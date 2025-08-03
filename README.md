@@ -1,6 +1,7 @@
 # Project Carbon
 
 Family of computer designs.
+Continued from the [Abacus 1](https://github.com/Julesc013/abacus-1) and [Abacus 2](https://github.com/Julesc013/abacus-2) projects.
 
 
 ## Directory Structure
