@@ -1,4 +1,4 @@
-26427992316848661
+26431500821012533
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -6622,14 +6622,14 @@ capacitor tantalum
 2
 2
 Carboni_Library
-8bJC
+JC64_Bus_8b
 
 
 0
 64
 64
 Carboni_Library
-16bJC
+JC100_Bus_16b
 
 
 0
@@ -105622,3 +105622,17 @@ Varistor VF
 0
 2
 2
+Zilog_Library
+PGA-84_13x13_34.29x34.29mm
+
+
+0
+84
+84
+Zilog_Library
+PGA-88_13x13_34.29x34.29mm
+
+
+0
+88
+88
