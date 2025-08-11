@@ -15971,6 +15971,68 @@
 			)
 		)
 	)
+	(sheet
+		(at 95.25 132.08)
+		(size 12.7 10.16)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "cc542a6e-7d4c-4a90-a4d7-357b80905847")
+		(property "Sheetname" "Clock"
+			(at 95.25 131.3684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "dATX_Clock.kicad_sch"
+			(at 95.25 142.8246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "CLK" output
+			(at 107.95 135.89 0)
+			(uuid "e947ebe7-b3cb-44b0-8f03-b2334371c7c5")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "CLK2" output
+			(at 107.95 138.43 0)
+			(uuid "f50e6c98-6aca-49cc-83fc-d676e270c6bb")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(instances
+			(project "dATX_JC100"
+				(path "/06d7853b-ec0e-46e4-9a93-83dad81d944c"
+					(page "2")
+				)
+			)
+		)
+	)
 	(sheet_instances
 		(path "/"
 			(page "1")
