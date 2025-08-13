@@ -63376,21 +63376,21 @@
 		(dnp no)
 		(uuid "0d534318-df73-4072-b156-9c9e7b324703")
 		(property "Reference" "U18"
-			(at 291.338 195.326 90)
+			(at 299.466 203.962 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Value" "74AHCT125"
-			(at 288.798 201.168 90)
+			(at 296.037 206.121 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -63630,21 +63630,21 @@
 		(dnp no)
 		(uuid "0df871cb-c414-4ade-a9ed-995104780e05")
 		(property "Reference" "U13"
-			(at 193.802 209.296 90)
+			(at 183.134 220.218 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Value" "74HCT74"
-			(at 196.342 212.598 90)
+			(at 186.69 222.758 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Package_DIP:DIP-14_W7.62mm"
@@ -66837,7 +66837,7 @@
 		(dnp no)
 		(uuid "23caa62d-5839-4a3c-88a5-b290eaebe43a")
 		(property "Reference" "U19"
-			(at 370.078 252.984 90)
+			(at 376.936 236.474 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -66846,7 +66846,7 @@
 			)
 		)
 		(property "Value" "74LS04"
-			(at 367.538 250.952 90)
+			(at 374.396 234.442 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -68040,7 +68040,7 @@
 		(dnp no)
 		(uuid "2bcb802e-17b0-4d3a-83c3-6e185634b345")
 		(property "Reference" "U3"
-			(at 42.672 214.63 90)
+			(at 35.814 228.346 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -68048,7 +68048,7 @@
 			)
 		)
 		(property "Value" "74AHCT125"
-			(at 45.212 218.186 90)
+			(at 37.084 230.632 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -69242,7 +69242,7 @@
 		(dnp no)
 		(uuid "33c99aa9-aa71-42cc-a21f-01b63f6200dd")
 		(property "Reference" "R40"
-			(at 275.59 176.022 90)
+			(at 276.606 172.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -69250,7 +69250,7 @@
 			)
 		)
 		(property "Value" "4K7"
-			(at 275.59 171.704 90)
+			(at 276.606 170.434 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -71098,7 +71098,7 @@
 			)
 		)
 		(property "Value" "+5V"
-			(at 192.278 206.502 0)
+			(at 189.23 204.216 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -71154,7 +71154,7 @@
 		(dnp no)
 		(uuid "46374356-46e9-485b-a432-9191b5dfb4cd")
 		(property "Reference" "U15"
-			(at 239.268 207.772 0)
+			(at 240.284 206.756 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -71163,7 +71163,7 @@
 			)
 		)
 		(property "Value" "74HCT138"
-			(at 239.268 210.312 0)
+			(at 240.284 209.296 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -71264,10 +71264,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "47fed211-d646-4f7b-b58c-af950072a758")
 		(property "Reference" "U1"
-			(at 22.098 62.23 90)
+			(at 30.988 45.974 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -71275,7 +71274,7 @@
 			)
 		)
 		(property "Value" "74LS04"
-			(at 19.558 60.706 90)
+			(at 29.464 48.514 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -71606,7 +71605,7 @@
 		(dnp no)
 		(uuid "4944e35b-080b-4585-a390-5da30bc5f98e")
 		(property "Reference" "U1"
-			(at 46.99 61.468 90)
+			(at 49.784 63.5 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -71614,7 +71613,7 @@
 			)
 		)
 		(property "Value" "74LS04"
-			(at 48.514 58.928 90)
+			(at 50.038 65.786 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -71911,7 +71910,7 @@
 		(dnp no)
 		(uuid "49d1e29a-244e-4176-8d93-718387de20fb")
 		(property "Reference" "U18"
-			(at 289.306 242.062 90)
+			(at 304.292 235.966 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -71920,7 +71919,7 @@
 			)
 		)
 		(property "Value" "74AHCT125"
-			(at 295.148 244.602 90)
+			(at 310.134 238.506 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -73362,21 +73361,21 @@
 		(dnp no)
 		(uuid "5568f73b-8697-4781-a55c-ddb1ddf65e8e")
 		(property "Reference" "U13"
-			(at 231.902 196.596 90)
+			(at 221.234 207.772 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Value" "74HCT74"
-			(at 234.442 199.898 90)
+			(at 224.536 210.312 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Package_DIP:DIP-14_W7.62mm"
@@ -74468,7 +74467,7 @@
 		(dnp no)
 		(uuid "5f1224bf-6141-4347-bef4-e3e868ae4d7d")
 		(property "Reference" "U14"
-			(at 195.326 198.628 90)
+			(at 198.12 201.422 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -74477,7 +74476,7 @@
 			)
 		)
 		(property "Value" "74LS32"
-			(at 197.358 196.088 90)
+			(at 200.152 198.882 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -74884,7 +74883,7 @@
 		(dnp no)
 		(uuid "607837ec-8fef-4a2b-9fd1-1d27ac7eda5c")
 		(property "Reference" "U18"
-			(at 284.226 257.302 90)
+			(at 286.004 256.54 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -74893,7 +74892,7 @@
 			)
 		)
 		(property "Value" "74AHCT125"
-			(at 290.068 259.842 90)
+			(at 288.544 259.08 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -75606,7 +75605,7 @@
 		(dnp no)
 		(uuid "65d1344f-7740-43f9-ae32-063268472e21")
 		(property "Reference" "U5"
-			(at 254 50.546 0)
+			(at 244.094 53.848 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -75614,7 +75613,7 @@
 			)
 		)
 		(property "Value" "74HCT688"
-			(at 250.444 53.086 0)
+			(at 251.206 53.848 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -76229,10 +76228,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "6d7ecad9-4b94-43ce-8758-2caf23de5905")
 		(property "Reference" "U1"
-			(at 44.958 62.23 90)
+			(at 53.848 45.974 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -76240,7 +76238,7 @@
 			)
 		)
 		(property "Value" "74LS04"
-			(at 42.418 60.706 90)
+			(at 52.324 48.514 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -76627,21 +76625,21 @@
 		(dnp no)
 		(uuid "6f446b64-6c95-485d-a8f2-74b4512fb0db")
 		(property "Reference" "U14"
-			(at 194.818 230.124 90)
+			(at 190.246 225.552 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Value" "74LS32"
-			(at 192.278 228.092 90)
+			(at 188.214 228.092 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Package_DIP:DIP-14_W7.62mm"
@@ -77458,21 +77456,21 @@
 		(dnp no)
 		(uuid "7723030b-23be-4084-9c08-623c3ef1bd09")
 		(property "Reference" "U12"
-			(at 19.812 183.388 90)
+			(at 21.336 184.15 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Value" "74LS00"
-			(at 21.844 180.848 90)
+			(at 18.796 182.118 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Footprint" "Package_DIP:DIP-14_W7.62mm"
@@ -77631,21 +77629,21 @@
 		(dnp no)
 		(uuid "774888d1-43b6-4aa7-8e37-878b9c3aeddb")
 		(property "Reference" "U19"
-			(at 395.224 243.332 90)
+			(at 393.192 242.824 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Value" "74LS04"
-			(at 393.192 245.872 90)
+			(at 395.732 242.824 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Package_DIP:DIP-14_W7.62mm"
@@ -78078,7 +78076,7 @@
 		(dnp no)
 		(uuid "7805f2f4-29d1-455f-a739-6fab4a77036c")
 		(property "Reference" "U4"
-			(at 312.928 119.38 90)
+			(at 327.66 116.332 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -78086,7 +78084,7 @@
 			)
 		)
 		(property "Value" "74HCT139"
-			(at 310.388 116.586 90)
+			(at 324.866 118.872 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -78991,7 +78989,7 @@
 		(dnp no)
 		(uuid "80e20ec7-7f35-4126-a0a3-74db8fae9278")
 		(property "Reference" "U1"
-			(at 29.718 139.7 90)
+			(at 38.608 131.826 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -78999,7 +78997,7 @@
 			)
 		)
 		(property "Value" "74LS04"
-			(at 27.178 138.176 90)
+			(at 37.084 134.366 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -80147,21 +80145,21 @@
 		(dnp no)
 		(uuid "8ba988c2-07b9-46cc-bedb-2b89c978d892")
 		(property "Reference" "U12"
-			(at 19.812 198.628 90)
+			(at 21.336 199.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Value" "74LS00"
-			(at 21.844 196.088 90)
+			(at 18.796 197.358 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Footprint" "Package_DIP:DIP-14_W7.62mm"
@@ -81258,21 +81256,21 @@
 		(dnp no)
 		(uuid "958ace6d-11e9-4af4-8df8-baccd6eb20e5")
 		(property "Reference" "U14"
-			(at 235.458 225.044 90)
+			(at 238.252 212.852 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Value" "74LS32"
-			(at 232.918 223.012 90)
+			(at 244.094 212.852 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Package_DIP:DIP-14_W7.62mm"
@@ -82126,7 +82124,7 @@
 		(dnp no)
 		(uuid "9aaede86-68bd-4d89-acac-ccbb718b78d3")
 		(property "Reference" "U4"
-			(at 274.828 119.38 90)
+			(at 289.814 116.332 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -82134,7 +82132,7 @@
 			)
 		)
 		(property "Value" "74HCT139"
-			(at 272.288 116.586 90)
+			(at 287.02 118.872 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -82893,7 +82891,6 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "a5d4f780-db3f-42ab-b508-0e906d0506cf")
 		(property "Reference" "#PWR067"
 			(at 237.49 50.8 0)
@@ -82905,7 +82902,7 @@
 			)
 		)
 		(property "Value" "+5V"
-			(at 245.11 50.7999 90)
+			(at 244.856 50.8 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -83031,21 +83028,21 @@
 		(dnp no)
 		(uuid "a8b71f6b-e7ca-45f9-a2ef-64c494fc4067")
 		(property "Reference" "U19"
-			(at 338.836 234.188 90)
+			(at 341.122 234.442 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Value" "74LS04"
-			(at 340.868 231.648 90)
+			(at 338.582 232.41 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Package_DIP:DIP-14_W7.62mm"
@@ -85599,7 +85596,7 @@
 		(dnp no)
 		(uuid "b903546f-c6b5-4e6b-8180-a221bf4dcc60")
 		(property "Reference" "R2"
-			(at 44.704 38.1 90)
+			(at 46.99 39.116 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -85607,7 +85604,7 @@
 			)
 		)
 		(property "Value" "330R"
-			(at 49.53 38.1 90)
+			(at 51.816 39.116 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -85933,7 +85930,7 @@
 		(dnp no)
 		(uuid "bf730a81-0c89-4f5f-8d29-968aa6ba0e54")
 		(property "Reference" "R1"
-			(at 21.844 38.1 90)
+			(at 24.13 39.116 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -85941,7 +85938,7 @@
 			)
 		)
 		(property "Value" "330R"
-			(at 26.67 38.1 90)
+			(at 28.956 39.116 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -86484,7 +86481,7 @@
 		(dnp no)
 		(uuid "c4da6ddc-6419-4bb3-8ab4-1d38baa2337f")
 		(property "Reference" "U1"
-			(at 179.578 270.51 90)
+			(at 185.674 264.414 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -86492,7 +86489,7 @@
 			)
 		)
 		(property "Value" "74LS04"
-			(at 177.038 268.986 90)
+			(at 184.15 266.954 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -86855,21 +86852,21 @@
 		(dnp no)
 		(uuid "c800d073-ec22-4d7f-a3f2-65221fcda7b7")
 		(property "Reference" "U19"
-			(at 338.836 211.328 90)
+			(at 341.122 211.582 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Value" "74LS04"
-			(at 340.868 208.788 90)
+			(at 338.582 209.55 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Package_DIP:DIP-14_W7.62mm"
@@ -87226,21 +87223,21 @@
 		(dnp no)
 		(uuid "cac7cb95-0e3b-46ec-a581-00e480fbb740")
 		(property "Reference" "U14"
-			(at 250.698 222.504 90)
+			(at 249.174 221.488 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Value" "74LS32"
-			(at 248.158 220.472 90)
+			(at 255.27 221.488 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Package_DIP:DIP-14_W7.62mm"
@@ -89488,21 +89485,21 @@
 		(dnp no)
 		(uuid "df3f78ec-0370-47cc-9077-c37a7214cdb7")
 		(property "Reference" "U18"
-			(at 297.688 213.106 90)
+			(at 303.53 214.122 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Value" "74AHCT125"
-			(at 295.148 218.948 90)
+			(at 303.53 216.662 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -90822,7 +90819,7 @@
 		(dnp no)
 		(uuid "e8d9f8cc-39c1-456d-8aff-9d2c61c99804")
 		(property "Reference" "U12"
-			(at 187.198 198.882 90)
+			(at 171.196 192.278 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -90831,7 +90828,7 @@
 			)
 		)
 		(property "Value" "74LS00"
-			(at 185.166 201.422 90)
+			(at 171.196 189.992 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -91127,7 +91124,7 @@
 		(dnp no)
 		(uuid "eda03ded-e84f-4222-a297-95bee23c36f8")
 		(property "Reference" "JP24"
-			(at 303.784 224.282 0)
+			(at 302.26 224.282 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -91645,21 +91642,21 @@
 		(dnp no)
 		(uuid "f328ae31-e88f-4f71-8b9a-e3ed3b65ddcb")
 		(property "Reference" "U19"
-			(at 395.224 220.472 90)
+			(at 393.192 219.456 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Value" "74LS04"
-			(at 393.192 223.012 90)
+			(at 395.732 219.456 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify right)
 			)
 		)
 		(property "Footprint" "Package_DIP:DIP-14_W7.62mm"
@@ -91952,7 +91949,7 @@
 		(dnp no)
 		(uuid "f5cf1070-2526-42ba-8f76-31f8ef855b43")
 		(property "Reference" "U12"
-			(at 187.198 183.642 90)
+			(at 170.434 178.054 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -91961,7 +91958,7 @@
 			)
 		)
 		(property "Value" "74LS00"
-			(at 185.166 186.182 90)
+			(at 170.434 175.768 90)
 			(effects
 				(font
 					(size 1.27 1.27)
