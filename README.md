@@ -5,7 +5,7 @@ Continued from the [Abacus 1](https://github.com/Julesc013/abacus-1) and [Abacus
 
 ## Schematics
 [dATX_JC100_sch.pdf](https://github.com/Julesc013/project-carbon/blob/main/schematics/dATX_JC100_sch.pdf)
-[dATX_JC100_sch_rev0.png](https://github.com/Julesc013/project-carbon/blob/main/schematics/dATX_JC100_sch_rev0.png)
+![dATX_JC100_sch_rev0.png](https://github.com/Julesc013/project-carbon/blob/main/schematics/dATX_JC100_sch_rev0.png)
 
 ## Directory Structure
 (OUT OF DATE)
