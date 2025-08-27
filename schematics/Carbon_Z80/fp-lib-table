@@ -1,0 +1,5 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "8Bit_Chip_Library")(type "KiCad")(uri "${KIPRJMOD}/libs/8Bit_Chip_Library")(options "")(descr ""))
+  (lib (name "Zilog_Library")(type "KiCad")(uri "${KIPRJMOD}/libs/Zilog_Library")(options "")(descr ""))
+)
