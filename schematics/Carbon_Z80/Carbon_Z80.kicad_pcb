@@ -8,12 +8,13 @@
 	)
 	(paper "A3")
 	(title_block
-		(title "Decimal ATX Motherboard (dATX)")
+		(title "Carbon Z80 Model 150")
 		(date "2025-08-10")
-		(rev "0")
+		(rev "1")
 		(company "Jules Carboni")
-		(comment 1 "dATX:   300×200 mm")
-		(comment 2 "ISO A4: 297×210 mm")
+		(comment 1 "Decimal ATX Motherboard (dATX)")
+		(comment 2 "dATX:   300×200 mm")
+		(comment 3 "ISO A4: 297×210 mm")
 	)
 	(layers
 		(0 "F.Cu" signal)
@@ -1619,7 +1620,7 @@
 	(footprint "Package_DIP:DIP-40_W15.24mm_Socket"
 		(layer "F.Cu")
 		(uuid "01498e1b-f63e-48f6-958c-158664f4e417")
-		(at 127 234.95)
+		(at 91.44 238.76)
 		(descr "40-lead though-hole mounted DIP package, row spacing 15.24mm (600 mils), Socket")
 		(tags "THT DIP DIL PDIP 2.54mm 15.24mm 600mil Socket")
 		(property "Reference" "FDC_0"
@@ -3563,7 +3564,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "0235cb15-f74e-452f-bef5-9acd8a1d1adc")
-		(at 48.87 325.75)
+		(at 385.26 82.275)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R11"
@@ -3737,7 +3738,7 @@
 	(footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "02fa880f-01fd-4ec4-93e9-6a7bf41a600d")
-		(at 285.75 251.465)
+		(at 265.335 247.105)
 		(descr "Through hole straight pin header, 1x02, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x02 2.54mm single row")
 		(property "Reference" "JP30"
@@ -3990,7 +3991,7 @@
 	(footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "08247648-3f67-4b0c-96ac-417e349de603")
-		(at 302.355 250.735)
+		(at 281.94 246.375)
 		(descr "Through hole straight pin header, 1x02, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x02 2.54mm single row")
 		(property "Reference" "JP28"
@@ -4243,13 +4244,13 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "08ec4801-a7fb-41f5-94f3-23e780f071df")
-		(at 215.67 294.92)
+		(at 177.7075 282.51)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R41"
 			(at 5.08 -2.37 0)
 			(layer "F.SilkS")
-			(uuid "4e8c8949-25ac-4567-97a6-97e2c5601b18")
+			(uuid "a8af8b31-4aa4-45ea-93ae-953d2572b4dc")
 			(effects
 				(font
 					(size 1 1)
@@ -4260,7 +4261,7 @@
 		(property "Value" "4K7"
 			(at 5.08 2.37 0)
 			(layer "F.Fab")
-			(uuid "9fd830db-ce0b-457f-8788-5ed9600ccba2")
+			(uuid "2ea9891c-6fbc-4186-9a71-dd5857f44a71")
 			(effects
 				(font
 					(size 1 1)
@@ -4272,7 +4273,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "ce02877d-9393-46cf-9796-ff048d6760fa")
+			(uuid "00e6921a-44c6-468e-a607-e0c3c987c158")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4284,7 +4285,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "4fe83014-d1a9-488d-81d9-cd0351492aa6")
+			(uuid "def1b9a2-12dc-46c6-96e0-f553a91804c5")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5597,7 +5598,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "0d1ec02f-0f43-4bee-9d41-5edcefe7433e")
-		(at 61.77 272.73)
+		(at 363.61 40.185)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C16"
@@ -5876,7 +5877,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "0fa8c5d8-f36d-4bbb-8718-aa5add14d4fb")
-		(at 237.32 354.555)
+		(at 392.26 136.11)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U17"
@@ -7303,7 +7304,7 @@
 	(footprint "Package_DIP:DIP-8_W7.62mm_Socket"
 		(layer "F.Cu")
 		(uuid "11d18d2f-96fa-4d1f-97e7-0fbc7586e66f")
-		(at 115.35 332.85)
+		(at 356.65 214.74)
 		(descr "8-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils), Socket")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil Socket")
 		(property "Reference" "U25"
@@ -7617,7 +7618,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "1287f861-6454-4a77-bb09-a6c544252aed")
-		(at 192.67 377.205)
+		(at 347.61 158.76)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R68"
@@ -7791,7 +7792,7 @@
 	(footprint "LED_THT:LED_D5.0mm"
 		(layer "F.Cu")
 		(uuid "133942c3-e703-449c-a86b-3bb9ca66befc")
-		(at 238.2 375.585)
+		(at 393.14 157.14)
 		(descr "LED, diameter 5.0mm, 2 pins, http://cdn-reichelt.de/documents/datenblatt/A500/LL-504BC2E-009.pdf, generated by kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D18"
@@ -12702,7 +12703,7 @@
 	(footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "26244025-e0b8-48b4-a70b-3e83fa04a29b")
-		(at 306.945 250.735)
+		(at 286.53 246.375)
 		(descr "Through hole straight pin header, 1x02, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x02 2.54mm single row")
 		(property "Reference" "JP29"
@@ -13475,7 +13476,7 @@
 	(footprint "LED_THT:LED_D5.0mm"
 		(layer "F.Cu")
 		(uuid "2a16091e-4c7b-44fb-a1bd-37b0a8264ce1")
-		(at 92.57 316.23)
+		(at 376.37 81.875)
 		(descr "LED, diameter 5.0mm, 2 pins, http://cdn-reichelt.de/documents/datenblatt/A500/LL-504BC2E-009.pdf, generated by kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D7"
@@ -13706,7 +13707,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "2cc3e97f-004f-4e78-b6e3-260762c6830e")
-		(at 226.06 228.6)
+		(at 180.345 219.71)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U14"
@@ -14051,7 +14052,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "2d23f458-bc28-4664-aaaf-47fe55c1ce9f")
-		(at 154.945 227.33)
+		(at 119.5225 222.54)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U19"
@@ -14397,7 +14398,7 @@
 	(footprint "Button_Switch_THT:SW_PUSH_6mm"
 		(layer "F.Cu")
 		(uuid "2d65d10f-8ebf-49b9-afdd-81b55377a59e")
-		(at 48.36 266.01)
+		(at 352.24 40.105)
 		(descr "Generic 6mm SW tactile push button")
 		(tags "tact sw push 6mm")
 		(property "Reference" "SW1"
@@ -14744,7 +14745,7 @@
 	(footprint "Crystal:Resonator-2Pin_W6.0mm_H3.0mm"
 		(layer "F.Cu")
 		(uuid "2e0f3108-d7d2-4b8f-8b98-431b2c2e901e")
-		(at 151.57 264.81)
+		(at 116.1475 260.02)
 		(descr "Ceramic Resonator/Filter, length 3.0mm, width 6.0mm, 2 pins")
 		(tags "ceramic")
 		(property "Reference" "XTAL_RES_2"
@@ -15259,7 +15260,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "32d04b29-2698-44b6-8cd2-fe3b5abb3275")
-		(at 50.35 283.06)
+		(at 350.52 52.365)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U0"
@@ -15599,7 +15600,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "33b936de-43ba-4875-a21f-42e99417f22c")
-		(at 215.28 228.6)
+		(at 169.565 219.71)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U13"
@@ -16131,7 +16132,7 @@
 	(footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "343f1a00-8a0c-4bb7-b8bf-73005ef8c555")
-		(at 62.4 262.26)
+		(at 347.06 40.795)
 		(descr "Through hole straight pin header, 1x02, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x02 2.54mm single row")
 		(property "Reference" "JP4"
@@ -16384,7 +16385,7 @@
 	(footprint "LED_THT:LED_D5.0mm"
 		(layer "F.Cu")
 		(uuid "34b30136-3179-413e-a734-da2e77014f1e")
-		(at 92.57 323.7)
+		(at 376.37 89.345)
 		(descr "LED, diameter 5.0mm, 2 pins, http://cdn-reichelt.de/documents/datenblatt/A500/LL-504BC2E-009.pdf, generated by kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D8"
@@ -17466,7 +17467,7 @@
 	(footprint "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "3b8f7b74-6d4a-4e0a-8aae-80c87ae251b1")
-		(at 171.025 227.57)
+		(at 135.6025 222.78)
 		(descr "Through hole straight pin header, 1x03, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x03 2.54mm single row")
 		(property "Reference" "JP24"
@@ -19905,7 +19906,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "40822354-fe7c-4dc9-badb-f5f99b8eff38")
-		(at 87.175 304.355)
+		(at 354.82 78.525)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C22"
@@ -20047,13 +20048,13 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "414f2be9-e188-4c36-ae2e-87758d9fc3b3")
-		(at 69.975 244.535)
+		(at 356.05 24.285)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R7"
 			(at 5.08 -2.37 0)
 			(layer "F.SilkS")
-			(uuid "25132cc1-dfbf-4a7e-a232-42cc390af6b1")
+			(uuid "b1106e97-938f-4642-bba7-14a22a8e5bf6")
 			(effects
 				(font
 					(size 1 1)
@@ -20064,7 +20065,7 @@
 		(property "Value" "R"
 			(at 5.08 2.37 0)
 			(layer "F.Fab")
-			(uuid "5af568f1-4402-434f-a45f-4aee52a59adc")
+			(uuid "85f86fdd-1ee5-485a-86a2-cbcae8ec875a")
 			(effects
 				(font
 					(size 1 1)
@@ -20076,7 +20077,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "abd70543-6f47-4133-8465-5aaf0b9d6172")
+			(uuid "6f262107-f4b6-4879-9faa-34a4747c6f00")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20088,7 +20089,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "f2790495-a24a-4191-b180-084f0dd97401")
+			(uuid "3dd2f202-0f88-440a-9f0a-783505a7404e")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20221,7 +20222,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "42217c75-1b47-4440-8314-396eaa6950df")
-		(at 84.635 263.475)
+		(at 384.805 32.78)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R17"
@@ -20800,7 +20801,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "494c816e-6e15-498e-a3f4-a9267b341934")
-		(at 192.67 389.355)
+		(at 347.61 170.91)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R71"
@@ -25308,7 +25309,7 @@
 	(footprint "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "4c11fdbf-dbd2-4c1c-953a-8fdb1faf9f00")
-		(at 166.435 227.57)
+		(at 131.0125 222.78)
 		(descr "Through hole straight pin header, 1x03, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x03 2.54mm single row")
 		(property "Reference" "JP23"
@@ -25572,7 +25573,7 @@
 	(footprint "Package_DIP:DIP-40_W15.24mm_Socket"
 		(layer "F.Cu")
 		(uuid "4cadd7fa-96f6-4fd4-8108-d8bbe7682620")
-		(at 218.44 332.745)
+		(at 373.38 114.3)
 		(descr "40-lead though-hole mounted DIP package, row spacing 15.24mm (600 mils), Socket")
 		(tags "THT DIP DIL PDIP 2.54mm 15.24mm 600mil Socket")
 		(property "Reference" "U27"
@@ -26238,7 +26239,7 @@
 	(footprint "LED_THT:LED_D5.0mm"
 		(layer "F.Cu")
 		(uuid "4da370be-f21a-47a2-8da4-375453416639")
-		(at 48.38 254.26)
+		(at 348.55 31.905)
 		(descr "LED, diameter 5.0mm, 2 pins, http://cdn-reichelt.de/documents/datenblatt/A500/LL-504BC2E-009.pdf, generated by kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D1"
@@ -26469,7 +26470,7 @@
 	(footprint "LED_THT:LED_D5.0mm"
 		(layer "F.Cu")
 		(uuid "4e165162-d53a-442b-a14d-3d0488ef81a1")
-		(at 77.61 323.7)
+		(at 361.41 89.345)
 		(descr "LED, diameter 5.0mm, 2 pins, http://cdn-reichelt.de/documents/datenblatt/A500/LL-504BC2E-009.pdf, generated by kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D4"
@@ -26874,7 +26875,7 @@
 	(footprint "Package_DIP:DIP-16_W7.62mm"
 		(layer "F.Cu")
 		(uuid "515f1eae-1c6b-47f1-86db-6f5e4baa7310")
-		(at 154.32 276.57)
+		(at 118.8975 271.78)
 		(descr "16-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U20"
@@ -27254,7 +27255,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "53fc8aa9-19c7-4154-873a-fcd84dae1536")
-		(at 125.67 313.45)
+		(at 366.97 195.34)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U26"
@@ -27600,7 +27601,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "556f1623-cc8d-437c-b4d6-b30d76668500")
-		(at 48.87 313.6)
+		(at 385.26 70.125)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R8"
@@ -27774,7 +27775,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "56b1234b-c6a5-4832-acdc-d4b59b5fecdb")
-		(at 48.87 337.9)
+		(at 385.26 94.425)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R14"
@@ -28122,7 +28123,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "57770810-6722-489f-99d4-ce75e966862d")
-		(at 114.89 313.45)
+		(at 356.19 195.34)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U23"
@@ -28971,7 +28972,7 @@
 	(footprint "Package_DIP:DIP-16_W7.62mm"
 		(layer "F.Cu")
 		(uuid "5aa041b3-a8a0-4d96-b42e-43f6a1d2b6ba")
-		(at 237.32 332.675)
+		(at 392.26 114.23)
 		(descr "16-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U29"
@@ -29351,7 +29352,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "5ac3576a-04c2-406e-b2f6-3e42e7d98280")
-		(at 192.67 369.105)
+		(at 347.61 150.66)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R66"
@@ -29525,7 +29526,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "5bbf0b9f-8ffc-444f-9b31-436b86f150bc")
-		(at 228.7325 251.75)
+		(at 183.0175 242.86)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U14"
@@ -29871,11 +29872,11 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "5c6afa35-26e1-4ce9-a735-3019e0555549")
-		(at 56.805 255.515)
+		(at 356.09 31.905)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C3"
-			(at 10.715 3.975 0)
+			(at 1.217006 -2.065135 0)
 			(layer "F.SilkS")
 			(uuid "fd9fa073-bbae-4554-a6c9-e78077a75f00")
 			(effects
@@ -29968,7 +29969,7 @@
 			(uuid "558c91ec-3e20-49eb-bb39-3616b154aac7")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 10.715 6.025 0)
+			(at 1.217006 -0.015135 0)
 			(layer "F.Fab")
 			(uuid "56a4d403-c920-4a8b-b24a-3fb6c1c8a540")
 			(effects
@@ -30497,7 +30498,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "5ed03173-ede1-44d9-9cdf-1d52180e11c2")
-		(at 70.66 253.87)
+		(at 370.83 23.175)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U3"
@@ -30843,7 +30844,7 @@
 	(footprint "Package_DIP:DIP-16_W7.62mm"
 		(layer "F.Cu")
 		(uuid "5ed88037-b320-4443-a7a3-1e2e70614092")
-		(at 301.645 209.265)
+		(at 299.72 208.28)
 		(descr "16-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U22"
@@ -31454,7 +31455,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "5f353166-ff06-45aa-9da3-46dffb9eadd5")
-		(at 192.67 356.955)
+		(at 347.61 138.51)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R63"
@@ -31892,7 +31893,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "60b45c32-a2a1-4181-99a8-23da517462d0")
-		(at 192.67 344.805)
+		(at 347.61 126.36)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R60"
@@ -32066,7 +32067,7 @@
 	(footprint "Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal"
 		(layer "F.Cu")
 		(uuid "60c5e1ac-edeb-46f7-b828-e0b3202579a7")
-		(at 237.565 391.585)
+		(at 392.505 173.14)
 		(descr "TRS 3.5mm, horizontal, through-hole, https://www.cuidevices.com/product/resource/pdf/sj1-352xn.pdf")
 		(tags "TRS audio jack stereo horizontal")
 		(property "Reference" "TRS_1"
@@ -33163,7 +33164,7 @@
 	(footprint "LED_THT:LED_D5.0mm"
 		(layer "F.Cu")
 		(uuid "6596c289-f405-47a3-8ccc-f6bfe5baaeab")
-		(at 77.61 316.23)
+		(at 361.41 81.875)
 		(descr "LED, diameter 5.0mm, 2 pins, http://cdn-reichelt.de/documents/datenblatt/A500/LL-504BC2E-009.pdf, generated by kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D3"
@@ -35168,7 +35169,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "6a55e82e-12a5-43e0-bfd8-30e5a7ab3660")
-		(at 84.635 267.525)
+		(at 384.805 36.83)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R18"
@@ -36522,7 +36523,7 @@
 	(footprint "Package_DIP:DIP-8_W7.62mm"
 		(layer "F.Cu")
 		(uuid "6ff34e40-ed09-48b8-a7ed-7ad34e1637f1")
-		(at 205.99 393.185)
+		(at 360.93 174.74)
 		(descr "8-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U37"
@@ -36814,7 +36815,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "70bc33d4-8ad8-4960-b481-03ba3964af41")
-		(at 65.585 305.625)
+		(at 366.21 72.835)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R37"
@@ -36988,7 +36989,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "71537462-c2a0-473d-93df-47d37cb55f11")
-		(at 192.67 352.905)
+		(at 347.61 134.46)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R62"
@@ -37298,7 +37299,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "743de4b8-bc52-4cda-8372-cf513ea35f67")
-		(at 192.67 373.155)
+		(at 347.61 154.71)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R67"
@@ -38652,7 +38653,7 @@
 	(footprint "Package_TO_SOT_THT:TO-92L_Inline"
 		(layer "F.Cu")
 		(uuid "7657cd4d-03f0-461c-a8d7-57058da5664f")
-		(at 62.18 257.59)
+		(at 362.35 31.685)
 		(descr "TO-92L leads in-line (large body variant of TO-92), also known as TO-226, wide, drill 0.75mm (see https://www.diodes.com/assets/Package-Files/TO92L.pdf and http://www.ti.com/lit/an/snoa059/snoa059.pdf)")
 		(tags "TO-92L Inline Wide transistor")
 		(property "Reference" "U2"
@@ -38860,7 +38861,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "767a188c-f619-4426-95d0-ed5fc8a0dadc")
-		(at 192.67 336.705)
+		(at 347.61 118.26)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R53"
@@ -39034,7 +39035,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "7fc3de5d-7a34-4b68-b188-e130b1c9be0b")
-		(at 84.635 259.425)
+		(at 384.805 28.73)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R16"
@@ -39208,7 +39209,7 @@
 	(footprint "Connector_IDC:IDC-Header_2x17_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "7fca161a-9ee7-432c-b5a9-512e03877694")
-		(at 187.96 238.76)
+		(at 152.5375 233.97)
 		(descr "Through hole IDC box header, 2x17, 2.54mm pitch, DIN 41651 / IEC 60603-13, double rows, https://docs.google.com/spreadsheets/d/16SsEcesNF15N3Lb4niX7dcUr-NY5_MFPQhobNuNppn4/edit#gid=0")
 		(tags "Through hole vertical IDC box header THT 2x17 2.54mm double row")
 		(property "Reference" "FDD_0"
@@ -39964,7 +39965,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "82197e0d-5b2a-4904-bb53-56d8c285fd4a")
-		(at 192.67 348.855)
+		(at 347.61 130.41)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R61"
@@ -40736,7 +40737,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "83ecb074-bc20-4888-91c9-a298a172b96c")
-		(at 61.77 275.88)
+		(at 363.61 43.335)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C17"
@@ -40879,7 +40880,7 @@
 	(footprint "Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "84c7130c-29b0-4cb4-969e-1bbf72b9b224")
-		(at 254 237.49)
+		(at 209.6875 233.97)
 		(descr "Through hole IDC box header, 2x20, 2.54mm pitch, DIN 41651 / IEC 60603-13, double rows, https://docs.google.com/spreadsheets/d/16SsEcesNF15N3Lb4niX7dcUr-NY5_MFPQhobNuNppn4/edit#gid=0")
 		(tags "Through hole vertical IDC box header THT 2x20 2.54mm double row")
 		(property "Reference" "IDE_1"
@@ -41701,13 +41702,13 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "85a5f4fe-1372-4be6-9b71-07b81a909bd3")
-		(at 215.67 282.77)
+		(at 177.7075 270.36)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R38"
 			(at 5.08 -2.37 0)
 			(layer "F.SilkS")
-			(uuid "64022071-fa1d-45ed-b644-16d92d50e727")
+			(uuid "cc0fce94-5d7d-48da-824e-7f3190e7a237")
 			(effects
 				(font
 					(size 1 1)
@@ -41718,7 +41719,7 @@
 		(property "Value" "4K7"
 			(at 5.08 2.37 0)
 			(layer "F.Fab")
-			(uuid "19c85e69-89d9-46ae-9afa-9fde6a434834")
+			(uuid "84112d97-7eff-4e36-986d-feb5c56d4650")
 			(effects
 				(font
 					(size 1 1)
@@ -41730,7 +41731,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "e6d5f74a-f72c-4c18-a8f3-3498568fd776")
+			(uuid "54d0fba8-41d1-4b2a-a2ca-42c108c17b23")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -41742,7 +41743,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "2d4e609a-d8fc-4698-8bcc-1f4b438e5d7c")
+			(uuid "63a5b54d-322b-4949-a2eb-b8fabf25a519")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -41875,7 +41876,7 @@
 	(footprint "LED_THT:LED_D5.0mm"
 		(layer "F.Cu")
 		(uuid "88139429-09e3-46df-ab57-f67c39443785")
-		(at 85.09 323.7)
+		(at 368.89 89.345)
 		(descr "LED, diameter 5.0mm, 2 pins, http://cdn-reichelt.de/documents/datenblatt/A500/LL-504BC2E-009.pdf, generated by kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D6"
@@ -42106,7 +42107,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "89fd4f07-9afe-4d64-a1da-543abef3d2ed")
-		(at 167.64 250.19)
+		(at 132.2175 245.4)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U19"
@@ -42451,7 +42452,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "8ba0d470-de09-4514-8efd-7cea5b7afa8b")
-		(at 320.045 160.02)
+		(at 318.775 161.29)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U1"
@@ -42797,13 +42798,13 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "8c69ad8a-fd8d-4f12-bcb3-4a7335b3d180")
-		(at 215.67 286.82)
+		(at 177.7075 274.41)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R39"
 			(at 5.08 -2.37 0)
 			(layer "F.SilkS")
-			(uuid "d6a50cdb-f533-45ef-b6fb-461891209c86")
+			(uuid "60ddb84b-1b98-4002-af08-f3a893cb2e65")
 			(effects
 				(font
 					(size 1 1)
@@ -42814,7 +42815,7 @@
 		(property "Value" "4K7"
 			(at 5.08 2.37 0)
 			(layer "F.Fab")
-			(uuid "8e7575de-e9a0-49b9-8ef4-ab9e02f3c291")
+			(uuid "0513ce71-31c7-4432-bbd1-ddb59ee12c9f")
 			(effects
 				(font
 					(size 1 1)
@@ -42826,7 +42827,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "e3acab4a-f817-4af6-be89-be277c9043c5")
+			(uuid "b671087e-f239-4258-abf4-634728e7bf15")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -42838,7 +42839,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "d7cc7575-04f7-4ac2-a2ae-d63c17d99d7c")
+			(uuid "0ea703a5-6ddc-4174-b099-de67e8dc8684")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -42971,7 +42972,7 @@
 	(footprint "LED_THT:LED_D5.0mm"
 		(layer "F.Cu")
 		(uuid "8d238e48-0c03-45f3-83fc-9197b233d64f")
-		(at 70.13 323.7)
+		(at 353.93 89.345)
 		(descr "LED, diameter 5.0mm, 2 pins, http://cdn-reichelt.de/documents/datenblatt/A500/LL-504BC2E-009.pdf, generated by kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D2"
@@ -43202,7 +43203,7 @@
 	(footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "8fa32a79-3101-47e2-b055-7cdce9eda493")
-		(at 75.185 283.745)
+		(at 375.355 53.05)
 		(descr "Through hole straight pin header, 1x02, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x02 2.54mm single row")
 		(property "Reference" "JP27"
@@ -43455,7 +43456,7 @@
 	(footprint "Oscillator:Oscillator_DIP-8"
 		(layer "F.Cu")
 		(uuid "931bfdeb-1a12-45a2-9492-ea718987dbcb")
-		(at 287.03 170.185)
+		(at 285.76 171.455)
 		(descr "Oscillator, DIP8,http://cdn-reichelt.de/documents/datenblatt/B400/OSZI.pdf")
 		(tags "oscillator")
 		(property "Reference" "XTAL_OSC_0"
@@ -43835,7 +43836,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "935f47e4-14fb-4914-a777-ba9615bbedf0")
-		(at 292.1 240.035)
+		(at 292.1 245.11)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R44"
@@ -44009,7 +44010,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "94df56fb-f933-406e-be8f-55fa2bd6a308")
-		(at 48.87 333.85)
+		(at 385.26 90.375)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R13"
@@ -44183,7 +44184,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "95adb1d6-d4fe-4acd-b3ff-d90e2eab0bbf")
-		(at 309.54 162.515)
+		(at 308.27 163.785)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C2"
@@ -44636,7 +44637,7 @@
 	(footprint "Connector_PinHeader_2.54mm:PinHeader_2x06_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "96f15599-0781-4890-9534-02ca8e844af5")
-		(at 137.16 313.69)
+		(at 378.46 195.58)
 		(descr "Through hole straight pin header, 2x06, 2.54mm pitch, double rows")
 		(tags "Through hole pin header THT 2x06 2.54mm double row")
 		(property "Reference" "J1"
@@ -45018,7 +45019,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "9798df79-cb70-41f6-b678-7738642f5a36")
-		(at 332.745 160.02)
+		(at 331.475 161.29)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U1"
@@ -46054,7 +46055,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "a03e9ba5-1212-48d1-91a6-852d89f3f037")
-		(at 145.87 269.51)
+		(at 110.4475 264.72)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C28"
@@ -46586,7 +46587,7 @@
 	(footprint "Package_DIP:DIP-16_W7.62mm"
 		(layer "F.Cu")
 		(uuid "a6171c94-a86f-49f7-a117-77dc0419d1ff")
-		(at 216.0325 251.75)
+		(at 170.3175 242.86)
 		(descr "16-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U15"
@@ -46965,7 +46966,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "a6b4a185-9b9c-4697-a0e6-fe0c6fc9da62")
-		(at 237.51 381.095)
+		(at 392.45 162.65)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP1"
@@ -47128,7 +47129,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "a83de449-3a2b-4c4e-a807-9c4230862c73")
-		(at 192.67 332.655)
+		(at 347.61 114.21)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R52"
@@ -47743,7 +47744,7 @@
 			(drill 3.2)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(uuid "b700321f-3814-42a7-8e47-ed855a92df92")
+			(uuid "ef7947bd-e407-4786-8e4b-60f05d85700e")
 		)
 		(pad "1" thru_hole rect
 			(at 0 0 180)
@@ -48458,7 +48459,7 @@
 	(footprint "Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "ac5d1f7b-2324-4727-b58a-f4d429caced7")
-		(at 209.645 336.755)
+		(at 364.585 118.31)
 		(descr "Through hole IDC box header, 2x20, 2.54mm pitch, DIN 41651 / IEC 60603-13, double rows, https://docs.google.com/spreadsheets/d/16SsEcesNF15N3Lb4niX7dcUr-NY5_MFPQhobNuNppn4/edit#gid=0")
 		(tags "Through hole vertical IDC box header THT 2x20 2.54mm double row")
 		(property "Reference" "IDE_0"
@@ -49812,7 +49813,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "adfafd55-9c56-4f29-826f-6684507ff02f")
-		(at 192.67 361.005)
+		(at 347.61 142.56)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R64"
@@ -50160,7 +50161,7 @@
 	(footprint "Battery:BatteryHolder_MYOUNG_BS-07-A1BJ001_CR2032"
 		(layer "F.Cu")
 		(uuid "aed0164c-b63b-4bca-8b0a-40206db2d8bb")
-		(at 131.6 346.71)
+		(at 372.9 228.6)
 		(descr "CR2032 battery holder https://www.lcsc.com/datasheet/lcsc_datasheet_2203021630_MYOUNG-BS-07-A1BJ001_C2979167.pdf")
 		(tags "CR2032 BR2032 BatteryHolder Battery")
 		(property "Reference" "BT1"
@@ -50380,7 +50381,7 @@
 	(footprint "Crystal:Crystal_Round_D3.0mm_Vertical"
 		(layer "F.Cu")
 		(uuid "b47f4096-fa6a-4c43-9331-d092f5b38e57")
-		(at 126.59 333.27)
+		(at 367.89 215.16)
 		(descr "C38-LF, Crystal, length 8mm, width 3mm")
 		(property "Reference" "XTAL_RES_3"
 			(at 0.95 -2.7 0)
@@ -51015,7 +51016,7 @@
 	(footprint "Crystal:Resonator-2Pin_W6.0mm_H3.0mm"
 		(layer "F.Cu")
 		(uuid "b4f0e6dc-4e1a-45d6-8586-b2d70c4578c1")
-		(at 151.57 259.76)
+		(at 116.1475 254.97)
 		(descr "Ceramic Resonator/Filter, length 3.0mm, width 6.0mm, 2 pins")
 		(tags "ceramic")
 		(property "Reference" "XTAL_RES_1"
@@ -51266,7 +51267,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "b83f12cf-450a-4f2f-bdae-c998e4c23e26")
-		(at 84.64 277.685)
+		(at 384.81 46.99)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U0"
@@ -51606,7 +51607,7 @@
 	(footprint "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "b996c8bd-ebec-4f78-b499-72d72ba9109e")
-		(at 147.32 278.13)
+		(at 111.8975 273.34)
 		(descr "Through hole straight pin header, 1x03, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x03 2.54mm single row")
 		(property "Reference" "JP7"
@@ -53603,7 +53604,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "bd70d56d-1ce2-4980-9413-e538962e0312")
-		(at 192.67 381.255)
+		(at 347.61 162.81)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R69"
@@ -54443,7 +54444,7 @@
 	(footprint "Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal"
 		(layer "F.Cu")
 		(uuid "befd8fb6-420c-4ea7-a799-d48dc142decb")
-		(at 223.445 391.585)
+		(at 378.385 173.14)
 		(descr "TRS 3.5mm, horizontal, through-hole, https://www.cuidevices.com/product/resource/pdf/sj1-352xn.pdf")
 		(tags "TRS audio jack stereo horizontal")
 		(property "Reference" "TRS_0"
@@ -55833,7 +55834,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "c42622d4-886a-4fdf-b42b-1ead6b5154c9")
-		(at 145.87 260.06)
+		(at 110.4475 255.27)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C24"
@@ -56150,13 +56151,13 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "c53e11d6-4175-4522-81d5-7b86a342440f")
-		(at 215.67 290.87)
+		(at 177.7075 278.46)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R40"
 			(at 5.08 -2.37 0)
 			(layer "F.SilkS")
-			(uuid "d1f168e6-3fe9-4f97-ac6a-884be97257e9")
+			(uuid "a34e492a-073b-42a7-ac2b-9b680eda377a")
 			(effects
 				(font
 					(size 1 1)
@@ -56167,7 +56168,7 @@
 		(property "Value" "4K7"
 			(at 5.08 2.37 0)
 			(layer "F.Fab")
-			(uuid "988d61aa-9d1e-4d15-b28b-6fb8b174e1cc")
+			(uuid "79c415b0-c2f7-4a74-92a4-ba03d564002d")
 			(effects
 				(font
 					(size 1 1)
@@ -56179,7 +56180,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "69c84556-e748-413a-b13c-2421330a5f9a")
+			(uuid "bea083be-8f89-4165-b160-e01ac42471d9")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -56191,7 +56192,7 @@
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "dd318cc0-10d1-422f-8944-a651f1e1bd00")
+			(uuid "f774f819-91a4-4cdd-a27b-9ce2f166c186")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -56726,7 +56727,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "c8004f05-c256-458e-aec6-edc075694f11")
-		(at 170.18 278.13)
+		(at 134.7575 273.34)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U18"
@@ -57918,7 +57919,7 @@
 			(drill 3.2)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(uuid "69c618c8-b60c-4c14-8a32-f5e68aed76a9")
+			(uuid "f24ac27b-fb21-4ac5-bf96-b6ac2fa6712e")
 		)
 		(pad "1" thru_hole rect
 			(at 0 0 180)
@@ -58035,7 +58036,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "cd410a21-d3e1-4830-bc7f-051377b85346")
-		(at 48.87 329.8)
+		(at 385.26 86.325)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R12"
@@ -58462,7 +58463,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "ce823e57-5fd8-4289-934a-ceac62309fba")
-		(at 87.175 301.205)
+		(at 354.82 75.375)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C21"
@@ -60293,7 +60294,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "d2084310-406b-40fd-b35f-e8f67c400594")
-		(at 302.54 162.515)
+		(at 301.27 163.785)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C1"
@@ -60436,7 +60437,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "d3b7b9be-155b-41f9-b127-4e39148bad38")
-		(at 165.645 238.43)
+		(at 130.2225 233.64)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R42"
@@ -60610,7 +60611,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "d4e9847c-d7b8-429b-9e22-bb1e6deba2f9")
-		(at 48.87 321.7)
+		(at 385.26 78.225)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R10"
@@ -62487,7 +62488,7 @@
 	(footprint "LED_THT:LED_D5.0mm"
 		(layer "F.Cu")
 		(uuid "dc2a6367-cafe-45e8-b5ef-38bee4dacacd")
-		(at 229.87 284.48)
+		(at 191.9075 272.07)
 		(descr "LED, diameter 5.0mm, 2 pins, http://cdn-reichelt.de/documents/datenblatt/A500/LL-504BC2E-009.pdf, generated by kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D17"
@@ -62892,7 +62893,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "df8c2a16-606f-4d88-be2a-f17d2f8191c0")
-		(at 65.585 301.575)
+		(at 366.21 68.785)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R36"
@@ -63066,7 +63067,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "e04ee1d9-54b3-49ce-9c22-a0dc52a215f1")
-		(at 192.67 365.055)
+		(at 347.61 146.61)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R65"
@@ -63240,7 +63241,7 @@
 	(footprint "LED_THT:LED_D5.0mm"
 		(layer "F.Cu")
 		(uuid "e18d3a1f-8828-4c0c-a634-5cbb59e62107")
-		(at 85.09 316.23)
+		(at 368.89 81.875)
 		(descr "LED, diameter 5.0mm, 2 pins, http://cdn-reichelt.de/documents/datenblatt/A500/LL-504BC2E-009.pdf, generated by kicad-footprint-generator")
 		(tags "LED")
 		(property "Reference" "D5"
@@ -63471,7 +63472,7 @@
 	(footprint "Resistor_THT:R_Array_SIP9"
 		(layer "F.Cu")
 		(uuid "e3033b72-9bae-40c8-8957-446a2a5c39f6")
-		(at 155.485 223.19)
+		(at 120.0625 218.4)
 		(descr "9-pin Resistor SIP pack")
 		(tags "R")
 		(property "Reference" "RN2"
@@ -63791,7 +63792,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "e6757656-79fd-4fbd-8074-d528ea9be2dd")
-		(at 192.67 393.405)
+		(at 347.61 174.96)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R72"
@@ -63965,7 +63966,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "eab309d3-3cfa-4fa9-9f6d-51bd32b56e65")
-		(at 65.585 297.525)
+		(at 366.21 64.735)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R35"
@@ -64139,7 +64140,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "ec65d835-0e28-4688-b911-4cda47ad73b9")
-		(at 192.67 385.305)
+		(at 347.61 166.86)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R70"
@@ -65095,7 +65096,7 @@
 	(footprint "Button_Switch_THT:SW_PUSH_6mm"
 		(layer "F.Cu")
 		(uuid "ef1dc00d-ca67-4661-85be-95bc6ca30bc9")
-		(at 64.875 283.055)
+		(at 365.045 52.36)
 		(descr "Generic 6mm SW tactile push button")
 		(tags "tact sw push 6mm")
 		(property "Reference" "SW2"
@@ -65442,7 +65443,7 @@
 	(footprint "Crystal:Resonator-2Pin_W6.0mm_H3.0mm"
 		(layer "F.Cu")
 		(uuid "efa9c1a8-751d-4d37-9fd1-5a461a70889f")
-		(at 151.57 254.71)
+		(at 116.1475 249.92)
 		(descr "Ceramic Resonator/Filter, length 3.0mm, width 6.0mm, 2 pins")
 		(tags "ceramic")
 		(property "Reference" "XTAL_RES_1"
@@ -67314,7 +67315,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "f6464f61-3dc3-4252-9ef3-cfb06913a093")
-		(at 48.87 317.65)
+		(at 385.26 74.175)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R9"
@@ -67488,7 +67489,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "f690f821-a317-4b77-8a71-6a91a304224b")
-		(at 84.635 255.375)
+		(at 384.805 24.68)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R15"
@@ -67662,7 +67663,7 @@
 	(footprint "Crystal:Resonator-2Pin_W6.0mm_H3.0mm"
 		(layer "F.Cu")
 		(uuid "f8110cf7-ecd7-4db9-9f58-7e72bfbecfee")
-		(at 303.62 171.455)
+		(at 302.35 172.725)
 		(descr "Ceramic Resonator/Filter, length 3.0mm, width 6.0mm, 2 pins")
 		(tags "ceramic")
 		(property "Reference" "XTAL_RES_0"
@@ -68293,7 +68294,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "f8e1f1a1-df05-41ef-bc9a-241f955eafd6")
-		(at 145.87 263.21)
+		(at 110.4475 258.42)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C25"
@@ -68436,7 +68437,7 @@
 	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "fc18beae-90fb-4234-b40d-836011ea3860")
-		(at 192.67 340.755)
+		(at 347.61 122.31)
 		(descr "Resistor, Axial_DIN0207 series, Axial, Horizontal, pin pitch=10.16mm, 0.25W = 1/4W, length*diameter=6.3*2.5mm^2, http://cdn-reichelt.de/documents/datenblatt/B400/1_4W%23YAG.pdf")
 		(tags "Resistor Axial_DIN0207 series Axial Horizontal pin pitch 10.16mm 0.25W = 1/4W length 6.3mm diameter 2.5mm")
 		(property "Reference" "R54"
@@ -68610,7 +68611,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "fff2c668-94df-4a39-82f3-572d7723bb12")
-		(at 145.87 266.36)
+		(at 110.4475 261.57)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C27"
