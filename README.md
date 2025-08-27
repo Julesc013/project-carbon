@@ -4,11 +4,15 @@ Family of computer designs.
 Continued from the [Abacus 1](https://github.com/Julesc013/abacus-1) and [Abacus 2](https://github.com/Julesc013/abacus-2) projects.
 
 ## Schematics
-[dATX_JC100_sch.pdf](https://github.com/Julesc013/project-carbon/blob/main/schematics/dATX_JC100_sch.pdf)
-![dATX_JC100_sch_rev0.png](https://github.com/Julesc013/project-carbon/blob/main/schematics/dATX_JC100_sch_rev0.png)
+
+[Carbon_Z80_150_sch_rev1.pdf](https://github.com/Julesc013/project-carbon/blob/main/schematics/Carbon_Z80/export/Carbon_Z80_150_sch_rev1.pdf)
+
+![Carbon_Z80_150_sch_rev1.png](https://github.com/Julesc013/project-carbon/blob/main/schematics/Carbon_Z80/export/Carbon_Z80_150_sch_rev1.png)
 
 ## Directory Structure
+
 (OUT OF DATE)
+
 ```
 ├── archive             Archived and old versions of files.
 ├── hardware            Hardware design and circuitry.
