@@ -77843,6 +77843,17 @@
 		)
 		(uuid "10f7d92d-364f-4d17-8bbe-36f3c6708162")
 	)
+	(text "9600 Hz"
+		(exclude_from_sim no)
+		(at 297.688 233.68 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "1138401e-21ed-4a8a-89fc-c8ef49a75e34")
+	)
 	(text "FDC 16.0 MHz"
 		(exclude_from_sim no)
 		(at 230.886 337.82 90)
@@ -78068,17 +78079,6 @@
 		)
 		(uuid "57682185-b18a-4b42-925d-2917abd44caa")
 	)
-	(text "LSB"
-		(exclude_from_sim no)
-		(at 306.07 259.08 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "5a8c70c2-b068-40a9-bdc4-47f9d4b5cf26")
-	)
 	(text "D1-5"
 		(exclude_from_sim no)
 		(at 326.644 472.44 0)
@@ -78244,17 +78244,6 @@
 		)
 		(uuid "78fa3678-bffa-4394-8861-7b7e29635179")
 	)
-	(text "MSB"
-		(exclude_from_sim no)
-		(at 306.07 270.51 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "7b021fc7-b5b9-485a-9f9b-7cff0cb59908")
-	)
 	(text "I/O write to:\n0x7X = 0111 100X"
 		(exclude_from_sim no)
 		(at 317.5 511.81 0)
@@ -78307,6 +78296,17 @@
 			)
 		)
 		(uuid "7c844eb2-df22-499d-8483-a098592f3f4b")
+	)
+	(text "19.2 kHz"
+		(exclude_from_sim no)
+		(at 297.688 231.14 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "7d949025-a154-4091-98d6-44eccbbd0fc1")
 	)
 	(text "Device Decode 1:\n0x80-83 = /SIO (4b)\n0x84-87 = /CTC (4b)\n0x88-8B = /PIO (4b)\n0x8C-8F = /DMA (4b)\n0x90-90 = /AUX (1b)\n0x94-97 = /FPU (4b)\n0x98-9F = /FDC (8b)\n\nDevice Decode 2:\n0xA0-AB = /IDE (12b)\n0xAC-AF = /MMU (4b)\n0xB0-BF = /BANK (16b)"
 		(exclude_from_sim no)
@@ -78458,17 +78458,6 @@
 			)
 		)
 		(uuid "9c52858b-77c7-4c0a-8aa5-80e5e12bedb0")
-	)
-	(text "MSB"
-		(exclude_from_sim no)
-		(at 307.34 223.52 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "9df2911d-583d-4552-bca1-d22edbb258c2")
 	)
 	(text "Input:\nD0 - RTC_DIN\nD4 - TAPE_IN\nD5 - TAPE_IN_RAW\n\nOutput:\nD0 - TAPE_SPD_L\nD1 - TAPE_SPD_H\nD2 - TAPE_MOTOR\nD3 - TAPE_OUT\nD4 - RTC_CE\nD5 - RTC_WE\nD6 - RTC_SCLK\nD7 - RTC_DOUT\n\nNote: SEL_RTC = SEL_TAPE"
 		(exclude_from_sim no)
@@ -78637,16 +78626,6 @@
 			(justify left)
 		)
 		(uuid "bb6f38ca-a74a-4557-af6e-61d07e354a7d")
-	)
-	(text "Swap order"
-		(exclude_from_sim no)
-		(at 300.482 253.492 90)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "bb9f5046-c10d-4484-b85e-359b0d879494")
 	)
 	(text "JC-64/100 Expansion Slots"
 		(exclude_from_sim no)
@@ -78863,6 +78842,17 @@
 		)
 		(uuid "e0fd6dea-7d58-48ca-b808-8b4d23a07643")
 	)
+	(text "38.4 kHz"
+		(exclude_from_sim no)
+		(at 297.688 228.6 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "e10bcaa3-c1b8-42ff-9c61-d61decb404c2")
+	)
 	(text "IBM Floppy 34 Pin"
 		(exclude_from_sim no)
 		(at 245.11 406.4 90)
@@ -78923,17 +78913,6 @@
 		)
 		(uuid "e7708a36-40c8-4d25-9276-786cc0771a81")
 	)
-	(text "LSB"
-		(exclude_from_sim no)
-		(at 307.34 234.95 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "e7c51895-d3ba-4fa3-a193-ae81a46a9a5c")
-	)
 	(text "D0"
 		(exclude_from_sim no)
 		(at 173.99 246.38 0)
@@ -78955,6 +78934,17 @@
 			(justify left top)
 		)
 		(uuid "eb8956cc-cdaf-4e75-b000-0953b070d6a2")
+	)
+	(text "4800 Hz"
+		(exclude_from_sim no)
+		(at 297.688 236.22 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "ed564207-6214-4130-975e-728313f6583c")
 	)
 	(text "BUSY when IDE R/W."
 		(exclude_from_sim no)
