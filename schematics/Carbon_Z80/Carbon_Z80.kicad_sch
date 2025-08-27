@@ -6,7 +6,7 @@
 	(paper "A2" portrait)
 	(title_block
 		(title "Carbon Z80 Model 150")
-		(date "2025-08-11")
+		(date "2025-08-28")
 		(rev "1")
 		(company "Jules Carboni")
 		(comment 1 "Zilog Z80 System")
