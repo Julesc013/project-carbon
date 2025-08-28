@@ -78309,9 +78309,9 @@
 		)
 		(uuid "7d949025-a154-4091-98d6-44eccbbd0fc1")
 	)
-	(text "Device Decode 1:\n0x80-83 = /SIO\n0x84-87 = /CTC\n0x88-8B = /PIO\n0x8C-8F = /DMA\n0x90-93 = /RTC/TAPE\n0x94-97 = /FPU\n0x98-9F = /FDC\n\nDevice Decode 2:\n0xA0-AB = /IDE (x2)\n0xAC-AF = /MMU\n0xB0-BF = /BANK (x4)"
+	(text "Device Decode 1:\n0x80-83 = /SIO\n0x84-87 = /CTC\n0x88-8B = /PIO\n0x8C-8F = /DMA\n0x90-93 = /RTC/TAPE\n0x94-97 = /FPU\n0x98-9F = /FDC\n\nDevice Decode 2:\n0xA0-AB = /IDE (x3)\n0xAC-AF = /MMU"
 		(exclude_from_sim no)
-		(at 220.98 476.758 0)
+		(at 220.98 477.52 0)
 		(effects
 			(font
 				(size 1.27 1.27)
