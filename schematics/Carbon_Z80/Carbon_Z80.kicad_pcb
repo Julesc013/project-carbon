@@ -9,7 +9,7 @@
 	(paper "A3")
 	(title_block
 		(title "Carbon Z80 Model 150")
-		(date "2025-08-10")
+		(date "2025-08-29")
 		(rev "1")
 		(company "Jules Carboni")
 		(comment 1 "Decimal ATX Motherboard (dATX)")
@@ -11913,7 +11913,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "18ce5bfa-0f8f-447d-b6fd-e09ee7d67a02")
-		(at 194.31 208.28)
+		(at 147.32 229.87)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP9"
@@ -17456,7 +17456,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "23f790a5-abfa-4ccf-a3c3-51122d184619")
-		(at 251.46 169.66)
+		(at 274.32 170.96)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP39"
@@ -19942,7 +19942,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "2b80217f-6859-42ec-a4e2-ffc6055195e8")
-		(at 246.38 177.02)
+		(at 269.24 178.32)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP34"
@@ -22546,7 +22546,7 @@
 	(footprint "Package_DIP:DIP-20_W7.62mm"
 		(layer "F.Cu")
 		(uuid "35214612-f8d7-48c5-9804-d27885ff1a8c")
-		(at 219.095 185.42)
+		(at 233.06 160.02)
 		(descr "20-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U5"
@@ -29185,7 +29185,7 @@
 	(footprint "Connector_Molex:Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical"
 		(layer "F.Cu")
 		(uuid "4ac0388e-7939-4e90-8d88-30ed4bc55e54")
-		(at 118.99 224.79)
+		(at 177.61 199.39)
 		(descr "Molex Mini-Fit Jr. Power Connectors, old mpn/engineering number: 5566-24A, example for new mpn: 39-28-x24x, 12 Pins per row, Mounting:  (http://www.molex.com/pdm_docs/sd/039281043_sd.pdf), generated with kicad-footprint-generator")
 		(tags "connector Molex Mini-Fit_Jr vertical")
 		(property "Reference" "ATX_PWR_0"
@@ -34587,7 +34587,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "50c45250-fde9-42af-abee-a1e56dc0ca3b")
-		(at 199.39 199.39)
+		(at 152.4 220.98)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U1"
@@ -46617,7 +46617,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "69e8d2d3-0169-4656-ae4d-49c297275f89")
-		(at 251.46 173.21)
+		(at 274.32 174.51)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP40"
@@ -49456,7 +49456,7 @@
 	(footprint "Package_DIP:DIP-14_W7.62mm"
 		(layer "F.Cu")
 		(uuid "73d2bb01-612b-4707-804a-789cf2462edd")
-		(at 243.84 191.77)
+		(at 255.27 163.83)
 		(descr "14-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U30"
@@ -52179,7 +52179,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "80a9fa88-7321-45c9-b636-10bfecf2850f")
-		(at 246.38 159.27)
+		(at 269.24 160.57)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP29"
@@ -56563,7 +56563,7 @@
 	(footprint "Oscillator:Oscillator_DIP-8"
 		(layer "F.Cu")
 		(uuid "931bfdeb-1a12-45a2-9492-ea718987dbcb")
-		(at 184.15 228.6)
+		(at 119.38 232.41)
 		(descr "Oscillator, DIP8,http://cdn-reichelt.de/documents/datenblatt/B400/OSZI.pdf")
 		(tags "oscillator")
 		(property "Reference" "XTAL_OSC_0"
@@ -57617,7 +57617,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "95adb1d6-d4fe-4acd-b3ff-d90e2eab0bbf")
-		(at 191.81 203.2)
+		(at 144.82 224.79)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C2"
@@ -60663,7 +60663,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "a303ca79-5023-449f-8ecd-1900ca3715a9")
-		(at 246.38 169.92)
+		(at 269.24 171.22)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP32"
@@ -63453,7 +63453,7 @@
 	(footprint "Package_DIP:DIP-20_W7.62mm"
 		(layer "F.Cu")
 		(uuid "aaec4135-f376-4b20-b13c-c7e17223726f")
-		(at 229.875 185.42)
+		(at 243.84 160.02)
 		(descr "20-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U6"
@@ -64746,7 +64746,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "ae1cb1a3-5857-4b54-99e9-9570c007c719")
-		(at 251.46 180.31)
+		(at 274.32 181.61)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP42"
@@ -66764,7 +66764,7 @@
 	(footprint "Package_DIP:DIP-16_W7.62mm"
 		(layer "F.Cu")
 		(uuid "b9a2aa39-9035-4d4d-ba43-9f88fe5e53d7")
-		(at 232.41 161.29)
+		(at 219.71 166.37)
 		(descr "16-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U4"
@@ -67318,7 +67318,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "ba15094f-fae7-48df-829e-890f590299d2")
-		(at 251.46 166.11)
+		(at 274.32 167.41)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP38"
@@ -67644,7 +67644,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "bb6c6176-6ec0-4912-b49c-e8789d330521")
-		(at 251.46 176.76)
+		(at 274.32 178.06)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP41"
@@ -69150,7 +69150,7 @@
 	(footprint "Package_DIP:DIP-40_W15.24mm_Socket"
 		(layer "F.Cu")
 		(uuid "bd78d979-0c72-45df-97c2-e0aea4fe9725")
-		(at 171.45 143.51)
+		(at 170.18 142.24)
 		(descr "40-lead though-hole mounted DIP package, row spacing 15.24mm (600 mils), Socket")
 		(tags "THT DIP DIL PDIP 2.54mm 15.24mm 600mil Socket")
 		(property "Reference" "PIO_0"
@@ -73645,7 +73645,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "ca7391e0-ddad-406e-af6b-c3ecd498f46b")
-		(at 246.38 184.12)
+		(at 269.24 185.42)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP36"
@@ -76656,7 +76656,7 @@
 	(footprint "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "d2084310-406b-40fd-b35f-e8f67c400594")
-		(at 184.81 203.2)
+		(at 137.82 224.79)
 		(descr "C, Disc series, Radial, pin pitch=2.50mm, diameter*width=3.0*1.6mm^2, Capacitor, http://www.vishay.com/docs/45233/krseries.pdf")
 		(tags "C Disc series Radial pin pitch 2.50mm diameter 3.0mm width 1.6mm Capacitor")
 		(property "Reference" "C1"
@@ -76973,7 +76973,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "d2954b38-9ae6-4594-810b-4f5b99035e55")
-		(at 194.31 211.83)
+		(at 147.32 233.42)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP10"
@@ -79849,7 +79849,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "d7158010-9235-418f-997c-c2ade572aaa1")
-		(at 246.38 180.57)
+		(at 269.24 181.87)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP35"
@@ -81055,7 +81055,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "de39359c-9ba7-45de-b484-d52e61268bdc")
-		(at 246.38 173.47)
+		(at 269.24 174.77)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP33"
@@ -84478,7 +84478,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "e9956cc2-3086-4925-b8fc-5f5875446bbf")
-		(at 246.38 162.82)
+		(at 269.24 164.12)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP30"
@@ -88938,7 +88938,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "f5fce843-b736-4983-ad6a-e04aef4eb2a9")
-		(at 246.38 166.37)
+		(at 269.24 167.67)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP31"
@@ -89449,7 +89449,7 @@
 	(footprint "Crystal:Resonator-2Pin_W6.0mm_H3.0mm"
 		(layer "F.Cu")
 		(uuid "f8110cf7-ecd7-4db9-9f58-7e72bfbecfee")
-		(at 182.96 210.82)
+		(at 135.97 232.41)
 		(descr "Ceramic Resonator/Filter, length 3.0mm, width 6.0mm, 2 pins")
 		(tags "ceramic")
 		(property "Reference" "XTAL_RES_0"
@@ -89700,7 +89700,7 @@
 	(footprint "TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm"
 		(layer "F.Cu")
 		(uuid "f846a7f6-4483-43b5-b253-56ea49cd97b1")
-		(at 251.46 162.56)
+		(at 274.32 163.86)
 		(descr "THT rectangular pad as test Point, square 1.5mm side length, hole diameter 0.7mm")
 		(tags "test point THT pad rectangle square")
 		(property "Reference" "TP37"
@@ -90037,7 +90037,7 @@
 	(footprint "Package_DIP:DIP-16_W7.62mm"
 		(layer "F.Cu")
 		(uuid "f8ba963a-e689-44be-9979-2468dbc6c21e")
-		(at 219.095 163.55)
+		(at 219.71 140.97)
 		(descr "16-lead though-hole mounted DIP package, row spacing 7.62mm (300 mils)")
 		(tags "THT DIP DIL PDIP 2.54mm 7.62mm 300mil")
 		(property "Reference" "U7"
