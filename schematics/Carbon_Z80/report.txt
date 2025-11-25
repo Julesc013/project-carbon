@@ -1,0 +1,493 @@
+Info: Processing symbol 'ATX_PWR_0:Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical'.
+Info: Processing symbol 'TP107:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'BT1:Battery:BatteryHolder_MYOUNG_BS-07-A1BJ001_CR2032'.
+Info: Processing symbol 'C1:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'C2:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'C3:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'C4:'.
+Info: Processing symbol 'TP108:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C5:'.
+Info: Processing symbol 'TP109:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C6:'.
+Info: Processing symbol 'TP110:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C7:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'C8:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'C9:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'C10:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'C11:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'C12:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'C13:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'C14:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'C15:'.
+Info: Processing symbol 'TP111:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C16:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'C17:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'C18:'.
+Info: Processing symbol 'TP112:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C19:'.
+Info: Processing symbol 'TP113:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C20:'.
+Info: Processing symbol 'TP114:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C21:'.
+Info: Processing symbol 'TP115:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C22:'.
+Info: Processing symbol 'TP116:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C23:'.
+Info: Processing symbol 'TP117:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C24:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'C25:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'C26:'.
+Info: Processing symbol 'TP118:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C27:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'C28:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'C29:'.
+Info: Processing symbol 'TP119:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C30:'.
+Info: Processing symbol 'TP120:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C31:'.
+Info: Processing symbol 'TRS_0:Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal'.
+Info: Processing symbol 'C32:'.
+Info: Processing symbol 'TRS_1:Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal'.
+Info: Processing symbol 'C33:'.
+Info: Processing symbol 'U0:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'C34:'.
+Info: Processing symbol 'U1:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'C35:'.
+Info: Processing symbol 'U2:Package_TO_SOT_THT:TO-92L_Inline'.
+Info: Processing symbol 'C36:'.
+Info: Processing symbol 'U3:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'C37:'.
+Info: Processing symbol 'U4:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'C38:'.
+Info: Processing symbol 'JP7:'.
+Info: Processing symbol 'C39:'.
+Info: Processing symbol 'U5:Package_DIP:DIP-20_W7.62mm'.
+Info: Processing symbol 'C40:'.
+Info: Processing symbol 'U6:Package_DIP:DIP-20_W7.62mm'.
+Info: Processing symbol 'C41:'.
+Info: Processing symbol 'U7:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'C42:'.
+Info: Processing symbol 'U8:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'C43:'.
+Info: Processing symbol 'U9:Package_DIP:DIP-20_W7.62mm'.
+Info: Processing symbol 'C44:'.
+Info: Processing symbol 'U10:Package_DIP:DIP-16_W7.62mm_Socket'.
+Info: Processing symbol 'C45:'.
+Info: Processing symbol 'U11:Package_DIP:DIP-16_W7.62mm_Socket'.
+Info: Processing symbol 'CPU_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'CTC_0:Package_DIP:DIP-28_W15.24mm_Socket'.
+Info: Processing symbol 'D1:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D2:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D3:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D4:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D5:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D6:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D7:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D8:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D9:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D10:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D11:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D12:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D13:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D14:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D15:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D16:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D17:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'D18:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'DMA_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'FDC_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'FDD_0:IDC-Header_2x17_P2.54mm_Vertical'.
+Info: Processing symbol 'U12:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'FPU_0:Package_DIP:DIP-24_W15.24mm_Socket'.
+Info: Processing symbol 'U13:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U14:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'IDE_0:IDC-Header_2x20_P2.54mm_Vertical'.
+Info: Processing symbol 'U15:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'IDE_1:IDC-Header_2x20_P2.54mm_Vertical'.
+Info: Processing symbol 'U16:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'JCBUS_0:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JCBUS_1:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JCBUS_2:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JCBUS_3:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JCBUS_4:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JCBUS_5:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JP1:'.
+Info: Processing symbol 'U17:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'JP2:'.
+Info: Total warnings: 44, errors: 61.
+Info: Processing symbol 'JP3:'.
+Info: Processing symbol 'U18:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'JP4:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP5:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'JP6:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'U19:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U20:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'JP8:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP9:'.
+Info: Processing symbol 'U21:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'JP10:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP11:'.
+Info: Processing symbol 'U22:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'JP12:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP13:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP14:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP15:'.
+Info: Processing symbol 'U23:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'JP16:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'JP17:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'JP18:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'JP19:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'JP20:'.
+Info: Processing symbol 'U24:Package_DIP:DIP-20_W7.62mm'.
+Info: Processing symbol 'JP21:'.
+Info: Processing symbol 'U25:Package_DIP:DIP-8_W7.62mm_Socket'.
+Info: Processing symbol 'JP22:'.
+Info: Processing symbol 'U26:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'JP23:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'JP24:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'JP25:'.
+Info: Processing symbol 'U27:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'JP26:'.
+Info: Processing symbol 'U28:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'JP27:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP28:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP29:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP30:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP31:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP32:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP35:'.
+Info: Processing symbol 'U29:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'JP36:'.
+Info: Processing symbol 'U30:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'JP37:'.
+Info: Processing symbol 'U33:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'JP38:'.
+Info: Processing symbol 'U34:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'JP39:'.
+Info: Processing symbol 'U35:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'JP40:'.
+Info: Processing symbol 'U36:'.
+Info: Processing symbol 'JP41:'.
+Info: Processing symbol 'U37:Package_DIP:DIP-8_W7.62mm'.
+Info: Processing symbol 'JP42:'.
+Info: Processing symbol 'U38:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'JP43:'.
+Info: Processing symbol 'U39:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'PIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'R1:'.
+Info: Processing symbol 'U40:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'R2:'.
+Info: Processing symbol 'U41:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'R3:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R4:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R5:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R6:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R7:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R8:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R9:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R10:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R11:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R12:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R13:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R14:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R15:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R16:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R17:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R18:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R19:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R20:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R21:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R22:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R23:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R24:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R25:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R26:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R27:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R28:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R29:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R30:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R31:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R32:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R33:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R34:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R35:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R36:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R37:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R38:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R39:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R40:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R41:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R42:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R43:'.
+Info: Processing symbol 'U42:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'R44:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R45:'.
+Info: Processing symbol 'U43:Package_DIP:DIP-16_W7.62mm_Socket'.
+Info: Processing symbol 'R46:'.
+Info: Processing symbol 'XTAL_OSC_0:Oscillator:Oscillator_DIP-8'.
+Info: Processing symbol 'R47:'.
+Info: Processing symbol 'XTAL_RES_0:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'R48:'.
+Info: Processing symbol 'XTAL_RES_1:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'R49:'.
+Info: Processing symbol 'XTAL_RES_2:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'R50:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R51:'.
+Info: Processing symbol 'XTAL_RES_3:Crystal:Crystal_Round_D3.0mm_Vertical'.
+Info: Processing symbol 'R52:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R53:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R54:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R60:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R61:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R62:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R63:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R64:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R65:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R66:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R67:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R68:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R69:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R70:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R71:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R72:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'RAM_0:Package_DIP:DIP-32_W15.24mm_Socket'.
+Info: Processing symbol 'RAM_1:Package_DIP:DIP-24_W15.24mm_Socket'.
+Info: Processing symbol 'RAM_2:Package_DIP:DIP-24_W15.24mm_Socket'.
+Info: Processing symbol 'RN1:Resistor_THT:R_Array_SIP9'.
+Info: Processing symbol 'RN2:Resistor_THT:R_Array_SIP9'.
+Info: Processing symbol 'ROM_0:Package_DIP:DIP-28_W15.24mm_Socket'.
+Info: Processing symbol 'ROM_1:Package_DIP:DIP-28_W15.24mm_Socket'.
+Info: Processing symbol 'RV1:'.
+Info: Processing symbol 'RV2:'.
+Info: Processing symbol 'SERIAL_0:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
+Info: Processing symbol 'SERIAL_1:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
+Info: Processing symbol 'SIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'SW1:Button_Switch_THT:SW_PUSH_6mm'.
+Info: Processing symbol 'SW2:Button_Switch_THT:SW_PUSH_6mm'.
+Info: Processing symbol 'TP1:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP2:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP3:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP4:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP5:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP6:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP7:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP8:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP9:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP10:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP11:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP12:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP13:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP14:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP15:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP16:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP17:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP18:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP19:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP20:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP21:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP22:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP23:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP24:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP25:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP26:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP27:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP28:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP29:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP30:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP31:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP32:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP33:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP34:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP35:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP36:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP37:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP38:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP39:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP40:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP41:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP42:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP43:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP44:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP45:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP46:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP47:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP48:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP49:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP50:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP51:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP52:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP53:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP54:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP55:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP56:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP57:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP58:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP59:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP60:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP61:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP62:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP63:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP64:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP65:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP66:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP67:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP68:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP69:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP70:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP71:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP72:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP73:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP74:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP75:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP76:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP77:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP78:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP79:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP80:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP81:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP82:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP83:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP84:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP85:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP86:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP87:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP88:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP89:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP90:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP91:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP92:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP93:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP94:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP95:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP96:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP97:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP98:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP99:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP100:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP101:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP102:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP103:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP104:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP105:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP106:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Change ATX_PWR_0 footprint from 'Connector_Molex:Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical' to 'Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical'.
+Update U26 symbol association from /4abe36e3-36d0-4cbd-b773-73bb9a5c887d to /8a8d8e16-088b-4d35-b6a3-e1cb225c200e.
+Change FDD_0 footprint from 'Connector_IDC:IDC-Header_2x17_P2.54mm_Vertical' to 'IDC-Header_2x17_P2.54mm_Vertical'.
+Change SERIAL_0 footprint from 'Connector_Dsub:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm' to 'DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
+Update U14 symbol association from /cac7cb95-0e3b-46ec-a581-00e480fbb740 to /6f446b64-6c95-485d-a8f2-74b4512fb0db.
+Change SERIAL_1 footprint from 'Connector_Dsub:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm' to 'DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
+Update U23 symbol association from /72cb084a-0173-4482-bd98-1aa13a168b3b to /8298b409-1c1d-4f6c-831b-a38efb54d4cb.
+Update U21 symbol association from /cb9e3d48-d76d-4809-bfc6-3fcf9fb4faf5 to /9a177d8a-94a3-4cfd-ba26-9ae5d0f91d85.
+Change IDE_0 footprint from 'Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical' to 'IDC-Header_2x20_P2.54mm_Vertical'.
+Change IDE_1 footprint from 'Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical' to 'IDC-Header_2x20_P2.54mm_Vertical'.
+
+
+Update U18 symbol association from /49d1e29a-244e-4176-8d93-718387de20fb to /3a300a20-aaad-4e17-8f94-98d2f816b43f.
+Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
+Warning: No net found for component U17 pad 11 (no pin 11 in symbol).
+Warning: No net found for component U17 pad 1 (no pin 1 in symbol).
+Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
+Warning: No net found for component TRS_0 pad RN (no pin RN in symbol).
+Warning: No net found for component TRS_0 pad TN (no pin TN in symbol).
+Warning: No net found for component TRS_1 pad TN (no pin TN in symbol).
+Warning: No net found for component TRS_1 pad RN (no pin RN in symbol).
+Warning: No net found for component U0 pad 9 (no pin 9 in symbol).
+Warning: No net found for component U0 pad 8 (no pin 8 in symbol).
+Warning: No net found for component U0 pad 10 (no pin 10 in symbol).
+Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
+Warning: No net found for component U33 pad 13 (no pin 13 in symbol).
+Warning: No net found for component U33 pad 16 (no pin 16 in symbol).
+Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
+Warning: No net found for component U34 pad 14 (no pin 14 in symbol).
+Warning: No net found for component U34 pad 16 (no pin 16 in symbol).
+Warning: No net found for component U34 pad 15 (no pin 15 in symbol).
+Warning: No net found for component U34 pad 3 (no pin 3 in symbol).
+Warning: No net found for component U34 pad 1 (no pin 1 in symbol).
+Warning: No net found for component U34 pad 2 (no pin 2 in symbol).
+Warning: No net found for component U34 pad 4 (no pin 4 in symbol).
+Warning: No net found for component U17 pad 5 (no pin 5 in symbol).
+Warning: No net found for component U35 pad 11 (no pin 11 in symbol).
+Warning: No net found for component U35 pad 8 (no pin 8 in symbol).
+Warning: No net found for component U35 pad 10 (no pin 10 in symbol).
+Warning: No net found for component U35 pad 13 (no pin 13 in symbol).
+Warning: No net found for component FPU_0 pad 7 (no pin 7 in symbol).
+Warning: No net found for component FPU_0 pad 6 (no pin 6 in symbol).
+Warning: No net found for component U35 pad 9 (no pin 9 in symbol).
+Warning: No net found for component U35 pad 7 (no pin 7 in symbol).
+Warning: No net found for component U35 pad 6 (no pin 6 in symbol).
+Warning: No net found for component U35 pad 12 (no pin 12 in symbol).
+Warning: No net found for component U35 pad 5 (no pin 5 in symbol).
+Warning: No net found for component U17 pad 2 (no pin 2 in symbol).
+Warning: No net found for component U17 pad 6 (no pin 6 in symbol).
+Warning: No net found for component U17 pad 7 (no pin 7 in symbol).
+Warning: No net found for component U17 pad 4 (no pin 4 in symbol).
+Warning: No net found for component U17 pad 3 (no pin 3 in symbol).
+Warning: No net found for component U17 pad 13 (no pin 13 in symbol).
+Warning: No net found for component U17 pad 12 (no pin 12 in symbol).
+Warning: No net found for component XTAL_OSC_0 pad 5 (no pin 5 in symbol).
+Warning: No net found for component XTAL_OSC_0 pad 8 (no pin 8 in symbol).
+Warning: No net found for component U17 pad 14 (no pin 14 in symbol).
+Error: Cannot add C4 (no footprint assigned).
+Error: Cannot add C5 (no footprint assigned).
+Error: Cannot add C6 (no footprint assigned).
+Error: Cannot add C15 (no footprint assigned).
+Error: Cannot add C18 (no footprint assigned).
+Error: Cannot add C19 (no footprint assigned).
+Error: Cannot add C20 (no footprint assigned).
+Error: Cannot add C21 (no footprint assigned).
+Error: Cannot add C22 (no footprint assigned).
+Error: Cannot add C23 (no footprint assigned).
+Error: Cannot add C26 (no footprint assigned).
+Error: Cannot add C29 (no footprint assigned).
+Error: Cannot add C30 (no footprint assigned).
+Error: Cannot add C32 (no footprint assigned).
+Error: Cannot add C33 (no footprint assigned).
+Error: Cannot add C34 (no footprint assigned).
+Error: Cannot add C35 (no footprint assigned).
+Error: Cannot add C36 (no footprint assigned).
+Error: Cannot add C37 (no footprint assigned).
+Error: Cannot add C39 (no footprint assigned).
+Error: Cannot add C40 (no footprint assigned).
+Error: Cannot add C41 (no footprint assigned).
+Error: Cannot add C42 (no footprint assigned).
+Error: Cannot add C43 (no footprint assigned).
+Error: Cannot add C44 (no footprint assigned).
+Error: Cannot add C45 (no footprint assigned).
+Error: Cannot add C31 (no footprint assigned).
+Error: Cannot add JP1 (no footprint assigned).
+Error: Cannot add JP2 (no footprint assigned).
+Error: Cannot add JP3 (no footprint assigned).
+Error: Cannot add C38 (no footprint assigned).
+Error: Cannot add JP7 (no footprint assigned).
+Error: Cannot add JP9 (no footprint assigned).
+Error: Cannot add JP11 (no footprint assigned).
+Error: Cannot add JP15 (no footprint assigned).
+Error: Cannot add JP20 (no footprint assigned).
+Error: Cannot add JP21 (no footprint assigned).
+Error: Cannot add JP22 (no footprint assigned).
+Error: Cannot add JP25 (no footprint assigned).
+Error: Cannot add JP35 (no footprint assigned).
+Error: Cannot add JP36 (no footprint assigned).
+Error: Cannot add JP37 (no footprint assigned).
+Error: Cannot add JP38 (no footprint assigned).
+Error: Cannot add JP39 (no footprint assigned).
+Error: Cannot add R51 (no footprint assigned).
+Error: Cannot add R47 (no footprint assigned).
+Error: Cannot add JP26 (no footprint assigned).
+Error: Cannot add R2 (no footprint assigned).
+Error: Cannot add RV1 (no footprint assigned).
+Error: Cannot add R46 (no footprint assigned).
+Error: Cannot add R48 (no footprint assigned).
+Error: Cannot add R45 (no footprint assigned).
+Error: Cannot add R1 (no footprint assigned).
+Error: Cannot add R49 (no footprint assigned).
+Error: Cannot add RV2 (no footprint assigned).
+Error: Cannot add JP43 (no footprint assigned).
+Error: Cannot add JP42 (no footprint assigned).
+Error: Cannot add R43 (no footprint assigned).
+Error: Cannot add JP41 (no footprint assigned).
+Error: Cannot add JP40 (no footprint assigned).
+Error: Cannot add U36 (no footprint assigned).
+
+
+Info: Total warnings: 44, errors: 61.
