@@ -1,5 +1,0 @@
-; LiNC80_Z80 computer description
-;
-Processor=Z80
-Clock=7372
-Website=http://linc.no/go/linc80
