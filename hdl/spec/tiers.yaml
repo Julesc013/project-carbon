@@ -1,0 +1,145 @@
+spec_version: 1.0
+name: tiers
+description: Compatibility tier ladders for Project Carbon.
+revision: v1.0.0
+created: 2025-12-15
+stable: true
+
+ladders:
+  - id: TIER_LADDER_Z80
+    value: 0
+    name: z80_derived
+    description: Z80-derived compatibility ladder.
+    reset_default: P0
+    upgrade_rule: target_tier > current_tier
+    downgrade_rule: only via RETMD
+    tiers:
+      - id: P0
+        value: 0
+        mnemonic: I8080
+        label: 8080
+        strict: true
+      - id: P1
+        value: 1
+        mnemonic: I8085
+        label: 8085
+        strict: true
+      - id: P2
+        value: 2
+        mnemonic: Z80
+        label: z80
+        strict: true
+      - id: P3
+        value: 3
+        mnemonic: Z180
+        label: z180
+        strict: true
+      - id: P4
+        value: 4
+        mnemonic: Z280
+        label: z280
+        strict: true
+      - id: P5
+        value: 5
+        mnemonic: Z380
+        label: z380
+        strict: true
+      - id: P6
+        value: 6
+        mnemonic: EZ80
+        label: eZ80
+        strict: true
+      - id: P7
+        value: 7
+        mnemonic: TURBO_UNLIMITED
+        label: TURBO_UNLIMITED
+        strict: false
+        turbo: true
+    reserved_tier_values:
+      - range: [8, 255]
+        description: Reserved for future tier extensions.
+
+  - id: TIER_LADDER_X86
+    value: 1
+    name: x86_derived
+    description: x86-derived compatibility ladder.
+    reset_default: P0
+    upgrade_rule: target_tier > current_tier
+    downgrade_rule: only via RETMD
+    tiers:
+      - id: P0
+        value: 0
+        mnemonic: I8086_8087
+        label: 8086/8087
+        strict: true
+      - id: P1
+        value: 1
+        mnemonic: I286_287
+        label: 286/287
+        strict: true
+      - id: P2
+        value: 2
+        mnemonic: I386_387
+        label: 386/387
+        strict: true
+      - id: P3
+        value: 3
+        mnemonic: I486_487
+        label: 486/487
+        strict: true
+      - id: P4
+        value: 4
+        mnemonic: I586_587
+        label: 586/587
+        strict: true
+      - id: P5
+        value: 5
+        mnemonic: I686_687
+        label: 686/687
+        strict: true
+      - id: P6
+        value: 6
+        mnemonic: I786_787
+        label: 786/787
+        strict: true
+      - id: P7
+        value: 7
+        mnemonic: TURBO_UNLIMITED
+        label: TURBO_UNLIMITED
+        strict: false
+        turbo: true
+    reserved_tier_values:
+      - range: [8, 255]
+        description: Reserved for future tier extensions.
+
+  - id: TIER_LADDER_AMD_FPU
+    value: 2
+    name: amd_fpu
+    description: AMD-derived FPU compatibility ladder.
+    reset_default: P0
+    upgrade_rule: target_tier > current_tier
+    downgrade_rule: only via RETMD
+    tiers:
+      - id: P0
+        value: 0
+        mnemonic: AM9511
+        label: am9511
+        strict: true
+      - id: P1
+        value: 1
+        mnemonic: AM9512
+        label: am9512
+        notes: IEEE ports for missing am9511 functions.
+        strict: true
+      - id: P7
+        value: 7
+        mnemonic: TURBO_UNLIMITED
+        label: TURBO_UNLIMITED
+        notes: am9513 full access.
+        strict: false
+        turbo: true
+    reserved_tier_values:
+      - range: [2, 6]
+        description: Reserved for future AMD FPU tiers.
+      - range: [8, 255]
+        description: Reserved for future tier extensions.

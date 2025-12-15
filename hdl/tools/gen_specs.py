@@ -1,0 +1,889 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import re
+import sys
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+
+
+class SpecError(Exception):
+    pass
+
+
+_RE_INT = re.compile(r"^-?\d+$")
+_RE_HEX = re.compile(r"^0x[0-9a-fA-F]+$")
+
+
+def _strip_comment_line(line: str) -> str:
+    stripped = line.lstrip()
+    if stripped.startswith("#"):
+        return ""
+    return line.rstrip("\r\n")
+
+
+def _parse_scalar(text: str) -> Any:
+    s = text.strip()
+    if s == "":
+        return ""
+    if s.startswith("'") and s.endswith("'") and len(s) >= 2:
+        return s[1:-1]
+    if s.startswith('"') and s.endswith('"') and len(s) >= 2:
+        return s[1:-1]
+    lower = s.lower()
+    if lower == "true":
+        return True
+    if lower == "false":
+        return False
+    if s.startswith("[") and s.endswith("]"):
+        inner = s[1:-1].strip()
+        if inner == "":
+            return []
+        parts = [p.strip() for p in inner.split(",")]
+        return [_parse_scalar(p) for p in parts if p != ""]
+    if _RE_HEX.match(s):
+        return int(s, 16)
+    if _RE_INT.match(s):
+        return int(s, 10)
+    return s
+
+
+def _split_key_value(line: str) -> Tuple[str, Optional[str]]:
+    if ":" not in line:
+        raise SpecError(f"Invalid mapping line (missing ':'): {line!r}")
+    key, rest = line.split(":", 1)
+    key = key.strip()
+    if key == "":
+        raise SpecError(f"Invalid mapping line (empty key): {line!r}")
+    rest = rest.strip()
+    if rest == "":
+        return key, None
+    return key, rest
+
+
+def _next_significant_line(lines: Sequence[str], start_index: int) -> Optional[str]:
+    for i in range(start_index, len(lines)):
+        cleaned = _strip_comment_line(lines[i])
+        if cleaned.strip() == "":
+            continue
+        return cleaned
+    return None
+
+
+def parse_yaml_subset(text: str, *, source: str = "<string>") -> Dict[str, Any]:
+    lines = text.splitlines()
+    root: Dict[str, Any] = {}
+    stack: List[Tuple[int, Union[Dict[str, Any], List[Any]]]] = [(0, root)]
+
+    def current_container(expected_indent: int) -> Union[Dict[str, Any], List[Any]]:
+        while stack and stack[-1][0] > expected_indent:
+            stack.pop()
+        if not stack or stack[-1][0] != expected_indent:
+            raise SpecError(f"{source}: bad indentation at indent={expected_indent}")
+        return stack[-1][1]
+
+    for index, raw in enumerate(lines):
+        cleaned = _strip_comment_line(raw)
+        if cleaned.strip() == "":
+            continue
+        indent = len(cleaned) - len(cleaned.lstrip(" "))
+        if indent % 2 != 0:
+            raise SpecError(f"{source}:{index+1}: indentation must be multiple of 2 spaces")
+
+        content = cleaned.strip()
+        container = current_container(indent)
+
+        if content.startswith("- "):
+            if not isinstance(container, list):
+                raise SpecError(f"{source}:{index+1}: list item in non-list context")
+            item_text = content[2:].strip()
+            if item_text == "":
+                next_line = _next_significant_line(lines, index + 1)
+                if next_line is None:
+                    raise SpecError(f"{source}:{index+1}: '-' with no value at end of file")
+                next_indent = len(next_line) - len(next_line.lstrip(" "))
+                if next_indent <= indent:
+                    raise SpecError(f"{source}:{index+1}: '-' with no nested block")
+                if next_line.strip().startswith("-"):
+                    new_list: List[Any] = []
+                    container.append(new_list)
+                    stack.append((indent + 2, new_list))
+                else:
+                    new_dict: Dict[str, Any] = {}
+                    container.append(new_dict)
+                    stack.append((indent + 2, new_dict))
+                continue
+
+            if ":" in item_text:
+                key, rest = _split_key_value(item_text)
+                new_dict2: Dict[str, Any] = {}
+                new_dict2[key] = _parse_scalar(rest) if rest is not None else None
+                container.append(new_dict2)
+                stack.append((indent + 2, new_dict2))
+                continue
+
+            container.append(_parse_scalar(item_text))
+            continue
+
+        if not isinstance(container, dict):
+            raise SpecError(f"{source}:{index+1}: mapping entry in non-dict context")
+        key, rest = _split_key_value(content)
+        if rest is None:
+            next_line = _next_significant_line(lines, index + 1)
+            if next_line is None:
+                raise SpecError(
+                    f"{source}:{index+1}: key {key!r} missing nested block at end of file"
+                )
+            next_indent = len(next_line) - len(next_line.lstrip(" "))
+            if next_indent <= indent:
+                raise SpecError(f"{source}:{index+1}: key {key!r} missing nested block")
+            if next_line.strip().startswith("-"):
+                new_list2: List[Any] = []
+                container[key] = new_list2
+                stack.append((indent + 2, new_list2))
+            else:
+                new_dict3: Dict[str, Any] = {}
+                container[key] = new_dict3
+                stack.append((indent + 2, new_dict3))
+            continue
+
+        container[key] = _parse_scalar(rest)
+
+    return root
+
+
+def _require_keys(obj: Dict[str, Any], keys: Sequence[str], *, where: str) -> None:
+    missing = [k for k in keys if k not in obj]
+    if missing:
+        raise SpecError(f"{where}: missing required keys: {', '.join(missing)}")
+
+
+def _expect_type(value: Any, expected: type, *, where: str) -> None:
+    if not isinstance(value, expected):
+        raise SpecError(f"{where}: expected {expected.__name__}, got {type(value).__name__}")
+
+
+def _fmt_hex(value: int, bits: int) -> str:
+    width = (bits + 3) // 4
+    return f"{value:#0{width+2}x}"
+
+
+def _sv_hex(value: int, bits: int) -> str:
+    width = (bits + 3) // 4
+    return f"{bits}'h{value:0{width}x}"
+
+
+def _c_hex_u32(value: int) -> str:
+    return f"0x{value:08x}u"
+
+
+def _md_escape(text: str) -> str:
+    return str(text).replace("|", "\\|")
+
+
+def _write_text_unix(path: Path, text: str) -> None:
+    path.write_bytes(text.encode("utf-8"))
+
+
+def _load_specs(spec_dir: Path) -> Dict[str, Dict[str, Any]]:
+    required = [
+        "tiers.yaml",
+        "mode_switch.yaml",
+        "discovery.yaml",
+        "csr_map.yaml",
+        "fabric.yaml",
+        "cai.yaml",
+    ]
+    specs: Dict[str, Dict[str, Any]] = {}
+    for filename in required:
+        path = spec_dir / filename
+        if not path.exists():
+            raise SpecError(f"Missing required spec: {path.as_posix()}")
+        data = parse_yaml_subset(path.read_text(encoding="utf-8"), source=path.as_posix())
+        _require_keys(
+            data,
+            ["spec_version", "name", "description", "revision", "created", "stable"],
+            where=path.as_posix(),
+        )
+        if str(data["spec_version"]) != "1.0":
+            raise SpecError(f"{path.as_posix()}: spec_version must be 1.0")
+        if data["stable"] is not True:
+            raise SpecError(f"{path.as_posix()}: stable must be true")
+        specs[filename] = data
+    return specs
+
+
+def _validate_tiers(spec: Dict[str, Any]) -> None:
+    where = "tiers.yaml"
+    ladders = spec.get("ladders")
+    _expect_type(ladders, list, where=f"{where}:ladders")
+    if len(ladders) != 3:
+        raise SpecError(f"{where}: expected exactly 3 ladders, got {len(ladders)}")
+    ladder_values = set()
+    for ladder in ladders:
+        _expect_type(ladder, dict, where=f"{where}:ladder")
+        _require_keys(
+            ladder,
+            ["id", "value", "name", "tiers", "reset_default", "upgrade_rule", "downgrade_rule"],
+            where=f"{where}:{ladder.get('id','<ladder>')}",
+        )
+        value = ladder["value"]
+        if not isinstance(value, int) or value < 0 or value > 255:
+            raise SpecError(f"{where}:{ladder['id']}: ladder value must be 0..255")
+        if value in ladder_values:
+            raise SpecError(f"{where}:{ladder['id']}: duplicate ladder value {value}")
+        ladder_values.add(value)
+
+        tiers = ladder["tiers"]
+        _expect_type(tiers, list, where=f"{where}:{ladder['id']}:tiers")
+        seen_tier_values = set()
+        seen_ids = set()
+        for t in tiers:
+            _expect_type(t, dict, where=f"{where}:{ladder['id']}:tier")
+            _require_keys(t, ["id", "value", "mnemonic", "label", "strict"], where=f"{where}:{ladder['id']}:tier")
+            if t["id"] in seen_ids:
+                raise SpecError(f"{where}:{ladder['id']}: duplicate tier id {t['id']}")
+            seen_ids.add(t["id"])
+            tv = t["value"]
+            if not isinstance(tv, int) or tv < 0 or tv > 255:
+                raise SpecError(f"{where}:{ladder['id']}:{t['id']}: tier value must be 0..255")
+            if tv in seen_tier_values:
+                raise SpecError(f"{where}:{ladder['id']}:{t['id']}: duplicate tier value {tv}")
+            seen_tier_values.add(tv)
+
+        if ladder["reset_default"] != "P0":
+            raise SpecError(f"{where}:{ladder['id']}: reset_default must be P0")
+        if "P7" not in seen_ids:
+            raise SpecError(f"{where}:{ladder['id']}: must define P7 (TURBO_UNLIMITED)")
+        if "P0" not in seen_ids:
+            raise SpecError(f"{where}:{ladder['id']}: must define P0")
+
+
+def _validate_mode_switch(spec: Dict[str, Any]) -> None:
+    where = "mode_switch.yaml"
+    instructions = spec.get("instructions")
+    _expect_type(instructions, list, where=f"{where}:instructions")
+    names = {i.get("name") for i in instructions if isinstance(i, dict)}
+    if "MODEUP" not in names or "RETMD" not in names:
+        raise SpecError(f"{where}: instructions must include MODEUP and RETMD")
+
+    modeflags = spec.get("modeflags")
+    _expect_type(modeflags, dict, where=f"{where}:modeflags")
+    _require_keys(modeflags, ["width_bits", "bits", "reserved_bits"], where=f"{where}:modeflags")
+    if not isinstance(modeflags["width_bits"], int) or modeflags["width_bits"] <= 0:
+        raise SpecError(f"{where}:modeflags.width_bits must be a positive integer")
+    bits = modeflags["bits"]
+    _expect_type(bits, list, where=f"{where}:modeflags.bits")
+    used = set()
+    for b in bits:
+        _expect_type(b, dict, where=f"{where}:modeflags.bits entry")
+        _require_keys(b, ["name", "bit", "reset", "description"], where=f"{where}:modeflags.bits")
+        bit = b["bit"]
+        if not isinstance(bit, int) or bit < 0 or bit >= modeflags["width_bits"]:
+            raise SpecError(f"{where}:modeflags.bits:{b['name']}: bit out of range")
+        if bit in used:
+            raise SpecError(f"{where}:modeflags.bits:{b['name']}: duplicate bit {bit}")
+        used.add(bit)
+
+    modestack = spec.get("modestack")
+    _expect_type(modestack, dict, where=f"{where}:modestack")
+    _require_keys(modestack, ["min_depth", "recommended_depth"], where=f"{where}:modestack")
+    if modestack["min_depth"] != 4:
+        raise SpecError(f"{where}:modestack.min_depth must be 4")
+    if modestack["recommended_depth"] != 16:
+        raise SpecError(f"{where}:modestack.recommended_depth must be 16")
+
+
+def _validate_discovery(spec: Dict[str, Any]) -> None:
+    where = "discovery.yaml"
+    leafs = spec.get("leafs")
+    _expect_type(leafs, list, where=f"{where}:leafs")
+    leaf_ids = set()
+    for leaf in leafs:
+        _expect_type(leaf, dict, where=f"{where}:leaf")
+        _require_keys(leaf, ["id", "name", "description"], where=f"{where}:leaf")
+        lid = leaf["id"]
+        if not isinstance(lid, int) or lid < 0 or lid > 0xFFFFFFFF:
+            raise SpecError(f"{where}:{leaf['name']}: leaf id must be u32")
+        if lid in leaf_ids:
+            raise SpecError(f"{where}:{leaf['name']}: duplicate leaf id {_fmt_hex(lid, 32)}")
+        leaf_ids.add(lid)
+
+    feature_sets = spec.get("feature_sets")
+    _expect_type(feature_sets, list, where=f"{where}:feature_sets")
+    for fs in feature_sets:
+        _expect_type(fs, dict, where=f"{where}:feature_set")
+        _require_keys(fs, ["id", "leaf", "bits"], where=f"{where}:feature_set")
+        bits = fs["bits"]
+        _expect_type(bits, list, where=f"{where}:{fs['id']}:bits")
+        seen = set()
+        for bit in bits:
+            _expect_type(bit, dict, where=f"{where}:{fs['id']}:bit")
+            _require_keys(bit, ["name", "bit", "description"], where=f"{where}:{fs['id']}:bit")
+            b = bit["bit"]
+            if not isinstance(b, int) or b < 0 or b > 127:
+                raise SpecError(f"{where}:{bit['name']}: feature bit must be 0..127")
+            if b in seen:
+                raise SpecError(f"{where}:{bit['name']}: duplicate feature bit {b}")
+            seen.add(b)
+
+
+def _validate_csr_map(spec: Dict[str, Any]) -> None:
+    where = "csr_map.yaml"
+    csrs = spec.get("csrs")
+    _expect_type(csrs, list, where=f"{where}:csrs")
+    required = {
+        "CSR_ID",
+        "CSR_TIER",
+        "CSR_MODEFLAGS",
+        "CSR_TIME",
+        "CSR_CAUSE",
+        "CSR_EPC",
+        "CSR_IE",
+        "CSR_IP",
+        "CSR_TRACE_CTL",
+    }
+    present = set()
+    addresses = set()
+    for csr in csrs:
+        _expect_type(csr, dict, where=f"{where}:csr")
+        _require_keys(csr, ["name", "address", "access", "privilege_min"], where=f"{where}:csr")
+        name = csr["name"]
+        present.add(name)
+        addr = csr["address"]
+        if not isinstance(addr, int) or addr < 0 or addr > 0xFFFFFFFF:
+            raise SpecError(f"{where}:{name}: address must be u32")
+        if addr in addresses:
+            raise SpecError(f"{where}:{name}: duplicate address {_fmt_hex(addr, 32)}")
+        addresses.add(addr)
+    missing = sorted(required - present)
+    if missing:
+        raise SpecError(f"{where}: missing required CSRs: {', '.join(missing)}")
+
+
+def _validate_fabric(spec: Dict[str, Any]) -> None:
+    where = "fabric.yaml"
+    tx = spec.get("transaction_types")
+    _expect_type(tx, list, where=f"{where}:transaction_types")
+    attrs = spec.get("fabric_attributes")
+    _expect_type(attrs, dict, where=f"{where}:fabric_attributes")
+    _require_keys(attrs, ["width_bits", "fields"], where=f"{where}:fabric_attributes")
+    _expect_type(attrs["fields"], list, where=f"{where}:fabric_attributes.fields")
+    resp = spec.get("response_codes")
+    _expect_type(resp, list, where=f"{where}:response_codes")
+
+
+def _validate_cai(spec: Dict[str, Any]) -> None:
+    where = "cai.yaml"
+    for k in ["submission_descriptor", "operand_descriptor", "completion_record", "completion_status_codes"]:
+        if k not in spec:
+            raise SpecError(f"{where}: missing {k}")
+    for desc_key in ["submission_descriptor", "operand_descriptor", "completion_record"]:
+        desc = spec[desc_key]
+        _expect_type(desc, dict, where=f"{where}:{desc_key}")
+        _require_keys(desc, ["name", "version", "size_bytes", "fields"], where=f"{where}:{desc_key}")
+        _expect_type(desc["fields"], list, where=f"{where}:{desc_key}.fields")
+    _expect_type(spec["completion_status_codes"], list, where=f"{where}:completion_status_codes")
+
+
+def _validate_specs(specs: Dict[str, Dict[str, Any]]) -> None:
+    _validate_tiers(specs["tiers.yaml"])
+    _validate_mode_switch(specs["mode_switch.yaml"])
+    _validate_discovery(specs["discovery.yaml"])
+    _validate_csr_map(specs["csr_map.yaml"])
+    _validate_fabric(specs["fabric.yaml"])
+    _validate_cai(specs["cai.yaml"])
+
+
+def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
+    tiers = specs["tiers.yaml"]
+    mode = specs["mode_switch.yaml"]
+    disc = specs["discovery.yaml"]
+    csr = specs["csr_map.yaml"]
+    fabric = specs["fabric.yaml"]
+    cai = specs["cai.yaml"]
+
+    out: List[str] = []
+    out.append("// AUTO-GENERATED FILE - DO NOT EDIT.")
+    out.append("// Generated by hdl/tools/gen_specs.py from hdl/spec/*.yaml.")
+    out.append("")
+    out.append("package carbon_arch_pkg;")
+    out.append("")
+
+    out.append("  // Tier ladder identifiers")
+    for ladder in tiers["ladders"]:
+        out.append(f"  localparam int unsigned CARBON_{ladder['id']} = {ladder['value']};")
+    out.append("")
+
+    out.append("  // Tier enums")
+    for ladder in tiers["ladders"]:
+        ladder_name = str(ladder["name"]).upper()
+        enum_name = f"carbon_{ladder['name']}_tier_e"
+        out.append("  typedef enum logic [7:0] {")
+        entries: List[str] = []
+        for tier in ladder["tiers"]:
+            entries.append(
+                f"    CARBON_{ladder_name}_TIER_{tier['id']}_{tier['mnemonic']} = 8'd{tier['value']}"
+            )
+        out.append(",\n".join(entries))
+        out.append(f"  }} {enum_name};")
+        out.append("")
+
+    out.append("  // MODEFLAGS")
+    modeflags = mode["modeflags"]
+    mf_width = int(modeflags["width_bits"])
+    out.append(f"  localparam int unsigned CARBON_MODEFLAGS_WIDTH_BITS = {mf_width};")
+    for bit in modeflags["bits"]:
+        bit_name = bit["name"]
+        b = int(bit["bit"])
+        mask = 1 << b
+        out.append(f"  localparam int unsigned CARBON_{bit_name}_BIT = {b};")
+        out.append(
+            f"  localparam logic [{mf_width-1}:0] CARBON_{bit_name}_MASK = {_sv_hex(mask, mf_width)};"
+        )
+    out.append("")
+    out.append("  // MODESTACK depth requirements")
+    out.append(f"  localparam int unsigned CARBON_MODESTACK_MIN_DEPTH = {mode['modestack']['min_depth']};")
+    out.append(
+        f"  localparam int unsigned CARBON_MODESTACK_RECOMMENDED_DEPTH = {mode['modestack']['recommended_depth']};"
+    )
+    out.append("")
+
+    out.append("  // CPUID leaf identifiers")
+    for leaf in disc["leafs"]:
+        out.append(f"  localparam int unsigned CARBON_{leaf['name']} = {_sv_hex(leaf['id'], 32)};")
+    out.append("")
+
+    out.append("  // Feature bit identifiers")
+    for fs in disc["feature_sets"]:
+        out.append(f"  // {fs['id']}")
+        for feat in fs["bits"]:
+            name = feat["name"]
+            bit = int(feat["bit"])
+            word = bit // 32
+            bit_in_word = bit % 32
+            out.append(f"  localparam int unsigned CARBON_{name}_BIT = {bit};")
+            out.append(f"  localparam int unsigned CARBON_{name}_WORD = {word};")
+            out.append(f"  localparam logic [31:0] CARBON_{name}_MASK = (32'h1 << {bit_in_word});")
+        out.append("")
+
+    out.append("  // CSR addresses")
+    for reg in csr["csrs"]:
+        out.append(f"  localparam int unsigned CARBON_{reg['name']} = {_sv_hex(reg['address'], 32)};")
+    out.append("")
+
+    out.append("  // Fabric transaction types")
+    for t in fabric["transaction_types"]:
+        out.append(f"  localparam int unsigned CARBON_{t['name']} = {t['value']};")
+    out.append("")
+
+    out.append("  // Fabric attribute fields")
+    attrs = fabric["fabric_attributes"]
+    attr_width = int(attrs["width_bits"])
+    out.append(f"  localparam int unsigned CARBON_FABRIC_ATTR_WIDTH_BITS = {attr_width};")
+    for field in attrs["fields"]:
+        fname = field["name"]
+        lsb = int(field["lsb"])
+        width = int(field["width"])
+        mask = ((1 << width) - 1) << lsb
+        out.append(f"  localparam int unsigned CARBON_{fname}_LSB = {lsb};")
+        out.append(f"  localparam int unsigned CARBON_{fname}_WIDTH = {width};")
+        out.append(
+            f"  localparam logic [{attr_width-1}:0] CARBON_{fname}_MASK = {_sv_hex(mask, attr_width)};"
+        )
+    out.append("")
+
+    out.append("  // Fabric response codes")
+    for rc in fabric["response_codes"]:
+        out.append(f"  localparam int unsigned CARBON_{rc['name']} = {rc['value']};")
+    out.append("")
+
+    out.append("  // CAI descriptor formats")
+    submit = cai["submission_descriptor"]
+    out.append(f"  localparam int unsigned CARBON_{submit['name']}_VERSION = {submit['version']};")
+    out.append(f"  localparam int unsigned CARBON_{submit['name']}_SIZE_BYTES = {submit['size_bytes']};")
+    for f in submit["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{submit['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
+    opdesc = cai["operand_descriptor"]
+    out.append(f"  localparam int unsigned CARBON_{opdesc['name']}_VERSION = {opdesc['version']};")
+    out.append(f"  localparam int unsigned CARBON_{opdesc['name']}_SIZE_BYTES = {opdesc['size_bytes']};")
+    for f in opdesc["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{opdesc['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
+    comp = cai["completion_record"]
+    out.append(f"  localparam int unsigned CARBON_{comp['name']}_VERSION = {comp['version']};")
+    out.append(f"  localparam int unsigned CARBON_{comp['name']}_SIZE_BYTES = {comp['size_bytes']};")
+    for f in comp["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{comp['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
+    out.append("  // CAI completion status codes")
+    for s in cai["completion_status_codes"]:
+        out.append(f"  localparam int unsigned CARBON_{s['name']} = {s['value']};")
+    out.append("")
+
+    out.append("endpackage : carbon_arch_pkg")
+    return "\n".join(out)
+
+
+def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
+    tiers = specs["tiers.yaml"]
+    mode = specs["mode_switch.yaml"]
+    disc = specs["discovery.yaml"]
+    csr = specs["csr_map.yaml"]
+    fabric = specs["fabric.yaml"]
+    cai = specs["cai.yaml"]
+
+    out: List[str] = []
+    out.append("/* AUTO-GENERATED FILE - DO NOT EDIT. */")
+    out.append("/* Generated by hdl/tools/gen_specs.py from hdl/spec/*.yaml. */")
+    out.append("#pragma once")
+    out.append("")
+    out.append("#include <stdint.h>")
+    out.append("")
+
+    out.append("/* Tier ladder identifiers */")
+    for ladder in tiers["ladders"]:
+        out.append(f"#define CARBON_{ladder['id']} ({ladder['value']}u)")
+    out.append("")
+
+    out.append("/* Tier values */")
+    for ladder in tiers["ladders"]:
+        lname = str(ladder["name"]).upper()
+        for tier in ladder["tiers"]:
+            out.append(f"#define CARBON_{lname}_TIER_{tier['id']}_{tier['mnemonic']} ({tier['value']}u)")
+    out.append("")
+
+    out.append("/* MODEFLAGS */")
+    modeflags = mode["modeflags"]
+    mf_width = int(modeflags["width_bits"])
+    out.append(f"#define CARBON_MODEFLAGS_WIDTH_BITS ({mf_width}u)")
+    for bit in modeflags["bits"]:
+        bit_name = bit["name"]
+        b = int(bit["bit"])
+        out.append(f"#define CARBON_{bit_name}_BIT ({b}u)")
+        out.append(f"#define CARBON_{bit_name}_MASK (UINT32_C(1) << {b})")
+    out.append(f"#define CARBON_MODESTACK_MIN_DEPTH ({mode['modestack']['min_depth']}u)")
+    out.append(f"#define CARBON_MODESTACK_RECOMMENDED_DEPTH ({mode['modestack']['recommended_depth']}u)")
+    out.append("")
+
+    out.append("/* CPUID leaf identifiers */")
+    for leaf in disc["leafs"]:
+        out.append(f"#define CARBON_{leaf['name']} ({_c_hex_u32(int(leaf['id']))})")
+    out.append("")
+
+    out.append("/* Feature bit identifiers */")
+    for fs in disc["feature_sets"]:
+        out.append(f"/* {fs['id']} */")
+        for feat in fs["bits"]:
+            name = feat["name"]
+            bit = int(feat["bit"])
+            word = bit // 32
+            bit_in_word = bit % 32
+            out.append(f"#define CARBON_{name}_BIT ({bit}u)")
+            out.append(f"#define CARBON_{name}_WORD ({word}u)")
+            out.append(f"#define CARBON_{name}_MASK (UINT32_C(1) << {bit_in_word})")
+        out.append("")
+
+    out.append("/* CSR addresses */")
+    for reg in csr["csrs"]:
+        out.append(f"#define CARBON_{reg['name']} ({_c_hex_u32(int(reg['address']))})")
+    out.append("")
+
+    out.append("/* Fabric transaction types */")
+    for t in fabric["transaction_types"]:
+        out.append(f"#define CARBON_{t['name']} ({t['value']}u)")
+    out.append("")
+
+    out.append("/* Fabric attribute fields */")
+    attrs = fabric["fabric_attributes"]
+    attr_width = int(attrs["width_bits"])
+    out.append(f"#define CARBON_FABRIC_ATTR_WIDTH_BITS ({attr_width}u)")
+    for field in attrs["fields"]:
+        fname = field["name"]
+        lsb = int(field["lsb"])
+        width = int(field["width"])
+        mask = ((1 << width) - 1) << lsb
+        out.append(f"#define CARBON_{fname}_LSB ({lsb}u)")
+        out.append(f"#define CARBON_{fname}_WIDTH ({width}u)")
+        out.append(f"#define CARBON_{fname}_MASK ({_c_hex_u32(mask)})")
+    out.append("")
+
+    out.append("/* Fabric response codes */")
+    for rc in fabric["response_codes"]:
+        out.append(f"#define CARBON_{rc['name']} ({rc['value']}u)")
+    out.append("")
+
+    out.append("/* CAI descriptor formats */")
+    submit = cai["submission_descriptor"]
+    out.append(f"#define CARBON_{submit['name']}_VERSION ({submit['version']}u)")
+    out.append(f"#define CARBON_{submit['name']}_SIZE_BYTES ({submit['size_bytes']}u)")
+    for f in submit["fields"]:
+        out.append(f"#define CARBON_{submit['name']}_OFF_{str(f['name']).upper()} ({f['offset']}u)")
+    out.append("")
+
+    opdesc = cai["operand_descriptor"]
+    out.append(f"#define CARBON_{opdesc['name']}_VERSION ({opdesc['version']}u)")
+    out.append(f"#define CARBON_{opdesc['name']}_SIZE_BYTES ({opdesc['size_bytes']}u)")
+    for f in opdesc["fields"]:
+        out.append(f"#define CARBON_{opdesc['name']}_OFF_{str(f['name']).upper()} ({f['offset']}u)")
+    out.append("")
+
+    comp = cai["completion_record"]
+    out.append(f"#define CARBON_{comp['name']}_VERSION ({comp['version']}u)")
+    out.append(f"#define CARBON_{comp['name']}_SIZE_BYTES ({comp['size_bytes']}u)")
+    for f in comp["fields"]:
+        out.append(f"#define CARBON_{comp['name']}_OFF_{str(f['name']).upper()} ({f['offset']}u)")
+    out.append("")
+
+    out.append("/* CAI completion status codes */")
+    for s in cai["completion_status_codes"]:
+        out.append(f"#define CARBON_{s['name']} ({s['value']}u)")
+    out.append("")
+
+    return "\n".join(out)
+
+
+def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
+    tiers = specs["tiers.yaml"]
+    mode = specs["mode_switch.yaml"]
+    disc = specs["discovery.yaml"]
+    csr = specs["csr_map.yaml"]
+    fabric = specs["fabric.yaml"]
+    cai = specs["cai.yaml"]
+
+    out: List[str] = []
+    out.append("# Project Carbon — Frozen Architecture Contracts (v1.0)")
+    out.append("")
+    out.append("_AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._")
+    out.append("")
+
+    out.append("## A) Compatibility Tier Ladders")
+    out.append("")
+    for ladder in tiers["ladders"]:
+        out.append(f"### {ladder['id']} ({_md_escape(ladder['description'])})")
+        out.append("")
+        out.append(f"- Reset default: `{ladder['reset_default']}`")
+        out.append(f"- Upgrade rule: `{ladder['upgrade_rule']}`")
+        out.append(f"- Downgrade rule: `{ladder['downgrade_rule']}`")
+        out.append("")
+        out.append("| Tier | Value | Label | Strict | Turbo |")
+        out.append("|---:|---:|---|:---:|:---:|")
+        for t in ladder["tiers"]:
+            turbo = "true" if bool(t.get("turbo", False)) else ""
+            strict = "true" if bool(t.get("strict", False)) else ""
+            out.append(
+                f"| `{t['id']}` | `{t['value']}` | `{_md_escape(t['label'])}` | {strict} | {turbo} |"
+            )
+        out.append("")
+
+    out.append("## B) Mode Switching Contract")
+    out.append("")
+    out.append("### Instructions")
+    out.append("")
+    out.append("| Instruction | Signature | Description |")
+    out.append("|---|---|---|")
+    for inst in mode["instructions"]:
+        out.append(f"| `{inst['name']}` | `{inst['signature']}` | {_md_escape(inst['description'])} |")
+    out.append("")
+
+    out.append("### MODEFLAGS")
+    out.append("")
+    out.append(f"- Width: `{mode['modeflags']['width_bits']}` bits")
+    out.append("")
+    out.append("| Name | Bit | Reset | Description |")
+    out.append("|---|---:|---:|---|")
+    for b in mode["modeflags"]["bits"]:
+        out.append(f"| `{b['name']}` | `{b['bit']}` | `{b['reset']}` | {_md_escape(b['description'])} |")
+    out.append("")
+    out.append("### MODESTACK")
+    out.append("")
+    out.append(f"- Minimum depth: `{mode['modestack']['min_depth']}`")
+    out.append(f"- Recommended depth: `{mode['modestack']['recommended_depth']}`")
+    out.append("")
+
+    out.append("## C) Discovery / CPUID / CAPS")
+    out.append("")
+    out.append(f"- Endianness: `{disc['packing']['endianness']}`")
+    out.append(f"- Leaf return words: `{disc['packing']['leaf_return_words']}` x `{disc['packing']['word_bits']}`-bit")
+    out.append(f"- Unknown leaf behavior: `{disc['leaf_rules']['unknown_leaf_behavior']}`")
+    out.append("")
+    out.append("### CPUID Leaf IDs")
+    out.append("")
+    out.append("| Leaf | ID | Description |")
+    out.append("|---|---:|---|")
+    for leaf in disc["leafs"]:
+        out.append(f"| `{leaf['name']}` | `{_fmt_hex(int(leaf['id']), 32)}` | {_md_escape(leaf['description'])} |")
+    out.append("")
+    out.append("### Feature Bits")
+    out.append("")
+    out.append("| Feature | Bit | Description |")
+    out.append("|---|---:|---|")
+    for fs in disc["feature_sets"]:
+        for feat in fs["bits"]:
+            out.append(f"| `{feat['name']}` | `{feat['bit']}` | {_md_escape(feat['description'])} |")
+    out.append("")
+    out.append("### Example CPUID Leaf Table (IDs)")
+    out.append("")
+    out.append("| Leaf ID | Name |")
+    out.append("|---:|---|")
+    for ex in disc.get("examples", []):
+        if isinstance(ex, dict) and ex.get("name") == "example_cpuid_leaf_table":
+            for row in ex.get("rows", []):
+                out.append(f"| `{_fmt_hex(int(row['leaf']), 32)}` | `{row['name']}` |")
+    out.append("")
+
+    out.append("## D) CSR Namespace + Register Model")
+    out.append("")
+    out.append(f"- Unknown CSR behavior: `{csr['access_control']['unknown_csr_behavior']}`")
+    out.append("")
+    out.append("| CSR | Address | Access | Min Priv | Description |")
+    out.append("|---|---:|---|---|---|")
+    for r in csr["csrs"]:
+        out.append(
+            f"| `{r['name']}` | `{_fmt_hex(int(r['address']), 32)}` | `{r['access']}` | `{r['privilege_min']}` | {_md_escape(r['description'])} |"
+        )
+    out.append("")
+
+    out.append("## E) Fabric Transaction Contract")
+    out.append("")
+    out.append("### Transaction Types")
+    out.append("")
+    out.append("| Name | Value | Description |")
+    out.append("|---|---:|---|")
+    for t in fabric["transaction_types"]:
+        out.append(f"| `{t['name']}` | `{t['value']}` | {_md_escape(t['description'])} |")
+    out.append("")
+    out.append("### Attributes")
+    out.append("")
+    out.append("| Field | LSB | Width | Description |")
+    out.append("|---|---:|---:|---|")
+    for f in fabric["fabric_attributes"]["fields"]:
+        out.append(f"| `{f['name']}` | `{f['lsb']}` | `{f['width']}` | {_md_escape(f['description'])} |")
+    out.append("")
+    out.append("### Response Codes")
+    out.append("")
+    out.append("| Name | Value | Description |")
+    out.append("|---|---:|---|")
+    for r in fabric["response_codes"]:
+        out.append(f"| `{r['name']}` | `{r['value']}` | {_md_escape(r['description'])} |")
+    out.append("")
+
+    out.append("## F) Carbon Accelerator Interface (CAI)")
+    out.append("")
+    out.append("### Submission Descriptor (V1)")
+    out.append("")
+    submit = cai["submission_descriptor"]
+    out.append(f"- Format: `{submit['name']}`, version `{submit['version']}`, size `{submit['size_bytes']}` bytes")
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in submit["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Operand Descriptor (V1)")
+    out.append("")
+    opdesc = cai["operand_descriptor"]
+    out.append(f"- Format: `{opdesc['name']}`, version `{opdesc['version']}`, size `{opdesc['size_bytes']}` bytes")
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in opdesc["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Completion Record (V1)")
+    out.append("")
+    comp = cai["completion_record"]
+    out.append(f"- Format: `{comp['name']}`, version `{comp['version']}`, size `{comp['size_bytes']}` bytes")
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in comp["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Completion Status Codes")
+    out.append("")
+    out.append("| Name | Value | Description |")
+    out.append("|---|---:|---|")
+    for s in cai["completion_status_codes"]:
+        out.append(f"| `{s['name']}` | `{s['value']}` | {_md_escape(s['description'])} |")
+    out.append("")
+
+    out.append("### Example Submission Descriptor")
+    out.append("")
+    for ex in cai.get("examples", []):
+        if isinstance(ex, dict) and ex.get("name") == "example_descriptor":
+            desc = ex.get("submit_desc", {})
+            out.append("```text")
+            for k in [
+                "desc_version",
+                "desc_size_dw",
+                "opcode",
+                "flags",
+                "context_id",
+                "operand_count",
+                "tag",
+                "operands_ptr",
+                "result_ptr",
+                "result_len",
+                "result_stride",
+            ]:
+                if k in desc:
+                    out.append(f"{k}: {desc[k]}")
+            out.append("```")
+            out.append("")
+
+    return "\n".join(out)
+
+
+def main(argv: Sequence[str]) -> int:
+    parser = argparse.ArgumentParser(description="Generate Project Carbon architecture outputs.")
+    parser.add_argument(
+        "--repo-root",
+        default=None,
+        help="Path to repository root (defaults to auto-detect from script location).",
+    )
+    args = parser.parse_args(argv)
+
+    repo_root = Path(args.repo_root) if args.repo_root else Path(__file__).resolve().parents[2]
+    spec_dir = repo_root / "hdl" / "spec"
+    out_gen = repo_root / "hdl" / "gen"
+    out_docs = repo_root / "docs"
+
+    try:
+        specs = _load_specs(spec_dir)
+        _validate_specs(specs)
+
+        out_gen.mkdir(parents=True, exist_ok=True)
+        out_docs.mkdir(parents=True, exist_ok=True)
+
+        _write_text_unix(out_gen / "carbon_arch_pkg.sv", _emit_sv(specs) + "\n")
+        _write_text_unix(out_gen / "carbon_arch.h", _emit_c_header(specs) + "\n")
+        _write_text_unix(out_docs / "ARCH_CONTRACTS.md", _emit_arch_contracts_md(specs) + "\n")
+        return 0
+    except SpecError as e:
+        print(f"gen_specs.py: ERROR: {e}", file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

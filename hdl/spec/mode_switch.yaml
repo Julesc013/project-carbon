@@ -1,0 +1,68 @@
+spec_version: 1.0
+name: mode_switch
+description: Canonical tier mode switching contract (MODEUP / RETMD).
+revision: v1.0.0
+created: 2025-12-15
+stable: true
+
+contract:
+  strict_tiers:
+    description: Legacy tiers operate in strict mode with no turbo extensions.
+    tiers: [P0, P1, P2, P3, P4, P5, P6]
+  turbo_tiers:
+    description: P7 enables turbo behavior and forward-compatible extensions.
+    tiers: [P7]
+
+instructions:
+  - name: MODEUP
+    signature: MODEUP(target_tier, entry_vector)
+    description: Upgrade-only transition into a higher compatibility tier.
+    rules:
+      - Only upgrades are allowed; target_tier must be strictly greater than current_tier.
+      - A mode frame is pushed containing previous_tier, previous_modeflags, and return_pc.
+      - Prefetch/decode state is flushed as part of the transition.
+      - Control transfers to entry_vector after the atomic transition completes.
+      - Interrupts are architecturally masked for the duration of the atomic transition.
+    traps:
+      - invalid_target_tier
+      - not_permitted_privilege
+      - modestack_overflow
+      - invalid_entry_vector
+  - name: RETMD
+    signature: RETMD()
+    description: Return from mode (the only architectural tier downgrade mechanism).
+    rules:
+      - A mode frame is popped and previous_tier, previous_modeflags, and return_pc are restored.
+      - Prefetch/decode state is flushed as part of the transition.
+    traps:
+      - modestack_underflow
+      - modeframe_corrupt
+
+modeflags:
+  width_bits: 8
+  description: Small mode control bitfield; undefined bits are reserved for future use.
+  bits:
+    - name: MODEFLAG_STRICT
+      bit: 0
+      reset: 1
+      description: When 1, turbo/extension behaviors are disabled regardless of tier.
+    - name: MODEFLAG_INTMASK
+      bit: 1
+      reset: 0
+      description: Architectural interrupt mask hint; when 1, mask interrupts (implementation-defined sources).
+  reserved_bits:
+    - range: [2, 7]
+      description: Reserved; read as 0, must be written as 0.
+
+modestack:
+  description: Architectural mode frame stack requirements.
+  min_depth: 4
+  recommended_depth: 16
+  rules:
+    - MODEUP must trap on overflow at the architectural minimum depth.
+    - RETMD must trap on underflow.
+
+reserved_numeric_ranges:
+  - name: modeframe_format_version
+    range: [2, 255]
+    description: Reserved for future mode frame format revisions.

@@ -1,0 +1,160 @@
+spec_version: 1.0
+name: csr_map
+description: Global CSR namespace and register model for Project Carbon.
+revision: v1.0.0
+created: 2025-12-15
+stable: true
+
+csr_addressing:
+  address_bits: 32
+  description: Canonical CSR address format using (vendor_id, block_id, block_version, reg_id).
+  fields:
+    - name: reg_id
+      lsb: 0
+      width: 12
+    - name: block_version
+      lsb: 12
+      width: 4
+    - name: block_id
+      lsb: 16
+      width: 8
+    - name: vendor_id
+      lsb: 24
+      width: 8
+  formula: addr = (vendor_id<<24) | (block_id<<16) | (block_version<<12) | reg_id
+  canonical_vendor_id: 0x00
+
+access_control:
+  privilege_levels:
+    - name: PRIV_U
+      value: 0
+      description: User mode.
+    - name: PRIV_S
+      value: 1
+      description: Supervisor mode.
+    - name: PRIV_H
+      value: 2
+      description: Hypervisor/host mode.
+  access_types:
+    - name: CSR_RO
+      value: 0
+      description: Read-only.
+    - name: CSR_WO
+      value: 1
+      description: Write-only.
+    - name: CSR_RW
+      value: 2
+      description: Read/write.
+  unknown_csr_behavior: trap
+
+block_partitions:
+  - name: core_common
+    block_id_range: [0x00, 0x1F]
+    description: Core-common CSRs shared across CPU families.
+  - name: mmu_vm
+    block_id_range: [0x20, 0x2F]
+    description: MMU/VM CSRs.
+  - name: interrupt_timer
+    block_id_range: [0x30, 0x3F]
+    description: Interrupt controller and timer CSRs.
+  - name: debug_trace
+    block_id_range: [0x40, 0x4F]
+    description: Debug and trace CSRs.
+  - name: cache_control
+    block_id_range: [0x50, 0x5F]
+    description: Cache control CSRs.
+  - name: fabric_interconnect
+    block_id_range: [0x60, 0x6F]
+    description: Fabric/interconnect CSRs.
+  - name: accelerators
+    block_id_range: [0x70, 0x7F]
+    description: Accelerator CSRs (CAI doorbells, queues, status).
+  - name: reserved_future_gpu
+    block_id_range: [0x80, 0x9F]
+    description: Reserved for future GPU blocks.
+  - name: reserved_future_cpu
+    block_id_range: [0xA0, 0xBF]
+    description: Reserved for future CPU family-specific blocks.
+  - name: reserved
+    block_id_range: [0xC0, 0xFF]
+    description: Reserved.
+
+csrs:
+  - name: CSR_ID
+    address: 0x00000000
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Read-only identification register (implementation-defined encoding).
+  - name: CSR_TIER
+    address: 0x00000001
+    block: core_common
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 8
+    description: Current tier within the active ladder; tier changes use MODEUP/RETMD.
+  - name: CSR_MODEFLAGS
+    address: 0x00000002
+    block: core_common
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 8
+    description: Architectural MODEFLAGS bitfield (see mode_switch spec).
+  - name: CSR_TIME
+    address: 0x00000010
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Cycle counter low word (or full 64-bit counter when read as 64-bit).
+  - name: CSR_TIME_HI
+    address: 0x00000011
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Cycle counter high word (when exposed as 2x32-bit).
+  - name: CSR_CAUSE
+    address: 0x00000020
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Trap cause metadata (encoding defined by trap/exception architecture).
+  - name: CSR_EPC
+    address: 0x00000021
+    block: core_common
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Exception program counter (trap return address).
+  - name: CSR_IE
+    address: 0x00000030
+    block: core_common
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Interrupt enable bits.
+  - name: CSR_IP
+    address: 0x00000031
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Interrupt pending bits.
+  - name: CSR_TRACE_CTL
+    address: 0x00000040
+    block: debug_trace
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Trace control register (trace on/off and mode bits).
+
+reserved_numeric_ranges:
+  - name: core_common_reg_id
+    range: [0x000, 0x0FF]
+    description: Reserved for core-common v1 growth.
+  - name: future_vendor_ids
+    range: [0x01, 0xFF]
+    description: Reserved for future vendors.

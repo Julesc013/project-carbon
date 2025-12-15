@@ -1,0 +1,174 @@
+spec_version: 1.0
+name: discovery
+description: Unified feature discovery contract (CPUID leaf model and CAPS mirror).
+revision: v1.0.0
+created: 2025-12-15
+stable: true
+
+packing:
+  endianness: little
+  word_bits: 32
+  leaf_return_words: 4
+  description: Leaf data is returned as four 32-bit words; bit 0 is the LSB of word 0.
+
+identifiers:
+  vendor_id_bits: 8
+  family_id_bits: 8
+  model_id_bits: 8
+  stepping_bits: 8
+  description: vendor/family/model/stepping are compact identifiers (not strings).
+
+transports:
+  - name: CPUID
+    applies_to: eZ90
+    required_tier: P7
+    description: CPUID instruction provides the canonical leaf model.
+  - name: CAPS
+    applies_to: Z85/Z90
+    required_tier: P0
+    description: CAPS provides a port/CSR mirror of CPUID leaves using the same IDs and packing.
+    model:
+      mechanism: index_and_data
+      behavior:
+        - Write the desired leaf ID to CAPS_INDEX.
+        - Read CAPS_DATA0..CAPS_DATA3 to obtain the four return words.
+        - Implementations may expose CAPS_* as IO ports, CSRs, or both.
+      reserved:
+        - CAPS transport-specific addressing is platform-defined; only leaf IDs and packing are architectural.
+
+leafs:
+  - id: 0x00000000
+    name: CPUID_LEAF_VENDOR
+    description: Maximum standard leaf and vendor string.
+    fields:
+      - word: 0
+        name: max_standard_leaf
+        bits: [15, 0]
+      - word: 0
+        name: discovery_format_version
+        bits: [31, 16]
+      - word: 1
+        name: vendor_str_0
+        bits: [31, 0]
+      - word: 2
+        name: vendor_str_1
+        bits: [31, 0]
+      - word: 3
+        name: vendor_str_2
+        bits: [31, 0]
+  - id: 0x00000001
+    name: CPUID_LEAF_ID
+    description: Vendor ID, family ID, model ID, and stepping.
+    fields:
+      - word: 0
+        name: vendor_id
+        bits: [7, 0]
+      - word: 0
+        name: family_id
+        bits: [15, 8]
+      - word: 0
+        name: model_id
+        bits: [23, 16]
+      - word: 0
+        name: stepping
+        bits: [31, 24]
+      - word: 1
+        name: chip_flags
+        bits: [31, 0]
+  - id: 0x00000002
+    name: CPUID_LEAF_TIERS
+    description: Active tier ladder and tier limits.
+    fields:
+      - word: 0
+        name: tier_ladder_id
+        bits: [7, 0]
+      - word: 0
+        name: current_tier
+        bits: [15, 8]
+      - word: 0
+        name: max_tier
+        bits: [23, 16]
+      - word: 1
+        name: tier_policy_flags
+        bits: [31, 0]
+  - id: 0x00000003
+    name: CPUID_LEAF_FEATURES0
+    description: Base feature bitmap (bits 0..127 across words 0..3).
+  - id: 0x00000010
+    name: CPUID_LEAF_CACHE0
+    description: Cache descriptor 0 (if present).
+  - id: 0x00000011
+    name: CPUID_LEAF_TOPOLOGY
+    description: Core/thread topology descriptor.
+  - id: 0x00000020
+    name: CPUID_LEAF_ACCEL0
+    description: Accelerator presence descriptor 0.
+  - id: 0x00000030
+    name: CPUID_LEAF_ERRATA0
+    description: Errata bitmap 0 (bits 0..127 across words 0..3).
+
+leaf_rules:
+  unknown_leaf_behavior: return_zeros
+  description: Requests for undefined/reserved leaf IDs return all zeros; software must consult max_standard_leaf.
+
+reserved_leaf_ranges:
+  - range: [0x00000004, 0x0000000F]
+    description: Reserved for future standard leaves.
+  - range: [0x00000012, 0x0000001F]
+    description: Reserved for future cache/topology leaves.
+  - range: [0x00000021, 0x0000002F]
+    description: Reserved for future accelerator descriptor leaves.
+  - range: [0x00000031, 0x7FFFFFFF]
+    description: Reserved for future standard expansion.
+  - range: [0x80000000, 0x8FFFFFFF]
+    description: Vendor-specific extended leaves.
+  - range: [0x90000000, 0xFFFFFFFF]
+    description: Reserved.
+
+feature_sets:
+  - id: FEATURESET_0
+    leaf: CPUID_LEAF_FEATURES0
+    description: Base feature bitmap.
+    bits:
+      - name: FEAT_MODE_SWITCH
+        bit: 0
+        description: MODEUP/RETMD mode switching contract implemented.
+      - name: FEAT_CSR_NAMESPACE
+        bit: 1
+        description: Carbon CSR namespace and access model implemented.
+      - name: FEAT_FABRIC
+        bit: 2
+        description: Carbon internal fabric transaction contract implemented.
+      - name: FEAT_CAI
+        bit: 3
+        description: Carbon Accelerator Interface (CAI) implemented.
+      - name: FEAT_CPUID
+        bit: 4
+        description: CPUID instruction transport implemented (eZ90 P7).
+      - name: FEAT_CAPS
+        bit: 5
+        description: CAPS transport implemented (Z85/Z90).
+      - name: FEAT_AM9513
+        bit: 6
+        description: Am9513-class accelerator present.
+      - name: FEAT_IOMMU_HOOKS
+        bit: 7
+        description: IOMMU integration hooks for accelerators/fabric present.
+    reserved_bit_ranges:
+      - range: [8, 63]
+        description: Reserved for base feature growth.
+      - range: [64, 127]
+        description: Reserved for future feature sets.
+
+examples:
+  - name: example_cpuid_leaf_table
+    description: Small example leaf ID table for documentation.
+    rows:
+      - leaf: 0x00000000
+        name: CPUID_LEAF_VENDOR
+      - leaf: 0x00000001
+        name: CPUID_LEAF_ID
+      - leaf: 0x00000002
+        name: CPUID_LEAF_TIERS
+      - leaf: 0x00000003
+        name: CPUID_LEAF_FEATURES0

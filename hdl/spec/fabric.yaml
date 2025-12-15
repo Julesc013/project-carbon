@@ -1,0 +1,100 @@
+spec_version: 1.0
+name: fabric
+description: Internal SoC fabric transaction contract for Project Carbon.
+revision: v1.0.0
+created: 2025-12-15
+stable: true
+
+overview:
+  description: The Carbon fabric is a ready/valid, request/response interconnect used between cores, caches, memory controllers, and accelerators.
+
+transaction_types:
+  - name: FABRIC_XACT_READ
+    value: 0
+    description: Read from memory or IO space.
+  - name: FABRIC_XACT_WRITE
+    value: 1
+    description: Write to memory or IO space.
+  - name: FABRIC_XACT_ATOMIC
+    value: 2
+    description: Atomic operation (minimum set defined by implementation profile).
+  - name: FABRIC_XACT_MESSAGE
+    value: 3
+    description: Message packet (mailboxes, interrupts, doorbells).
+  - name: FABRIC_XACT_DMA_DESC
+    value: 4
+    description: DMA descriptor transaction (may also be encoded as a message).
+
+fabric_attributes:
+  width_bits: 16
+  description: Packed per-transaction attributes.
+  fields:
+    - name: FABRIC_ATTR_CACHEABLE
+      lsb: 0
+      width: 1
+      description: 1=cacheable, 0=uncacheable.
+    - name: FABRIC_ATTR_ORDERED
+      lsb: 1
+      width: 1
+      description: 1=ordered, 0=normal ordering.
+    - name: FABRIC_ATTR_IO_SPACE
+      lsb: 2
+      width: 1
+      description: 1=IO space, 0=memory space.
+    - name: FABRIC_ATTR_ACQUIRE
+      lsb: 3
+      width: 1
+      description: Acquire semantics (for synchronization).
+    - name: FABRIC_ATTR_RELEASE
+      lsb: 4
+      width: 1
+      description: Release semantics (for synchronization).
+    - name: FABRIC_ATTR_BURST_HINT
+      lsb: 5
+      width: 3
+      description: Burst length hint (0=unspecified; other values are implementation-defined hints).
+    - name: FABRIC_ATTR_QOS
+      lsb: 8
+      width: 4
+      description: QoS/priority (reserved if not implemented; must be ignored if unsupported).
+  reserved_bits:
+    - range: [12, 15]
+      description: Reserved; read as 0, must be written as 0.
+
+response_codes:
+  - name: FABRIC_RESP_OK
+    value: 0
+    description: Transaction completed successfully.
+  - name: FABRIC_RESP_DECODE_ERR
+    value: 1
+    description: Address decode error (no target).
+  - name: FABRIC_RESP_ACCESS_FAULT
+    value: 2
+    description: Access permission fault.
+  - name: FABRIC_RESP_TIMEOUT
+    value: 3
+    description: Target timeout or no response.
+  - name: FABRIC_RESP_ECC_ERR
+    value: 4
+    description: ECC or integrity error (reserved if not implemented).
+
+interface_requirements:
+  data_width_bits:
+    configurable: true
+    recommended_min: 32
+  handshake:
+    description: Ready/valid handshake suitable for a SystemVerilog interface.
+    request_channel_rules:
+      - A request transfers on a cycle where req_valid && req_ready.
+      - While req_valid && !req_ready, request signals must remain stable.
+    response_channel_rules:
+      - A response transfers on a cycle where resp_valid && resp_ready.
+      - While resp_valid && !resp_ready, response signals must remain stable.
+
+reserved_numeric_ranges:
+  - name: transaction_type_values
+    range: [5, 255]
+    description: Reserved for future transaction types.
+  - name: response_code_values
+    range: [5, 255]
+    description: Reserved for future response codes.

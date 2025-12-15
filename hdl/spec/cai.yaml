@@ -1,0 +1,216 @@
+spec_version: 1.0
+name: cai
+description: Carbon Accelerator Interface (CAI) contract (queues, descriptors, completions).
+revision: v1.0.0
+created: 2025-12-15
+stable: true
+
+queue_model:
+  description: Standard submission/completion ring model for accelerators.
+  submission:
+    - A doorbell register notifies the accelerator that new descriptors are available.
+    - Descriptors reside in a memory-backed ring; producer is software, consumer is hardware.
+  completion:
+    - Completions are written to a memory-backed ring; producer is hardware, consumer is software.
+    - Completion may additionally trigger an interrupt or a fabric message.
+  ordering:
+    - Software must ensure descriptor writes are globally visible before ringing the doorbell.
+    - A fence is required between descriptor stores and doorbell writes on weakly-ordered systems.
+  security_hooks:
+    - IOMMU integration is optional; descriptors must be considered untrusted inputs by the device.
+
+context_model:
+  minimum_contexts: 1
+  rules:
+    - Context IDs provide logical isolation between software clients.
+    - A device may implement stronger isolation (address spaces, permission checks) via IOMMU hooks.
+
+submission_descriptor:
+  name: CAI_SUBMIT_DESC_V1
+  version: 1
+  size_bytes: 64
+  description: Fixed-size submission descriptor; extensible via versioning and reserved fields.
+  fields:
+    - name: desc_version
+      offset: 0
+      width_bytes: 2
+      type: u16
+      description: Descriptor format version (must be 1 for v1.0).
+    - name: desc_size_dw
+      offset: 2
+      width_bytes: 2
+      type: u16
+      description: Descriptor size in 32-bit words (must be 16 for this format).
+    - name: opcode
+      offset: 4
+      width_bytes: 4
+      type: u32
+      description: Operation code.
+    - name: flags
+      offset: 8
+      width_bytes: 4
+      type: u32
+      description: Operation flags (reserved bits must be 0).
+    - name: context_id
+      offset: 12
+      width_bytes: 2
+      type: u16
+      description: Context identifier.
+    - name: operand_count
+      offset: 14
+      width_bytes: 2
+      type: u16
+      description: Number of operand descriptors in the operand list.
+    - name: tag
+      offset: 16
+      width_bytes: 4
+      type: u32
+      description: Opaque tag returned in the completion record.
+    - name: reserved0
+      offset: 20
+      width_bytes: 4
+      type: u32
+      description: Reserved; must be 0.
+    - name: operands_ptr
+      offset: 24
+      width_bytes: 8
+      type: u64
+      description: Pointer to an array of operand descriptors.
+    - name: result_ptr
+      offset: 32
+      width_bytes: 8
+      type: u64
+      description: Pointer to the result buffer.
+    - name: result_len
+      offset: 40
+      width_bytes: 4
+      type: u32
+      description: Result length in bytes (or elements, opcode-defined).
+    - name: result_stride
+      offset: 44
+      width_bytes: 4
+      type: u32
+      description: Stride in bytes between result elements (0=contiguous).
+    - name: reserved1
+      offset: 48
+      width_bytes: 8
+      type: u64
+      description: Reserved; must be 0.
+    - name: reserved2
+      offset: 56
+      width_bytes: 8
+      type: u64
+      description: Reserved; must be 0.
+
+operand_descriptor:
+  name: CAI_OPERAND_DESC_V1
+  version: 1
+  size_bytes: 32
+  description: Operand descriptor referenced by operands_ptr.
+  fields:
+    - name: ptr
+      offset: 0
+      width_bytes: 8
+      type: u64
+      description: Pointer to operand buffer.
+    - name: len
+      offset: 8
+      width_bytes: 4
+      type: u32
+      description: Operand length in bytes (or elements, opcode-defined).
+    - name: stride
+      offset: 12
+      width_bytes: 4
+      type: u32
+      description: Stride in bytes between operand elements (0=contiguous).
+    - name: flags
+      offset: 16
+      width_bytes: 4
+      type: u32
+      description: Operand flags (reserved if not implemented).
+    - name: reserved0
+      offset: 20
+      width_bytes: 4
+      type: u32
+      description: Reserved; must be 0.
+    - name: reserved1
+      offset: 24
+      width_bytes: 8
+      type: u64
+      description: Reserved; must be 0.
+
+completion_record:
+  name: CAI_COMP_REC_V1
+  version: 1
+  size_bytes: 16
+  description: Completion record written by the accelerator.
+  fields:
+    - name: tag
+      offset: 0
+      width_bytes: 4
+      type: u32
+      description: Tag from the submission descriptor.
+    - name: status
+      offset: 4
+      width_bytes: 2
+      type: u16
+      description: Completion status code.
+    - name: ext_status
+      offset: 6
+      width_bytes: 2
+      type: u16
+      description: Optional extended status (e.g. IEEE flags for Am9513).
+    - name: bytes_written
+      offset: 8
+      width_bytes: 4
+      type: u32
+      description: Optional byte count written to result (0 if unused).
+    - name: reserved0
+      offset: 12
+      width_bytes: 4
+      type: u32
+      description: Reserved; must be 0.
+
+completion_status_codes:
+  - name: CAI_STATUS_OK
+    value: 0
+    description: Success.
+  - name: CAI_STATUS_INVALID_OP
+    value: 1
+    description: Unsupported/invalid opcode.
+  - name: CAI_STATUS_FAULT
+    value: 2
+    description: Access fault or invalid pointer/length.
+  - name: CAI_STATUS_TIMEOUT
+    value: 3
+    description: Operation timeout.
+  - name: CAI_STATUS_UNSUPPORTED
+    value: 4
+    description: Feature unsupported for this device/context.
+
+reserved_numeric_ranges:
+  - name: cai_opcode_values
+    range: [0x00000001, 0x7FFFFFFF]
+    description: Reserved for future standard CAI opcodes.
+  - name: cai_vendor_opcode_values
+    range: [0x80000000, 0xFFFFFFFF]
+    description: Vendor-specific opcodes.
+  - name: cai_status_values
+    range: [5, 65535]
+    description: Reserved for future completion status codes.
+
+examples:
+  - name: example_descriptor
+    description: Example submission descriptor using two operands.
+    submit_desc:
+      desc_version: 1
+      desc_size_dw: 16
+      opcode: 0x00000000
+      flags: 0x00000000
+      context_id: 0
+      operand_count: 2
+      tag: 0x12345678
+      operands_ptr: 0x0000000010000000
+      result_ptr: 0x0000000020000000
+      result_len: 256
+      result_stride: 0
