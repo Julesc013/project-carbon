@@ -133,7 +133,36 @@ module fabric_mem_bfm #(
         rsp_rdata_q <= '0;
         rsp_code_q  <= CODE_W'(CARBON_FABRIC_RESP_OK);
 
-        if (int'(bus.req_addr) + BYTES_PER_WORD > MEM_BYTES) begin
+        // Bounds check by transaction type.
+        if (bus.req_op == OP_W'(CARBON_FABRIC_XACT_ATOMIC)) begin
+          if (int'(bus.req_addr) + 2 > MEM_BYTES) begin
+            rsp_code_q <= CODE_W'(CARBON_FABRIC_RESP_DECODE_ERR);
+          end else begin
+            // ATOMIC (v1 scaffolding): CAS16
+            logic [15:0] expected;
+            logic [15:0] desired;
+            logic [15:0] oldv;
+            logic success;
+            int unsigned a;
+            a = int'(bus.req_addr);
+
+            expected = bus.req_wdata[15:0];
+            desired  = bus.req_wdata[31:16];
+            oldv     = {mem[a + 1], mem[a]};
+            success  = (oldv == expected);
+
+            if (success) begin
+              mem[a]     = desired[7:0];
+              mem[a + 1] = desired[15:8];
+            end
+
+            rsp_rdata_q <= '0;
+            rsp_rdata_q[15:0] <= oldv;
+            if (DATA_W >= 32) begin
+              rsp_rdata_q[31] <= success;
+            end
+          end
+        end else if (int'(bus.req_addr) + BYTES_PER_WORD > MEM_BYTES) begin
           rsp_code_q <= CODE_W'(CARBON_FABRIC_RESP_DECODE_ERR);
         end else if (bus.req_op == OP_W'(CARBON_FABRIC_XACT_WRITE)) begin
           mem_write_word(bus.req_addr, bus.req_wdata, bus.req_wstrb);
@@ -152,4 +181,3 @@ module fabric_mem_bfm #(
   end
 
 endmodule : fabric_mem_bfm
-

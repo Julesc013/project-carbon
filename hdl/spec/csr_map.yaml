@@ -151,6 +151,57 @@ csrs:
     width_bits: 32
     description: Trace control register (trace on/off and mode bits).
 
+  # Z90 core-family CSRs (vendor_id=0x00, block_id=0xA1, block_version=0x0)
+  - name: CSR_Z90_MMU_WIN0_BASE
+    address: 0x00A10000
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Z90 MMU/window register 0 base address (register-only placeholder).
+  - name: CSR_Z90_MMU_WIN0_MASK
+    address: 0x00A10004
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Z90 MMU/window register 0 mask/limit (register-only placeholder).
+  - name: CSR_Z90_MMU_WIN1_BASE
+    address: 0x00A10008
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Z90 MMU/window register 1 base address (register-only placeholder).
+  - name: CSR_Z90_MMU_WIN1_MASK
+    address: 0x00A1000C
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Z90 MMU/window register 1 mask/limit (register-only placeholder).
+  - name: CSR_Z90_CACHE_CTL
+    address: 0x00A10010
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Z90 cache control hooks (register-only placeholder; no cache logic implied).
+  - name: CSR_Z90_ATOMIC_CTL
+    address: 0x00A10014
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Z90 atomic enable/control (register-only placeholder).
+  - name: CSR_Z90_ATOMIC_STATUS
+    address: 0x00A10018
+    block: reserved_future_cpu
+    access: CSR_RO
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Z90 atomic status (register-only placeholder).
+
 reserved_numeric_ranges:
   - name: core_common_reg_id
     range: [0x000, 0x0FF]

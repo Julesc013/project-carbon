@@ -194,6 +194,7 @@ def _load_specs(spec_dir: Path) -> Dict[str, Dict[str, Any]]:
         "csr_map.yaml",
         "fabric.yaml",
         "cai.yaml",
+        "isa_z90.yaml",
     ]
     specs: Dict[str, Dict[str, Any]] = {}
     for filename in required:
@@ -387,6 +388,36 @@ def _validate_cai(spec: Dict[str, Any]) -> None:
     _expect_type(spec["completion_status_codes"], list, where=f"{where}:completion_status_codes")
 
 
+def _validate_isa_z90(spec: Dict[str, Any]) -> None:
+    where = "isa_z90.yaml"
+    pages = spec.get("opcode_pages")
+    _expect_type(pages, list, where=f"{where}:opcode_pages")
+    for p in pages:
+        _expect_type(p, dict, where=f"{where}:opcode_pages[]")
+        _require_keys(p, ["name", "prefix_bytes", "description"], where=f"{where}:opcode_pages[]")
+        _expect_type(p["prefix_bytes"], list, where=f"{where}:{p.get('name','<page>')}.prefix_bytes")
+        if len(p["prefix_bytes"]) != 2:
+            raise SpecError(f"{where}: {p['name']}: prefix_bytes must have length 2")
+
+    majors = spec.get("page0_majors")
+    _expect_type(majors, list, where=f"{where}:page0_majors")
+    for m in majors:
+        _expect_type(m, dict, where=f"{where}:page0_majors[]")
+        _require_keys(m, ["name", "value", "description"], where=f"{where}:page0_majors[]")
+
+    subops = spec.get("page0_subops")
+    _expect_type(subops, list, where=f"{where}:page0_subops")
+    for s in subops:
+        _expect_type(s, dict, where=f"{where}:page0_subops[]")
+        _require_keys(s, ["name", "major", "value", "description"], where=f"{where}:page0_subops[]")
+
+    p1 = spec.get("page1_ops")
+    _expect_type(p1, list, where=f"{where}:page1_ops")
+    for o in p1:
+        _expect_type(o, dict, where=f"{where}:page1_ops[]")
+        _require_keys(o, ["name", "value", "description"], where=f"{where}:page1_ops[]")
+
+
 def _validate_specs(specs: Dict[str, Dict[str, Any]]) -> None:
     _validate_tiers(specs["tiers.yaml"])
     _validate_mode_switch(specs["mode_switch.yaml"])
@@ -394,6 +425,7 @@ def _validate_specs(specs: Dict[str, Dict[str, Any]]) -> None:
     _validate_csr_map(specs["csr_map.yaml"])
     _validate_fabric(specs["fabric.yaml"])
     _validate_cai(specs["cai.yaml"])
+    _validate_isa_z90(specs["isa_z90.yaml"])
 
 
 def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
@@ -403,6 +435,7 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
     csr = specs["csr_map.yaml"]
     fabric = specs["fabric.yaml"]
     cai = specs["cai.yaml"]
+    isa_z90 = specs["isa_z90.yaml"]
 
     out: List[str] = []
     out.append("// AUTO-GENERATED FILE - DO NOT EDIT.")
@@ -532,6 +565,33 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"  localparam int unsigned CARBON_{s['name']} = {s['value']};")
     out.append("")
 
+    out.append("  // Z90 opcode pages and encodings")
+    out.append("  // Opcode page prefixes")
+    for page in isa_z90["opcode_pages"]:
+        pfx = page["prefix_bytes"]
+        out.append(
+            f"  localparam logic [7:0] CARBON_{page['name']}_PREFIX0 = {_sv_hex(int(pfx[0]), 8)};"
+        )
+        out.append(
+            f"  localparam logic [7:0] CARBON_{page['name']}_PREFIX1 = {_sv_hex(int(pfx[1]), 8)};"
+        )
+    out.append("")
+
+    out.append("  // Page0 majors")
+    for m in isa_z90["page0_majors"]:
+        out.append(f"  localparam int unsigned CARBON_{m['name']} = {int(m['value'])};")
+    out.append("")
+
+    out.append("  // Page0 subops")
+    for s in isa_z90["page0_subops"]:
+        out.append(f"  localparam int unsigned CARBON_{s['name']} = {int(s['value'])};")
+    out.append("")
+
+    out.append("  // Page1 ops")
+    for o in isa_z90["page1_ops"]:
+        out.append(f"  localparam int unsigned CARBON_{o['name']} = {int(o['value'])};")
+    out.append("")
+
     out.append("endpackage : carbon_arch_pkg")
     return "\n".join(out)
 
@@ -543,6 +603,7 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
     csr = specs["csr_map.yaml"]
     fabric = specs["fabric.yaml"]
     cai = specs["cai.yaml"]
+    isa_z90 = specs["isa_z90.yaml"]
 
     out: List[str] = []
     out.append("/* AUTO-GENERATED FILE - DO NOT EDIT. */")
@@ -651,6 +712,29 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"#define CARBON_{s['name']} ({s['value']}u)")
     out.append("")
 
+    out.append("/* Z90 opcode pages and encodings */")
+    out.append("/* Opcode page prefixes */")
+    for page in isa_z90["opcode_pages"]:
+        pfx = page["prefix_bytes"]
+        out.append(f"#define CARBON_{page['name']}_PREFIX0 ({_c_hex_u32(int(pfx[0]))})")
+        out.append(f"#define CARBON_{page['name']}_PREFIX1 ({_c_hex_u32(int(pfx[1]))})")
+    out.append("")
+
+    out.append("/* Page0 majors */")
+    for m in isa_z90["page0_majors"]:
+        out.append(f"#define CARBON_{m['name']} ({_c_hex_u32(int(m['value']))})")
+    out.append("")
+
+    out.append("/* Page0 subops */")
+    for s in isa_z90["page0_subops"]:
+        out.append(f"#define CARBON_{s['name']} ({_c_hex_u32(int(s['value']))})")
+    out.append("")
+
+    out.append("/* Page1 ops */")
+    for o in isa_z90["page1_ops"]:
+        out.append(f"#define CARBON_{o['name']} ({_c_hex_u32(int(o['value']))})")
+    out.append("")
+
     return "\n".join(out)
 
 
@@ -661,6 +745,7 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
     csr = specs["csr_map.yaml"]
     fabric = specs["fabric.yaml"]
     cai = specs["cai.yaml"]
+    isa_z90 = specs["isa_z90.yaml"]
 
     out: List[str] = []
     out.append("# Project Carbon — Frozen Architecture Contracts (v1.0)")
@@ -851,6 +936,43 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
                     out.append(f"{k}: {desc[k]}")
             out.append("```")
             out.append("")
+
+    out.append("## G) Z90 Fast-Path ISA (Opcode Pages)")
+    out.append("")
+    out.append("### Opcode Pages")
+    out.append("")
+    out.append("| Page | Prefix Bytes | Description |")
+    out.append("|---|---|---|")
+    for page in isa_z90["opcode_pages"]:
+        pfx = page["prefix_bytes"]
+        out.append(
+            f"| `{page['name']}` | `{_md_escape(' '.join([hex(int(b)) for b in pfx]))}` | {_md_escape(page['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Page0 Majors")
+    out.append("")
+    out.append("| Name | Value | Description |")
+    out.append("|---|---:|---|")
+    for m in isa_z90["page0_majors"]:
+        out.append(f"| `{m['name']}` | `{m['value']}` | {_md_escape(m['description'])} |")
+    out.append("")
+
+    out.append("### Page0 Subops")
+    out.append("")
+    out.append("| Name | Major | Value | Description |")
+    out.append("|---|---|---:|---|")
+    for s in isa_z90["page0_subops"]:
+        out.append(f"| `{s['name']}` | `{s['major']}` | `{s['value']}` | {_md_escape(s['description'])} |")
+    out.append("")
+
+    out.append("### Page1 Ops")
+    out.append("")
+    out.append("| Name | Value | Description |")
+    out.append("|---|---:|---|")
+    for o in isa_z90["page1_ops"]:
+        out.append(f"| `{o['name']}` | `{o['value']}` | {_md_escape(o['description'])} |")
+    out.append("")
 
     return "\n".join(out)
 

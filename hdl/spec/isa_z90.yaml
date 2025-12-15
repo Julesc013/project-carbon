@@ -1,0 +1,141 @@
+spec_version: 1.0
+name: isa_z90
+description: Z90 turbo ISA opcode pages and encodings for Project Carbon.
+revision: v1.0.0
+created: 2025-12-16
+stable: true
+
+overview:
+  description: Z90 defines a forward-compatible fast-path ISA extension that coexists with legacy decoding. All Z90 instructions live in dedicated opcode pages entered via a 2-byte prefix sequence.
+
+opcode_pages:
+  - name: Z90_OPPAGE_P0
+    prefix_bytes: [0xED, 0xF0]
+    description: Page 0 (register/ALU/system control/CAI).
+  - name: Z90_OPPAGE_P1
+    prefix_bytes: [0xED, 0xF1]
+    description: Page 1 (memory/addressing/atomics).
+
+page0_encoding:
+  description: Two opcode bytes follow the page prefix.
+  op0:
+    major_bits: [7, 4]
+    rd_bits: [3, 0]
+  op1:
+    sub_bits: [7, 4]
+    rs_bits: [3, 0]
+  imm:
+    description: Optional immediates depend on (major, sub).
+
+page1_encoding:
+  description: Three bytes follow the page prefix.
+  op0:
+    major_bits: [7, 4]
+    rd_bits: [3, 0]
+  op1:
+    base_bits: [7, 4]
+    index_bits: [3, 0]
+  disp8:
+    signed: true
+    description: 8-bit signed displacement added to (base + index).
+
+page0_majors:
+  - name: Z90_P0_MAJOR_REG
+    value: 0x0
+    description: Register move/exchange.
+  - name: Z90_P0_MAJOR_ALU
+    value: 0x1
+    description: Integer ALU ops on X registers.
+  - name: Z90_P0_MAJOR_SYS
+    value: 0xF
+    description: System control (MODEUP/RETMD/CAI).
+
+page0_subops:
+  - name: Z90_P0_SUB_MOV
+    major: Z90_P0_MAJOR_REG
+    value: 0x0
+    description: MOV Xd, Xs.
+  - name: Z90_P0_SUB_XCHG
+    major: Z90_P0_MAJOR_REG
+    value: 0x1
+    description: XCHG Xd, Xs.
+
+  - name: Z90_P0_SUB_ADD
+    major: Z90_P0_MAJOR_ALU
+    value: 0x0
+    description: ADD Xd, Xs.
+  - name: Z90_P0_SUB_SUB
+    major: Z90_P0_MAJOR_ALU
+    value: 0x1
+    description: SUB Xd, Xs.
+  - name: Z90_P0_SUB_AND
+    major: Z90_P0_MAJOR_ALU
+    value: 0x2
+    description: AND Xd, Xs.
+  - name: Z90_P0_SUB_OR
+    major: Z90_P0_MAJOR_ALU
+    value: 0x3
+    description: OR Xd, Xs.
+  - name: Z90_P0_SUB_XOR
+    major: Z90_P0_MAJOR_ALU
+    value: 0x4
+    description: XOR Xd, Xs.
+  - name: Z90_P0_SUB_CMP
+    major: Z90_P0_MAJOR_ALU
+    value: 0x5
+    description: CMP Xd, Xs (flags only).
+
+  - name: Z90_P0_SUB_MODEUP
+    major: Z90_P0_MAJOR_SYS
+    value: 0x0
+    description: MODEUP(target_tier_u8, entry_vector_u16). rs selects ladder (0=Z80-derived ladder).
+    immediates:
+      - name: target_tier
+        width_bytes: 1
+        description: Target tier enum value.
+      - name: entry_vector
+        width_bytes: 2
+        description: Entry vector PC (little-endian).
+  - name: Z90_P0_SUB_RETMD
+    major: Z90_P0_MAJOR_SYS
+    value: 0x1
+    description: RETMD().
+  - name: Z90_P0_SUB_CAI_CFG
+    major: Z90_P0_MAJOR_SYS
+    value: 0x8
+    description: CAI_CFG (implementation-defined mapping onto cai_if host registers).
+  - name: Z90_P0_SUB_CAI_SUBMIT
+    major: Z90_P0_MAJOR_SYS
+    value: 0x9
+    description: CAI_SUBMIT rings the CAI submission doorbell.
+
+page1_ops:
+  - name: Z90_P1_OP_LD16
+    value: 0x1
+    description: LD16 Xd, [base + index + disp8].
+  - name: Z90_P1_OP_ST16
+    value: 0x2
+    description: ST16 [base + index + disp8], Xd.
+  - name: Z90_P1_OP_LEA
+    value: 0x3
+    description: LEA Xd, [base + index + disp8].
+  - name: Z90_P1_OP_CAS16
+    value: 0x4
+    description: CAS16 Xd, [base + disp8], Xs (Xd expected/old, Xs desired; Z90.Z=success).
+
+reserved_numeric_ranges:
+  - name: z90_prefix_second_byte
+    range: [0xF2, 0xFF]
+    description: Reserved for future Z90 opcode pages under ED prefix.
+  - name: page0_major_values
+    range: [0x2, 0xE]
+    description: Reserved for future majors in page0.
+  - name: page1_major_values
+    range: [0x5, 0xF]
+    description: Reserved for future ops in page1.
+
+unknown_behavior:
+  - name: unknown_page_prefix
+    description: Any prefix sequence not matching a defined page must trap (illegal instruction).
+  - name: unknown_opcode
+    description: Any unknown major/sub/op within a page must trap.

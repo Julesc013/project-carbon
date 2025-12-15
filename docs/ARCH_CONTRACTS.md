@@ -130,6 +130,13 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `CSR_IE` | `0x00000030` | `CSR_RW` | `PRIV_S` | Interrupt enable bits. |
 | `CSR_IP` | `0x00000031` | `CSR_RO` | `PRIV_S` | Interrupt pending bits. |
 | `CSR_TRACE_CTL` | `0x00000040` | `CSR_RW` | `PRIV_S` | Trace control register (trace on/off and mode bits). |
+| `CSR_Z90_MMU_WIN0_BASE` | `0x00a10000` | `CSR_RW` | `PRIV_S` | Z90 MMU/window register 0 base address (register-only placeholder). |
+| `CSR_Z90_MMU_WIN0_MASK` | `0x00a10004` | `CSR_RW` | `PRIV_S` | Z90 MMU/window register 0 mask/limit (register-only placeholder). |
+| `CSR_Z90_MMU_WIN1_BASE` | `0x00a10008` | `CSR_RW` | `PRIV_S` | Z90 MMU/window register 1 base address (register-only placeholder). |
+| `CSR_Z90_MMU_WIN1_MASK` | `0x00a1000c` | `CSR_RW` | `PRIV_S` | Z90 MMU/window register 1 mask/limit (register-only placeholder). |
+| `CSR_Z90_CACHE_CTL` | `0x00a10010` | `CSR_RW` | `PRIV_S` | Z90 cache control hooks (register-only placeholder; no cache logic implied). |
+| `CSR_Z90_ATOMIC_CTL` | `0x00a10014` | `CSR_RW` | `PRIV_S` | Z90 atomic enable/control (register-only placeholder). |
+| `CSR_Z90_ATOMIC_STATUS` | `0x00a10018` | `CSR_RO` | `PRIV_S` | Z90 atomic status (register-only placeholder). |
 
 ## E) Fabric Transaction Contract
 
@@ -238,4 +245,47 @@ result_ptr: 536870912
 result_len: 256
 result_stride: 0
 ```
+
+## G) Z90 Fast-Path ISA (Opcode Pages)
+
+### Opcode Pages
+
+| Page | Prefix Bytes | Description |
+|---|---|---|
+| `Z90_OPPAGE_P0` | `0xed 0xf0` | Page 0 (register/ALU/system control/CAI). |
+| `Z90_OPPAGE_P1` | `0xed 0xf1` | Page 1 (memory/addressing/atomics). |
+
+### Page0 Majors
+
+| Name | Value | Description |
+|---|---:|---|
+| `Z90_P0_MAJOR_REG` | `0` | Register move/exchange. |
+| `Z90_P0_MAJOR_ALU` | `1` | Integer ALU ops on X registers. |
+| `Z90_P0_MAJOR_SYS` | `15` | System control (MODEUP/RETMD/CAI). |
+
+### Page0 Subops
+
+| Name | Major | Value | Description |
+|---|---|---:|---|
+| `Z90_P0_SUB_MOV` | `Z90_P0_MAJOR_REG` | `0` | MOV Xd, Xs. |
+| `Z90_P0_SUB_XCHG` | `Z90_P0_MAJOR_REG` | `1` | XCHG Xd, Xs. |
+| `Z90_P0_SUB_ADD` | `Z90_P0_MAJOR_ALU` | `0` | ADD Xd, Xs. |
+| `Z90_P0_SUB_SUB` | `Z90_P0_MAJOR_ALU` | `1` | SUB Xd, Xs. |
+| `Z90_P0_SUB_AND` | `Z90_P0_MAJOR_ALU` | `2` | AND Xd, Xs. |
+| `Z90_P0_SUB_OR` | `Z90_P0_MAJOR_ALU` | `3` | OR Xd, Xs. |
+| `Z90_P0_SUB_XOR` | `Z90_P0_MAJOR_ALU` | `4` | XOR Xd, Xs. |
+| `Z90_P0_SUB_CMP` | `Z90_P0_MAJOR_ALU` | `5` | CMP Xd, Xs (flags only). |
+| `Z90_P0_SUB_MODEUP` | `Z90_P0_MAJOR_SYS` | `0` | MODEUP(target_tier_u8, entry_vector_u16). rs selects ladder (0=Z80-derived ladder). |
+| `Z90_P0_SUB_RETMD` | `Z90_P0_MAJOR_SYS` | `1` | RETMD(). |
+| `Z90_P0_SUB_CAI_CFG` | `Z90_P0_MAJOR_SYS` | `8` | CAI_CFG (implementation-defined mapping onto cai_if host registers). |
+| `Z90_P0_SUB_CAI_SUBMIT` | `Z90_P0_MAJOR_SYS` | `9` | CAI_SUBMIT rings the CAI submission doorbell. |
+
+### Page1 Ops
+
+| Name | Value | Description |
+|---|---:|---|
+| `Z90_P1_OP_LD16` | `1` | LD16 Xd, [base + index + disp8]. |
+| `Z90_P1_OP_ST16` | `2` | ST16 [base + index + disp8], Xd. |
+| `Z90_P1_OP_LEA` | `3` | LEA Xd, [base + index + disp8]. |
+| `Z90_P1_OP_CAS16` | `4` | CAS16 Xd, [base + disp8], Xs (Xd expected/old, Xs desired; Z90.Z=success). |
 

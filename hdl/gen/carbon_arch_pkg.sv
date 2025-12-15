@@ -96,6 +96,13 @@ package carbon_arch_pkg;
   localparam int unsigned CARBON_CSR_IE = 32'h00000030;
   localparam int unsigned CARBON_CSR_IP = 32'h00000031;
   localparam int unsigned CARBON_CSR_TRACE_CTL = 32'h00000040;
+  localparam int unsigned CARBON_CSR_Z90_MMU_WIN0_BASE = 32'h00a10000;
+  localparam int unsigned CARBON_CSR_Z90_MMU_WIN0_MASK = 32'h00a10004;
+  localparam int unsigned CARBON_CSR_Z90_MMU_WIN1_BASE = 32'h00a10008;
+  localparam int unsigned CARBON_CSR_Z90_MMU_WIN1_MASK = 32'h00a1000c;
+  localparam int unsigned CARBON_CSR_Z90_CACHE_CTL = 32'h00a10010;
+  localparam int unsigned CARBON_CSR_Z90_ATOMIC_CTL = 32'h00a10014;
+  localparam int unsigned CARBON_CSR_Z90_ATOMIC_STATUS = 32'h00a10018;
 
   // Fabric transaction types
   localparam int unsigned CARBON_FABRIC_XACT_READ = 0;
@@ -176,5 +183,37 @@ package carbon_arch_pkg;
   localparam int unsigned CARBON_CAI_STATUS_FAULT = 2;
   localparam int unsigned CARBON_CAI_STATUS_TIMEOUT = 3;
   localparam int unsigned CARBON_CAI_STATUS_UNSUPPORTED = 4;
+
+  // Z90 opcode pages and encodings
+  // Opcode page prefixes
+  localparam logic [7:0] CARBON_Z90_OPPAGE_P0_PREFIX0 = 8'hed;
+  localparam logic [7:0] CARBON_Z90_OPPAGE_P0_PREFIX1 = 8'hf0;
+  localparam logic [7:0] CARBON_Z90_OPPAGE_P1_PREFIX0 = 8'hed;
+  localparam logic [7:0] CARBON_Z90_OPPAGE_P1_PREFIX1 = 8'hf1;
+
+  // Page0 majors
+  localparam int unsigned CARBON_Z90_P0_MAJOR_REG = 0;
+  localparam int unsigned CARBON_Z90_P0_MAJOR_ALU = 1;
+  localparam int unsigned CARBON_Z90_P0_MAJOR_SYS = 15;
+
+  // Page0 subops
+  localparam int unsigned CARBON_Z90_P0_SUB_MOV = 0;
+  localparam int unsigned CARBON_Z90_P0_SUB_XCHG = 1;
+  localparam int unsigned CARBON_Z90_P0_SUB_ADD = 0;
+  localparam int unsigned CARBON_Z90_P0_SUB_SUB = 1;
+  localparam int unsigned CARBON_Z90_P0_SUB_AND = 2;
+  localparam int unsigned CARBON_Z90_P0_SUB_OR = 3;
+  localparam int unsigned CARBON_Z90_P0_SUB_XOR = 4;
+  localparam int unsigned CARBON_Z90_P0_SUB_CMP = 5;
+  localparam int unsigned CARBON_Z90_P0_SUB_MODEUP = 0;
+  localparam int unsigned CARBON_Z90_P0_SUB_RETMD = 1;
+  localparam int unsigned CARBON_Z90_P0_SUB_CAI_CFG = 8;
+  localparam int unsigned CARBON_Z90_P0_SUB_CAI_SUBMIT = 9;
+
+  // Page1 ops
+  localparam int unsigned CARBON_Z90_P1_OP_LD16 = 1;
+  localparam int unsigned CARBON_Z90_P1_OP_ST16 = 2;
+  localparam int unsigned CARBON_Z90_P1_OP_LEA = 3;
+  localparam int unsigned CARBON_Z90_P1_OP_CAS16 = 4;
 
 endpackage : carbon_arch_pkg
