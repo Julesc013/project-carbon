@@ -151,6 +151,101 @@ csrs:
     width_bits: 32
     description: Trace control register (trace on/off and mode bits).
 
+  # CPUID CSR window (core-common, v1)
+  - name: CSR_CPUID_LEAF
+    address: 0x00000050
+    block: core_common
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CPUID leaf selector for CSR window.
+  - name: CSR_CPUID_SUBLEAF
+    address: 0x00000051
+    block: core_common
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CPUID subleaf selector for CSR window.
+  - name: CSR_CPUID_DATA0_LO
+    address: 0x00000060
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CPUID data word 0 (low 32 of 64).
+  - name: CSR_CPUID_DATA0_HI
+    address: 0x00000061
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CPUID data word 0 (high 32 of 64).
+  - name: CSR_CPUID_DATA1_LO
+    address: 0x00000062
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CPUID data word 1 (low 32 of 64).
+  - name: CSR_CPUID_DATA1_HI
+    address: 0x00000063
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CPUID data word 1 (high 32 of 64).
+  - name: CSR_CPUID_DATA2_LO
+    address: 0x00000064
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CPUID data word 2 (low 32 of 64).
+  - name: CSR_CPUID_DATA2_HI
+    address: 0x00000065
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CPUID data word 2 (high 32 of 64).
+  - name: CSR_CPUID_DATA3_LO
+    address: 0x00000066
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CPUID data word 3 (low 32 of 64).
+  - name: CSR_CPUID_DATA3_HI
+    address: 0x00000067
+    block: core_common
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CPUID data word 3 (high 32 of 64).
+
+  # Debug control CSRs (core-common, v1 scaffold)
+  - name: CSR_DBG_CTRL
+    address: 0x00000070
+    block: debug_trace
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Debug run/halt control (CSR mirror of dbg_if).
+  - name: CSR_DBG_STEP
+    address: 0x00000071
+    block: debug_trace
+    access: CSR_WO
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Debug single-step request token (CSR mirror of dbg_if.step_req).
+  - name: CSR_DBG_STATUS
+    address: 0x00000072
+    block: debug_trace
+    access: CSR_RO
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Debug status (halted/step-ack snapshot).
+
   # Z90 core-family CSRs (vendor_id=0x00, block_id=0xA1, block_version=0x0)
   - name: CSR_Z90_MMU_WIN0_BASE
     address: 0x00A10000

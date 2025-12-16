@@ -130,6 +130,19 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `CSR_IE` | `0x00000030` | `CSR_RW` | `PRIV_S` | Interrupt enable bits. |
 | `CSR_IP` | `0x00000031` | `CSR_RO` | `PRIV_S` | Interrupt pending bits. |
 | `CSR_TRACE_CTL` | `0x00000040` | `CSR_RW` | `PRIV_S` | Trace control register (trace on/off and mode bits). |
+| `CSR_CPUID_LEAF` | `0x00000050` | `CSR_RW` | `PRIV_U` | CPUID leaf selector for CSR window. |
+| `CSR_CPUID_SUBLEAF` | `0x00000051` | `CSR_RW` | `PRIV_U` | CPUID subleaf selector for CSR window. |
+| `CSR_CPUID_DATA0_LO` | `0x00000060` | `CSR_RO` | `PRIV_U` | CPUID data word 0 (low 32 of 64). |
+| `CSR_CPUID_DATA0_HI` | `0x00000061` | `CSR_RO` | `PRIV_U` | CPUID data word 0 (high 32 of 64). |
+| `CSR_CPUID_DATA1_LO` | `0x00000062` | `CSR_RO` | `PRIV_U` | CPUID data word 1 (low 32 of 64). |
+| `CSR_CPUID_DATA1_HI` | `0x00000063` | `CSR_RO` | `PRIV_U` | CPUID data word 1 (high 32 of 64). |
+| `CSR_CPUID_DATA2_LO` | `0x00000064` | `CSR_RO` | `PRIV_U` | CPUID data word 2 (low 32 of 64). |
+| `CSR_CPUID_DATA2_HI` | `0x00000065` | `CSR_RO` | `PRIV_U` | CPUID data word 2 (high 32 of 64). |
+| `CSR_CPUID_DATA3_LO` | `0x00000066` | `CSR_RO` | `PRIV_U` | CPUID data word 3 (low 32 of 64). |
+| `CSR_CPUID_DATA3_HI` | `0x00000067` | `CSR_RO` | `PRIV_U` | CPUID data word 3 (high 32 of 64). |
+| `CSR_DBG_CTRL` | `0x00000070` | `CSR_RW` | `PRIV_S` | Debug run/halt control (CSR mirror of dbg_if). |
+| `CSR_DBG_STEP` | `0x00000071` | `CSR_WO` | `PRIV_S` | Debug single-step request token (CSR mirror of dbg_if.step_req). |
+| `CSR_DBG_STATUS` | `0x00000072` | `CSR_RO` | `PRIV_S` | Debug status (halted/step-ack snapshot). |
 | `CSR_Z90_MMU_WIN0_BASE` | `0x00a10000` | `CSR_RW` | `PRIV_S` | Z90 MMU/window register 0 base address (register-only placeholder). |
 | `CSR_Z90_MMU_WIN0_MASK` | `0x00a10004` | `CSR_RW` | `PRIV_S` | Z90 MMU/window register 0 mask/limit (register-only placeholder). |
 | `CSR_Z90_MMU_WIN1_BASE` | `0x00a10008` | `CSR_RW` | `PRIV_S` | Z90 MMU/window register 1 base address (register-only placeholder). |
