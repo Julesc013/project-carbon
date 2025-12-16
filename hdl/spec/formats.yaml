@@ -1,0 +1,59 @@
+spec_version: 1.0
+name: formats
+description: Numeric format identifiers used by accelerators and CAI payloads.
+revision: v1.0.0
+created: 2025-12-16
+stable: true
+
+numeric_formats:
+  description: Canonical numeric format IDs (floating-point).
+  formats:
+    - name: FMT_BINARY16
+      value: 0
+      width_bits: 16
+      exp_bits: 5
+      frac_bits: 10
+      bias: 15
+      description: IEEE 754 binary16 (half).
+    - name: FMT_BFLOAT16
+      value: 1
+      width_bits: 16
+      exp_bits: 8
+      frac_bits: 7
+      bias: 127
+      description: bfloat16.
+    - name: FMT_BINARY32
+      value: 2
+      width_bits: 32
+      exp_bits: 8
+      frac_bits: 23
+      bias: 127
+      description: IEEE 754 binary32 (single).
+    - name: FMT_BINARY64
+      value: 3
+      width_bits: 64
+      exp_bits: 11
+      frac_bits: 52
+      bias: 1023
+      description: IEEE 754 binary64 (double).
+
+rounding_modes:
+  description: IEEE 754 rounding mode IDs.
+  modes:
+    - name: RND_RN
+      value: 0
+      mnemonic: RN
+      description: Round to nearest, ties to even.
+    - name: RND_RZ
+      value: 1
+      mnemonic: RZ
+      description: Round toward zero.
+    - name: RND_RP
+      value: 2
+      mnemonic: RP
+      description: Round toward +infinity.
+    - name: RND_RM
+      value: 3
+      mnemonic: RM
+      description: Round toward -infinity.
+

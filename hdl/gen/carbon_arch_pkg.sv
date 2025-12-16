@@ -48,6 +48,34 @@ package carbon_arch_pkg;
   localparam int unsigned CARBON_MODESTACK_MIN_DEPTH = 4;
   localparam int unsigned CARBON_MODESTACK_RECOMMENDED_DEPTH = 16;
 
+  // Numeric format identifiers
+  localparam int unsigned CARBON_FMT_BINARY16 = 0;
+  localparam int unsigned CARBON_FMT_BINARY16_WIDTH_BITS = 16;
+  localparam int unsigned CARBON_FMT_BINARY16_EXP_BITS = 5;
+  localparam int unsigned CARBON_FMT_BINARY16_FRAC_BITS = 10;
+  localparam int unsigned CARBON_FMT_BINARY16_BIAS = 15;
+  localparam int unsigned CARBON_FMT_BFLOAT16 = 1;
+  localparam int unsigned CARBON_FMT_BFLOAT16_WIDTH_BITS = 16;
+  localparam int unsigned CARBON_FMT_BFLOAT16_EXP_BITS = 8;
+  localparam int unsigned CARBON_FMT_BFLOAT16_FRAC_BITS = 7;
+  localparam int unsigned CARBON_FMT_BFLOAT16_BIAS = 127;
+  localparam int unsigned CARBON_FMT_BINARY32 = 2;
+  localparam int unsigned CARBON_FMT_BINARY32_WIDTH_BITS = 32;
+  localparam int unsigned CARBON_FMT_BINARY32_EXP_BITS = 8;
+  localparam int unsigned CARBON_FMT_BINARY32_FRAC_BITS = 23;
+  localparam int unsigned CARBON_FMT_BINARY32_BIAS = 127;
+  localparam int unsigned CARBON_FMT_BINARY64 = 3;
+  localparam int unsigned CARBON_FMT_BINARY64_WIDTH_BITS = 64;
+  localparam int unsigned CARBON_FMT_BINARY64_EXP_BITS = 11;
+  localparam int unsigned CARBON_FMT_BINARY64_FRAC_BITS = 52;
+  localparam int unsigned CARBON_FMT_BINARY64_BIAS = 1023;
+
+  // IEEE rounding modes
+  localparam int unsigned CARBON_RND_RN = 0;
+  localparam int unsigned CARBON_RND_RZ = 1;
+  localparam int unsigned CARBON_RND_RP = 2;
+  localparam int unsigned CARBON_RND_RM = 3;
+
   // CPUID leaf identifiers
   localparam int unsigned CARBON_CPUID_LEAF_VENDOR = 32'h00000000;
   localparam int unsigned CARBON_CPUID_LEAF_ID = 32'h00000001;
@@ -103,6 +131,28 @@ package carbon_arch_pkg;
   localparam int unsigned CARBON_CSR_Z90_CACHE_CTL = 32'h00a10010;
   localparam int unsigned CARBON_CSR_Z90_ATOMIC_CTL = 32'h00a10014;
   localparam int unsigned CARBON_CSR_Z90_ATOMIC_STATUS = 32'h00a10018;
+  localparam int unsigned CARBON_CSR_AM9513_ID = 32'h00700000;
+  localparam int unsigned CARBON_CSR_AM9513_CTRL = 32'h00700004;
+  localparam int unsigned CARBON_CSR_AM9513_STATUS = 32'h00700008;
+  localparam int unsigned CARBON_CSR_AM9513_MODE = 32'h0070000c;
+  localparam int unsigned CARBON_CSR_AM9513_CTX_SEL = 32'h00700010;
+  localparam int unsigned CARBON_CSR_AM9513_CTX_RM = 32'h00700014;
+  localparam int unsigned CARBON_CSR_AM9513_CTX_FLAGS = 32'h00700018;
+  localparam int unsigned CARBON_CSR_AM9513_CTX_FLAGS_CLR = 32'h0070001c;
+  localparam int unsigned CARBON_CSR_AM9513_RF_INDEX = 32'h00700020;
+  localparam int unsigned CARBON_CSR_AM9513_RF_DATA_LO = 32'h00700024;
+  localparam int unsigned CARBON_CSR_AM9513_RF_DATA_HI = 32'h00700028;
+  localparam int unsigned CARBON_CSR_AM9513_CAI_COMP_BASE_LO = 32'h00700030;
+  localparam int unsigned CARBON_CSR_AM9513_CAI_COMP_BASE_HI = 32'h00700034;
+  localparam int unsigned CARBON_CSR_AM9513_CAI_COMP_RING_MASK = 32'h00700038;
+  localparam int unsigned CARBON_CSR_AM9513_CAI_IRQ_ENABLE = 32'h0070003c;
+  localparam int unsigned CARBON_CSR_AM9513_LEGACY_CTRL = 32'h00700040;
+  localparam int unsigned CARBON_CSR_AM9513_LEGACY_STATUS = 32'h00700044;
+  localparam int unsigned CARBON_CSR_AM9513_LEGACY_PUSH_LO = 32'h00700048;
+  localparam int unsigned CARBON_CSR_AM9513_LEGACY_PUSH_HI = 32'h0070004c;
+  localparam int unsigned CARBON_CSR_AM9513_LEGACY_POP_LO = 32'h00700050;
+  localparam int unsigned CARBON_CSR_AM9513_LEGACY_POP_HI = 32'h00700054;
+  localparam int unsigned CARBON_CSR_AM9513_LEGACY_OP = 32'h00700058;
 
   // Fabric transaction types
   localparam int unsigned CARBON_FABRIC_XACT_READ = 0;

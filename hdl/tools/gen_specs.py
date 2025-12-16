@@ -192,6 +192,7 @@ def _load_specs(spec_dir: Path) -> Dict[str, Dict[str, Any]]:
         "mode_switch.yaml",
         "discovery.yaml",
         "csr_map.yaml",
+        "formats.yaml",
         "fabric.yaml",
         "cai.yaml",
         "isa_z90.yaml",
@@ -363,6 +364,55 @@ def _validate_csr_map(spec: Dict[str, Any]) -> None:
         raise SpecError(f"{where}: missing required CSRs: {', '.join(missing)}")
 
 
+def _validate_formats(spec: Dict[str, Any]) -> None:
+    where = "formats.yaml"
+
+    num = spec.get("numeric_formats")
+    _expect_type(num, dict, where=f"{where}:numeric_formats")
+    fmts = num.get("formats")
+    _expect_type(fmts, list, where=f"{where}:numeric_formats.formats")
+
+    seen_vals = set()
+    for f in fmts:
+        _expect_type(f, dict, where=f"{where}:numeric_formats.formats[]")
+        _require_keys(
+            f,
+            ["name", "value", "width_bits", "exp_bits", "frac_bits", "bias", "description"],
+            where=f"{where}:numeric_formats.formats[]",
+        )
+        v = f["value"]
+        if not isinstance(v, int) or v < 0 or v > 255:
+            raise SpecError(f"{where}:{f.get('name','<fmt>')}: value must be u8")
+        if v in seen_vals:
+            raise SpecError(f"{where}:{f.get('name','<fmt>')}: duplicate value {v}")
+        seen_vals.add(v)
+
+        width = int(f["width_bits"])
+        exp = int(f["exp_bits"])
+        frac = int(f["frac_bits"])
+        if width != (1 + exp + frac):
+            raise SpecError(
+                f"{where}:{f['name']}: width_bits must equal 1+exp_bits+frac_bits"
+            )
+
+    rnd = spec.get("rounding_modes")
+    _expect_type(rnd, dict, where=f"{where}:rounding_modes")
+    modes = rnd.get("modes")
+    _expect_type(modes, list, where=f"{where}:rounding_modes.modes")
+    seen_rm = set()
+    for m in modes:
+        _expect_type(m, dict, where=f"{where}:rounding_modes.modes[]")
+        _require_keys(
+            m, ["name", "value", "mnemonic", "description"], where=f"{where}:rounding_modes.modes[]"
+        )
+        v = m["value"]
+        if not isinstance(v, int) or v < 0 or v > 7:
+            raise SpecError(f"{where}:{m.get('name','<rm>')}: value must be 0..7")
+        if v in seen_rm:
+            raise SpecError(f"{where}:{m.get('name','<rm>')}: duplicate value {v}")
+        seen_rm.add(v)
+
+
 def _validate_fabric(spec: Dict[str, Any]) -> None:
     where = "fabric.yaml"
     tx = spec.get("transaction_types")
@@ -423,6 +473,7 @@ def _validate_specs(specs: Dict[str, Dict[str, Any]]) -> None:
     _validate_mode_switch(specs["mode_switch.yaml"])
     _validate_discovery(specs["discovery.yaml"])
     _validate_csr_map(specs["csr_map.yaml"])
+    _validate_formats(specs["formats.yaml"])
     _validate_fabric(specs["fabric.yaml"])
     _validate_cai(specs["cai.yaml"])
     _validate_isa_z90(specs["isa_z90.yaml"])
@@ -433,6 +484,7 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
     mode = specs["mode_switch.yaml"]
     disc = specs["discovery.yaml"]
     csr = specs["csr_map.yaml"]
+    formats = specs["formats.yaml"]
     fabric = specs["fabric.yaml"]
     cai = specs["cai.yaml"]
     isa_z90 = specs["isa_z90.yaml"]
@@ -481,6 +533,21 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
     out.append(
         f"  localparam int unsigned CARBON_MODESTACK_RECOMMENDED_DEPTH = {mode['modestack']['recommended_depth']};"
     )
+    out.append("")
+
+    out.append("  // Numeric format identifiers")
+    for f in formats["numeric_formats"]["formats"]:
+        name = f["name"]
+        out.append(f"  localparam int unsigned CARBON_{name} = {int(f['value'])};")
+        out.append(f"  localparam int unsigned CARBON_{name}_WIDTH_BITS = {int(f['width_bits'])};")
+        out.append(f"  localparam int unsigned CARBON_{name}_EXP_BITS = {int(f['exp_bits'])};")
+        out.append(f"  localparam int unsigned CARBON_{name}_FRAC_BITS = {int(f['frac_bits'])};")
+        out.append(f"  localparam int unsigned CARBON_{name}_BIAS = {int(f['bias'])};")
+    out.append("")
+
+    out.append("  // IEEE rounding modes")
+    for rm in formats["rounding_modes"]["modes"]:
+        out.append(f"  localparam int unsigned CARBON_{rm['name']} = {int(rm['value'])};")
     out.append("")
 
     out.append("  // CPUID leaf identifiers")
@@ -601,6 +668,7 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
     mode = specs["mode_switch.yaml"]
     disc = specs["discovery.yaml"]
     csr = specs["csr_map.yaml"]
+    formats = specs["formats.yaml"]
     fabric = specs["fabric.yaml"]
     cai = specs["cai.yaml"]
     isa_z90 = specs["isa_z90.yaml"]
@@ -636,6 +704,21 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"#define CARBON_{bit_name}_MASK (UINT32_C(1) << {b})")
     out.append(f"#define CARBON_MODESTACK_MIN_DEPTH ({mode['modestack']['min_depth']}u)")
     out.append(f"#define CARBON_MODESTACK_RECOMMENDED_DEPTH ({mode['modestack']['recommended_depth']}u)")
+    out.append("")
+
+    out.append("/* Numeric format identifiers */")
+    for f in formats["numeric_formats"]["formats"]:
+        name = f["name"]
+        out.append(f"#define CARBON_{name} ({int(f['value'])}u)")
+        out.append(f"#define CARBON_{name}_WIDTH_BITS ({int(f['width_bits'])}u)")
+        out.append(f"#define CARBON_{name}_EXP_BITS ({int(f['exp_bits'])}u)")
+        out.append(f"#define CARBON_{name}_FRAC_BITS ({int(f['frac_bits'])}u)")
+        out.append(f"#define CARBON_{name}_BIAS ({int(f['bias'])}u)")
+    out.append("")
+
+    out.append("/* IEEE rounding modes */")
+    for rm in formats["rounding_modes"]["modes"]:
+        out.append(f"#define CARBON_{rm['name']} ({int(rm['value'])}u)")
     out.append("")
 
     out.append("/* CPUID leaf identifiers */")
@@ -743,6 +826,7 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
     mode = specs["mode_switch.yaml"]
     disc = specs["discovery.yaml"]
     csr = specs["csr_map.yaml"]
+    formats = specs["formats.yaml"]
     fabric = specs["fabric.yaml"]
     cai = specs["cai.yaml"]
     isa_z90 = specs["isa_z90.yaml"]
@@ -972,6 +1056,24 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
     out.append("|---|---:|---|")
     for o in isa_z90["page1_ops"]:
         out.append(f"| `{o['name']}` | `{o['value']}` | {_md_escape(o['description'])} |")
+    out.append("")
+
+    out.append("## H) Numeric Formats")
+    out.append("")
+    out.append("| Name | Value | Width | Exp | Frac | Bias | Description |")
+    out.append("|---|---:|---:|---:|---:|---:|---|")
+    for f in formats["numeric_formats"]["formats"]:
+        out.append(
+            f"| `{f['name']}` | `{f['value']}` | `{f['width_bits']}` | `{f['exp_bits']}` | `{f['frac_bits']}` | `{f['bias']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Rounding Modes")
+    out.append("")
+    out.append("| Name | Value | Mnemonic | Description |")
+    out.append("|---|---:|---|---|")
+    for m in formats["rounding_modes"]["modes"]:
+        out.append(f"| `{m['name']}` | `{m['value']}` | `{m['mnemonic']}` | {_md_escape(m['description'])} |")
     out.append("")
 
     return "\n".join(out)

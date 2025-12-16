@@ -137,6 +137,28 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `CSR_Z90_CACHE_CTL` | `0x00a10010` | `CSR_RW` | `PRIV_S` | Z90 cache control hooks (register-only placeholder; no cache logic implied). |
 | `CSR_Z90_ATOMIC_CTL` | `0x00a10014` | `CSR_RW` | `PRIV_S` | Z90 atomic enable/control (register-only placeholder). |
 | `CSR_Z90_ATOMIC_STATUS` | `0x00a10018` | `CSR_RO` | `PRIV_S` | Z90 atomic status (register-only placeholder). |
+| `CSR_AM9513_ID` | `0x00700000` | `CSR_RO` | `PRIV_U` | Am9513 identification register (implementation-defined encoding). |
+| `CSR_AM9513_CTRL` | `0x00700004` | `CSR_RW` | `PRIV_S` | Am9513 global control (v1.0: enable). |
+| `CSR_AM9513_STATUS` | `0x00700008` | `CSR_RO` | `PRIV_U` | Am9513 global status (busy, pending work, last fault). |
+| `CSR_AM9513_MODE` | `0x0070000c` | `CSR_RW` | `PRIV_S` | Default personality/mode select (P0/P1/P7) for non-CAI paths. |
+| `CSR_AM9513_CTX_SEL` | `0x00700010` | `CSR_RW` | `PRIV_U` | Context selector for CSR register-file/legacy windows. |
+| `CSR_AM9513_CTX_RM` | `0x00700014` | `CSR_RW` | `PRIV_U` | Per-context IEEE rounding mode (uses formats spec rounding IDs). |
+| `CSR_AM9513_CTX_FLAGS` | `0x00700018` | `CSR_RO` | `PRIV_U` | Per-context IEEE exception flags (sticky). |
+| `CSR_AM9513_CTX_FLAGS_CLR` | `0x0070001c` | `CSR_WO` | `PRIV_U` | Write-1-to-clear bits for per-context IEEE exception flags. |
+| `CSR_AM9513_RF_INDEX` | `0x00700020` | `CSR_RW` | `PRIV_U` | Register-file index selector (F0..F15) for RF_DATA reads/writes. |
+| `CSR_AM9513_RF_DATA_LO` | `0x00700024` | `CSR_RW` | `PRIV_U` | Register-file data low word for selected context/register. |
+| `CSR_AM9513_RF_DATA_HI` | `0x00700028` | `CSR_RW` | `PRIV_U` | Register-file data high word for selected context/register. |
+| `CSR_AM9513_CAI_COMP_BASE_LO` | `0x00700030` | `CSR_RW` | `PRIV_S` | CAI completion ring base address (low word). |
+| `CSR_AM9513_CAI_COMP_BASE_HI` | `0x00700034` | `CSR_RW` | `PRIV_S` | CAI completion ring base address (high word). |
+| `CSR_AM9513_CAI_COMP_RING_MASK` | `0x00700038` | `CSR_RW` | `PRIV_S` | CAI completion ring mask (entries-1, power-of-two ring). |
+| `CSR_AM9513_CAI_IRQ_ENABLE` | `0x0070003c` | `CSR_RW` | `PRIV_S` | CAI completion interrupt enable (maps to cai_if.comp_irq). |
+| `CSR_AM9513_LEGACY_CTRL` | `0x00700040` | `CSR_RW` | `PRIV_U` | Legacy 9511/9512 CSR window control (mode/format selection). |
+| `CSR_AM9513_LEGACY_STATUS` | `0x00700044` | `CSR_RO` | `PRIV_U` | Legacy 9511/9512 status (busy, stack depth, error). |
+| `CSR_AM9513_LEGACY_PUSH_LO` | `0x00700048` | `CSR_WO` | `PRIV_U` | Legacy push operand low word (commit via PUSH_HI write). |
+| `CSR_AM9513_LEGACY_PUSH_HI` | `0x0070004c` | `CSR_WO` | `PRIV_U` | Legacy push operand high word (writing commits a push). |
+| `CSR_AM9513_LEGACY_POP_LO` | `0x00700050` | `CSR_RO` | `PRIV_U` | Legacy pop result low word (read does not pop; POP_HI commits pop). |
+| `CSR_AM9513_LEGACY_POP_HI` | `0x00700054` | `CSR_RO` | `PRIV_U` | Legacy pop result high word (read triggers pop side-effect). |
+| `CSR_AM9513_LEGACY_OP` | `0x00700058` | `CSR_WO` | `PRIV_U` | Legacy operation issue (opcode-defined stack operands/results). |
 
 ## E) Fabric Transaction Contract
 
@@ -288,4 +310,22 @@ result_stride: 0
 | `Z90_P1_OP_ST16` | `2` | ST16 [base + index + disp8], Xd. |
 | `Z90_P1_OP_LEA` | `3` | LEA Xd, [base + index + disp8]. |
 | `Z90_P1_OP_CAS16` | `4` | CAS16 Xd, [base + disp8], Xs (Xd expected/old, Xs desired; Z90.Z=success). |
+
+## H) Numeric Formats
+
+| Name | Value | Width | Exp | Frac | Bias | Description |
+|---|---:|---:|---:|---:|---:|---|
+| `FMT_BINARY16` | `0` | `16` | `5` | `10` | `15` | IEEE 754 binary16 (half). |
+| `FMT_BFLOAT16` | `1` | `16` | `8` | `7` | `127` | bfloat16. |
+| `FMT_BINARY32` | `2` | `32` | `8` | `23` | `127` | IEEE 754 binary32 (single). |
+| `FMT_BINARY64` | `3` | `64` | `11` | `52` | `1023` | IEEE 754 binary64 (double). |
+
+### Rounding Modes
+
+| Name | Value | Mnemonic | Description |
+|---|---:|---|---|
+| `RND_RN` | `0` | `RN` | Round to nearest, ties to even. |
+| `RND_RZ` | `1` | `RZ` | Round toward zero. |
+| `RND_RP` | `2` | `RP` | Round toward +infinity. |
+| `RND_RM` | `3` | `RM` | Round toward -infinity. |
 

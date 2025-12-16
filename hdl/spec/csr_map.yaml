@@ -202,6 +202,166 @@ csrs:
     width_bits: 32
     description: Z90 atomic status (register-only placeholder).
 
+  # Am9513 accelerator CSRs (vendor_id=0x00, block_id=0x70, block_version=0x0)
+  - name: CSR_AM9513_ID
+    address: 0x00700000
+    block: accelerators
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Am9513 identification register (implementation-defined encoding).
+  - name: CSR_AM9513_CTRL
+    address: 0x00700004
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Am9513 global control (v1.0: enable).
+  - name: CSR_AM9513_STATUS
+    address: 0x00700008
+    block: accelerators
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Am9513 global status (busy, pending work, last fault).
+  - name: CSR_AM9513_MODE
+    address: 0x0070000C
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Default personality/mode select (P0/P1/P7) for non-CAI paths.
+
+  - name: CSR_AM9513_CTX_SEL
+    address: 0x00700010
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Context selector for CSR register-file/legacy windows.
+  - name: CSR_AM9513_CTX_RM
+    address: 0x00700014
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Per-context IEEE rounding mode (uses formats spec rounding IDs).
+  - name: CSR_AM9513_CTX_FLAGS
+    address: 0x00700018
+    block: accelerators
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Per-context IEEE exception flags (sticky).
+  - name: CSR_AM9513_CTX_FLAGS_CLR
+    address: 0x0070001C
+    block: accelerators
+    access: CSR_WO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Write-1-to-clear bits for per-context IEEE exception flags.
+
+  - name: CSR_AM9513_RF_INDEX
+    address: 0x00700020
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Register-file index selector (F0..F15) for RF_DATA reads/writes.
+  - name: CSR_AM9513_RF_DATA_LO
+    address: 0x00700024
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Register-file data low word for selected context/register.
+  - name: CSR_AM9513_RF_DATA_HI
+    address: 0x00700028
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Register-file data high word for selected context/register.
+
+  - name: CSR_AM9513_CAI_COMP_BASE_LO
+    address: 0x00700030
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: CAI completion ring base address (low word).
+  - name: CSR_AM9513_CAI_COMP_BASE_HI
+    address: 0x00700034
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: CAI completion ring base address (high word).
+  - name: CSR_AM9513_CAI_COMP_RING_MASK
+    address: 0x00700038
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: CAI completion ring mask (entries-1, power-of-two ring).
+  - name: CSR_AM9513_CAI_IRQ_ENABLE
+    address: 0x0070003C
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: CAI completion interrupt enable (maps to cai_if.comp_irq).
+
+  - name: CSR_AM9513_LEGACY_CTRL
+    address: 0x00700040
+    block: accelerators
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Legacy 9511/9512 CSR window control (mode/format selection).
+  - name: CSR_AM9513_LEGACY_STATUS
+    address: 0x00700044
+    block: accelerators
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Legacy 9511/9512 status (busy, stack depth, error).
+  - name: CSR_AM9513_LEGACY_PUSH_LO
+    address: 0x00700048
+    block: accelerators
+    access: CSR_WO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Legacy push operand low word (commit via PUSH_HI write).
+  - name: CSR_AM9513_LEGACY_PUSH_HI
+    address: 0x0070004C
+    block: accelerators
+    access: CSR_WO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Legacy push operand high word (writing commits a push).
+  - name: CSR_AM9513_LEGACY_POP_LO
+    address: 0x00700050
+    block: accelerators
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Legacy pop result low word (read does not pop; POP_HI commits pop).
+  - name: CSR_AM9513_LEGACY_POP_HI
+    address: 0x00700054
+    block: accelerators
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Legacy pop result high word (read triggers pop side-effect).
+  - name: CSR_AM9513_LEGACY_OP
+    address: 0x00700058
+    block: accelerators
+    access: CSR_WO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Legacy operation issue (opcode-defined stack operands/results).
+
 reserved_numeric_ranges:
   - name: core_common_reg_id
     range: [0x000, 0x0FF]
