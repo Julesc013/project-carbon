@@ -5,6 +5,9 @@
 #   make tb_irq_ctrl
 #   make tb_ipi_mailbox
 #   make tb_trace_ring
+#   make tb_cai_contract
+#   make tb_z85
+#   make tb_z90
 #   make tb_am9513
 #   make tb_ez90_scaffold
 #   make tb_8096
@@ -114,11 +117,20 @@ Z85_RTL_SV := \
   ../cores/Z85/rtl/z85_decode.sv \
   ../cores/Z85/rtl/z85_core.sv
 
+Z85_SV := \
+  $(Z85_RTL_SV) \
+  ../cores/Z85/ref/z85_ref_model.sv \
+  ../cores/Z85/tb/tb_z85.sv
+
 Z90_RTL_SV := \
   $(Z85_RTL_SV) \
   ../cores/Z90/rtl/z90_decode_pkg.sv \
   ../cores/Z90/rtl/z90_alu_pkg.sv \
   ../cores/Z90/rtl/z90_core.sv
+
+Z90_SV := \
+  $(Z90_RTL_SV) \
+  ../cores/Z90/tb/tb_z90.sv
 
 X96_8096_RTL_SV := \
   ../cores/8096/rtl/cpu_8096_pkg.sv \
@@ -195,8 +207,8 @@ X96_8097_SV := \
 
 IVERILOG_FLAGS := -g2012 -Wall -Wno-timescale
 
-.PHONY: all clean tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_am9513 tb_ez90_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonez90 tb_carbonx86 tb_carbonx96
-all: tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_am9513 tb_ez90_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonez90 tb_carbonx86 tb_carbonx96
+.PHONY: all clean tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_ez90_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonez90 tb_carbonx86 tb_carbonx96
+all: tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_ez90_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonez90 tb_carbonx86 tb_carbonx96
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -216,6 +228,18 @@ tb_ipi_mailbox: $(BUILD_DIR)
 tb_trace_ring: $(BUILD_DIR)
 	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_trace_ring.vvp $(COMMON_SV) tb/tb_trace_ring.sv
 	$(VVP) $(BUILD_DIR)/tb_trace_ring.vvp
+
+tb_cai_contract: $(BUILD_DIR)
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_cai_contract.vvp $(COMMON_SV) $(AM9513_RTL_SV) tb/tb_cai_contract.sv
+	$(VVP) $(BUILD_DIR)/tb_cai_contract.vvp
+
+tb_z85: $(BUILD_DIR)
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_z85.vvp $(COMMON_SV) $(Z85_SV)
+	$(VVP) $(BUILD_DIR)/tb_z85.vvp
+
+tb_z90: $(BUILD_DIR)
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_z90.vvp $(COMMON_SV) $(Z90_SV)
+	$(VVP) $(BUILD_DIR)/tb_z90.vvp
 
 tb_am9513: $(BUILD_DIR)
 	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_am9513.vvp $(COMMON_SV) $(AM9513_SV)

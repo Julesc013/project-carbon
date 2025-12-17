@@ -49,3 +49,11 @@ Continued from the [Abacus 1](https://github.com/Julesc013/abacus-1) and [Abacus
     └── executables         Executable file formats and disk formats.
 ```
 
+## HDL
+
+HDL lives under `hdl/` (common infrastructure, cores, systems, and simulation).
+
+- Regenerate generated constants: `scripts/gen_arch.sh` / `scripts/gen_arch.ps1`
+- Run regression suite: `scripts/run_sim.sh --all` / `scripts/run_sim.ps1 -All`
+- See `hdl/sim/README.md` for simulator requirements and usage
+

@@ -1,0 +1,9 @@
+# HDL build artifacts (keep generated specs committed under hdl/gen/)
+
+# Simulation
+sim/build/
+sim/*.vvp
+sim/*.vcd
+sim/*.fst
+sim/obj_dir/
+

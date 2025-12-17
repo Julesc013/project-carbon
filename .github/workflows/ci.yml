@@ -1,0 +1,34 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  sim:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog make
+
+      - name: Generate arch outputs
+        run: bash scripts/gen_arch.sh
+
+      - name: Verify generated outputs are committed
+        run: git diff --exit-code
+
+      - name: Run regression
+        run: bash scripts/run_sim.sh --all --no-gen
+
+      - name: Upload sim logs (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-logs
+          path: hdl/sim/build/logs
+

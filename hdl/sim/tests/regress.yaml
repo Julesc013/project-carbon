@@ -1,0 +1,27 @@
+# Project Carbon regression manifest (v1.0)
+#
+# This file is intentionally "simple YAML" so it can be parsed without external
+# YAML dependencies. Any line of the form `- tb_name` is treated as a test.
+
+contract_tests:
+  - tb_fabric_arbiter
+  - tb_irq_ctrl
+  - tb_ipi_mailbox
+  - tb_trace_ring
+  - tb_cai_contract
+
+core_tests:
+  - tb_z85
+  - tb_z90
+  - tb_am9513
+  - tb_ez90_scaffold
+  - tb_8096
+  - tb_8097
+
+system_tests:
+  - tb_carbonz80
+  - tb_carbonz90
+  - tb_carbonez90
+  - tb_carbonx86
+  - tb_carbonx96
+
