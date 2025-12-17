@@ -115,11 +115,33 @@ def _grid(n: int) -> float:
     return n * GRID_MM
 
 
-def _effects(font_mm: float = 1.27, justify: Optional[str] = None) -> List[Any]:
+def _effects(font_mm: float = 1.27, justify: Optional[str] = None, *, hide: bool = False) -> List[Any]:
     effects: List[Any] = [Sym("effects"), [Sym("font"), [Sym("size"), font_mm, font_mm]]]
     if justify:
         effects.append([Sym("justify"), Sym(justify)])
+    if hide:
+        effects.append([Sym("hide"), Sym("yes")])
     return effects
+
+
+def _property(
+    name: str,
+    value: str,
+    at_xy: Tuple[float, float],
+    rot: int = 0,
+    *,
+    font_mm: float = 1.27,
+    justify: Optional[str] = None,
+    hide: bool = False,
+) -> List[Any]:
+    x, y = at_xy
+    return [
+        Sym("property"),
+        name,
+        value,
+        [Sym("at"), x, y, rot],
+        _effects(font_mm=font_mm, justify=justify, hide=hide),
+    ]
 
 
 def _title_block(title: str, common: Dict[str, Any]) -> List[Any]:
@@ -241,6 +263,8 @@ def _kicad_schematic(
     common: Dict[str, Any],
     items: Sequence[List[Any]],
     paper: Optional[str] = None,
+    *,
+    lib_symbols: Optional[Sequence[List[Any]]] = None,
 ) -> str:
     paper_name = paper or common.get("layout", {}).get("paper", "A3")
     root_uuid = _stable_uuid("sch", rel_path)
@@ -253,8 +277,12 @@ def _kicad_schematic(
         [Sym("uuid"), root_uuid],
         [Sym("paper"), paper_name],
         _title_block(title, common),
-        [Sym("lib_symbols")],
     ]
+
+    libs: List[Any] = [Sym("lib_symbols")]
+    if lib_symbols:
+        libs.extend(list(lib_symbols))
+    root.append(libs)
 
     root.extend(items)
     root.append([Sym("sheet_instances"), [Sym("path"), "/", [Sym("page"), "1"]]])
@@ -264,6 +292,115 @@ def _kicad_schematic(
     if not out.endswith("\n"):
         out += "\n"
     return out
+
+
+def _carbon_block_symbol_def(symbol_name: str, *, ref_prefix: str, description: str) -> List[Any]:
+    w = _grid(20)
+    h = _grid(10)
+    hw = w / 2.0
+    hh = h / 2.0
+
+    full_name = f"carbon_blocks:{symbol_name}"
+    return [
+        Sym("symbol"),
+        full_name,
+        [Sym("pin_names"), [Sym("offset"), 1.016]],
+        [Sym("exclude_from_sim"), Sym("no")],
+        [Sym("in_bom"), Sym("yes")],
+        [Sym("on_board"), Sym("yes")],
+        _property("Reference", ref_prefix, (0.0, hh + _grid(2))),
+        _property("Value", symbol_name, (0.0, -hh - _grid(2))),
+        _property("Footprint", "", (0.0, 0.0), hide=True),
+        _property("Datasheet", "", (0.0, 0.0), hide=True),
+        _property("Description", description, (0.0, 0.0), hide=True),
+        [
+            Sym("symbol"),
+            f"{symbol_name}_1_1",
+            [
+                Sym("rectangle"),
+                [Sym("start"), -hw, hh],
+                [Sym("end"), hw, -hh],
+                [Sym("stroke"), [Sym("width"), 0.254], [Sym("type"), Sym("default")]],
+                [Sym("fill"), [Sym("type"), Sym("background")]],
+            ],
+        ],
+        [Sym("embedded_fonts"), Sym("no")],
+    ]
+
+
+def _carbon_symbols_by_name() -> Dict[str, List[Any]]:
+    return {
+        "CARBON_BLOCK_CPU": _carbon_block_symbol_def(
+            "CARBON_BLOCK_CPU", ref_prefix="U", description="Project Carbon CPU placeholder block"
+        ),
+        "CARBON_BLOCK_FABRIC": _carbon_block_symbol_def(
+            "CARBON_BLOCK_FABRIC", ref_prefix="U", description="Project Carbon fabric/interconnect placeholder block"
+        ),
+        "CARBON_BLOCK_SRAM": _carbon_block_symbol_def(
+            "CARBON_BLOCK_SRAM", ref_prefix="U", description="Project Carbon SRAM placeholder block"
+        ),
+        "CARBON_BLOCK_ROM": _carbon_block_symbol_def(
+            "CARBON_BLOCK_ROM", ref_prefix="U", description="Project Carbon ROM placeholder block"
+        ),
+        "CARBON_BLOCK_DRAM": _carbon_block_symbol_def(
+            "CARBON_BLOCK_DRAM", ref_prefix="U", description="Project Carbon DRAM placeholder block"
+        ),
+        "CARBON_BLOCK_CAI_ACCEL": _carbon_block_symbol_def(
+            "CARBON_BLOCK_CAI_ACCEL", ref_prefix="U", description="Project Carbon CAI accelerator placeholder block"
+        ),
+        "CARBON_BLOCK_CONN_HEADER": _carbon_block_symbol_def(
+            "CARBON_BLOCK_CONN_HEADER", ref_prefix="J", description="Project Carbon generic header connector placeholder"
+        ),
+        "CARBON_BLOCK_CLOCK_RESET": _carbon_block_symbol_def(
+            "CARBON_BLOCK_CLOCK_RESET", ref_prefix="U", description="Project Carbon clock/reset placeholder block"
+        ),
+        "CARBON_BLOCK_POWER": _carbon_block_symbol_def(
+            "CARBON_BLOCK_POWER", ref_prefix="U", description="Project Carbon power distribution placeholder block"
+        ),
+        "CARBON_BLOCK_DBG": _carbon_block_symbol_def(
+            "CARBON_BLOCK_DBG", ref_prefix="U", description="Project Carbon debug/JTAG/UART placeholder block"
+        ),
+        "CARBON_BLOCK_RC2014_ADAPTER": _carbon_block_symbol_def(
+            "CARBON_BLOCK_RC2014_ADAPTER", ref_prefix="U", description="Project Carbon RC2014 adapter placeholder block"
+        ),
+        "CARBON_BLOCK_S100_ADAPTER": _carbon_block_symbol_def(
+            "CARBON_BLOCK_S100_ADAPTER", ref_prefix="U", description="Project Carbon S-100 adapter placeholder block"
+        ),
+    }
+
+
+def _symbol_instance(
+    *,
+    project: str,
+    root_uuid: str,
+    file_id: str,
+    lib_id: str,
+    ref: str,
+    value: str,
+    at_xy: Tuple[float, float],
+) -> List[Any]:
+    x, y = at_xy
+    sym_uuid = _stable_uuid("sym", file_id, lib_id, ref, value)
+    return [
+        Sym("symbol"),
+        [Sym("lib_id"), lib_id],
+        [Sym("at"), x, y, 0],
+        [Sym("unit"), 1],
+        [Sym("exclude_from_sim"), Sym("no")],
+        [Sym("in_bom"), Sym("yes")],
+        [Sym("on_board"), Sym("yes")],
+        [Sym("dnp"), Sym("no")],
+        [Sym("uuid"), sym_uuid],
+        _property("Reference", ref, (x, y + _grid(8))),
+        _property("Value", value, (x, y - _grid(8))),
+        _property("Footprint", "", (x, y), hide=True),
+        _property("Datasheet", "", (x, y), hide=True),
+        _property("Description", "", (x, y), hide=True),
+        [
+            Sym("instances"),
+            [Sym("project"), project, [Sym("path"), f"/{root_uuid}", [Sym("reference"), ref], [Sym("unit"), 1]]],
+        ],
+    ]
 
 
 def _read_json(path: Path) -> Dict[str, Any]:
@@ -433,30 +570,41 @@ def _generate_common(common: Dict[str, Any], root: Path) -> List[Path]:
 
     written: List[Path] = []
 
+    carbon_symbols = _carbon_symbols_by_name()
     common_sheets = [
-        ("blk_clock_reset.kicad_sch", "Clock/Reset (placeholder)"),
-        ("blk_debug_header.kicad_sch", "Debug Header (placeholder)"),
-        ("blk_power_dist.kicad_sch", "Power Distribution (placeholder)"),
-        ("blk_jtag_uart.kicad_sch", "JTAG/UART (placeholder)"),
-        ("blk_rc2014_adapter.kicad_sch", "RC2014 Adapter (placeholder)"),
-        ("blk_s100_adapter.kicad_sch", "S-100 Adapter (placeholder)"),
-        ("blk_sram.kicad_sch", "SRAM (placeholder)"),
-        ("blk_rom.kicad_sch", "ROM (placeholder)"),
-        ("blk_dram.kicad_sch", "DRAM (placeholder)"),
+        ("blk_clock_reset.kicad_sch", "Clock/Reset (placeholder)", "CARBON_BLOCK_CLOCK_RESET", "U"),
+        ("blk_debug_header.kicad_sch", "Debug Header (placeholder)", "CARBON_BLOCK_CONN_HEADER", "J"),
+        ("blk_power_dist.kicad_sch", "Power Distribution (placeholder)", "CARBON_BLOCK_POWER", "U"),
+        ("blk_jtag_uart.kicad_sch", "JTAG/UART (placeholder)", "CARBON_BLOCK_DBG", "U"),
+        ("blk_rc2014_adapter.kicad_sch", "RC2014 Adapter (placeholder)", "CARBON_BLOCK_RC2014_ADAPTER", "U"),
+        ("blk_s100_adapter.kicad_sch", "S-100 Adapter (placeholder)", "CARBON_BLOCK_S100_ADAPTER", "U"),
+        ("blk_sram.kicad_sch", "SRAM (placeholder)", "CARBON_BLOCK_SRAM", "U"),
+        ("blk_rom.kicad_sch", "ROM (placeholder)", "CARBON_BLOCK_ROM", "U"),
+        ("blk_dram.kicad_sch", "DRAM (placeholder)", "CARBON_BLOCK_DRAM", "U"),
     ]
 
-    for fname, title in common_sheets:
+    for fname, title, sym_name, sym_ref in common_sheets:
         path = common_dir / fname
         rel_path = str(path.relative_to(root)).replace("\\", "/")
+        root_uuid = _stable_uuid("sch", rel_path)
         items = [
             _text_box(
                 f"Generated common block: {title}",
                 (_grid(10), _grid(10)),
                 (_grid(90), _grid(6)),
                 rel_path,
-            )
+            ),
+            _symbol_instance(
+                project="carbon_common",
+                root_uuid=root_uuid,
+                file_id=rel_path,
+                lib_id=f"carbon_blocks:{sym_name}",
+                ref=sym_ref,
+                value=title,
+                at_xy=(_grid(60), _grid(40)),
+            ),
         ]
-        _write_text(path, _kicad_schematic(rel_path, title, common, items))
+        _write_text(path, _kicad_schematic(rel_path, title, common, items, lib_symbols=[carbon_symbols[sym_name]]))
         written.append(path)
 
     return written
@@ -652,6 +800,20 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
             page=page,
             sheetname="blk_power_dist",
             sheetfile=common_sheetfile("blk_power_dist.kicad_sch"),
+            at_xy=misc_at,
+            size_wh=(sheet_w, base_sheet_h),
+        )
+    )
+    page += 1
+
+    misc_at = (misc_at[0], misc_at[1] + _grid(40))
+    sheets.append(
+        _sheet(
+            project=project_name,
+            root_uuid=root_uuid,
+            page=page,
+            sheetname="blk_jtag_uart",
+            sheetfile=common_sheetfile("blk_jtag_uart.kicad_sch"),
             at_xy=misc_at,
             size_wh=(sheet_w, base_sheet_h),
         )

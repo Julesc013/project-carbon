@@ -1448,10 +1448,10 @@
 				0
 			)
 		)
-		(uuid "a7349b38-d705-5941-9fdf-1c8986c024a5")
+		(uuid "6b4314fe-9bdb-5318-8f15-a263cd587733")
 		(property
 			"Sheetname"
-			"blk_rc2014_adapter"
+			"blk_jtag_uart"
 			(at
 				139.7
 				240.03
@@ -1466,7 +1466,7 @@
 		)
 		(property
 			"Sheetfile"
-			"../../common/blk_rc2014_adapter.kicad_sch"
+			"../../common/blk_jtag_uart.kicad_sch"
 			(at
 				139.7
 				280.67
@@ -1508,10 +1508,10 @@
 				0
 			)
 		)
-		(uuid "39b7c7dc-b8ac-50c6-b5e5-c7d8d5ebe674")
+		(uuid "a7349b38-d705-5941-9fdf-1c8986c024a5")
 		(property
 			"Sheetname"
-			"blk_s100_adapter"
+			"blk_rc2014_adapter"
 			(at
 				139.7
 				290.83
@@ -1526,7 +1526,7 @@
 		)
 		(property
 			"Sheetfile"
-			"../../common/blk_s100_adapter.kicad_sch"
+			"../../common/blk_rc2014_adapter.kicad_sch"
 			(at
 				139.7
 				331.47
@@ -1545,6 +1545,66 @@
 				(path
 					"/7812a538-6816-560e-a6c8-4ca50871fde7"
 					(page "11")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 139.7 342.9)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "39b7c7dc-b8ac-50c6-b5e5-c7d8d5ebe674")
+		(property
+			"Sheetname"
+			"blk_s100_adapter"
+			(at
+				139.7
+				341.63
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"../../common/blk_s100_adapter.kicad_sch"
+			(at
+				139.7
+				382.27
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"system_CarbonX86"
+				(path
+					"/7812a538-6816-560e-a6c8-4ca50871fde7"
+					(page "12")
 				)
 			)
 		)

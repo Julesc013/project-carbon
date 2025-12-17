@@ -10,7 +10,105 @@
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
-	(lib_symbols)
+	(lib_symbols
+		(symbol
+			"carbon_blocks:CARBON_BLOCK_CONN_HEADER"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property
+				"Reference"
+				"J"
+				(at
+					0
+					8.89
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property
+				"Value"
+				"CARBON_BLOCK_CONN_HEADER"
+				(at
+					0
+					-8.89
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property
+				"Footprint"
+				""
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property
+				"Datasheet"
+				""
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property
+				"Description"
+				"Project Carbon generic header connector placeholder"
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol
+				"CARBON_BLOCK_CONN_HEADER_1_1"
+				(rectangle
+					(start -12.7 6.35)
+					(end 12.7 -6.35)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
 	(text_box
 		"Generated common block: Debug Header (placeholder)"
 		(exclude_from_sim no)
@@ -52,6 +150,103 @@
 			(justify left)
 		)
 		(uuid "5a26c7f5-d33e-5719-a20b-de3277df87a1")
+	)
+	(symbol
+		(lib_id "carbon_blocks:CARBON_BLOCK_CONN_HEADER")
+		(at
+			76.2
+			50.8
+			0
+		)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8adfff64-ef9c-5c7b-89bb-8da2147267c0")
+		(property
+			"Reference"
+			"J"
+			(at
+				76.2
+				60.96
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property
+			"Value"
+			"Debug Header (placeholder)"
+			(at
+				76.2
+				40.64
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property
+			"Footprint"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property
+			"Datasheet"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property
+			"Description"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project
+				"carbon_common"
+				(path
+					"/a595fe49-7438-52d4-a467-fd1b1a755d06"
+					(reference "J")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(sheet_instances
 		(path

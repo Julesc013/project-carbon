@@ -10,7 +10,105 @@
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
-	(lib_symbols)
+	(lib_symbols
+		(symbol
+			"carbon_blocks:CARBON_BLOCK_POWER"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property
+				"Reference"
+				"U"
+				(at
+					0
+					8.89
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property
+				"Value"
+				"CARBON_BLOCK_POWER"
+				(at
+					0
+					-8.89
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property
+				"Footprint"
+				""
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property
+				"Datasheet"
+				""
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property
+				"Description"
+				"Project Carbon power distribution placeholder block"
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol
+				"CARBON_BLOCK_POWER_1_1"
+				(rectangle
+					(start -12.7 6.35)
+					(end 12.7 -6.35)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
 	(text_box
 		"Generated common block: Power Distribution (placeholder)"
 		(exclude_from_sim no)
@@ -52,6 +150,103 @@
 			(justify left)
 		)
 		(uuid "2ece3e99-3c4e-5400-8174-6bf5fa1b9f9e")
+	)
+	(symbol
+		(lib_id "carbon_blocks:CARBON_BLOCK_POWER")
+		(at
+			76.2
+			50.8
+			0
+		)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "72a276ad-a793-5d8c-8966-10a1ef5305bd")
+		(property
+			"Reference"
+			"U"
+			(at
+				76.2
+				60.96
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property
+			"Value"
+			"Power Distribution (placeholder)"
+			(at
+				76.2
+				40.64
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property
+			"Footprint"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property
+			"Datasheet"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property
+			"Description"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project
+				"carbon_common"
+				(path
+					"/2e6590ff-5281-5d1e-83e1-e1ce210be04f"
+					(reference "U")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(sheet_instances
 		(path

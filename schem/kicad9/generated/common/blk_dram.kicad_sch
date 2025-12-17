@@ -10,7 +10,105 @@
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
-	(lib_symbols)
+	(lib_symbols
+		(symbol
+			"carbon_blocks:CARBON_BLOCK_DRAM"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property
+				"Reference"
+				"U"
+				(at
+					0
+					8.89
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property
+				"Value"
+				"CARBON_BLOCK_DRAM"
+				(at
+					0
+					-8.89
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property
+				"Footprint"
+				""
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property
+				"Datasheet"
+				""
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property
+				"Description"
+				"Project Carbon DRAM placeholder block"
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol
+				"CARBON_BLOCK_DRAM_1_1"
+				(rectangle
+					(start -12.7 6.35)
+					(end 12.7 -6.35)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
 	(text_box
 		"Generated common block: DRAM (placeholder)"
 		(exclude_from_sim no)
@@ -52,6 +150,103 @@
 			(justify left)
 		)
 		(uuid "b3ef5a4e-2b51-5e07-90da-0f9e54e52336")
+	)
+	(symbol
+		(lib_id "carbon_blocks:CARBON_BLOCK_DRAM")
+		(at
+			76.2
+			50.8
+			0
+		)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "95cc7256-2b7d-5266-9b1f-f45d3bb3258a")
+		(property
+			"Reference"
+			"U"
+			(at
+				76.2
+				60.96
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property
+			"Value"
+			"DRAM (placeholder)"
+			(at
+				76.2
+				40.64
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property
+			"Footprint"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property
+			"Datasheet"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property
+			"Description"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project
+				"carbon_common"
+				(path
+					"/47409cea-498e-58b9-8107-b38f81d4bcfd"
+					(reference "U")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(sheet_instances
 		(path

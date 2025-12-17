@@ -10,7 +10,105 @@
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
-	(lib_symbols)
+	(lib_symbols
+		(symbol
+			"carbon_blocks:CARBON_BLOCK_S100_ADAPTER"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property
+				"Reference"
+				"U"
+				(at
+					0
+					8.89
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property
+				"Value"
+				"CARBON_BLOCK_S100_ADAPTER"
+				(at
+					0
+					-8.89
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property
+				"Footprint"
+				""
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property
+				"Datasheet"
+				""
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property
+				"Description"
+				"Project Carbon S-100 adapter placeholder block"
+				(at
+					0
+					0
+					0
+				)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol
+				"CARBON_BLOCK_S100_ADAPTER_1_1"
+				(rectangle
+					(start -12.7 6.35)
+					(end 12.7 -6.35)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
 	(text_box
 		"Generated common block: S-100 Adapter (placeholder)"
 		(exclude_from_sim no)
@@ -52,6 +150,103 @@
 			(justify left)
 		)
 		(uuid "16c429af-84c1-51ee-b3c0-2f60fc5aa84f")
+	)
+	(symbol
+		(lib_id "carbon_blocks:CARBON_BLOCK_S100_ADAPTER")
+		(at
+			76.2
+			50.8
+			0
+		)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "ca14f232-7e40-5fab-bd60-1657879280c5")
+		(property
+			"Reference"
+			"U"
+			(at
+				76.2
+				60.96
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property
+			"Value"
+			"S-100 Adapter (placeholder)"
+			(at
+				76.2
+				40.64
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property
+			"Footprint"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property
+			"Datasheet"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property
+			"Description"
+			""
+			(at
+				76.2
+				50.8
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project
+				"carbon_common"
+				(path
+					"/a4c8715a-d408-541a-b1cd-97a5f90b163c"
+					(reference "U")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(sheet_instances
 		(path
