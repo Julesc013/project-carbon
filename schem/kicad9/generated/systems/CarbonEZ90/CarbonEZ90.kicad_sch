@@ -1,0 +1,1607 @@
+(kicad_sch
+	(version 20250114)
+	(generator "kicadgen")
+	(generator_version "0.1")
+	(uuid "17675ba5-bcbf-5d72-8a1b-6c49952c9687")
+	(paper "A3")
+	(title_block
+		(title "CarbonEZ90 (generated)")
+		(company "Project Carbon")
+		(comment 1 "Generated - do not edit in generated/")
+		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
+	)
+	(lib_symbols)
+	(text_box
+		"Generated system top: CarbonEZ90  (edit mapping specs; do not hand-edit generated/)"
+		(exclude_from_sim no)
+		(at
+			12.7
+			12.7
+			0
+		)
+		(size 152.4 7.62)
+		(margins
+			1.27
+			1.27
+			1.27
+			1.27
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color
+				0
+				0
+				0
+				1
+			)
+		)
+		(fill
+			(type color)
+			(color
+				255
+				255
+				150
+				1
+			)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "0d83353c-ab69-5db3-a299-6c66a69f33e8")
+	)
+	(sheet
+		(at 12.7 25.4)
+		(size 101.6 50.8)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "b7c33a55-cb58-5d4f-a2fe-ec6842121eb3")
+		(property
+			"Sheetname"
+			"blk_cpu"
+			(at
+				12.7
+				24.13
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"../../cores/eZ90/eZ90_scaffold.kicad_sch"
+			(at
+				12.7
+				77.47
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_RDATA[31:0]"
+			input
+			(at
+				12.7
+				27.94
+				180
+			)
+			(uuid "298f8092-99a4-5a4f-84d2-dac848ce12b1")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_ACK"
+			input
+			(at
+				12.7
+				30.48
+				180
+			)
+			(uuid "2cf61dfd-ebf7-54c7-90b0-a7186997579f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_ERR"
+			input
+			(at
+				12.7
+				33.02
+				180
+			)
+			(uuid "76841821-f05e-5e39-b912-71aa1dd2041a")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_CLK"
+			input
+			(at
+				12.7
+				35.56
+				180
+			)
+			(uuid "80c07648-0402-5b90-a119-dc2fad34493a")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_RESETn"
+			input
+			(at
+				12.7
+				38.1
+				180
+			)
+			(uuid "4ba836be-72cb-52cd-9442-011f48e28371")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_ADDR[15:0]"
+			input
+			(at
+				12.7
+				40.64
+				180
+			)
+			(uuid "dbcb0036-69c5-5b05-a2cf-abdc7735510b")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_WDATA[31:0]"
+			input
+			(at
+				12.7
+				43.18
+				180
+			)
+			(uuid "05e54929-002f-5ad5-9314-c41dc82eb31a")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_WE"
+			input
+			(at
+				12.7
+				45.72
+				180
+			)
+			(uuid "33e4475e-6d3a-53ed-a41a-8bfecaebd666")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_STB"
+			input
+			(at
+				12.7
+				48.26
+				180
+			)
+			(uuid "4159e66a-a3ed-5386-bbaf-afce2463cddc")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_CLK"
+			input
+			(at
+				12.7
+				50.8
+				180
+			)
+			(uuid "26cd1c38-4f3c-5f1f-957e-1f297edee8dc")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_RESETn"
+			input
+			(at
+				12.7
+				53.34
+				180
+			)
+			(uuid "e16fda3e-fc09-5adb-a77e-118127f3c1e3")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"IRQ[31:0]"
+			input
+			(at
+				12.7
+				55.88
+				180
+			)
+			(uuid "88a45a48-29a7-5adc-86fe-d35cbd20520d")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"NMI"
+			input
+			(at
+				12.7
+				58.42
+				180
+			)
+			(uuid "8c3e1913-1c1b-51cd-86b3-d78a6cbddafe")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"DBG_UART_RX"
+			input
+			(at
+				12.7
+				60.96
+				180
+			)
+			(uuid "51fbf256-c31b-5416-ad7f-9b1ffdb4c690")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"DBG_JTAG_TCK"
+			input
+			(at
+				12.7
+				63.5
+				180
+			)
+			(uuid "aa6b0422-7535-508c-a090-ba856be7f0cc")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"DBG_JTAG_TMS"
+			input
+			(at
+				12.7
+				66.04
+				180
+			)
+			(uuid "ce0ec791-8f5c-5958-b05a-e5ee1bbafca7")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"DBG_JTAG_TDI"
+			input
+			(at
+				12.7
+				68.58
+				180
+			)
+			(uuid "d66ab85c-9390-5fdf-9d97-aa0d3c4a5704")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"DBG_RESETn"
+			input
+			(at
+				12.7
+				71.12
+				180
+			)
+			(uuid "32b104a7-8cdf-5775-93f0-3fac09c3e890")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_ADDR[31:0]"
+			output
+			(at
+				114.3
+				27.94
+				0
+			)
+			(uuid "2e9d96e7-76d7-526b-8573-d7690745b6df")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"FAB_WDATA[31:0]"
+			output
+			(at
+				114.3
+				30.48
+				0
+			)
+			(uuid "99d2f31a-fbd6-550c-a173-8ce7f784e797")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"FAB_BE[3:0]"
+			output
+			(at
+				114.3
+				33.02
+				0
+			)
+			(uuid "4496896b-dfc6-56c1-b8c0-101ec9793057")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"FAB_WE"
+			output
+			(at
+				114.3
+				35.56
+				0
+			)
+			(uuid "c541fe26-3798-58e3-87a9-a3b73778c5d1")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"FAB_REQ"
+			output
+			(at
+				114.3
+				38.1
+				0
+			)
+			(uuid "30602b39-5202-5716-9d36-1ed97556e9c2")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"CSR_RDATA[31:0]"
+			output
+			(at
+				114.3
+				40.64
+				0
+			)
+			(uuid "d3ec984f-c051-5c7e-9acf-0fe4547d0a1d")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"CSR_ACK"
+			output
+			(at
+				114.3
+				43.18
+				0
+			)
+			(uuid "ebafa821-2e07-5b83-b5f9-f23cc8f53de8")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"IRQ_ACK"
+			output
+			(at
+				114.3
+				45.72
+				0
+			)
+			(uuid "38b05b81-3898-55d4-a0b5-0550e415295c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"DBG_UART_TX"
+			output
+			(at
+				114.3
+				48.26
+				0
+			)
+			(uuid "8601154f-2ecf-5014-a6bf-caebacf2e5e5")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"DBG_JTAG_TDO"
+			output
+			(at
+				114.3
+				50.8
+				0
+			)
+			(uuid "9a0ea91d-f5bd-5355-ac49-8724a33ad46b")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(instances
+			(project
+				"system_CarbonEZ90"
+				(path
+					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 139.7 25.4)
+		(size 101.6 53.34)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "c7cd1314-eed0-5f4d-91f7-af4c1df02f84")
+		(property
+			"Sheetname"
+			"blk_accel"
+			(at
+				139.7
+				24.13
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"../../cores/Am9513/Am9513.kicad_sch"
+			(at
+				139.7
+				80.01
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_RDATA[31:0]"
+			input
+			(at
+				139.7
+				27.94
+				180
+			)
+			(uuid "858f14f3-de05-52fb-953a-1a1692a3e558")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_ACK"
+			input
+			(at
+				139.7
+				30.48
+				180
+			)
+			(uuid "3a4f6e6f-69bd-5a51-ad2b-06e76ffa11f6")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_ERR"
+			input
+			(at
+				139.7
+				33.02
+				180
+			)
+			(uuid "52563724-d6d4-5df0-8339-6b0c95a5e8fb")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_CLK"
+			input
+			(at
+				139.7
+				35.56
+				180
+			)
+			(uuid "27ab8274-3ced-5b15-a339-21e45fa04693")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_RESETn"
+			input
+			(at
+				139.7
+				38.1
+				180
+			)
+			(uuid "9b7f9f2d-0ced-5801-b88e-8eace78f0e81")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_ADDR[15:0]"
+			input
+			(at
+				139.7
+				40.64
+				180
+			)
+			(uuid "34f26523-445a-5c7c-bf4a-a43a78ac3110")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_WDATA[31:0]"
+			input
+			(at
+				139.7
+				43.18
+				180
+			)
+			(uuid "31a2334f-2693-535f-bda8-6f472dc26be2")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_WE"
+			input
+			(at
+				139.7
+				45.72
+				180
+			)
+			(uuid "db0f5381-dd1a-5b4d-a3ce-86f5325dc5e7")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_STB"
+			input
+			(at
+				139.7
+				48.26
+				180
+			)
+			(uuid "df13f2b7-f2bd-50be-bc75-4032c3f1b66f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_CLK"
+			input
+			(at
+				139.7
+				50.8
+				180
+			)
+			(uuid "2718efea-dbe0-5ddd-9b22-53f8c0920fc5")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CSR_RESETn"
+			input
+			(at
+				139.7
+				53.34
+				180
+			)
+			(uuid "6dda96d9-c040-53ef-ad0b-46a062099ba6")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"DBG_UART_RX"
+			input
+			(at
+				139.7
+				55.88
+				180
+			)
+			(uuid "83ec6155-f3a3-51b2-b36c-2ca97085cbc0")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"DBG_JTAG_TCK"
+			input
+			(at
+				139.7
+				58.42
+				180
+			)
+			(uuid "193b7f10-7dcc-53b1-b7a4-a8cf87fe4245")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"DBG_JTAG_TMS"
+			input
+			(at
+				139.7
+				60.96
+				180
+			)
+			(uuid "0e8c619e-e9cf-5a7f-bbef-f488a81ce9ba")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"DBG_JTAG_TDI"
+			input
+			(at
+				139.7
+				63.5
+				180
+			)
+			(uuid "304a7bc2-9c16-5002-b75a-7cde0fa5af1c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"DBG_RESETn"
+			input
+			(at
+				139.7
+				66.04
+				180
+			)
+			(uuid "026479e8-b726-52ba-ad43-a39cddcf6ec4")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CAI_CMD[31:0]"
+			input
+			(at
+				139.7
+				68.58
+				180
+			)
+			(uuid "88850df3-713d-5312-80ad-6966ac03e255")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CAI_CMD_VALID"
+			input
+			(at
+				139.7
+				71.12
+				180
+			)
+			(uuid "eef78f62-260b-57c3-8ba1-9112f7b1883a")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"CAI_RSP_READY"
+			input
+			(at
+				139.7
+				73.66
+				180
+			)
+			(uuid "ff3f1639-d766-554f-96c5-4c6d980cdb9d")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin
+			"FAB_ADDR[31:0]"
+			output
+			(at
+				241.3
+				27.94
+				0
+			)
+			(uuid "1026bf37-dd03-5985-a450-a0a59a55664b")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"FAB_WDATA[31:0]"
+			output
+			(at
+				241.3
+				30.48
+				0
+			)
+			(uuid "177dd247-03cb-55e4-b054-33b17874b41a")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"FAB_BE[3:0]"
+			output
+			(at
+				241.3
+				33.02
+				0
+			)
+			(uuid "79f7f4a3-e7b8-51a7-9972-d79b40f9bacb")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"FAB_WE"
+			output
+			(at
+				241.3
+				35.56
+				0
+			)
+			(uuid "66eba3fc-d5f8-53af-8492-911d22b1fd01")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"FAB_REQ"
+			output
+			(at
+				241.3
+				38.1
+				0
+			)
+			(uuid "994355e9-6a66-5fd3-9ef4-6af456675fbb")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"CSR_RDATA[31:0]"
+			output
+			(at
+				241.3
+				40.64
+				0
+			)
+			(uuid "68be658d-4221-5562-8c0a-d9cd3082a3e6")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"CSR_ACK"
+			output
+			(at
+				241.3
+				43.18
+				0
+			)
+			(uuid "aa897893-532d-54cd-85f2-fbda488a4521")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"DBG_UART_TX"
+			output
+			(at
+				241.3
+				45.72
+				0
+			)
+			(uuid "57d68d2a-480f-52d6-86af-7be44e36e767")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"DBG_JTAG_TDO"
+			output
+			(at
+				241.3
+				48.26
+				0
+			)
+			(uuid "46a812da-58f9-5812-b521-73d401b5c720")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"CAI_CMD_READY"
+			output
+			(at
+				241.3
+				50.8
+				0
+			)
+			(uuid "ace5d67b-0b42-52f4-ae39-654463a82301")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"CAI_RSP[31:0]"
+			output
+			(at
+				241.3
+				53.34
+				0
+			)
+			(uuid "3405a46d-c4d3-53b0-8da5-b7f08b77fc4f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin
+			"CAI_RSP_VALID"
+			output
+			(at
+				241.3
+				55.88
+				0
+			)
+			(uuid "c1173446-c81b-5c79-a86a-e93c963f2bd7")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(instances
+			(project
+				"system_CarbonEZ90"
+				(path
+					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 12.7 91.44)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "0a48b769-1f6d-53a6-8fda-3260d4453cda")
+		(property
+			"Sheetname"
+			"blk_rom"
+			(at
+				12.7
+				90.17
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"../../common/blk_rom.kicad_sch"
+			(at
+				12.7
+				130.81
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"system_CarbonEZ90"
+				(path
+					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 12.7 142.24)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "6097f2c7-438c-5bb1-8fe9-2faaa0d31553")
+		(property
+			"Sheetname"
+			"blk_sram"
+			(at
+				12.7
+				140.97
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"../../common/blk_sram.kicad_sch"
+			(at
+				12.7
+				181.61
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"system_CarbonEZ90"
+				(path
+					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 12.7 193.04)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "231553ae-6164-59d9-8d11-ccce8b32d754")
+		(property
+			"Sheetname"
+			"blk_dram"
+			(at
+				12.7
+				191.77
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"../../common/blk_dram.kicad_sch"
+			(at
+				12.7
+				232.41
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"system_CarbonEZ90"
+				(path
+					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 139.7 91.44)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "ae6a0376-9c19-51fa-a094-e70cfa13c03e")
+		(property
+			"Sheetname"
+			"blk_clock_reset"
+			(at
+				139.7
+				90.17
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"../../common/blk_clock_reset.kicad_sch"
+			(at
+				139.7
+				130.81
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"system_CarbonEZ90"
+				(path
+					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 139.7 142.24)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "67748999-fca6-5479-86b9-d74f5515c193")
+		(property
+			"Sheetname"
+			"blk_debug_header"
+			(at
+				139.7
+				140.97
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"../../common/blk_debug_header.kicad_sch"
+			(at
+				139.7
+				181.61
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"system_CarbonEZ90"
+				(path
+					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
+					(page "8")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 139.7 193.04)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "212bfa53-33c1-5ff2-bea0-9cb7893fa7e3")
+		(property
+			"Sheetname"
+			"blk_power_dist"
+			(at
+				139.7
+				191.77
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"../../common/blk_power_dist.kicad_sch"
+			(at
+				139.7
+				232.41
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"system_CarbonEZ90"
+				(path
+					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
+					(page "9")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 139.7 243.84)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "c1bfa392-acce-54b6-84f0-17717360782d")
+		(property
+			"Sheetname"
+			"blk_rc2014_adapter"
+			(at
+				139.7
+				242.57
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"../../common/blk_rc2014_adapter.kicad_sch"
+			(at
+				139.7
+				283.21
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"system_CarbonEZ90"
+				(path
+					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
+					(page "10")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 139.7 294.64)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "28f2bcc6-5086-5807-83b1-f1e7255e19f6")
+		(property
+			"Sheetname"
+			"blk_s100_adapter"
+			(at
+				139.7
+				293.37
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"../../common/blk_s100_adapter.kicad_sch"
+			(at
+				139.7
+				334.01
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"system_CarbonEZ90"
+				(path
+					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
+					(page "11")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path
+			"/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
