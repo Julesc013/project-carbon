@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(carbon-sim
   src/main.cpp
+  src/z80.cpp
 )
 
 target_include_directories(carbon-sim PRIVATE
@@ -19,4 +20,3 @@ if(MSVC)
 else()
   target_compile_options(carbon-sim PRIVATE -Wall -Wextra -Wpedantic)
 endif()
-
