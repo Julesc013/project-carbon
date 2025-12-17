@@ -6,6 +6,8 @@
 #include <sstream>
 #include <utility>
 
+#include "carbon_sim/devices/interrupt_controller.h"
+
 namespace carbon_sim {
 
 static std::string hex16(u16 v) {
@@ -15,7 +17,7 @@ static std::string hex16(u16 v) {
   return oss.str();
 }
 
-Z80::Z80(Bus& bus) : bus_(bus) { init_tables(); }
+Z80::Z80(Bus& bus, InterruptController* irq) : bus_(bus), irq_(irq) { init_tables(); }
 
 void Z80::init_tables() {
   for (int i = 0; i < 256; ++i) {
@@ -551,6 +553,29 @@ u64 Z80::execute_cb(u8 op) {
 }
 
 u64 Z80::execute_ed(u8 op) {
+  const auto cond = [&](int cc) -> bool {
+    switch (cc & 7) {
+      case 0:
+        return (f_ & FLAG_Z) == 0;
+      case 1:
+        return (f_ & FLAG_Z) != 0;
+      case 2:
+        return (f_ & FLAG_C) == 0;
+      case 3:
+        return (f_ & FLAG_C) != 0;
+      case 4:
+        return (f_ & FLAG_PV) == 0;
+      case 5:
+        return (f_ & FLAG_PV) != 0;
+      case 6:
+        return (f_ & FLAG_S) == 0;
+      case 7:
+        return (f_ & FLAG_S) != 0;
+      default:
+        return false;
+    }
+  };
+
   switch (op) {
     case 0x44:
     case 0x4C:
@@ -904,7 +929,6 @@ u64 Z80::execute_base(u8 op, u8 index_prefix) {
   if ((op & 0xC0) == 0x40) {
     if (op == 0x76) { // HALT
       halt_ = true;
-      pc_ = static_cast<u16>(pc_ - 1);
       return 0;
     }
     const int dst = (op >> 3) & 7;
@@ -1198,6 +1222,22 @@ u64 Z80::execute_base(u8 op, u8 index_prefix) {
       pc_ = fetch_u16();
       return 0;
 
+    case 0xC2:
+    case 0xCA:
+    case 0xD2:
+    case 0xDA:
+    case 0xE2:
+    case 0xEA:
+    case 0xF2:
+    case 0xFA: { // JP cc,nn
+      const u16 addr = fetch_u16();
+      const int cc = (op >> 3) & 7;
+      if (cond(cc)) {
+        pc_ = addr;
+      }
+      return 0;
+    }
+
     case 0xE9: // JP (HL/IX/IY)
       pc_ = addr_hl(index_prefix);
       return 0;
@@ -1209,9 +1249,41 @@ u64 Z80::execute_base(u8 op, u8 index_prefix) {
       return 0;
     }
 
+    case 0xC4:
+    case 0xCC:
+    case 0xD4:
+    case 0xDC:
+    case 0xE4:
+    case 0xEC:
+    case 0xF4:
+    case 0xFC: { // CALL cc,nn
+      const u16 addr = fetch_u16();
+      const int cc = (op >> 3) & 7;
+      if (cond(cc)) {
+        push_u16(pc_);
+        pc_ = addr;
+      }
+      return 0;
+    }
+
     case 0xC9: // RET
       pc_ = pop_u16();
       return 0;
+
+    case 0xC0:
+    case 0xC8:
+    case 0xD0:
+    case 0xD8:
+    case 0xE0:
+    case 0xE8:
+    case 0xF0:
+    case 0xF8: { // RET cc
+      const int cc = (op >> 3) & 7;
+      if (cond(cc)) {
+        pc_ = pop_u16();
+      }
+      return 0;
+    }
 
     case 0xC7:
     case 0xCF:
@@ -1345,10 +1417,54 @@ u64 Z80::step() {
 
   step_cycles_ = 0;
 
-  // Apply EI delay: if EI was executed on the previous step, interrupts become
-  // enabled after this instruction completes. (Interrupt sampling not yet modeled.)
+  // EI enables maskable interrupts after the *following* instruction completes.
+  // While the delay is active, INT is blocked for one instruction boundary.
+  const bool block_int_this_step = ei_delay_;
   const bool apply_ei_after = ei_delay_;
   ei_delay_ = false;
+
+  // Interrupt sampling at instruction boundaries.
+  if (irq_ != nullptr) {
+    if (irq_->consume_nmi_pulse()) {
+      halt_ = false;
+      iff2_ = iff1_;
+      iff1_ = false;
+      push_u16(pc_);
+      pc_ = 0x0066;
+      total_cycles_ += step_cycles_;
+      return step_cycles_;
+    }
+
+    if (!block_int_this_step && iff1_ && irq_->int_line()) {
+      halt_ = false;
+      iff1_ = false;
+      iff2_ = false;
+
+      const u8 vec = irq_->int_vector();
+      irq_->ack_int();
+
+      if (im_ == 0) {
+        if ((vec & 0xC7) != 0xC7) {
+          trap("IM0 unsupported vector " + hex16(vec));
+        } else {
+          push_u16(pc_);
+          pc_ = static_cast<u16>(vec & 0x38);
+        }
+      } else if (im_ == 1) {
+        push_u16(pc_);
+        pc_ = 0x0038;
+      } else { // IM 2
+        const u16 ptr = static_cast<u16>((static_cast<u16>(i_) << 8) | vec);
+        const u8 lo = mem_read(ptr);
+        const u8 hi = mem_read(static_cast<u16>(ptr + 1));
+        push_u16(pc_);
+        pc_ = static_cast<u16>((hi << 8) | lo);
+      }
+
+      total_cycles_ += step_cycles_;
+      return step_cycles_;
+    }
+  }
 
   if (halt_) {
     step_cycles_ += 4;

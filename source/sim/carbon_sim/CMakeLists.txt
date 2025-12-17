@@ -7,7 +7,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(carbon-sim
+  src/block_disk.cpp
+  src/boot_rom.cpp
+  src/cpm_disk.cpp
+  src/interrupt_controller.cpp
   src/main.cpp
+  src/platform_cpm22.cpp
+  src/timer_tick.cpp
+  src/uart_console.cpp
   src/z80.cpp
 )
 

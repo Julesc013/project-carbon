@@ -10,9 +10,11 @@
 
 namespace carbon_sim {
 
+class InterruptController;
+
 class Z80 {
 public:
-  explicit Z80(Bus& bus);
+  explicit Z80(Bus& bus, InterruptController* irq = nullptr);
 
   void reset();
   u64 step();
@@ -30,6 +32,7 @@ public:
   void set_sp(u16 sp) { sp_ = sp; }
 
   void set_trace(bool enable) { trace_ = enable; }
+  void set_irq_controller(InterruptController* irq) { irq_ = irq; }
 
 private:
   static constexpr u8 FLAG_S = 0x80;
@@ -42,6 +45,7 @@ private:
   static constexpr u8 FLAG_C = 0x01;
 
   Bus& bus_;
+  InterruptController* irq_ = nullptr;
 
   u8 a_ = 0;
   u8 f_ = 0;
@@ -162,4 +166,3 @@ private:
 };
 
 } // namespace carbon_sim
-
