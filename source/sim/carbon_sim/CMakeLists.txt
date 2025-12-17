@@ -16,6 +16,7 @@ add_library(carbon_sim_core
   src/platform_romwbw.cpp
   src/timer_tick.cpp
   src/uart_console.cpp
+  src/verilator_backend.cpp
   src/zilog_sio.cpp
   src/z80.cpp
 )
@@ -28,6 +29,22 @@ if(MSVC)
   target_compile_options(carbon_sim_core PUBLIC /W4 /permissive-)
 else()
   target_compile_options(carbon_sim_core PUBLIC -Wall -Wextra -Wpedantic)
+endif()
+
+option(CARBON_SIM_ENABLE_VERILATOR "Enable Verilator RTL backend (preview scaffolding)" OFF)
+if(CARBON_SIM_ENABLE_VERILATOR)
+  find_program(VERILATOR_BIN verilator)
+  if(NOT VERILATOR_BIN)
+    message(FATAL_ERROR "CARBON_SIM_ENABLE_VERILATOR=ON but 'verilator' was not found in PATH")
+  endif()
+
+  if(NOT DEFINED ENV{VERILATOR_ROOT})
+    message(FATAL_ERROR "CARBON_SIM_ENABLE_VERILATOR=ON but VERILATOR_ROOT is not set")
+  endif()
+  set(VERILATOR_ROOT $ENV{VERILATOR_ROOT})
+
+  target_include_directories(carbon_sim_core PUBLIC ${VERILATOR_ROOT}/include)
+  target_compile_definitions(carbon_sim_core PUBLIC CARBON_SIM_ENABLE_VERILATOR=1)
 endif()
 
 add_executable(carbon-sim

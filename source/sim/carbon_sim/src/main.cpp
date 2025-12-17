@@ -9,6 +9,7 @@
 #include "carbon_sim/platforms/cpm22.h"
 #include "carbon_sim/platforms/romwbw.h"
 #include "carbon_sim/platforms/machine.h"
+#include "carbon_sim/rtl/verilator_backend.h"
 #include "carbon_sim/sim_config.h"
 
 static void print_usage(std::string_view exe) {
@@ -229,7 +230,10 @@ int main(int argc, char** argv) {
     }
 
     if (cfg.verilator) {
-      throw std::runtime_error("--verilator backend is not enabled in this build");
+      if (!carbon_sim::VerilatorBackend::built()) {
+        throw std::runtime_error("built without Verilator backend support; configure with -DCARBON_SIM_ENABLE_VERILATOR=ON");
+      }
+      return carbon_sim::VerilatorBackend::run(cfg);
     }
 
     std::unique_ptr<carbon_sim::Machine> machine;

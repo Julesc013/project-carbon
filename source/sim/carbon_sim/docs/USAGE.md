@@ -50,3 +50,20 @@ Create a blank image:
 python tools/mk_disk.py --out disk.img --size-bytes 8388608
 ```
 
+## Verilator backend (preview)
+
+The Verilator backend is optional and currently scaffold-only.
+
+To enable it at build time:
+
+```sh
+set VERILATOR_ROOT=C:\path\to\verilator
+cmake -S source/sim/carbon_sim -B build/sim -DCARBON_SIM_ENABLE_VERILATOR=ON
+cmake --build build/sim
+```
+
+At runtime:
+
+```sh
+carbon-sim --verilator --platform cpm22 --rom ... --disk0 ...
+```
