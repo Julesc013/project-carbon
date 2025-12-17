@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "carbon_sim/platforms/cpm22.h"
+#include "carbon_sim/platforms/romwbw.h"
 #include "carbon_sim/platforms/machine.h"
 #include "carbon_sim/sim_config.h"
 
@@ -72,7 +73,7 @@ static int run_machine(carbon_sim::Machine& machine, const carbon_sim::SimConfig
   std::uint64_t cycles = 0;
 
   auto drain_stdin = [&] {
-    if (machine.uart0 == nullptr) {
+    if (machine.uart0 == nullptr && machine.sio0 == nullptr) {
       return;
     }
     while (std::cin.good() && std::cin.rdbuf()->in_avail() > 0) {
@@ -81,7 +82,11 @@ static int run_machine(carbon_sim::Machine& machine, const carbon_sim::SimConfig
         break;
       }
       const char c = static_cast<char>(ch);
-      machine.uart0->feed_input(std::string_view(&c, 1));
+      if (machine.uart0 != nullptr) {
+        machine.uart0->feed_input(std::string_view(&c, 1));
+      } else if (machine.sio0 != nullptr) {
+        machine.sio0->feed_input(std::string_view(&c, 1));
+      }
     }
   };
 
@@ -231,7 +236,7 @@ int main(int argc, char** argv) {
     if (cfg.platform == "cpm22") {
       machine = carbon_sim::create_platform_cpm22(cfg, std::cout);
     } else if (cfg.platform == "romwbw") {
-      throw std::runtime_error("platform romwbw not implemented yet");
+      machine = carbon_sim::create_platform_romwbw(cfg, std::cout);
     } else {
       throw std::runtime_error("unknown platform: " + cfg.platform);
     }

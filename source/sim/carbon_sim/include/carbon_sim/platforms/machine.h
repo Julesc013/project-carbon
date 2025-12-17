@@ -13,6 +13,7 @@
 #include "carbon_sim/devices/interrupt_controller.h"
 #include "carbon_sim/devices/timer_tick.h"
 #include "carbon_sim/devices/uart_console.h"
+#include "carbon_sim/devices/zilog_sio.h"
 
 namespace carbon_sim {
 
@@ -22,6 +23,7 @@ struct Machine {
   InterruptController* irq = nullptr;
   TimerTick* timer = nullptr;
   UARTConsole* uart0 = nullptr;
+  ZilogSio* sio0 = nullptr;
   CpmDiskDevice* cpm_disk = nullptr;
 
   std::array<std::unique_ptr<BlockDisk>, 4> disks;
@@ -29,4 +31,3 @@ struct Machine {
 };
 
 } // namespace carbon_sim
-

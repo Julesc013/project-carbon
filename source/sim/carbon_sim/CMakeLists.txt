@@ -10,11 +10,14 @@ add_executable(carbon-sim
   src/block_disk.cpp
   src/boot_rom.cpp
   src/cpm_disk.cpp
+  src/ide_disk.cpp
   src/interrupt_controller.cpp
   src/main.cpp
   src/platform_cpm22.cpp
+  src/platform_romwbw.cpp
   src/timer_tick.cpp
   src/uart_console.cpp
+  src/zilog_sio.cpp
   src/z80.cpp
 )
 

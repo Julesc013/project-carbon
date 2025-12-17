@@ -40,6 +40,7 @@ std::unique_ptr<Machine> create_platform_cpm22(const SimConfig& config, std::ost
   m->timer = &m->bus.add_device<TimerTick>(kTimerBasePort, m->irq, /*cycles_per_tick=*/500000);
 
   m->uart0 = &m->bus.add_device<UARTConsole>(kUart0BasePort, console_out);
+  m->sio0 = nullptr;
 
   m->cpm_disk = &m->bus.add_device<CpmDiskDevice>(kDiskBasePort);
 
