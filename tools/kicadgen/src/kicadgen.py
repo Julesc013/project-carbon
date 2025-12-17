@@ -32,6 +32,10 @@ GRID_MM = 1.27  # 50 mil grid in mm
 
 _UUID_NS = uuid.uuid5(uuid.NAMESPACE_URL, "https://project-carbon.local/kicadgen/v1")
 
+PIN_SPACING_U = 2
+PIN_MARGIN_U = 2
+MIN_SHEET_H_U = 30
+
 
 class KicadGenError(RuntimeError):
     pass
@@ -476,13 +480,37 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
     cpu_core = str(system.get("cpu_core", ""))
     accel_core = str(system.get("accel_core", ""))
 
-    # Compute relative paths to core top schematics.
-    def core_top_path(core_name: str) -> str:
-        cores_spec = _read_json(root / "schem/kicad9/spec/kicadgen_cores.yaml")
+    cores_spec = _read_json(root / "schem/kicad9/spec/kicadgen_cores.yaml")
+
+    def core_spec(core_name: str) -> Dict[str, Any]:
         for c in cores_spec.get("cores", []) or []:
             if str(c.get("name")) == core_name:
-                return str(Path(str(c["out_dir"])) / str(c["top_schematic"]))
+                return c
         raise KicadGenError(f"Unknown core referenced by system mapping: {core_name}")
+
+    def core_top_path(core_name: str) -> str:
+        c = core_spec(core_name)
+        return str(Path(str(c["out_dir"])) / str(c["top_schematic"]))
+
+    def sheet_pins_for_core(core_name: str, sheet_x: float, sheet_y: float, sheet_w: float) -> Tuple[int, List[Tuple[str, str, Tuple[float, float], int]]]:
+        c = core_spec(core_name)
+        interfaces = [str(x) for x in (c.get("interfaces", []) or [])]
+        ports: List[Dict[str, str]] = []
+        for iface in interfaces:
+            ports.extend(_iface_ports(common, iface))
+
+        left_ports = [p for p in ports if p.get("dir", "").lower() != "output"]
+        right_ports = [p for p in ports if p.get("dir", "").lower() == "output"]
+        max_pins = max(len(left_ports), len(right_ports), 1)
+        height_u = max(MIN_SHEET_H_U, max_pins * PIN_SPACING_U + 2 * PIN_MARGIN_U)
+
+        pins: List[Tuple[str, str, Tuple[float, float], int]] = []
+        y0 = sheet_y + _grid(PIN_MARGIN_U)
+        for idx, p in enumerate(left_ports):
+            pins.append((p["name"], "input", (sheet_x, y0 + _grid(idx * PIN_SPACING_U)), 180))
+        for idx, p in enumerate(right_ports):
+            pins.append((p["name"], "output", (sheet_x + sheet_w, y0 + _grid(idx * PIN_SPACING_U)), 0))
+        return height_u, pins
 
     cpu_sheetfile = os.path.relpath(_resolve_under(root, core_top_path(cpu_core)), out_dir).replace("\\", "/")
     accel_sheetfile = ""
@@ -498,13 +526,25 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
     sheets: List[List[Any]] = []
     page = 2
 
-    cpu_at = (_grid(10), _grid(20))
-    accel_at = (_grid(110), _grid(20))
-    mem_at = (_grid(10), _grid(70))
-    misc_at = (_grid(110), _grid(70))
-
     sheet_w = _grid(80)
-    sheet_h = _grid(30)
+    base_sheet_h = _grid(30)
+    cpu_x, cpu_y = (_grid(10), _grid(20))
+    cpu_h_u, cpu_pins = sheet_pins_for_core(cpu_core, cpu_x, cpu_y, sheet_w)
+    cpu_h = _grid(cpu_h_u)
+
+    accel_h = base_sheet_h
+    accel_pins: List[Tuple[str, str, Tuple[float, float], int]] = []
+    if accel_sheetfile:
+        accel_x, accel_y = (_grid(110), _grid(20))
+        accel_h_u, accel_pins = sheet_pins_for_core(accel_core, accel_x, accel_y, sheet_w)
+        accel_h = _grid(accel_h_u)
+    else:
+        accel_x, accel_y = (_grid(110), _grid(20))
+
+    top_row_h = max(cpu_h, accel_h)
+    row_gap = _grid(10)
+    mem_at = (_grid(10), cpu_y + top_row_h + row_gap)
+    misc_at = (_grid(110), cpu_y + top_row_h + row_gap)
 
     sheets.append(
         _sheet(
@@ -513,9 +553,9 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
             page=page,
             sheetname="blk_cpu",
             sheetfile=cpu_sheetfile,
-            at_xy=cpu_at,
-            size_wh=(sheet_w, sheet_h),
-            pins=(),
+            at_xy=(cpu_x, cpu_y),
+            size_wh=(sheet_w, cpu_h),
+            pins=cpu_pins,
         )
     )
     page += 1
@@ -528,9 +568,9 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
                 page=page,
                 sheetname="blk_accel",
                 sheetfile=accel_sheetfile,
-                at_xy=accel_at,
-                size_wh=(sheet_w, sheet_h),
-                pins=(),
+                at_xy=(accel_x, accel_y),
+                size_wh=(sheet_w, accel_h),
+                pins=accel_pins,
             )
         )
         page += 1
@@ -545,7 +585,7 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
                 sheetname="blk_rom",
                 sheetfile=common_sheetfile("blk_rom.kicad_sch"),
                 at_xy=mem_at,
-                size_wh=(sheet_w, sheet_h),
+                size_wh=(sheet_w, base_sheet_h),
             )
         )
         page += 1
@@ -559,7 +599,7 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
                 sheetname="blk_sram",
                 sheetfile=common_sheetfile("blk_sram.kicad_sch"),
                 at_xy=mem_at,
-                size_wh=(sheet_w, sheet_h),
+                size_wh=(sheet_w, base_sheet_h),
             )
         )
         page += 1
@@ -573,7 +613,7 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
                 sheetname="blk_dram",
                 sheetfile=common_sheetfile("blk_dram.kicad_sch"),
                 at_xy=mem_at,
-                size_wh=(sheet_w, sheet_h),
+                size_wh=(sheet_w, base_sheet_h),
             )
         )
         page += 1
@@ -587,7 +627,7 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
             sheetname="blk_clock_reset",
             sheetfile=common_sheetfile("blk_clock_reset.kicad_sch"),
             at_xy=misc_at,
-            size_wh=(sheet_w, sheet_h),
+            size_wh=(sheet_w, base_sheet_h),
         )
     )
     page += 1
@@ -600,7 +640,7 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
             sheetname="blk_debug_header",
             sheetfile=common_sheetfile("blk_debug_header.kicad_sch"),
             at_xy=misc_at,
-            size_wh=(sheet_w, sheet_h),
+            size_wh=(sheet_w, base_sheet_h),
         )
     )
     page += 1
@@ -613,7 +653,7 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
             sheetname="blk_power_dist",
             sheetfile=common_sheetfile("blk_power_dist.kicad_sch"),
             at_xy=misc_at,
-            size_wh=(sheet_w, sheet_h),
+            size_wh=(sheet_w, base_sheet_h),
         )
     )
     page += 1
@@ -629,7 +669,7 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
                 sheetname="blk_rc2014_adapter",
                 sheetfile=common_sheetfile("blk_rc2014_adapter.kicad_sch"),
                 at_xy=misc_at,
-                size_wh=(sheet_w, sheet_h),
+                size_wh=(sheet_w, base_sheet_h),
             )
         )
         page += 1
@@ -643,7 +683,7 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
                 sheetname="blk_s100_adapter",
                 sheetfile=common_sheetfile("blk_s100_adapter.kicad_sch"),
                 at_xy=misc_at,
-                size_wh=(sheet_w, sheet_h),
+                size_wh=(sheet_w, base_sheet_h),
             )
         )
         page += 1
