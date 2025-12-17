@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "note": "This file is YAML 1.2-compatible JSON so the generator can parse it using Python stdlib json (no external YAML dependency).",
+  "kicad": {
+    "version": 20250114,
+    "generator": "kicadgen",
+    "generator_version": "0.1"
+  },
+  "layout": {
+    "grid_mm": 1.27,
+    "paper": "A3",
+    "title_block": {
+      "company": "Project Carbon",
+      "comment1": "Generated - do not edit in generated/",
+      "comment2": "Edit in schem/kicad9/manual/ or refine mapping specs"
+    }
+  },
+  "interfaces": {
+    "fabric_if": {
+      "description": "Project Carbon fabric-style memory/IO transaction interface (logical placeholder).",
+      "ports": [
+        { "name": "FAB_ADDR[31:0]", "dir": "output" },
+        { "name": "FAB_WDATA[31:0]", "dir": "output" },
+        { "name": "FAB_RDATA[31:0]", "dir": "input" },
+        { "name": "FAB_BE[3:0]", "dir": "output" },
+        { "name": "FAB_WE", "dir": "output" },
+        { "name": "FAB_REQ", "dir": "output" },
+        { "name": "FAB_ACK", "dir": "input" },
+        { "name": "FAB_ERR", "dir": "input" },
+        { "name": "FAB_CLK", "dir": "input" },
+        { "name": "FAB_RESETn", "dir": "input" }
+      ]
+    },
+    "csr_if": {
+      "description": "CSR register access interface (logical placeholder).",
+      "ports": [
+        { "name": "CSR_ADDR[15:0]", "dir": "input" },
+        { "name": "CSR_WDATA[31:0]", "dir": "input" },
+        { "name": "CSR_RDATA[31:0]", "dir": "output" },
+        { "name": "CSR_WE", "dir": "input" },
+        { "name": "CSR_STB", "dir": "input" },
+        { "name": "CSR_ACK", "dir": "output" },
+        { "name": "CSR_CLK", "dir": "input" },
+        { "name": "CSR_RESETn", "dir": "input" }
+      ]
+    },
+    "irq_if": {
+      "description": "Interrupt delivery interface (logical placeholder).",
+      "ports": [
+        { "name": "IRQ[31:0]", "dir": "input" },
+        { "name": "NMI", "dir": "input" },
+        { "name": "IRQ_ACK", "dir": "output" }
+      ]
+    },
+    "dbg_if": {
+      "description": "Debug/JTAG/UART interface (logical placeholder).",
+      "ports": [
+        { "name": "DBG_UART_TX", "dir": "output" },
+        { "name": "DBG_UART_RX", "dir": "input" },
+        { "name": "DBG_JTAG_TCK", "dir": "input" },
+        { "name": "DBG_JTAG_TMS", "dir": "input" },
+        { "name": "DBG_JTAG_TDI", "dir": "input" },
+        { "name": "DBG_JTAG_TDO", "dir": "output" },
+        { "name": "DBG_RESETn", "dir": "input" }
+      ]
+    },
+    "cai_if": {
+      "description": "Carbon Accelerator Interface (CAI) for host/device links (logical placeholder).",
+      "ports": [
+        { "name": "CAI_CMD[31:0]", "dir": "input" },
+        { "name": "CAI_CMD_VALID", "dir": "input" },
+        { "name": "CAI_CMD_READY", "dir": "output" },
+        { "name": "CAI_RSP[31:0]", "dir": "output" },
+        { "name": "CAI_RSP_VALID", "dir": "output" },
+        { "name": "CAI_RSP_READY", "dir": "input" }
+      ]
+    }
+  },
+  "common_system_blocks": [
+    { "name": "clock_reset", "symbol": "CARBON_BLOCK_CLOCK_RESET", "ref": "U" },
+    { "name": "debug_header", "symbol": "CARBON_BLOCK_CONN_HEADER", "ref": "J" },
+    { "name": "power_dist", "symbol": "CARBON_BLOCK_POWER", "ref": "U" },
+    { "name": "jtag_uart", "symbol": "CARBON_BLOCK_DBG", "ref": "U" },
+    { "name": "rc2014_adapter", "symbol": "CARBON_BLOCK_RC2014_ADAPTER", "ref": "U" },
+    { "name": "s100_adapter", "symbol": "CARBON_BLOCK_S100_ADAPTER", "ref": "U" }
+  ]
+}
+

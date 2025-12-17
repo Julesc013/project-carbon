@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "cores": [
+    {
+      "name": "Z85",
+      "out_dir": "schem/kicad9/generated/cores/Z85",
+      "top_schematic": "Z85.kicad_sch",
+      "interfaces": ["fabric_if", "csr_if", "irq_if", "dbg_if"],
+      "blocks": [
+        { "name": "frontend_decode", "sheet_file": "blk_frontend_decode.kicad_sch" },
+        { "name": "regfile", "sheet_file": "blk_regfile.kicad_sch" },
+        { "name": "alu_exec", "sheet_file": "blk_alu_exec.kicad_sch" },
+        { "name": "mem_fabric", "sheet_file": "blk_mem_fabric.kicad_sch" },
+        { "name": "csr_irq_dbg", "sheet_file": "blk_csr_irq_dbg.kicad_sch" }
+      ]
+    },
+    {
+      "name": "Z90",
+      "out_dir": "schem/kicad9/generated/cores/Z90",
+      "top_schematic": "Z90.kicad_sch",
+      "interfaces": ["fabric_if", "csr_if", "irq_if", "dbg_if", "cai_if"],
+      "blocks": [
+        { "name": "frontend_decode", "sheet_file": "blk_frontend_decode.kicad_sch" },
+        { "name": "regfile", "sheet_file": "blk_regfile.kicad_sch" },
+        { "name": "alu_exec", "sheet_file": "blk_alu_exec.kicad_sch" },
+        { "name": "mem_fabric", "sheet_file": "blk_mem_fabric.kicad_sch" },
+        { "name": "csr_irq_dbg", "sheet_file": "blk_csr_irq_dbg.kicad_sch" },
+        { "name": "cai_link", "sheet_file": "blk_cai_link.kicad_sch" }
+      ]
+    },
+    {
+      "name": "eZ90",
+      "out_dir": "schem/kicad9/generated/cores/eZ90",
+      "top_schematic": "eZ90_scaffold.kicad_sch",
+      "interfaces": ["fabric_if", "csr_if", "irq_if", "dbg_if"],
+      "blocks": [
+        { "name": "frontend_decode", "sheet_file": "blk_frontend_decode.kicad_sch" },
+        { "name": "regfile", "sheet_file": "blk_regfile.kicad_sch" },
+        { "name": "alu_exec", "sheet_file": "blk_alu_exec.kicad_sch" },
+        { "name": "mem_fabric", "sheet_file": "blk_mem_fabric.kicad_sch" },
+        { "name": "csr_irq_dbg", "sheet_file": "blk_csr_irq_dbg.kicad_sch" }
+      ]
+    },
+    {
+      "name": "8096",
+      "out_dir": "schem/kicad9/generated/cores/8096",
+      "top_schematic": "8096.kicad_sch",
+      "interfaces": ["fabric_if", "csr_if", "irq_if", "dbg_if"],
+      "blocks": [
+        { "name": "frontend_decode", "sheet_file": "blk_frontend_decode.kicad_sch" },
+        { "name": "regfile", "sheet_file": "blk_regfile.kicad_sch" },
+        { "name": "alu_exec", "sheet_file": "blk_alu_exec.kicad_sch" },
+        { "name": "mem_fabric", "sheet_file": "blk_mem_fabric.kicad_sch" },
+        { "name": "csr_irq_dbg", "sheet_file": "blk_csr_irq_dbg.kicad_sch" }
+      ]
+    },
+    {
+      "name": "8097",
+      "out_dir": "schem/kicad9/generated/cores/8097",
+      "top_schematic": "8097.kicad_sch",
+      "interfaces": ["fabric_if", "csr_if", "irq_if", "dbg_if"],
+      "blocks": [
+        { "name": "frontend_decode", "sheet_file": "blk_frontend_decode.kicad_sch" },
+        { "name": "regfile", "sheet_file": "blk_regfile.kicad_sch" },
+        { "name": "alu_exec", "sheet_file": "blk_alu_exec.kicad_sch" },
+        { "name": "mem_fabric", "sheet_file": "blk_mem_fabric.kicad_sch" },
+        { "name": "csr_irq_dbg", "sheet_file": "blk_csr_irq_dbg.kicad_sch" }
+      ]
+    },
+    {
+      "name": "Am9513",
+      "out_dir": "schem/kicad9/generated/cores/Am9513",
+      "top_schematic": "Am9513.kicad_sch",
+      "interfaces": ["fabric_if", "csr_if", "dbg_if", "cai_if"],
+      "blocks": [
+        { "name": "frontend_decode", "sheet_file": "blk_frontend_decode.kicad_sch" },
+        { "name": "regfile", "sheet_file": "blk_regfile.kicad_sch" },
+        { "name": "alu_exec", "sheet_file": "blk_alu_exec.kicad_sch" },
+        { "name": "mem_fabric", "sheet_file": "blk_mem_fabric.kicad_sch" },
+        { "name": "csr_irq_dbg", "sheet_file": "blk_csr_irq_dbg.kicad_sch" },
+        { "name": "cai_queue", "sheet_file": "blk_cai_queue.kicad_sch" },
+        { "name": "context_ram", "sheet_file": "blk_context_ram.kicad_sch" },
+        { "name": "pipelines", "sheet_file": "blk_pipelines.kicad_sch" }
+      ]
+    }
+  ]
+}
+

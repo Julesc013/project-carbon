@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "systems": [
+    {
+      "name": "CarbonZ80",
+      "out_dir": "schem/kicad9/generated/systems/CarbonZ80",
+      "top_schematic": "CarbonZ80.kicad_sch",
+      "cpu_core": "Z85",
+      "accel_core": "Am9513",
+      "memory": ["ROM", "SRAM", "DRAM"],
+      "adapters": ["RC2014", "S-100"]
+    },
+    {
+      "name": "CarbonZ90",
+      "out_dir": "schem/kicad9/generated/systems/CarbonZ90",
+      "top_schematic": "CarbonZ90.kicad_sch",
+      "cpu_core": "Z90",
+      "accel_core": "Am9513",
+      "memory": ["ROM", "SRAM", "DRAM"],
+      "adapters": ["RC2014", "S-100"]
+    },
+    {
+      "name": "CarbonEZ90",
+      "out_dir": "schem/kicad9/generated/systems/CarbonEZ90",
+      "top_schematic": "CarbonEZ90.kicad_sch",
+      "cpu_core": "eZ90",
+      "accel_core": "Am9513",
+      "memory": ["ROM", "SRAM", "DRAM"],
+      "adapters": ["RC2014", "S-100"]
+    },
+    {
+      "name": "CarbonX86",
+      "out_dir": "schem/kicad9/generated/systems/CarbonX86",
+      "top_schematic": "CarbonX86.kicad_sch",
+      "cpu_core": "8096",
+      "accel_core": "8097",
+      "memory": ["ROM", "SRAM", "DRAM"],
+      "adapters": ["RC2014", "S-100"]
+    },
+    {
+      "name": "CarbonX96",
+      "out_dir": "schem/kicad9/generated/systems/CarbonX96",
+      "top_schematic": "CarbonX96.kicad_sch",
+      "cpu_core": "8096",
+      "accel_core": "8097",
+      "memory": ["ROM", "SRAM", "DRAM"],
+      "adapters": ["RC2014", "S-100"]
+    }
+  ]
+}
+
