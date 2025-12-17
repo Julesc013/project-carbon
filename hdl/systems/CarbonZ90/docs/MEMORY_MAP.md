@@ -1,0 +1,44 @@
+# CarbonZ90 — Memory Map (v1)
+
+This system instantiates:
+- `z90_core` (Z80-derived successor, turbo-gated opcode pages)
+- `am9513_accel` (P7 default mode enabled in this system)
+- Common ROM/RAM/MMIO devices on the fabric
+
+## Fabric address space (16-bit window)
+
+Address decode is **priority-based** (MMIO and ROM override the RAM default mapping).
+
+- **Boot ROM**: `0x0000`–`0x00FF` (256 B, read-only)
+- **MMIO**: `0xF000`–`0xF0FF` (256 B)
+- **RAM (default)**: all other `0x0000`–`0xFFFF` addresses not claimed by ROM/MMIO
+
+## MMIO registers (`carbon_mmio_regs`)
+
+Base: `0xF000`
+
+- `+0x00` **SIGNATURE** (RW, 32-bit; byte writes supported)
+- `+0x04` **POWEROFF** (WO; any write latches `poweroff=1`)
+- `+0x08` **UART_TX** (WO; low byte is emitted as a 1-cycle `uart_tx_valid` pulse)
+
+## CAI rings (v1 integration choices)
+
+This v1 system configures a minimal CAI setup to keep firmware tiny:
+
+- **Submit descriptor base (host→device)**: forced to `0x0400` (RAM) by `carbon_cai_router`
+- **Submit ring mask**: `0x0000_0000` (single-entry ring)
+- **Completion base (device CSR)**: `0x0500` (RAM) via `CARBON_CSR_AM9513_CAI_COMP_BASE_*`
+- **Completion ring mask (device CSR)**: `0x0000_0000` (single-entry ring)
+
+The Z90 boot stub performs:
+- `MODEUP` to tier P7
+- `CAI_SUBMIT` (doorbell pulse)
+- MMIO signature write + poweroff
+
+It does **not** poll for completion in v1 (no CAI status/MMIO bridge yet).
+
+## Notes
+
+- Z90 `MODEFLAGS.STRICT` is cleared by a small CSR init sequencer in the top so turbo ops are permitted.
+- IRQ delivery is tied off (no interrupt sources in this v1 integration).
+
