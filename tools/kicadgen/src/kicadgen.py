@@ -79,11 +79,11 @@ def _sexp(node: Any, indent: int = 0) -> str:
         return _q(node)
     if isinstance(node, list):
         if not node:
-            return "()"
+            return f"{tab}()"
 
         head, *rest = node
         if not rest:
-            return f"({_sexp(head, 0)})"
+            return f"{tab}({_sexp(head, 0)})"
 
         inline = (
             len(rest) <= 2
@@ -92,7 +92,7 @@ def _sexp(node: Any, indent: int = 0) -> str:
         )
         if inline:
             inner = " ".join(_sexp(x, 0) for x in [head, *rest])
-            return f"({inner})"
+            return f"{tab}({inner})"
 
         lines = [f"{tab}({_sexp(head, 0)}"]
         for child in rest:
@@ -680,7 +680,7 @@ def generate(root: Path, spec_dir: Path) -> List[Path]:
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     script_dir = Path(__file__).resolve().parent
-    default_root = script_dir.parents[3]
+    default_root = script_dir.parents[2]
 
     parser = argparse.ArgumentParser(description="Generate KiCad 9 hierarchical schematics (Project Carbon).")
     parser.add_argument(
