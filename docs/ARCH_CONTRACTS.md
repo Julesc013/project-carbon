@@ -150,6 +150,23 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `CSR_Z90_CACHE_CTL` | `0x00a10010` | `CSR_RW` | `PRIV_S` | Z90 cache control hooks (register-only placeholder; no cache logic implied). |
 | `CSR_Z90_ATOMIC_CTL` | `0x00a10014` | `CSR_RW` | `PRIV_S` | Z90 atomic enable/control (register-only placeholder). |
 | `CSR_Z90_ATOMIC_STATUS` | `0x00a10018` | `CSR_RO` | `PRIV_S` | Z90 atomic status (register-only placeholder). |
+| `CSR_8097_ID` | `0x00a30000` | `CSR_RO` | `PRIV_U` | 8097 identification register (implementation-defined encoding). |
+| `CSR_8097_TIER` | `0x00a30004` | `CSR_RW` | `PRIV_S` | 8097 active tier (x86-derived ladder); v1 only supports P0 and P7. |
+| `CSR_8097_MODEFLAGS` | `0x00a30008` | `CSR_RW` | `PRIV_S` | 8097 modeflags (STRICT/INTMASK); STRICT gates turbo extensions. |
+| `CSR_8097_STATUS` | `0x00a3000c` | `CSR_RO` | `PRIV_U` | 8097 status (busy, stack state, last fault). |
+| `CSR_8097_CTRL_WORD` | `0x00a30010` | `CSR_RW` | `PRIV_S` | 8097 control word (v1: rounding control subset). |
+| `CSR_8097_STATUS_WORD` | `0x00a30014` | `CSR_RO` | `PRIV_U` | 8097 status word (v1: condition codes + basic exception summary). |
+| `CSR_8097_MEM_ADDR_LO` | `0x00a30018` | `CSR_RW` | `PRIV_U` | 8097 memory address low word for FLD/FSTP commands. |
+| `CSR_8097_MEM_ADDR_HI` | `0x00a3001c` | `CSR_RW` | `PRIV_U` | 8097 memory address high word for FLD/FSTP commands. |
+| `CSR_8097_PUSH_LO` | `0x00a30020` | `CSR_WO` | `PRIV_U` | 8097 push data low word (64-bit); write LO then HI to push. |
+| `CSR_8097_PUSH_HI` | `0x00a30024` | `CSR_WO` | `PRIV_U` | 8097 push data high word; triggers stack push. |
+| `CSR_8097_POP_LO` | `0x00a30028` | `CSR_RO` | `PRIV_U` | 8097 pop data low word (peek ST0 low 32). |
+| `CSR_8097_POP_HI` | `0x00a3002c` | `CSR_RO` | `PRIV_U` | 8097 pop data high word (returns ST0 high 32 and pops). |
+| `CSR_8097_CMD` | `0x00a30030` | `CSR_WO` | `PRIV_U` | 8097 command register; writing triggers an x87-like operation. |
+| `CSR_8097_RF_INDEX` | `0x00a30034` | `CSR_RW` | `PRIV_S` | 8097 turbo RF index (F0..F15) for P7 regfile mode. |
+| `CSR_8097_RF_DATA_LO` | `0x00a30038` | `CSR_RW` | `PRIV_S` | 8097 turbo RF data low word. |
+| `CSR_8097_RF_DATA_HI` | `0x00a3003c` | `CSR_RW` | `PRIV_S` | 8097 turbo RF data high word. |
+| `CSR_8097_RF_OP` | `0x00a30040` | `CSR_WO` | `PRIV_S` | 8097 turbo RF operation (P7-only, packed indices/opcode). |
 | `CSR_AM9513_ID` | `0x00700000` | `CSR_RO` | `PRIV_U` | Am9513 identification register (implementation-defined encoding). |
 | `CSR_AM9513_CTRL` | `0x00700004` | `CSR_RW` | `PRIV_S` | Am9513 global control (v1.0: enable). |
 | `CSR_AM9513_STATUS` | `0x00700008` | `CSR_RO` | `PRIV_U` | Am9513 global status (busy, pending work, last fault). |

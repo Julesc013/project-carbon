@@ -297,6 +297,127 @@ csrs:
     width_bits: 32
     description: Z90 atomic status (register-only placeholder).
 
+  # 8097 FPU core-family CSRs (vendor_id=0x00, block_id=0xA3, block_version=0x0)
+  - name: CSR_8097_ID
+    address: 0x00A30000
+    block: reserved_future_cpu
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: 8097 identification register (implementation-defined encoding).
+  - name: CSR_8097_TIER
+    address: 0x00A30004
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 8
+    description: 8097 active tier (x86-derived ladder); v1 only supports P0 and P7.
+  - name: CSR_8097_MODEFLAGS
+    address: 0x00A30008
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 8
+    description: 8097 modeflags (STRICT/INTMASK); STRICT gates turbo extensions.
+  - name: CSR_8097_STATUS
+    address: 0x00A3000C
+    block: reserved_future_cpu
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: 8097 status (busy, stack state, last fault).
+  - name: CSR_8097_CTRL_WORD
+    address: 0x00A30010
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 16
+    description: 8097 control word (v1: rounding control subset).
+  - name: CSR_8097_STATUS_WORD
+    address: 0x00A30014
+    block: reserved_future_cpu
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 16
+    description: 8097 status word (v1: condition codes + basic exception summary).
+  - name: CSR_8097_MEM_ADDR_LO
+    address: 0x00A30018
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: 8097 memory address low word for FLD/FSTP commands.
+  - name: CSR_8097_MEM_ADDR_HI
+    address: 0x00A3001C
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: 8097 memory address high word for FLD/FSTP commands.
+  - name: CSR_8097_PUSH_LO
+    address: 0x00A30020
+    block: reserved_future_cpu
+    access: CSR_WO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: 8097 push data low word (64-bit); write LO then HI to push.
+  - name: CSR_8097_PUSH_HI
+    address: 0x00A30024
+    block: reserved_future_cpu
+    access: CSR_WO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: 8097 push data high word; triggers stack push.
+  - name: CSR_8097_POP_LO
+    address: 0x00A30028
+    block: reserved_future_cpu
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: 8097 pop data low word (peek ST0 low 32).
+  - name: CSR_8097_POP_HI
+    address: 0x00A3002C
+    block: reserved_future_cpu
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: 8097 pop data high word (returns ST0 high 32 and pops).
+  - name: CSR_8097_CMD
+    address: 0x00A30030
+    block: reserved_future_cpu
+    access: CSR_WO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: 8097 command register; writing triggers an x87-like operation.
+  - name: CSR_8097_RF_INDEX
+    address: 0x00A30034
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 8
+    description: 8097 turbo RF index (F0..F15) for P7 regfile mode.
+  - name: CSR_8097_RF_DATA_LO
+    address: 0x00A30038
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: 8097 turbo RF data low word.
+  - name: CSR_8097_RF_DATA_HI
+    address: 0x00A3003C
+    block: reserved_future_cpu
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: 8097 turbo RF data high word.
+  - name: CSR_8097_RF_OP
+    address: 0x00A30040
+    block: reserved_future_cpu
+    access: CSR_WO
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: 8097 turbo RF operation (P7-only, packed indices/opcode).
+
   # Am9513 accelerator CSRs (vendor_id=0x00, block_id=0x70, block_version=0x0)
   - name: CSR_AM9513_ID
     address: 0x00700000

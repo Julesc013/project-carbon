@@ -7,6 +7,8 @@
 #   make tb_trace_ring
 #   make tb_am9513
 #   make tb_ez90_scaffold
+#   make tb_8096
+#   make tb_8097
 #
 # Uses Icarus Verilog if available.
 
@@ -64,10 +66,23 @@ EZ90_SV := \
   ../cores/eZ90/rtl/ez90_core.sv \
   ../cores/eZ90/tb/tb_ez90_scaffold.sv
 
+X96_8096_SV := \
+  ../cores/8096/rtl/cpu_8096_pkg.sv \
+  ../cores/8096/rtl/cpu_8096_core.sv \
+  ../cores/8096/rtl/cpu_8096.sv \
+  ../cores/8096/tb/tb_8096.sv
+
+X96_8097_SV := \
+  ../cores/Am9513/rtl/am9513_pkg.sv \
+  ../cores/Am9513/rtl/am9513_math_pkg.sv \
+  ../cores/8097/rtl/fpu_8097_pkg.sv \
+  ../cores/8097/rtl/fpu_8097.sv \
+  ../cores/8097/tb/tb_8097.sv
+
 IVERILOG_FLAGS := -g2012 -Wall -Wno-timescale
 
-.PHONY: all clean tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_am9513 tb_ez90_scaffold
-all: tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_am9513 tb_ez90_scaffold
+.PHONY: all clean tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_am9513 tb_ez90_scaffold tb_8096 tb_8097
+all: tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_am9513 tb_ez90_scaffold tb_8096 tb_8097
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -95,6 +110,14 @@ tb_am9513: $(BUILD_DIR)
 tb_ez90_scaffold: $(BUILD_DIR)
 	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_ez90_scaffold.vvp $(COMMON_SV) $(EZ90_SV)
 	$(VVP) $(BUILD_DIR)/tb_ez90_scaffold.vvp
+
+tb_8096: $(BUILD_DIR)
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_8096.vvp $(COMMON_SV) $(X96_8096_SV)
+	$(VVP) $(BUILD_DIR)/tb_8096.vvp
+
+tb_8097: $(BUILD_DIR)
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_8097.vvp $(COMMON_SV) $(X96_8097_SV)
+	$(VVP) $(BUILD_DIR)/tb_8097.vvp
 
 clean:
 	rm -rf $(BUILD_DIR)
