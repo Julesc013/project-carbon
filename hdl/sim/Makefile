@@ -45,6 +45,11 @@ CARBONIO_SV := \
   ../cores/CarbonIO/rtl/carbonio.sv \
   ../cores/CarbonIO/tb/tb_carbonio.sv
 
+CARBONDMA_SV := \
+  ../cores/CarbonDMA/rtl/carbondma_pkg.sv \
+  ../cores/CarbonDMA/rtl/carbondma.sv \
+  ../cores/CarbonDMA/tb/tb_carbondma.sv
+
 AM9513_SV := \
   ../cores/Am9513/rtl/am9513_pkg.sv \
   ../cores/Am9513/rtl/am9513_math_pkg.sv \
@@ -217,7 +222,7 @@ X96_8097_SV := \
 
 IVERILOG_FLAGS := -g2012 -Wall -Wno-timescale
 
-.PHONY: all clean tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_carbonio tb_ez90_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonez90 tb_carbonx86 tb_carbonx96
+.PHONY: all clean tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_carbonio tb_carbondma tb_ez90_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonez90 tb_carbonx86 tb_carbonx96
 all: tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_ez90_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonez90 tb_carbonx86 tb_carbonx96
 
 $(BUILD_DIR):
@@ -258,6 +263,10 @@ tb_am9513: $(BUILD_DIR)
 tb_carbonio: $(BUILD_DIR)
 	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbonio.vvp $(COMMON_SV) $(CARBONIO_SV)
 	$(VVP) $(BUILD_DIR)/tb_carbonio.vvp
+
+tb_carbondma: $(BUILD_DIR)
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbondma.vvp $(COMMON_SV) $(CARBONDMA_SV)
+	$(VVP) $(BUILD_DIR)/tb_carbondma.vvp
 
 tb_ez90_scaffold: $(BUILD_DIR)
 	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_ez90_scaffold.vvp $(COMMON_SV) $(EZ90_SV)
