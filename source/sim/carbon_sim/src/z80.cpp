@@ -925,6 +925,29 @@ u64 Z80::execute_ed(u8 op) {
 }
 
 u64 Z80::execute_base(u8 op, u8 index_prefix) {
+  const auto cond = [&](int cc) -> bool {
+    switch (cc & 7) {
+      case 0:
+        return (f_ & FLAG_Z) == 0;
+      case 1:
+        return (f_ & FLAG_Z) != 0;
+      case 2:
+        return (f_ & FLAG_C) == 0;
+      case 3:
+        return (f_ & FLAG_C) != 0;
+      case 4:
+        return (f_ & FLAG_PV) == 0;
+      case 5:
+        return (f_ & FLAG_PV) != 0;
+      case 6:
+        return (f_ & FLAG_S) == 0;
+      case 7:
+        return (f_ & FLAG_S) != 0;
+      default:
+        return false;
+    }
+  };
+
   // LD r,r'
   if ((op & 0xC0) == 0x40) {
     if (op == 0x76) { // HALT

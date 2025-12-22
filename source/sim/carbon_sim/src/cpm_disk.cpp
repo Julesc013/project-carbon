@@ -35,7 +35,7 @@ BlockDisk* CpmDiskDevice::current_disk() const {
 
 void CpmDiskDevice::start_read() {
   err_ = false;
-  const auto* disk = current_disk();
+  auto* disk = current_disk();
   if (disk == nullptr || !disk->is_open()) {
     err_ = true;
     drq_ = false;
@@ -56,7 +56,7 @@ void CpmDiskDevice::start_read() {
 
 void CpmDiskDevice::start_write() {
   err_ = false;
-  const auto* disk = current_disk();
+  auto* disk = current_disk();
   if (disk == nullptr || !disk->is_open() || disk->read_only()) {
     err_ = true;
     drq_ = false;
@@ -163,4 +163,3 @@ void CpmDiskDevice::io_write(u16 port, u8 value) {
 }
 
 } // namespace carbon_sim
-
