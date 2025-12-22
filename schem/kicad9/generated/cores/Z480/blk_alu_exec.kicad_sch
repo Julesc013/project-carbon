@@ -2,17 +2,17 @@
 	(version 20250114)
 	(generator "kicadgen")
 	(generator_version "0.1")
-	(uuid "46a5305b-9dce-5859-96e4-4bfb0ac74f01")
+	(uuid "74156746-7fee-5a95-8b6b-aff46815b733")
 	(paper "A3")
 	(title_block
-		(title "eZ90::mem_fabric")
+		(title "Z480::alu_exec")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for eZ90/mem_fabric"
+		"Generated placeholder block for Z480/alu_exec"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "75de342a-c8f8-5f1b-971f-003a0914e398")
+		(uuid "0cd10e5b-1ba8-5a1e-bd5b-a8b155f94e8d")
 	)
 	(sheet_instances
 		(path

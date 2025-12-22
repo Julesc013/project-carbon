@@ -14,8 +14,8 @@ module carbonx96_top (
   localparam int unsigned DATA_W = 32;
   localparam int unsigned ID_W   = 4;
 
-  localparam int unsigned M = 3; // 8096 mem, 8096 io, 8097 mem
-  localparam int unsigned N = 3; // mmio, rom, ram(default)
+  localparam int unsigned M = 4; // 8096 mem, 8096 io, 8097 mem, carbondma
+  localparam int unsigned N = 5; // mmio, carbonio, carbondma, rom, ram(default)
 
   fabric_if #(
       .ADDR_W(ADDR_W),
@@ -37,11 +37,15 @@ module carbonx96_top (
 
   localparam logic [ADDR_W-1:0] SLAVE_BASE [N] = '{
       ADDR_W'(CARBON_SYSX86_MMIO_BASE),
+      ADDR_W'(CARBON_SYSX86_CARBONIO_BASE),
+      ADDR_W'(CARBON_SYSX86_CARBONDMA_BASE),
       ADDR_W'(CARBON_SYSX86_ROM_BASE),
       32'hFFFF_FFFF
   };
   localparam logic [ADDR_W-1:0] SLAVE_MASK [N] = '{
       ADDR_W'(CARBON_SYSX86_MMIO_MASK),
+      ADDR_W'(CARBON_SYSX86_CARBONIO_MASK),
+      ADDR_W'(CARBON_SYSX86_CARBONDMA_MASK),
       ADDR_W'(CARBON_SYSX86_ROM_MASK),
       32'hFFFF_FFFF
   };
@@ -53,7 +57,7 @@ module carbonx96_top (
       .DATA_W(DATA_W),
       .ID_W(ID_W),
       .HAS_DEFAULT(1'b1),
-      .DEFAULT_SLAVE(2),
+      .DEFAULT_SLAVE(4),
       .SLAVE_BASE(SLAVE_BASE),
       .SLAVE_MASK(SLAVE_MASK)
   ) u_fabric (
@@ -197,7 +201,7 @@ module carbonx96_top (
       end
       FPU_INIT_TIER: begin
         fpu_csr_addr  = 32'(CARBON_CSR_8097_TIER);
-        fpu_csr_wdata = {24'h000000, 8'(CARBON_X86_DERIVED_TIER_P7_TURBO_UNLIMITED)};
+        fpu_csr_wdata = {24'h000000, 8'(CARBON_X86_DERIVED_TIER_P7_X86_64)};
       end
       default: begin
       end
@@ -242,6 +246,80 @@ module carbonx96_top (
   end
 
   // --------------------------------------------------------------------------
+  // CarbonIO (UART/PIO/Timers)
+  // --------------------------------------------------------------------------
+  csr_if csr_carbonio (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  dbg_if dbg_carbonio (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  irq_if #(.N(carbonio_pkg::CARBONIO_IRQ_SRC_COUNT)) irq_carbonio (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+
+  csr_master_tieoff u_csr_carbonio_tie (.csr(csr_carbonio));
+  dbg_hub_tieoff    u_dbg_carbonio_tie (.dbg(dbg_carbonio));
+
+  assign irq_carbonio.irq_ack = 1'b0;
+  assign irq_carbonio.irq_ack_vector = '0;
+
+  logic carbonio_uart_rx_ready;
+  logic carbonio_uart_tx_valid;
+  logic [7:0] carbonio_uart_tx_data;
+  logic [31:0] carbonio_pio_out;
+  logic [31:0] carbonio_pio_dir;
+
+  carbonio #(
+      .COMPAT_BASE_ADDR(CARBON_SYSX86_CARBONIO_BASE)
+  ) u_carbonio (
+      .clk(clk),
+      .rst_n(rst_n),
+      .compat_if(s_if[1]),
+      .csr(csr_carbonio),
+      .dbg(dbg_carbonio),
+      .irq(irq_carbonio),
+      .uart_rx_valid(1'b0),
+      .uart_rx_data(8'h00),
+      .uart_rx_ready(carbonio_uart_rx_ready),
+      .uart_tx_ready(1'b1),
+      .uart_tx_valid(carbonio_uart_tx_valid),
+      .uart_tx_data(carbonio_uart_tx_data),
+      .pio_in('0),
+      .pio_out(carbonio_pio_out),
+      .pio_dir(carbonio_pio_dir)
+  );
+
+  // --------------------------------------------------------------------------
+  // CarbonDMA
+  // --------------------------------------------------------------------------
+  csr_if csr_carbondma (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  dbg_if dbg_carbondma (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+
+  csr_master_tieoff u_csr_carbondma_tie (.csr(csr_carbondma));
+  dbg_hub_tieoff    u_dbg_carbondma_tie (.dbg(dbg_carbondma));
+
+  carbondma #(
+      .COMPAT_BASE_ADDR(CARBON_SYSX86_CARBONDMA_BASE)
+  ) u_carbondma (
+      .clk(clk),
+      .rst_n(rst_n),
+      .compat_if(s_if[2]),
+      .mem_if(m_if[3]),
+      .csr(csr_carbondma),
+      .dbg(dbg_carbondma)
+  );
+
+  // --------------------------------------------------------------------------
   // ROM/RAM/MMIO
   // --------------------------------------------------------------------------
   localparam int unsigned ROM_BYTES = CARBON_SYSX86_ROM_BYTES;
@@ -261,7 +339,7 @@ module carbonx96_top (
       8'h00, 8'h01, 8'h06, 8'h88, 8'h39, 8'hB0,
       8'h00, 8'h00, 8'h06, 8'h88, 8'h58, 8'hB0,
       8'hBE, 8'hEF, 8'h00, 8'h00, 8'h63,
-      8'h00, 8'h0A, 8'(CARBON_X86_DERIVED_TIER_P7_TURBO_UNLIMITED), 8'h00, 8'h62,
+      8'h00, 8'h0A, 8'(CARBON_X86_DERIVED_TIER_P7_X86_64), 8'h00, 8'h62,
       8'hD8, 8'h8E, 8'hF0, 8'h00, 8'hB8
   };
 
@@ -273,7 +351,7 @@ module carbonx96_top (
   ) u_rom (
       .clk(clk),
       .rst_n(rst_n),
-      .bus(s_if[1])
+      .bus(s_if[3])
   );
 
   carbon_sram #(
@@ -283,7 +361,7 @@ module carbonx96_top (
   ) u_ram (
       .clk(clk),
       .rst_n(rst_n),
-      .bus(s_if[2])
+      .bus(s_if[4])
   );
 
   carbon_mmio_regs #(
@@ -300,6 +378,9 @@ module carbonx96_top (
       .uart_tx_byte()
   );
 
-  wire _unused = ^{cpu_csr_fault, cpu_csr_rdata[0], fpu_csr_fault, fpu_csr_rdata[0]};
+  wire _unused = ^{cpu_csr_fault, cpu_csr_rdata[0], fpu_csr_fault, fpu_csr_rdata[0],
+                   carbonio_uart_rx_ready, carbonio_uart_tx_valid, carbonio_uart_tx_data,
+                   carbonio_pio_out, carbonio_pio_dir, irq_carbonio.irq_valid,
+                   irq_carbonio.irq_vector, irq_carbonio.irq_prio, irq_carbonio.irq_pending};
 
 endmodule : carbonx96_top

@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module tb_carbonez90;
+module tb_carbonz480;
   logic clk;
   logic rst_n;
 
@@ -16,14 +16,14 @@ module tb_carbonez90;
     rst_n = 1'b1;
   end
 
-  carbonez90_top dut (
+  carbonz480_top dut (
       .clk(clk),
       .rst_n(rst_n),
       .signature(signature),
       .poweroff(poweroff)
   );
 
-  localparam logic [31:0] EXP_SIG = 32'h3039_5A45; // "EZ90" in little-endian bytes
+  localparam logic [31:0] EXP_SIG = 32'h3038_345A; // "Z480" in little-endian bytes
 
   int unsigned cycles;
   initial begin
@@ -33,11 +33,10 @@ module tb_carbonez90;
       @(posedge clk);
       cycles++;
     end
-    if (!poweroff) $fatal(1, "tb_carbonez90: timeout waiting for poweroff");
-    if (signature !== EXP_SIG) $fatal(1, "tb_carbonez90: signature mismatch exp=%08x got=%08x", EXP_SIG, signature);
-    $display("tb_carbonez90: PASS");
+    if (!poweroff) $fatal(1, "tb_carbonz480: timeout waiting for poweroff");
+    if (signature !== EXP_SIG) $fatal(1, "tb_carbonz480: signature mismatch exp=%08x got=%08x", EXP_SIG, signature);
+    $display("tb_carbonz480: PASS");
     $finish;
   end
 
 endmodule
-

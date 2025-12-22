@@ -29,9 +29,9 @@
       ]
     },
     {
-      "name": "eZ90",
-      "out_dir": "schem/kicad9/generated/cores/eZ90",
-      "top_schematic": "eZ90_scaffold.kicad_sch",
+      "name": "Z480",
+      "out_dir": "schem/kicad9/generated/cores/Z480",
+      "top_schematic": "Z480_scaffold.kicad_sch",
       "interfaces": ["fabric_if", "csr_if", "irq_if", "dbg_if"],
       "blocks": [
         { "name": "frontend_decode", "sheet_file": "blk_frontend_decode.kicad_sch" },
@@ -85,4 +85,3 @@
     }
   ]
 }
-

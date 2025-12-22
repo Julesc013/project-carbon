@@ -20,10 +20,10 @@
       "adapters": ["RC2014", "S-100"]
     },
     {
-      "name": "CarbonEZ90",
-      "out_dir": "schem/kicad9/generated/systems/CarbonEZ90",
-      "top_schematic": "CarbonEZ90.kicad_sch",
-      "cpu_core": "eZ90",
+      "name": "CarbonZ480",
+      "out_dir": "schem/kicad9/generated/systems/CarbonZ480",
+      "top_schematic": "CarbonZ480.kicad_sch",
+      "cpu_core": "Z480",
       "accel_core": "Am9513",
       "memory": ["ROM", "SRAM", "DRAM"],
       "adapters": ["RC2014", "S-100"]
@@ -48,4 +48,3 @@
     }
   ]
 }
-

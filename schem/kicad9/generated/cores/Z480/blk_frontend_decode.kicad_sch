@@ -2,17 +2,17 @@
 	(version 20250114)
 	(generator "kicadgen")
 	(generator_version "0.1")
-	(uuid "74156746-7fee-5a95-8b6b-aff46815b733")
+	(uuid "ae9bf571-4711-579d-8db8-c23a6221a3b2")
 	(paper "A3")
 	(title_block
-		(title "eZ90::alu_exec")
+		(title "Z480::frontend_decode")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for eZ90/alu_exec"
+		"Generated placeholder block for Z480/frontend_decode"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "0cd10e5b-1ba8-5a1e-bd5b-a8b155f94e8d")
+		(uuid "798875cd-7896-52f5-8248-0817703b2f99")
 	)
 	(sheet_instances
 		(path

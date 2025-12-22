@@ -5,14 +5,14 @@
 	(uuid "59d3f377-8086-5e08-87f2-a6ea56e5a5df")
 	(paper "A3")
 	(title_block
-		(title "eZ90 (generated)")
+		(title "Z480 (generated)")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated core top: eZ90  (edit mapping specs; do not hand-edit generated/)"
+		"Generated core top: Z480  (edit mapping specs; do not hand-edit generated/)"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -105,7 +105,7 @@
 		)
 		(instances
 			(project
-				"core_eZ90"
+				"core_Z480"
 				(path
 					"/59d3f377-8086-5e08-87f2-a6ea56e5a5df"
 					(page "2")
@@ -165,7 +165,7 @@
 		)
 		(instances
 			(project
-				"core_eZ90"
+				"core_Z480"
 				(path
 					"/59d3f377-8086-5e08-87f2-a6ea56e5a5df"
 					(page "3")
@@ -225,7 +225,7 @@
 		)
 		(instances
 			(project
-				"core_eZ90"
+				"core_Z480"
 				(path
 					"/59d3f377-8086-5e08-87f2-a6ea56e5a5df"
 					(page "4")
@@ -285,7 +285,7 @@
 		)
 		(instances
 			(project
-				"core_eZ90"
+				"core_Z480"
 				(path
 					"/59d3f377-8086-5e08-87f2-a6ea56e5a5df"
 					(page "5")
@@ -345,7 +345,7 @@
 		)
 		(instances
 			(project
-				"core_eZ90"
+				"core_Z480"
 				(path
 					"/59d3f377-8086-5e08-87f2-a6ea56e5a5df"
 					(page "6")

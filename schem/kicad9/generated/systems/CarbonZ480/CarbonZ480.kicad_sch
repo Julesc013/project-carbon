@@ -5,14 +5,14 @@
 	(uuid "17675ba5-bcbf-5d72-8a1b-6c49952c9687")
 	(paper "A3")
 	(title_block
-		(title "CarbonEZ90 (generated)")
+		(title "CarbonZ480 (generated)")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated system top: CarbonEZ90  (edit mapping specs; do not hand-edit generated/)"
+		"Generated system top: CarbonZ480  (edit mapping specs; do not hand-edit generated/)"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -90,7 +90,7 @@
 		)
 		(property
 			"Sheetfile"
-			"../../cores/eZ90/eZ90_scaffold.kicad_sch"
+			"../../cores/Z480/Z480_scaffold.kicad_sch"
 			(at
 				12.7
 				77.47
@@ -553,7 +553,7 @@
 		)
 		(instances
 			(project
-				"system_CarbonEZ90"
+				"system_CarbonZ480"
 				(path
 					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
 					(page "2")
@@ -1109,7 +1109,7 @@
 		)
 		(instances
 			(project
-				"system_CarbonEZ90"
+				"system_CarbonZ480"
 				(path
 					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
 					(page "3")
@@ -1169,7 +1169,7 @@
 		)
 		(instances
 			(project
-				"system_CarbonEZ90"
+				"system_CarbonZ480"
 				(path
 					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
 					(page "4")
@@ -1229,7 +1229,7 @@
 		)
 		(instances
 			(project
-				"system_CarbonEZ90"
+				"system_CarbonZ480"
 				(path
 					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
 					(page "5")
@@ -1289,7 +1289,7 @@
 		)
 		(instances
 			(project
-				"system_CarbonEZ90"
+				"system_CarbonZ480"
 				(path
 					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
 					(page "6")
@@ -1349,7 +1349,7 @@
 		)
 		(instances
 			(project
-				"system_CarbonEZ90"
+				"system_CarbonZ480"
 				(path
 					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
 					(page "7")
@@ -1409,7 +1409,7 @@
 		)
 		(instances
 			(project
-				"system_CarbonEZ90"
+				"system_CarbonZ480"
 				(path
 					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
 					(page "8")
@@ -1469,7 +1469,7 @@
 		)
 		(instances
 			(project
-				"system_CarbonEZ90"
+				"system_CarbonZ480"
 				(path
 					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
 					(page "9")
@@ -1529,7 +1529,7 @@
 		)
 		(instances
 			(project
-				"system_CarbonEZ90"
+				"system_CarbonZ480"
 				(path
 					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
 					(page "10")
@@ -1589,7 +1589,7 @@
 		)
 		(instances
 			(project
-				"system_CarbonEZ90"
+				"system_CarbonZ480"
 				(path
 					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
 					(page "11")
@@ -1649,7 +1649,7 @@
 		)
 		(instances
 			(project
-				"system_CarbonEZ90"
+				"system_CarbonZ480"
 				(path
 					"/17675ba5-bcbf-5d72-8a1b-6c49952c9687"
 					(page "12")

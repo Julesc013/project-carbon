@@ -2,17 +2,17 @@
 	(version 20250114)
 	(generator "kicadgen")
 	(generator_version "0.1")
-	(uuid "eaa72bbb-db7f-5b84-95cb-8c22e2b2e535")
+	(uuid "46a5305b-9dce-5859-96e4-4bfb0ac74f01")
 	(paper "A3")
 	(title_block
-		(title "eZ90::csr_irq_dbg")
+		(title "Z480::mem_fabric")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for eZ90/csr_irq_dbg"
+		"Generated placeholder block for Z480/mem_fabric"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "80b509f3-87cb-5f1f-a63f-0b98a6da9174")
+		(uuid "75de342a-c8f8-5f1b-971f-003a0914e398")
 	)
 	(sheet_instances
 		(path

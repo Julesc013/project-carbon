@@ -2,17 +2,17 @@
 	(version 20250114)
 	(generator "kicadgen")
 	(generator_version "0.1")
-	(uuid "9f33cea1-b39a-5997-bd61-d62ca1b3f9f9")
+	(uuid "eaa72bbb-db7f-5b84-95cb-8c22e2b2e535")
 	(paper "A3")
 	(title_block
-		(title "eZ90::regfile")
+		(title "Z480::csr_irq_dbg")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for eZ90/regfile"
+		"Generated placeholder block for Z480/csr_irq_dbg"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "a7a7cc15-b304-5234-b0d5-33b55b09320f")
+		(uuid "80b509f3-87cb-5f1f-a63f-0b98a6da9174")
 	)
 	(sheet_instances
 		(path

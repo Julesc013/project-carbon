@@ -1,7 +1,7 @@
 // Project Carbon - Systems
-// carbonez90_top: CarbonEZ90 bring-up system (eZ90 scaffold + Am9513).
+// carbonz480_top: CarbonZ480 bring-up system (Z480 scaffold + Am9513).
 
-module carbonez90_top (
+module carbonz480_top (
     input logic clk,
     input logic rst_n,
     output logic [31:0] signature,
@@ -15,8 +15,8 @@ module carbonez90_top (
   localparam int unsigned DATA_W = 32;
   localparam int unsigned ID_W   = 4;
 
-  localparam int unsigned M = 3; // ez90 mem (idle), bootmaster, am9513 dma
-  localparam int unsigned N = 3; // mmio, rom, ram(default)
+  localparam int unsigned M = 4; // z480 mem (idle), bootmaster, am9513 dma, carbondma
+  localparam int unsigned N = 5; // mmio, carbonio, carbondma, rom, ram(default)
 
   fabric_if #(
       .ADDR_W(ADDR_W),
@@ -39,11 +39,15 @@ module carbonez90_top (
   // Reuse the x86-class 1MiB map for v1 bring-up.
   localparam logic [ADDR_W-1:0] SLAVE_BASE [N] = '{
       ADDR_W'(CARBON_SYSX86_MMIO_BASE),
+      ADDR_W'(CARBON_SYSX86_CARBONIO_BASE),
+      ADDR_W'(CARBON_SYSX86_CARBONDMA_BASE),
       ADDR_W'(CARBON_SYSX86_ROM_BASE),
       32'hFFFF_FFFF
   };
   localparam logic [ADDR_W-1:0] SLAVE_MASK [N] = '{
       ADDR_W'(CARBON_SYSX86_MMIO_MASK),
+      ADDR_W'(CARBON_SYSX86_CARBONIO_MASK),
+      ADDR_W'(CARBON_SYSX86_CARBONDMA_MASK),
       ADDR_W'(CARBON_SYSX86_ROM_MASK),
       32'hFFFF_FFFF
   };
@@ -55,7 +59,7 @@ module carbonez90_top (
       .DATA_W(DATA_W),
       .ID_W(ID_W),
       .HAS_DEFAULT(1'b1),
-      .DEFAULT_SLAVE(2),
+      .DEFAULT_SLAVE(4),
       .SLAVE_BASE(SLAVE_BASE),
       .SLAVE_MASK(SLAVE_MASK)
   ) u_fabric (
@@ -66,7 +70,7 @@ module carbonez90_top (
   );
 
   // --------------------------------------------------------------------------
-  // eZ90 scaffold core (fabric is intentionally idle in v1)
+  // Z480 scaffold core (fabric is intentionally idle in v1)
   // --------------------------------------------------------------------------
   csr_if csr_cpu (
       .clk(clk),
@@ -85,7 +89,7 @@ module carbonez90_top (
   dbg_hub_tieoff    u_dbg_cpu_tie (.dbg(dbg_cpu));
   irq_src_tieoff    u_irq_cpu_tie (.irq(irq_cpu));
 
-  ez90_core u_cpu (
+  z480_core u_cpu (
       .clk(clk),
       .rst_n(rst_n),
       .mem_if(m_if[0]),
@@ -95,7 +99,7 @@ module carbonez90_top (
   );
 
   // --------------------------------------------------------------------------
-  // Am9513 accelerator (enabled; default mode P7/9513); CAI host is tied off.
+  // Am9513 accelerator (enabled; default mode P7 native); CAI host is tied off.
   // --------------------------------------------------------------------------
   cai_if cai_host (
       .clk(clk),
@@ -171,7 +175,7 @@ module carbonez90_top (
       end
       FPU_INIT_MODE: begin
         fpu_csr_addr  = 32'(CARBON_CSR_AM9513_MODE);
-        fpu_csr_wdata = {24'h000000, 8'(AM9513_P7_TURBO)};
+        fpu_csr_wdata = {24'h000000, 8'(AM9513_P7_NATIVE)};
       end
       FPU_INIT_COMP_LO: begin
         fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_COMP_BASE_LO);
@@ -216,11 +220,85 @@ module carbonez90_top (
   end
 
   // --------------------------------------------------------------------------
+  // CarbonIO (UART/PIO/Timers)
+  // --------------------------------------------------------------------------
+  csr_if csr_carbonio (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  dbg_if dbg_carbonio (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  irq_if #(.N(carbonio_pkg::CARBONIO_IRQ_SRC_COUNT)) irq_carbonio (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+
+  csr_master_tieoff u_csr_carbonio_tie (.csr(csr_carbonio));
+  dbg_hub_tieoff    u_dbg_carbonio_tie (.dbg(dbg_carbonio));
+
+  assign irq_carbonio.irq_ack = 1'b0;
+  assign irq_carbonio.irq_ack_vector = '0;
+
+  logic carbonio_uart_rx_ready;
+  logic carbonio_uart_tx_valid;
+  logic [7:0] carbonio_uart_tx_data;
+  logic [31:0] carbonio_pio_out;
+  logic [31:0] carbonio_pio_dir;
+
+  carbonio #(
+      .COMPAT_BASE_ADDR(CARBON_SYSX86_CARBONIO_BASE)
+  ) u_carbonio (
+      .clk(clk),
+      .rst_n(rst_n),
+      .compat_if(s_if[1]),
+      .csr(csr_carbonio),
+      .dbg(dbg_carbonio),
+      .irq(irq_carbonio),
+      .uart_rx_valid(1'b0),
+      .uart_rx_data(8'h00),
+      .uart_rx_ready(carbonio_uart_rx_ready),
+      .uart_tx_ready(1'b1),
+      .uart_tx_valid(carbonio_uart_tx_valid),
+      .uart_tx_data(carbonio_uart_tx_data),
+      .pio_in('0),
+      .pio_out(carbonio_pio_out),
+      .pio_dir(carbonio_pio_dir)
+  );
+
+  // --------------------------------------------------------------------------
+  // CarbonDMA
+  // --------------------------------------------------------------------------
+  csr_if csr_carbondma (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  dbg_if dbg_carbondma (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+
+  csr_master_tieoff u_csr_carbondma_tie (.csr(csr_carbondma));
+  dbg_hub_tieoff    u_dbg_carbondma_tie (.dbg(dbg_carbondma));
+
+  carbondma #(
+      .COMPAT_BASE_ADDR(CARBON_SYSX86_CARBONDMA_BASE)
+  ) u_carbondma (
+      .clk(clk),
+      .rst_n(rst_n),
+      .compat_if(s_if[2]),
+      .mem_if(m_if[3]),
+      .csr(csr_carbondma),
+      .dbg(dbg_carbondma)
+  );
+
+  // --------------------------------------------------------------------------
   // Boot stub master (writes signature + poweroff through MMIO)
   // --------------------------------------------------------------------------
   carbon_fabric_bootmaster #(
       .MMIO_BASE(CARBON_SYSX86_MMIO_BASE),
-      .SIGNATURE(32'h3039_5A45), // "EZ90" (little endian bytes)
+      .SIGNATURE(32'h3038_345A), // "Z480" (little endian bytes)
       .START_DELAY(8)
   ) u_boot (
       .clk(clk),
@@ -247,7 +325,7 @@ module carbonez90_top (
   ) u_rom (
       .clk(clk),
       .rst_n(rst_n),
-      .bus(s_if[1])
+      .bus(s_if[3])
   );
 
   carbon_sram #(
@@ -257,7 +335,7 @@ module carbonez90_top (
   ) u_ram (
       .clk(clk),
       .rst_n(rst_n),
-      .bus(s_if[2])
+      .bus(s_if[4])
   );
 
   carbon_mmio_regs #(
@@ -274,7 +352,9 @@ module carbonez90_top (
       .uart_tx_byte()
   );
 
-  wire _unused = ^{fpu_csr_fault, fpu_csr_rdata[0]};
+  wire _unused = ^{fpu_csr_fault, fpu_csr_rdata[0], carbonio_uart_rx_ready,
+                   carbonio_uart_tx_valid, carbonio_uart_tx_data, carbonio_pio_out,
+                   carbonio_pio_dir, irq_carbonio.irq_valid, irq_carbonio.irq_vector,
+                   irq_carbonio.irq_prio, irq_carbonio.irq_pending};
 
-endmodule : carbonez90_top
-
+endmodule : carbonz480_top
