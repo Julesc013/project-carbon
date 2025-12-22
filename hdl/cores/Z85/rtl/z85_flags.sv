@@ -436,4 +436,75 @@ package z85_flags_pkg;
     end
   endfunction
 
+  function automatic logic [7:0] flags_ld_block(
+      input logic [7:0] f_in,
+      input logic [7:0] a,
+      input logic [7:0] v,
+      input logic [15:0] bc_after
+  );
+    logic [7:0] f;
+    logic [7:0] sum;
+    begin
+      sum = a + v;
+      f = f_in & (Z85_F_S | Z85_F_Z | Z85_F_C);
+      f |= sum & (Z85_F_X | Z85_F_Y);
+      if (bc_after != 0) f |= Z85_F_PV;
+      // H=0, N=0
+      flags_ld_block = f;
+    end
+  endfunction
+
+  function automatic logic [7:0] flags_cp_block(
+      input logic [7:0] f_in,
+      input logic [7:0] a,
+      input logic [7:0] v,
+      input logic [15:0] bc_after
+  );
+    logic [7:0] f;
+    logic [7:0] res;
+    logic h;
+    logic [7:0] adj;
+    begin
+      res = a - v;
+      h = (a[3:0] < v[3:0]);
+      adj = res - (h ? 8'd1 : 8'd0);
+      f = f_in & Z85_F_C;
+      f |= Z85_F_N;
+      if (res[7]) f |= Z85_F_S;
+      if (res == 8'h00) f |= Z85_F_Z;
+      if (h) f |= Z85_F_H;
+      if (bc_after != 0) f |= Z85_F_PV;
+      f |= adj & (Z85_F_X | Z85_F_Y);
+      flags_cp_block = f;
+    end
+  endfunction
+
+  function automatic logic [7:0] flags_block_io(
+      input logic [7:0] val,
+      input logic [7:0] b_after,
+      input logic [7:0] c,
+      input logic [7:0] l_after,
+      input logic       is_in,
+      input logic       inc_dir
+  );
+    logic [7:0] f;
+    logic [7:0] tmp;
+    logic [8:0] sum;
+    begin
+      if (is_in) begin
+        tmp = inc_dir ? (c + 8'd1) : (c - 8'd1);
+      end else begin
+        tmp = l_after;
+      end
+      sum = {1'b0, val} + {1'b0, tmp};
+      f = 8'h00;
+      f |= b_after & (Z85_F_S | Z85_F_X | Z85_F_Y);
+      if (b_after == 8'h00) f |= Z85_F_Z;
+      if (sum[8]) f |= (Z85_F_H | Z85_F_C);
+      if (parity_even((sum[7:0] & 8'h07) ^ b_after)) f |= Z85_F_PV;
+      f |= Z85_F_N;
+      flags_block_io = f;
+    end
+  endfunction
+
 endpackage : z85_flags_pkg
