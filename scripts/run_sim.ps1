@@ -3,7 +3,7 @@ param(
   [switch]$List,
   [string]$Test,
   [string]$Manifest,
-  [ValidateSet("all","contract","core","system")]
+  [ValidateSet("all","contract","core","system","optional")]
   [string]$Suite = "all",
   [switch]$NoGen
 )
@@ -57,6 +57,7 @@ $sections = @{
   core_tests = @()
   system_tests = @()
   placeholder_tests = @()
+  optional_local_tests = @()
 }
 $current = $null
 foreach ($line in Get-Content $Manifest) {
@@ -80,6 +81,7 @@ $alias = @{
   contract = @("contract_tests")
   core = @("core_tests")
   system = @("system_tests")
+  optional = @("optional_local_tests")
 }
 
 $tests = @()

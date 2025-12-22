@@ -7,6 +7,7 @@
 #   make tb_trace_ring
 #   make tb_cai_contract
 #   make tb_z85
+#   make tb_z85_zex
 #   make tb_z90
 #   make tb_am9513
 #   make tb_z480_scaffold
@@ -146,6 +147,12 @@ Z85_SV := \
   ../cores/Z85/ref/z85_ref_model.sv \
   ../cores/Z85/tb/tb_z85.sv
 
+Z85_ZEX_SV := \
+  $(Z85_RTL_SV) \
+  ../cores/Z85/ref/z85_ref_model.sv \
+  ../cores/Z85/tb/tb_z85.sv \
+  ../cores/Z85/tb/tb_z85_zex.sv
+
 Z90_RTL_SV := \
   $(Z85_RTL_SV) \
   ../cores/Z90/rtl/z90_decode_pkg.sv \
@@ -246,7 +253,7 @@ define run_tb
 endef
 endif
 
-.PHONY: all clean tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_carbonio tb_carbondma tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
+.PHONY: all clean tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z85_zex tb_z90 tb_am9513 tb_carbonio tb_carbondma tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
 all: tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
 
 $(BUILD_DIR):
@@ -278,6 +285,9 @@ tb_cai_contract: $(BUILD_DIR)
 
 tb_z85: $(BUILD_DIR)
 	$(call run_tb,tb_z85,$(COMMON_SV) $(Z85_SV))
+
+tb_z85_zex: $(BUILD_DIR)
+	$(call run_tb,tb_z85_zex,$(COMMON_SV) $(Z85_ZEX_SV))
 
 tb_z90: $(BUILD_DIR)
 	$(call run_tb,tb_z90,$(COMMON_SV) $(Z90_SV))

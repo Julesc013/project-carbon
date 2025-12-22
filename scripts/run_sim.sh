@@ -14,8 +14,8 @@ usage() {
 Usage:
   scripts/run_sim.sh --all [--no-gen] [--manifest <path>]
   scripts/run_sim.sh --test <tb_target> [--no-gen]
-  scripts/run_sim.sh --list [--manifest <path>] [--suite <contract|core|system|all>]
-  scripts/run_sim.sh --all --suite <contract|core|system>
+  scripts/run_sim.sh --list [--manifest <path>] [--suite <contract|core|system|optional|all>]
+  scripts/run_sim.sh --all --suite <contract|core|system|optional>
 
 Notes:
   - Test names are Make targets under hdl/sim (e.g. tb_carbonz80).
@@ -60,7 +60,7 @@ if [ ! -f "$manifest" ]; then
 fi
 
 case "$suite" in
-  all|contract|core|system) ;;
+  all|contract|core|system|optional) ;;
   *)
     echo "ERROR: unknown suite: $suite" >&2
     exit 2
@@ -108,7 +108,7 @@ if [ "$do_list" -eq 1 ]; then
 import sys
 path = sys.argv[1]
 suite = sys.argv[2] if len(sys.argv) > 2 else "all"
-sections = {"contract_tests": [], "core_tests": [], "system_tests": [], "placeholder_tests": []}
+sections = {"contract_tests": [], "core_tests": [], "system_tests": [], "placeholder_tests": [], "optional_local_tests": []}
 current = None
 for raw in open(path, "r", encoding="utf-8"):
     line = raw.split("#", 1)[0].rstrip()
@@ -131,6 +131,7 @@ alias = {
     "contract": ["contract_tests"],
     "core": ["core_tests"],
     "system": ["system_tests"],
+    "optional": ["optional_local_tests"],
 }
 if suite not in alias:
     sys.stderr.write("ERROR: unknown suite: %s\n" % suite)
@@ -154,7 +155,7 @@ else
 import sys
 path = sys.argv[1]
 suite = sys.argv[2] if len(sys.argv) > 2 else "all"
-sections = {"contract_tests": [], "core_tests": [], "system_tests": [], "placeholder_tests": []}
+sections = {"contract_tests": [], "core_tests": [], "system_tests": [], "placeholder_tests": [], "optional_local_tests": []}
 current = None
 for raw in open(path, "r", encoding="utf-8"):
     line = raw.split("#", 1)[0].rstrip()
@@ -177,6 +178,7 @@ alias = {
     "contract": ["contract_tests"],
     "core": ["core_tests"],
     "system": ["system_tests"],
+    "optional": ["optional_local_tests"],
 }
 if suite not in alias:
     sys.stderr.write("ERROR: unknown suite: %s\n" % suite)

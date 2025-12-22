@@ -36,3 +36,6 @@ placeholder_tests:
   - tb_am9514
   - tb_am9515
   - tb_carbonz380
+
+optional_local_tests:
+  - tb_z85_zex

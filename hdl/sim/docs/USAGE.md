@@ -23,6 +23,9 @@
 - List available tests:
   - `scripts/run_sim.sh --list --suite contract`
   - `scripts/run_sim.ps1 -List -Suite contract`
+- List optional local tests:
+  - `scripts/run_sim.sh --list --suite optional`
+  - `scripts/run_sim.ps1 -List -Suite optional`
 
 Logs are written to `hdl/sim/build/logs`.
 
@@ -35,6 +38,7 @@ defines named sections:
 - `core_tests` for core-level unit tests
 - `system_tests` for full-system smoke tests
 - `placeholder_tests` for not-yet-implemented targets (not run by default)
+- `optional_local_tests` for local-only tests that may require extra assets
 
 To add a new TB:
 
