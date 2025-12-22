@@ -9,12 +9,12 @@
 #   make tb_z85
 #   make tb_z90
 #   make tb_am9513
-#   make tb_ez90_scaffold
+#   make tb_z480_scaffold
 #   make tb_8096
 #   make tb_8097
 #   make tb_carbonz80
 #   make tb_carbonz90
-#   make tb_carbonez90
+#   make tb_carbonz480
 #   make tb_carbonx86
 #   make tb_carbonx96
 #
@@ -35,19 +35,25 @@ COMMON_SV := \
   ../common/capability/*.sv \
   bfm/*.sv
 
-CARBONIO_SV := \
+CARBONIO_RTL_SV := \
   ../cores/CarbonIO/rtl/carbonio_pkg.sv \
   ../cores/CarbonIO/rtl/carbonio_fifo.sv \
   ../cores/CarbonIO/rtl/carbonio_uart.sv \
   ../cores/CarbonIO/rtl/carbonio_pio.sv \
   ../cores/CarbonIO/rtl/carbonio_timer.sv \
   ../cores/CarbonIO/rtl/carbonio_irq_router.sv \
-  ../cores/CarbonIO/rtl/carbonio.sv \
+  ../cores/CarbonIO/rtl/carbonio.sv
+
+CARBONIO_SV := \
+  $(CARBONIO_RTL_SV) \
   ../cores/CarbonIO/tb/tb_carbonio.sv
 
-CARBONDMA_SV := \
+CARBONDMA_RTL_SV := \
   ../cores/CarbonDMA/rtl/carbondma_pkg.sv \
-  ../cores/CarbonDMA/rtl/carbondma.sv \
+  ../cores/CarbonDMA/rtl/carbondma.sv
+
+CARBONDMA_SV := \
+  $(CARBONDMA_RTL_SV) \
   ../cores/CarbonDMA/tb/tb_carbondma.sv
 
 AM9513_SV := \
@@ -67,64 +73,64 @@ AM9513_RTL_SV := \
   ../cores/Am9513/rtl/am9513_cai_engine.sv \
   ../cores/Am9513/rtl/am9513_accel.sv
 
-EZ90_SV := \
-  ../cores/eZ90/rtl/ez90_pkg.sv \
-  ../cores/eZ90/rtl/uop_queue.sv \
-  ../cores/eZ90/rtl/fe_bpred.sv \
-  ../cores/eZ90/rtl/fe_icache_port.sv \
-  ../cores/eZ90/rtl/fe_fetch.sv \
-  ../cores/eZ90/rtl/fe_decode.sv \
-  ../cores/eZ90/rtl/fe_uop_cache.sv \
-  ../cores/eZ90/rtl/renamer.sv \
-  ../cores/eZ90/rtl/dispatch.sv \
-  ../cores/eZ90/rtl/rob.sv \
-  ../cores/eZ90/rtl/rs_int.sv \
-  ../cores/eZ90/rtl/lsq.sv \
-  ../cores/eZ90/rtl/scheduler.sv \
-  ../cores/eZ90/rtl/exec_int_alu.sv \
-  ../cores/eZ90/rtl/exec_branch.sv \
-  ../cores/eZ90/rtl/exec_muldiv.sv \
-  ../cores/eZ90/rtl/exec_vec.sv \
-  ../cores/eZ90/rtl/writeback.sv \
-  ../cores/eZ90/rtl/commit.sv \
-  ../cores/eZ90/rtl/priv_ctrl.sv \
-  ../cores/eZ90/rtl/mmu.sv \
-  ../cores/eZ90/rtl/trap_unit.sv \
-  ../cores/eZ90/rtl/iommu_hook.sv \
-  ../cores/eZ90/rtl/icache_port.sv \
-  ../cores/eZ90/rtl/dcache_port.sv \
-  ../cores/eZ90/rtl/cpuid_block.sv \
-  ../cores/eZ90/rtl/ez90_core.sv \
-  ../cores/eZ90/tb/tb_ez90_scaffold.sv
+Z480_SV := \
+  ../cores/Z480/rtl/z480_pkg.sv \
+  ../cores/Z480/rtl/uop_queue.sv \
+  ../cores/Z480/rtl/fe_bpred.sv \
+  ../cores/Z480/rtl/fe_icache_port.sv \
+  ../cores/Z480/rtl/fe_fetch.sv \
+  ../cores/Z480/rtl/fe_decode.sv \
+  ../cores/Z480/rtl/fe_uop_cache.sv \
+  ../cores/Z480/rtl/renamer.sv \
+  ../cores/Z480/rtl/dispatch.sv \
+  ../cores/Z480/rtl/rob.sv \
+  ../cores/Z480/rtl/rs_int.sv \
+  ../cores/Z480/rtl/lsq.sv \
+  ../cores/Z480/rtl/scheduler.sv \
+  ../cores/Z480/rtl/exec_int_alu.sv \
+  ../cores/Z480/rtl/exec_branch.sv \
+  ../cores/Z480/rtl/exec_muldiv.sv \
+  ../cores/Z480/rtl/exec_vec.sv \
+  ../cores/Z480/rtl/writeback.sv \
+  ../cores/Z480/rtl/commit.sv \
+  ../cores/Z480/rtl/priv_ctrl.sv \
+  ../cores/Z480/rtl/mmu.sv \
+  ../cores/Z480/rtl/trap_unit.sv \
+  ../cores/Z480/rtl/iommu_hook.sv \
+  ../cores/Z480/rtl/icache_port.sv \
+  ../cores/Z480/rtl/dcache_port.sv \
+  ../cores/Z480/rtl/cpuid_block.sv \
+  ../cores/Z480/rtl/z480_core.sv \
+  ../cores/Z480/tb/tb_z480_scaffold.sv
 
-EZ90_RTL_SV := \
-  ../cores/eZ90/rtl/ez90_pkg.sv \
-  ../cores/eZ90/rtl/uop_queue.sv \
-  ../cores/eZ90/rtl/fe_bpred.sv \
-  ../cores/eZ90/rtl/fe_icache_port.sv \
-  ../cores/eZ90/rtl/fe_fetch.sv \
-  ../cores/eZ90/rtl/fe_decode.sv \
-  ../cores/eZ90/rtl/fe_uop_cache.sv \
-  ../cores/eZ90/rtl/renamer.sv \
-  ../cores/eZ90/rtl/dispatch.sv \
-  ../cores/eZ90/rtl/rob.sv \
-  ../cores/eZ90/rtl/rs_int.sv \
-  ../cores/eZ90/rtl/lsq.sv \
-  ../cores/eZ90/rtl/scheduler.sv \
-  ../cores/eZ90/rtl/exec_int_alu.sv \
-  ../cores/eZ90/rtl/exec_branch.sv \
-  ../cores/eZ90/rtl/exec_muldiv.sv \
-  ../cores/eZ90/rtl/exec_vec.sv \
-  ../cores/eZ90/rtl/writeback.sv \
-  ../cores/eZ90/rtl/commit.sv \
-  ../cores/eZ90/rtl/priv_ctrl.sv \
-  ../cores/eZ90/rtl/mmu.sv \
-  ../cores/eZ90/rtl/trap_unit.sv \
-  ../cores/eZ90/rtl/iommu_hook.sv \
-  ../cores/eZ90/rtl/icache_port.sv \
-  ../cores/eZ90/rtl/dcache_port.sv \
-  ../cores/eZ90/rtl/cpuid_block.sv \
-  ../cores/eZ90/rtl/ez90_core.sv
+Z480_RTL_SV := \
+  ../cores/Z480/rtl/z480_pkg.sv \
+  ../cores/Z480/rtl/uop_queue.sv \
+  ../cores/Z480/rtl/fe_bpred.sv \
+  ../cores/Z480/rtl/fe_icache_port.sv \
+  ../cores/Z480/rtl/fe_fetch.sv \
+  ../cores/Z480/rtl/fe_decode.sv \
+  ../cores/Z480/rtl/fe_uop_cache.sv \
+  ../cores/Z480/rtl/renamer.sv \
+  ../cores/Z480/rtl/dispatch.sv \
+  ../cores/Z480/rtl/rob.sv \
+  ../cores/Z480/rtl/rs_int.sv \
+  ../cores/Z480/rtl/lsq.sv \
+  ../cores/Z480/rtl/scheduler.sv \
+  ../cores/Z480/rtl/exec_int_alu.sv \
+  ../cores/Z480/rtl/exec_branch.sv \
+  ../cores/Z480/rtl/exec_muldiv.sv \
+  ../cores/Z480/rtl/exec_vec.sv \
+  ../cores/Z480/rtl/writeback.sv \
+  ../cores/Z480/rtl/commit.sv \
+  ../cores/Z480/rtl/priv_ctrl.sv \
+  ../cores/Z480/rtl/mmu.sv \
+  ../cores/Z480/rtl/trap_unit.sv \
+  ../cores/Z480/rtl/iommu_hook.sv \
+  ../cores/Z480/rtl/icache_port.sv \
+  ../cores/Z480/rtl/dcache_port.sv \
+  ../cores/Z480/rtl/cpuid_block.sv \
+  ../cores/Z480/rtl/z480_core.sv
 
 Z85_RTL_SV := \
   ../cores/Z85/rtl/z85_regfile.sv \
@@ -158,6 +164,8 @@ X96_8097_RTL_SV := \
   ../cores/8097/rtl/fpu_8097.sv
 
 SYSTEMS_COMMON_SV := \
+  $(CARBONIO_RTL_SV) \
+  $(CARBONDMA_RTL_SV) \
   ../systems/common/rtl/carbon_memmap_pkg.sv \
   ../systems/common/rtl/carbon_bootrom.sv \
   ../systems/common/rtl/carbon_sram.sv \
@@ -186,12 +194,12 @@ CARBONZ90_SV := \
   ../systems/CarbonZ90/rtl/carbonz90_top.sv \
   ../systems/CarbonZ90/tb/tb_carbonz90.sv
 
-CARBONEZ90_SV := \
+CARBONZ480_SV := \
   $(SYSTEMS_COMMON_SV) \
-  $(EZ90_RTL_SV) \
+  $(Z480_RTL_SV) \
   $(AM9513_RTL_SV) \
-  ../systems/CarbonEZ90/rtl/carbonez90_top.sv \
-  ../systems/CarbonEZ90/tb/tb_carbonez90.sv
+  ../systems/CarbonZ480/rtl/carbonz480_top.sv \
+  ../systems/CarbonZ480/tb/tb_carbonz480.sv
 
 CARBONX86_SV := \
   $(SYSTEMS_COMMON_SV) \
@@ -222,8 +230,8 @@ X96_8097_SV := \
 
 IVERILOG_FLAGS := -g2012 -Wall -Wno-timescale
 
-.PHONY: all clean tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_carbonio tb_carbondma tb_ez90_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonez90 tb_carbonx86 tb_carbonx96
-all: tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_ez90_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonez90 tb_carbonx86 tb_carbonx96
+.PHONY: all clean tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_carbonio tb_carbondma tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
+all: tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -268,9 +276,9 @@ tb_carbondma: $(BUILD_DIR)
 	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbondma.vvp $(COMMON_SV) $(CARBONDMA_SV)
 	$(VVP) $(BUILD_DIR)/tb_carbondma.vvp
 
-tb_ez90_scaffold: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_ez90_scaffold.vvp $(COMMON_SV) $(EZ90_SV)
-	$(VVP) $(BUILD_DIR)/tb_ez90_scaffold.vvp
+tb_z480_scaffold: $(BUILD_DIR)
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_z480_scaffold.vvp $(COMMON_SV) $(Z480_SV)
+	$(VVP) $(BUILD_DIR)/tb_z480_scaffold.vvp
 
 tb_8096: $(BUILD_DIR)
 	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_8096.vvp $(COMMON_SV) $(X96_8096_SV)
@@ -288,9 +296,9 @@ tb_carbonz90: $(BUILD_DIR)
 	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbonz90.vvp $(COMMON_SV) $(CARBONZ90_SV)
 	$(VVP) $(BUILD_DIR)/tb_carbonz90.vvp
 
-tb_carbonez90: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbonez90.vvp $(COMMON_SV) $(CARBONEZ90_SV)
-	$(VVP) $(BUILD_DIR)/tb_carbonez90.vvp
+tb_carbonz480: $(BUILD_DIR)
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbonz480.vvp $(COMMON_SV) $(CARBONZ480_SV)
+	$(VVP) $(BUILD_DIR)/tb_carbonz480.vvp
 
 tb_carbonx86: $(BUILD_DIR)
 	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbonx86.vvp $(COMMON_SV) $(CARBONX86_SV)

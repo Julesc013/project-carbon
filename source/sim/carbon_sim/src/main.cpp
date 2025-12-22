@@ -74,7 +74,7 @@ static int run_machine(carbon_sim::Machine& machine, const carbon_sim::SimConfig
   std::uint64_t cycles = 0;
 
   auto drain_stdin = [&] {
-    if (machine.uart0 == nullptr && machine.sio0 == nullptr) {
+    if (machine.carbonio == nullptr && machine.uart0 == nullptr && machine.sio0 == nullptr) {
       return;
     }
     while (std::cin.good() && std::cin.rdbuf()->in_avail() > 0) {
@@ -83,7 +83,9 @@ static int run_machine(carbon_sim::Machine& machine, const carbon_sim::SimConfig
         break;
       }
       const char c = static_cast<char>(ch);
-      if (machine.uart0 != nullptr) {
+      if (machine.carbonio != nullptr) {
+        machine.carbonio->feed_input(std::string_view(&c, 1));
+      } else if (machine.uart0 != nullptr) {
         machine.uart0->feed_input(std::string_view(&c, 1));
       } else if (machine.sio0 != nullptr) {
         machine.sio0->feed_input(std::string_view(&c, 1));

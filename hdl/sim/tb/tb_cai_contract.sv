@@ -188,7 +188,7 @@ module tb_cai_contract;
     if (fault) $fatal(1, "comp_mask fault");
 
     // Enable accelerator and default to P7.
-    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P7_TURBO}, 4'hF, 2'b01, fault);
+    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P7_NATIVE}, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "mode fault");
     bfm.csr_write(CARBON_CSR_AM9513_ENABLE, 32'h1, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "enable fault");
@@ -273,4 +273,3 @@ module tb_cai_contract;
   end
 
 endmodule
-

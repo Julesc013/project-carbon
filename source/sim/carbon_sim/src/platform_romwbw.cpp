@@ -4,9 +4,14 @@
 #include <utility>
 
 #include "carbon_sim/devices/boot_rom.h"
+#include "carbon_sim/devices/caps.h"
+#include "carbon_sim/devices/carbondma.h"
+#include "carbon_sim/devices/carbonio.h"
 #include "carbon_sim/devices/ide_disk.h"
 #include "carbon_sim/devices/zilog_sio.h"
 #include "carbon_sim/platforms/machine.h"
+#include "carbon_sim/util/bdt_builder.h"
+#include "carbon_sim/util/carbon_constants.h"
 #include "carbon_sim/util/file.h"
 
 namespace carbon_sim {
@@ -14,7 +19,11 @@ namespace carbon_sim {
 static constexpr u16 kRomDisablePort = 0x003F;
 static constexpr u16 kSioBasePort = 0x0080;
 static constexpr u16 kIdeBasePort = 0x0010;
-static constexpr u16 kTimerBasePort = 0x0020;
+static constexpr u16 kCapsBasePort = 0xF000;
+static constexpr u16 kCarbonIoBasePort = 0xF100;
+static constexpr u16 kCarbonDmaBasePort = 0xF200;
+static constexpr u16 kBdtBaseAddr = 0xF800;
+static constexpr u16 kBdtDisablePort = 0xFFFE;
 
 std::unique_ptr<Machine> create_platform_romwbw(const SimConfig& config, std::ostream& console_out) {
   if (config.rom_path.empty()) {
@@ -39,7 +48,7 @@ std::unique_ptr<Machine> create_platform_romwbw(const SimConfig& config, std::os
   m->bus.add_device<BootRomOverlay>(0x0000, std::move(rom), kRomDisablePort);
 
   m->irq = &m->bus.add_device<InterruptController>();
-  m->timer = &m->bus.add_device<TimerTick>(kTimerBasePort, m->irq, /*cycles_per_tick=*/500000);
+  m->timer = nullptr;
 
   // Console: Zilog SIO/2 at ports 0x80-0x83 (channel A used for console).
   // Disk: 8-bit IDE/ATA PIO registers at ports 0x10-0x17.
@@ -48,6 +57,8 @@ std::unique_ptr<Machine> create_platform_romwbw(const SimConfig& config, std::os
 
   m->uart0 = nullptr;
   m->sio0 = &sio;
+  m->carbonio = &m->bus.add_device<CarbonIO>(kCarbonIoBasePort, console_out);
+  m->carbondma = &m->bus.add_device<CarbonDMA>(kCarbonDmaBasePort, &m->bus);
 
   m->disks[0] = std::make_unique<BlockDisk>(config.disk_paths[0], /*read_only=*/false);
   if (!m->disks[0]->is_open()) {
@@ -62,6 +73,67 @@ std::unique_ptr<Machine> create_platform_romwbw(const SimConfig& config, std::os
     }
     ide.attach_disk(1, m->disks[1].get());
   }
+
+  std::vector<DeviceDescriptor> devices;
+  DeviceDescriptor carbonio_desc;
+  carbonio_desc.class_id = kDevClassUart;
+  carbonio_desc.vendor_id = 0;
+  carbonio_desc.device_id = 1;
+  carbonio_desc.instance_id = 0;
+  carbonio_desc.revision_id = 1;
+  carbonio_desc.compat_flags = kCompatPolling | kCompatPortIo | kCompatMmio | kCompatWait;
+  carbonio_desc.feature_word0 =
+      (64u << kFeatWord0RxFifoLsb) |
+      (64u << kFeatWord0TxFifoLsb) |
+      (2u << kFeatWord0TimerCountLsb);
+  carbonio_desc.compat_io_base = kCarbonIoBasePort;
+  carbonio_desc.irq_count = 6;
+  devices.push_back(carbonio_desc);
+
+  DeviceDescriptor carbondma_desc;
+  carbondma_desc.class_id = kDevClassDma;
+  carbondma_desc.vendor_id = 0;
+  carbondma_desc.device_id = 1;
+  carbondma_desc.instance_id = 0;
+  carbondma_desc.revision_id = 1;
+  carbondma_desc.compat_flags = kCompatPolling | kCompatPortIo | kCompatMmio | kCompatWait;
+  carbondma_desc.feature_word0 = (4u << kFeatWord0DmaChannelsLsb);
+  carbondma_desc.compat_io_base = kCarbonDmaBasePort;
+  devices.push_back(carbondma_desc);
+
+  DeviceDescriptor sio_desc;
+  sio_desc.class_id = kDevClassSio;
+  sio_desc.vendor_id = 0;
+  sio_desc.device_id = 1;
+  sio_desc.instance_id = 0;
+  sio_desc.revision_id = 1;
+  sio_desc.compat_flags = kCompatPolling | kCompatPortIo;
+  sio_desc.compat_io_base = kSioBasePort;
+  devices.push_back(sio_desc);
+
+  DeviceDescriptor ide_desc;
+  ide_desc.class_id = kDevClassBlockStorage;
+  ide_desc.vendor_id = 0;
+  ide_desc.device_id = 1;
+  ide_desc.instance_id = 0;
+  ide_desc.revision_id = 1;
+  ide_desc.compat_flags = kCompatPolling | kCompatPortIo;
+  ide_desc.compat_io_base = kIdeBasePort;
+  devices.push_back(ide_desc);
+
+  const auto bdt = build_bdt(devices);
+  m->bus.add_device<BootRomOverlay>(kBdtBaseAddr, bdt.bytes, kBdtDisablePort);
+
+  BdtCapsInfo caps_info;
+  caps_info.base_lo = kBdtBaseAddr;
+  caps_info.base_hi = 0;
+  caps_info.entry_size = bdt.entry_size;
+  caps_info.entry_count = bdt.entry_count;
+  caps_info.header_size = bdt.header_size;
+
+  const std::uint32_t features0 =
+      kFeatCapsMask | kFeatDeviceModelMask | kFeatBdtMask | kFeatPollingCompleteMask;
+  m->caps = &m->bus.add_device<CapsDevice>(kCapsBasePort, caps_info, features0);
 
   m->cpu = std::make_unique<Z80>(m->bus, m->irq);
   m->cpu->set_trace(config.trace);

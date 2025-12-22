@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -56,14 +57,29 @@ static bool contains(const std::string& haystack, const std::string& needle) {
   return haystack.find(needle) != std::string::npos;
 }
 
+static void write_u32(Bus& bus, u16 addr, u32 value) {
+  bus.mem_write(static_cast<u16>(addr + 0), static_cast<u8>(value & 0xFFu));
+  bus.mem_write(static_cast<u16>(addr + 1), static_cast<u8>((value >> 8) & 0xFFu));
+  bus.mem_write(static_cast<u16>(addr + 2), static_cast<u8>((value >> 16) & 0xFFu));
+  bus.mem_write(static_cast<u16>(addr + 3), static_cast<u8>((value >> 24) & 0xFFu));
+}
+
+static u32 read_u32(Bus& bus, u16 addr) {
+  const u32 b0 = bus.mem_read(static_cast<u16>(addr + 0));
+  const u32 b1 = bus.mem_read(static_cast<u16>(addr + 1));
+  const u32 b2 = bus.mem_read(static_cast<u16>(addr + 2));
+  const u32 b3 = bus.mem_read(static_cast<u16>(addr + 3));
+  return b0 | (b1 << 8) | (b2 << 16) | (b3 << 24);
+}
+
 static int smoke_cpm22(const std::filesystem::path& temp_dir) {
   // Z80 ROM stub:
-  // - prints "CPM22 STUB OK\r\n" to UART0 (port 0x00)
+  // - prints "CPM22 STUB OK\r\n" to CarbonIO UART (MMIO 0xF100)
   // - HALT
   const std::vector<u8> rom = {
-      0x31, 0xFF, 0xFF, 0x21, 0x12, 0x00, 0x7E, 0xB7, 0x28, 0x05, 0xD3, 0x00,
-      0x23, 0x18, 0xF7, 0x76, 0x18, 0xFE, 0x43, 0x50, 0x4D, 0x32, 0x32, 0x20,
-      0x53, 0x54, 0x55, 0x42, 0x20, 0x4F, 0x4B, 0x0D, 0x0A, 0x00,
+      0x31, 0xFF, 0xFF, 0x21, 0x13, 0x00, 0x7E, 0xB7, 0x28, 0x06, 0x32, 0x00,
+      0xF1, 0x23, 0x18, 0xF6, 0x76, 0x18, 0xFE, 0x43, 0x50, 0x4D, 0x32, 0x32,
+      0x20, 0x53, 0x54, 0x55, 0x42, 0x20, 0x4F, 0x4B, 0x0D, 0x0A, 0x00,
   };
 
   const auto rom_path = temp_dir / "cpm22_stub.rom";
@@ -85,6 +101,47 @@ static int smoke_cpm22(const std::filesystem::path& temp_dir) {
   if (!contains(out.str(), "CPM22 STUB OK")) {
     std::cerr << "cpm22 smoke: missing banner\n";
     return 1;
+  }
+
+  auto machine2 = create_platform_cpm22(cfg, out);
+  machine2->bus.reset();
+  const u16 carbonio_base = 0xF100;
+  const u32 tick_lo_before = read_u32(machine2->bus, carbonio_base + 0x40);
+  const u32 tick_hi_before = read_u32(machine2->bus, carbonio_base + 0x44);
+  machine2->bus.tick(1000);
+  const u32 tick_lo_after = read_u32(machine2->bus, carbonio_base + 0x40);
+  const u32 tick_hi_after = read_u32(machine2->bus, carbonio_base + 0x44);
+  const std::uint64_t tick_before = (static_cast<std::uint64_t>(tick_hi_before) << 32) | tick_lo_before;
+  const std::uint64_t tick_after = (static_cast<std::uint64_t>(tick_hi_after) << 32) | tick_lo_after;
+  if (tick_after <= tick_before) {
+    std::cerr << "cpm22 smoke: CarbonIO tick did not advance\n";
+    return 1;
+  }
+
+  const u16 carbondma_base = 0xF200;
+  const u16 dma_src = 0x2000;
+  const u16 dma_dst = 0x2100;
+  for (u16 i = 0; i < 16; ++i) {
+    machine2->bus.mem_write(static_cast<u16>(dma_src + i), static_cast<u8>(0xA0 + i));
+    machine2->bus.mem_write(static_cast<u16>(dma_dst + i), 0);
+  }
+  write_u32(machine2->bus, carbondma_base + 0x08, 0x0000'0001);
+  write_u32(machine2->bus, carbondma_base + 0x0C, 0);
+  write_u32(machine2->bus, carbondma_base + 0x10, dma_src);
+  write_u32(machine2->bus, carbondma_base + 0x18, dma_dst);
+  write_u32(machine2->bus, carbondma_base + 0x20, 16);
+  write_u32(machine2->bus, carbondma_base + 0x24, 0x0000'0001);
+  const u32 dma_status = read_u32(machine2->bus, carbondma_base + 0x28);
+  if ((dma_status & (1u << 1)) == 0) {
+    std::cerr << "cpm22 smoke: CarbonDMA did not report DONE\n";
+    return 1;
+  }
+  for (u16 i = 0; i < 16; ++i) {
+    const u8 v = machine2->bus.mem_read(static_cast<u16>(dma_dst + i));
+    if (v != static_cast<u8>(0xA0 + i)) {
+      std::cerr << "cpm22 smoke: CarbonDMA copy mismatch at +" << i << "\n";
+      return 1;
+    }
   }
   return 0;
 }
@@ -139,4 +196,3 @@ int main() {
     return 1;
   }
 }
-
