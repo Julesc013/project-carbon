@@ -20,7 +20,7 @@ identifiers:
 
 transports:
   - name: CPUID
-    applies_to: eZ90
+    applies_to: Z480
     required_tier: P7
     description: CPUID instruction provides the canonical leaf model.
   - name: CAPS
@@ -166,7 +166,7 @@ feature_sets:
         description: Carbon Accelerator Interface (CAI) implemented.
       - name: FEAT_CPUID
         bit: 4
-        description: CPUID instruction transport implemented (eZ90 P7).
+        description: CPUID instruction transport implemented (Z480 P7).
       - name: FEAT_CAPS
         bit: 5
         description: CAPS transport implemented (Z85/Z90).

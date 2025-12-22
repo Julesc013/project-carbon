@@ -36,25 +36,24 @@ ladders:
         strict: true
       - id: P4
         value: 4
-        mnemonic: Z280
-        label: z280
-        strict: true
-      - id: P5
-        value: 5
-        mnemonic: Z380
-        label: z380
-        strict: true
-      - id: P6
-        value: 6
         mnemonic: EZ80
         label: eZ80
         strict: true
+      - id: P5
+        value: 5
+        mnemonic: Z280
+        label: z280
+        strict: true
+      - id: P6
+        value: 6
+        mnemonic: Z380
+        label: z380
+        strict: true
       - id: P7
         value: 7
-        mnemonic: TURBO_UNLIMITED
-        label: TURBO_UNLIMITED
-        strict: false
-        turbo: true
+        mnemonic: Z480
+        label: z480
+        strict: true
     reserved_tier_values:
       - range: [8, 255]
         description: Reserved for future tier extensions.
@@ -74,42 +73,43 @@ ladders:
         strict: true
       - id: P1
         value: 1
-        mnemonic: I286_287
-        label: 286/287
+        mnemonic: I80186_80187
+        label: 80186/80187
         strict: true
       - id: P2
         value: 2
-        mnemonic: I386_387
-        label: 386/387
+        mnemonic: I80286_80287
+        label: 80286/80287
         strict: true
       - id: P3
         value: 3
-        mnemonic: I486_487
-        label: 486/487
+        mnemonic: I80386_80387
+        label: 80386/80387
         strict: true
       - id: P4
         value: 4
-        mnemonic: I586_587
-        label: 586/587
+        mnemonic: I80486_80487
+        label: 80486/80487
         strict: true
       - id: P5
         value: 5
-        mnemonic: I686_687
-        label: 686/687
+        mnemonic: PENTIUM_IA32
+        label: pentium_ia32
         strict: true
       - id: P6
         value: 6
-        mnemonic: I786_787
-        label: 786/787
+        mnemonic: P6_IA32
+        label: p6_ia32
         strict: true
       - id: P7
         value: 7
-        mnemonic: TURBO_UNLIMITED
-        label: TURBO_UNLIMITED
-        strict: false
-        turbo: true
+        mnemonic: X86_64
+        label: x86_64
+        strict: true
     reserved_tier_values:
-      - range: [8, 255]
+      - range: [8, 15]
+        description: Reserved (P8-P15).
+      - range: [16, 255]
         description: Reserved for future tier extensions.
 
   - id: TIER_LADDER_AMD_FPU
@@ -133,11 +133,10 @@ ladders:
         strict: true
       - id: P7
         value: 7
-        mnemonic: TURBO_UNLIMITED
-        label: TURBO_UNLIMITED
-        notes: am9513 full access.
-        strict: false
-        turbo: true
+        mnemonic: AM9513_NATIVE
+        label: am9513-native
+        notes: am9513 native full access.
+        strict: true
     reserved_tier_values:
       - range: [2, 6]
         description: Reserved for future AMD FPU tiers.

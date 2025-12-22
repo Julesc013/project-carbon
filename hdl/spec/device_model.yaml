@@ -172,7 +172,7 @@ device_classes:
   classes:
     - name: DEVCLASS_CPU
       value: 0x0001
-      description: CPU cores (Z85/Z90/eZ90/8096/etc).
+      description: CPU cores (Z85/Z90/Z480/8096/etc).
     - name: DEVCLASS_FPU
       value: 0x0002
       description: FPU/accelerator cores (Am951x-class, 8097).

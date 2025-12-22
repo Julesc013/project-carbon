@@ -7,11 +7,8 @@ stable: true
 
 contract:
   strict_tiers:
-    description: Legacy tiers operate in strict mode with no turbo extensions.
-    tiers: [P0, P1, P2, P3, P4, P5, P6]
-  turbo_tiers:
-    description: P7 enables turbo behavior and forward-compatible extensions.
-    tiers: [P7]
+    description: All tiers operate in strict mode; performance scaling is not a tier feature.
+    tiers: [P0, P1, P2, P3, P4, P5, P6, P7]
 
 instructions:
   - name: MODEUP
@@ -45,7 +42,7 @@ modeflags:
     - name: MODEFLAG_STRICT
       bit: 0
       reset: 1
-      description: When 1, turbo/extension behaviors are disabled regardless of tier.
+      description: When 1, extension behaviors are disabled regardless of tier.
     - name: MODEFLAG_INTMASK
       bit: 1
       reset: 0
