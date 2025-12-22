@@ -47,10 +47,8 @@ module z85_core (
   localparam logic [31:0] Z85_CAUSE_IM0_UNSUP    = 32'h0000_0003;
 
   // --------------------------------------------------------------------------
-  // CSR implementation (minimal)
+  // CSR implementation (minimal + CAPS/CPUID window)
   // --------------------------------------------------------------------------
-  localparam logic [31:0] Z85_CSR_DBG_CTRL   = 32'h00A0_0000;
-  localparam logic [31:0] Z85_CSR_DBG_STATUS = 32'h00A0_0004;
 
   logic csr_rsp_valid_q;
   logic [31:0] csr_rsp_rdata_q;
@@ -61,6 +59,10 @@ module z85_core (
   logic [31:0] csr_epc_q;
   logic [31:0] csr_trace_ctl_q;
   logic [63:0] cycle_q;
+  logic [7:0]  csr_modeflags_q;
+  logic [7:0]  csr_tier_q;
+  logic [31:0] csr_cpuid_leaf_q;
+  logic [31:0] csr_cpuid_subleaf_q;
 
   // CSR-originated debug pulses (optional)
   logic csr_halt_pulse_q;
@@ -81,6 +83,71 @@ module z85_core (
   wire csr_req_fire = csr.req_valid && csr.req_ready;
   wire csr_rsp_fire = csr.rsp_valid && csr.rsp_ready;
 
+  localparam logic [31:0] Z85_FEAT_WORD0 =
+      CARBON_FEAT_MODE_SWITCH_MASK |
+      CARBON_FEAT_CSR_NAMESPACE_MASK |
+      CARBON_FEAT_FABRIC_MASK |
+      CARBON_FEAT_CAPS_MASK |
+      CARBON_FEAT_POLLING_COMPLETE_MASK |
+      CARBON_Z85_UNDOC_Z80_MASK;
+
+  localparam logic [7:0] Z85_VENDOR_ID  = 8'h00;
+  localparam logic [7:0] Z85_FAMILY_ID  = 8'h85;
+  localparam logic [7:0] Z85_MODEL_ID   = 8'h01;
+  localparam logic [7:0] Z85_STEPPING   = 8'h00;
+  localparam logic [31:0] Z85_VENDOR0   = "CARB";
+  localparam logic [31:0] Z85_VENDOR1   = "ON Z";
+  localparam logic [31:0] Z85_VENDOR2   = "85  ";
+
+  function automatic logic [31:0] cpuid_word(
+      input logic [31:0] leaf,
+      input logic [31:0] subleaf,
+      input int unsigned word_sel
+  );
+    logic [31:0] w0, w1, w2, w3;
+    begin
+      w0 = 32'h0;
+      w1 = 32'h0;
+      w2 = 32'h0;
+      w3 = 32'h0;
+      unique case (leaf)
+        CARBON_CPUID_LEAF_VENDOR: begin
+          w0[15:0]  = 16'(CARBON_CPUID_LEAF_FEATURES0);
+          w0[31:16] = 16'h0001;
+          w1 = Z85_VENDOR0;
+          w2 = Z85_VENDOR1;
+          w3 = Z85_VENDOR2;
+        end
+        CARBON_CPUID_LEAF_ID: begin
+          w0 = {Z85_STEPPING, Z85_MODEL_ID, Z85_FAMILY_ID, Z85_VENDOR_ID};
+          w1 = 32'h0;
+        end
+        CARBON_CPUID_LEAF_TIERS: begin
+          w0 = {8'h00,
+                8'(CARBON_Z80_DERIVED_TIER_P2_Z80),
+                8'(CARBON_Z80_DERIVED_TIER_P2_Z80),
+                8'(CARBON_TIER_LADDER_Z80)};
+          w1 = {8'h00,
+                8'(CARBON_AMD_FPU_TIER_P0_AM9511),
+                8'(CARBON_AMD_FPU_TIER_P0_AM9511),
+                8'(CARBON_TIER_LADDER_AMD_FPU)};
+        end
+        CARBON_CPUID_LEAF_FEATURES0: begin
+          w0 = Z85_FEAT_WORD0;
+        end
+        default: begin
+          // return zeros
+        end
+      endcase
+      unique case (word_sel)
+        0: cpuid_word = w0;
+        1: cpuid_word = w1;
+        2: cpuid_word = w2;
+        default: cpuid_word = w3;
+      endcase
+    end
+  endfunction
+
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       csr_rsp_valid_q <= 1'b0;
@@ -91,6 +158,10 @@ module z85_core (
       csr_epc_q       <= '0;
       csr_trace_ctl_q <= '0;
       cycle_q         <= 64'd0;
+      csr_modeflags_q <= CARBON_MODEFLAG_STRICT_MASK;
+      csr_tier_q      <= 8'(CARBON_Z80_DERIVED_TIER_P0_I8080);
+      csr_cpuid_leaf_q <= 32'h0;
+      csr_cpuid_subleaf_q <= 32'h0;
       csr_halt_pulse_q <= 1'b0;
       csr_run_pulse_q  <= 1'b0;
       csr_step_pulse_q <= 1'b0;
@@ -119,8 +190,15 @@ module z85_core (
             else csr_rsp_fault_q <= 1'b1;
           end
           CARBON_CSR_TIER: begin
-            if (!csr.req_write) csr_rsp_rdata_q[7:0] <= 8'(CARBON_Z80_DERIVED_TIER_P2_Z80);
+            if (!csr.req_write) csr_rsp_rdata_q[7:0] <= csr_tier_q;
             else csr_rsp_fault_q <= 1'b1;
+          end
+          CARBON_CSR_MODEFLAGS: begin
+            if (!csr.req_write) csr_rsp_rdata_q[7:0] <= csr_modeflags_q;
+            else begin
+              csr_modeflags_q <= csr.req_wdata[7:0] & (CARBON_MODEFLAG_STRICT_MASK | CARBON_MODEFLAG_INTMASK_MASK);
+              csr_rsp_side_q <= 1'b1;
+            end
           end
           CARBON_CSR_TIME: begin
             if (!csr.req_write) csr_rsp_rdata_q <= cycle_q[31:0];
@@ -141,6 +219,21 @@ module z85_core (
               csr_rsp_side_q <= 1'b1;
             end
           end
+          CARBON_CSR_IE: begin
+            if (!csr.req_write) begin
+              csr_rsp_rdata_q[0] <= s_q.IFF1;
+              csr_rsp_rdata_q[1] <= s_q.IFF2;
+            end else csr_rsp_fault_q <= 1'b1;
+          end
+          CARBON_CSR_IP: begin
+            if (!csr.req_write) begin
+              if ($bits(irq.irq_pending) <= 32) begin
+                csr_rsp_rdata_q <= {{(32-$bits(irq.irq_pending)){1'b0}}, irq.irq_pending};
+              end else begin
+                csr_rsp_rdata_q <= irq.irq_pending[31:0];
+              end
+            end else csr_rsp_fault_q <= 1'b1;
+          end
           CARBON_CSR_TRACE_CTL: begin
             if (!csr.req_write) csr_rsp_rdata_q <= csr_trace_ctl_q;
             else begin
@@ -148,7 +241,55 @@ module z85_core (
               csr_rsp_side_q <= 1'b1;
             end
           end
-          Z85_CSR_DBG_CTRL: begin
+          CARBON_CSR_CPUID_LEAF: begin
+            if (csr.req_write) begin
+              csr_cpuid_leaf_q <= csr.req_wdata;
+              csr_rsp_side_q <= 1'b1;
+            end else begin
+              csr_rsp_rdata_q <= csr_cpuid_leaf_q;
+            end
+          end
+          CARBON_CSR_CPUID_SUBLEAF: begin
+            if (csr.req_write) begin
+              csr_cpuid_subleaf_q <= csr.req_wdata;
+              csr_rsp_side_q <= 1'b1;
+            end else begin
+              csr_rsp_rdata_q <= csr_cpuid_subleaf_q;
+            end
+          end
+          CARBON_CSR_CPUID_DATA0_LO: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= cpuid_word(csr_cpuid_leaf_q, csr_cpuid_subleaf_q, 0);
+            else csr_rsp_fault_q <= 1'b1;
+          end
+          CARBON_CSR_CPUID_DATA0_HI: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= 32'h0;
+            else csr_rsp_fault_q <= 1'b1;
+          end
+          CARBON_CSR_CPUID_DATA1_LO: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= cpuid_word(csr_cpuid_leaf_q, csr_cpuid_subleaf_q, 1);
+            else csr_rsp_fault_q <= 1'b1;
+          end
+          CARBON_CSR_CPUID_DATA1_HI: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= 32'h0;
+            else csr_rsp_fault_q <= 1'b1;
+          end
+          CARBON_CSR_CPUID_DATA2_LO: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= cpuid_word(csr_cpuid_leaf_q, csr_cpuid_subleaf_q, 2);
+            else csr_rsp_fault_q <= 1'b1;
+          end
+          CARBON_CSR_CPUID_DATA2_HI: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= 32'h0;
+            else csr_rsp_fault_q <= 1'b1;
+          end
+          CARBON_CSR_CPUID_DATA3_LO: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= cpuid_word(csr_cpuid_leaf_q, csr_cpuid_subleaf_q, 3);
+            else csr_rsp_fault_q <= 1'b1;
+          end
+          CARBON_CSR_CPUID_DATA3_HI: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= 32'h0;
+            else csr_rsp_fault_q <= 1'b1;
+          end
+          CARBON_CSR_DBG_CTRL: begin
             if (csr.req_write) begin
               if (csr.req_wdata[0]) csr_halt_pulse_q <= 1'b1;
               if (csr.req_wdata[1]) csr_run_pulse_q  <= 1'b1;
@@ -158,9 +299,16 @@ module z85_core (
               csr_rsp_rdata_q[0] <= 1'b0;
             end
           end
-          Z85_CSR_DBG_STATUS: begin
+          CARBON_CSR_DBG_STEP: begin
+            if (csr.req_write) begin
+              csr_step_pulse_q <= 1'b1;
+              csr_rsp_side_q <= 1'b1;
+            end else csr_rsp_fault_q <= 1'b1;
+          end
+          CARBON_CSR_DBG_STATUS: begin
             if (!csr.req_write) begin
-              csr_rsp_rdata_q[0] <= 1'b0;
+              csr_rsp_rdata_q[0] <= dbg_halted_q || trapped_q;
+              csr_rsp_rdata_q[1] <= dbg_step_ack_q;
             end else begin
               csr_rsp_fault_q <= 1'b1;
             end
