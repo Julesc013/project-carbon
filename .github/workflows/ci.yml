@@ -16,8 +16,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y iverilog make
 
-      - name: Generate arch outputs
-        run: bash scripts/gen_arch.sh
+      - name: Run consistency checks
+        run: bash scripts/check_consistency.sh
 
       - name: Verify generated outputs are committed
         run: git diff --exit-code
@@ -31,4 +31,3 @@ jobs:
         with:
           name: sim-logs
           path: hdl/sim/build/logs
-
