@@ -34,7 +34,9 @@ package carbon_arch_pkg;
   typedef enum logic [7:0] {
     CARBON_AMD_FPU_TIER_P0_AM9511 = 8'd0,
     CARBON_AMD_FPU_TIER_P1_AM9512 = 8'd1,
-    CARBON_AMD_FPU_TIER_P7_AM9513_NATIVE = 8'd7
+    CARBON_AMD_FPU_TIER_P2_AM9513 = 8'd2,
+    CARBON_AMD_FPU_TIER_P3_AM9514 = 8'd3,
+    CARBON_AMD_FPU_TIER_P4_AM9515 = 8'd4
   } carbon_amd_fpu_tier_e;
 
   // MODEFLAGS
@@ -125,6 +127,30 @@ package carbon_arch_pkg;
   localparam int unsigned CARBON_FEAT_POLLING_COMPLETE_BIT = 11;
   localparam int unsigned CARBON_FEAT_POLLING_COMPLETE_WORD = 0;
   localparam logic [31:0] CARBON_FEAT_POLLING_COMPLETE_MASK = (32'h1 << 11);
+  localparam int unsigned CARBON_Z85_UNDOC_Z80_BIT = 12;
+  localparam int unsigned CARBON_Z85_UNDOC_Z80_WORD = 0;
+  localparam logic [31:0] CARBON_Z85_UNDOC_Z80_MASK = (32'h1 << 12);
+  localparam int unsigned CARBON_Z90_Z180_CLASS_BIT = 13;
+  localparam int unsigned CARBON_Z90_Z180_CLASS_WORD = 0;
+  localparam logic [31:0] CARBON_Z90_Z180_CLASS_MASK = (32'h1 << 13);
+  localparam int unsigned CARBON_Z380_32BIT_EXTENDED_BIT = 14;
+  localparam int unsigned CARBON_Z380_32BIT_EXTENDED_WORD = 0;
+  localparam logic [31:0] CARBON_Z380_32BIT_EXTENDED_MASK = (32'h1 << 14);
+  localparam int unsigned CARBON_Z480_NATIVE_64_BIT = 15;
+  localparam int unsigned CARBON_Z480_NATIVE_64_WORD = 0;
+  localparam logic [31:0] CARBON_Z480_NATIVE_64_MASK = (32'h1 << 15);
+  localparam int unsigned CARBON_AM9512_IEEE_BIT = 16;
+  localparam int unsigned CARBON_AM9512_IEEE_WORD = 0;
+  localparam logic [31:0] CARBON_AM9512_IEEE_MASK = (32'h1 << 16);
+  localparam int unsigned CARBON_AM9513_ASYNC_BIT = 17;
+  localparam int unsigned CARBON_AM9513_ASYNC_WORD = 0;
+  localparam logic [31:0] CARBON_AM9513_ASYNC_MASK = (32'h1 << 17);
+  localparam int unsigned CARBON_AM9514_VECTOR_BIT = 18;
+  localparam int unsigned CARBON_AM9514_VECTOR_WORD = 0;
+  localparam logic [31:0] CARBON_AM9514_VECTOR_MASK = (32'h1 << 18);
+  localparam int unsigned CARBON_AM9515_TENSOR_BIT = 19;
+  localparam int unsigned CARBON_AM9515_TENSOR_WORD = 0;
+  localparam logic [31:0] CARBON_AM9515_TENSOR_MASK = (32'h1 << 19);
 
   // CSR addresses
   localparam int unsigned CARBON_CSR_ID = 32'h00000000;
@@ -328,13 +354,19 @@ package carbon_arch_pkg;
   localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_CONTEXT_ID = 12;
   localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_OPERAND_COUNT = 14;
   localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_TAG = 16;
-  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_RESERVED0 = 20;
+  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_OPCODE_GROUP = 20;
+  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_FORMAT_PRIMARY = 21;
+  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_FORMAT_AUX = 22;
+  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_FORMAT_FLAGS = 23;
   localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_OPERANDS_PTR = 24;
   localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_RESULT_PTR = 32;
   localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_RESULT_LEN = 40;
   localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_RESULT_STRIDE = 44;
-  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_RESERVED1 = 48;
-  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_RESERVED2 = 56;
+  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_TENSOR_DESC_PTR = 48;
+  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_TENSOR_DESC_LEN = 56;
+  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_TENSOR_RANK = 58;
+  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_TENSOR_DESC_FLAGS = 59;
+  localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_OFF_RESERVED2 = 60;
 
   localparam int unsigned CARBON_CAI_OPERAND_DESC_V1_VERSION = 1;
   localparam int unsigned CARBON_CAI_OPERAND_DESC_V1_SIZE_BYTES = 32;

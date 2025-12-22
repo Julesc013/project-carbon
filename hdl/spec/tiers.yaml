@@ -5,6 +5,14 @@ revision: v1.0.0
 created: 2025-12-15
 stable: true
 
+presentation_model:
+  name: presented_tier
+  description: Reported tier value exposed to software for compatibility decisions.
+  rules:
+    - Presented tier is reported by discovery, even if internal implementation is a superset.
+    - Optional or undocumented behaviors are reported via feature bits, not by elevating the tier.
+    - Reset always starts in P0 for every ladder.
+
 ladders:
   - id: TIER_LADDER_Z80
     value: 0
@@ -37,7 +45,7 @@ ladders:
       - id: P4
         value: 4
         mnemonic: EZ80
-        label: eZ80
+        label: eZ80 (ADL/24-bit)
         strict: true
       - id: P5
         value: 5
@@ -54,8 +62,27 @@ ladders:
         mnemonic: Z480
         label: z480
         strict: true
+    presentation_overrides:
+      - part: Z85
+        presents_as: P2
+        feature_bits: [Z85_UNDOC_Z80]
+        description: Z85 presents as Z80 (P2) while exposing undocumented Z80 behaviors via feature bits.
+      - part: Z90
+        presents_as: P3
+        feature_bits: [Z90_Z180_CLASS]
+        description: Z90 presents as Z180-compatible (P3).
+      - part: Z380
+        presents_as: P6
+        feature_bits: [Z380_32BIT_EXTENDED]
+        description: Z380 presents as P6 and advertises 32-bit extensions via feature bits.
+      - part: Z480
+        presents_as: P7
+        feature_bits: [Z480_NATIVE_64]
+        description: Z480 presents as P7 and advertises native 64-bit mode via feature bits.
     reserved_tier_values:
-      - range: [8, 255]
+      - range: [8, 15]
+        description: Reserved (P8-P15).
+      - range: [16, 255]
         description: Reserved for future tier extensions.
 
   - id: TIER_LADDER_X86
@@ -115,7 +142,7 @@ ladders:
   - id: TIER_LADDER_AMD_FPU
     value: 2
     name: amd_fpu
-    description: AMD-derived FPU compatibility ladder.
+    description: AMD-derived FPU compatibility ladder (Am9511 lineage).
     reset_default: P0
     upgrade_rule: target_tier > current_tier
     downgrade_rule: only via RETMD
@@ -131,14 +158,43 @@ ladders:
         label: am9512
         notes: IEEE ports for missing am9511 functions.
         strict: true
-      - id: P7
-        value: 7
-        mnemonic: AM9513_NATIVE
-        label: am9513-native
-        notes: am9513 native full access.
+      - id: P2
+        value: 2
+        mnemonic: AM9513
+        label: am9513
+        notes: Native async scalar IEEE engine.
         strict: true
+      - id: P3
+        value: 3
+        mnemonic: AM9514
+        label: am9514
+        notes: Vector/SIMD math tier.
+        strict: true
+      - id: P4
+        value: 4
+        mnemonic: AM9515
+        label: am9515
+        notes: Matrix/tensor math tier.
+        strict: true
+    presentation_overrides:
+      - part: AM9512
+        presents_as: P1
+        feature_bits: [AM9512_IEEE]
+        description: Am9512 presents as P1 and advertises IEEE additions via feature bits.
+      - part: AM9513
+        presents_as: P2
+        feature_bits: [AM9513_ASYNC]
+        description: Am9513 presents as P2 and advertises async scalar capability via feature bits.
+      - part: AM9514
+        presents_as: P3
+        feature_bits: [AM9514_VECTOR]
+        description: Am9514 presents as P3 and advertises vector capability via feature bits.
+      - part: AM9515
+        presents_as: P4
+        feature_bits: [AM9515_TENSOR]
+        description: Am9515 presents as P4 and advertises tensor capability via feature bits.
     reserved_tier_values:
-      - range: [2, 6]
-        description: Reserved for future AMD FPU tiers.
-      - range: [8, 255]
+      - range: [5, 15]
+        description: Reserved (P5-P15).
+      - range: [16, 255]
         description: Reserved for future tier extensions.

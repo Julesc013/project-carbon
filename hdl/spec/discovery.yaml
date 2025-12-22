@@ -77,19 +77,37 @@ leafs:
         bits: [31, 0]
   - id: 0x00000002
     name: CPUID_LEAF_TIERS
-    description: Active tier ladder and tier limits.
+    description: Presented tier and limits for CPU and FPU lineages.
     fields:
       - word: 0
-        name: tier_ladder_id
+        name: cpu_ladder_id
         bits: [7, 0]
       - word: 0
-        name: current_tier
+        name: cpu_presented_tier
         bits: [15, 8]
       - word: 0
-        name: max_tier
+        name: cpu_max_tier
+        bits: [23, 16]
+      - word: 0
+        name: cpu_policy_flags
+        bits: [31, 24]
+      - word: 1
+        name: fpu_ladder_id
+        bits: [7, 0]
+      - word: 1
+        name: fpu_presented_tier
+        bits: [15, 8]
+      - word: 1
+        name: fpu_max_tier
         bits: [23, 16]
       - word: 1
-        name: tier_policy_flags
+        name: fpu_policy_flags
+        bits: [31, 24]
+      - word: 2
+        name: aux_lineage0
+        bits: [31, 0]
+      - word: 3
+        name: aux_lineage1
         bits: [31, 0]
   - id: 0x00000003
     name: CPUID_LEAF_FEATURES0
@@ -188,8 +206,32 @@ feature_sets:
       - name: FEAT_POLLING_COMPLETE
         bit: 11
         description: Polling-complete semantics required across devices.
+      - name: Z85_UNDOC_Z80
+        bit: 12
+        description: Z85 exposes undocumented Z80 opcodes/flags while presenting as P2.
+      - name: Z90_Z180_CLASS
+        bit: 13
+        description: Z90 is Z180-class while presenting as P3.
+      - name: Z380_32BIT_EXTENDED
+        bit: 14
+        description: Z380 provides 32-bit extended mode while presenting as P6.
+      - name: Z480_NATIVE_64
+        bit: 15
+        description: Z480 provides native 64-bit mode while presenting as P7.
+      - name: AM9512_IEEE
+        bit: 16
+        description: Am9512 adds IEEE ports for missing 9511 functions.
+      - name: AM9513_ASYNC
+        bit: 17
+        description: Am9513 provides async scalar IEEE execution.
+      - name: AM9514_VECTOR
+        bit: 18
+        description: Am9514 provides vector/SIMD math support.
+      - name: AM9515_TENSOR
+        bit: 19
+        description: Am9515 provides matrix/tensor math support.
     reserved_bit_ranges:
-      - range: [12, 63]
+      - range: [20, 63]
         description: Reserved for base feature growth.
       - range: [64, 127]
         description: Reserved for future feature sets.

@@ -25,11 +25,27 @@ context_model:
     - Context IDs provide logical isolation between software clients.
     - A device may implement stronger isolation (address spaces, permission checks) via IOMMU hooks.
 
+opcode_model:
+  description: Opcode space partitioning for scalar, vector, and tensor operations.
+  opcode_groups:
+    - name: CAI_OPGROUP_SCALAR
+      value: 0
+      description: Scalar/legacy math operations (Am9511/Am9512/Am9513 class).
+    - name: CAI_OPGROUP_VECTOR
+      value: 1
+      description: Vector/SIMD math operations (Am9514 class).
+    - name: CAI_OPGROUP_TENSOR
+      value: 2
+      description: Matrix/tensor math operations (Am9515 class).
+  reserved_group_values:
+    - range: [3, 255]
+      description: Reserved for future opcode groups.
+
 submission_descriptor:
   name: CAI_SUBMIT_DESC_V1
   version: 1
   size_bytes: 64
-  description: Fixed-size submission descriptor; extensible via versioning and reserved fields.
+  description: Fixed-size submission descriptor with opcode grouping and reserved tensor fields.
   fields:
     - name: desc_version
       offset: 0
@@ -45,7 +61,7 @@ submission_descriptor:
       offset: 4
       width_bytes: 4
       type: u32
-      description: Operation code.
+      description: Operation code within the opcode_group namespace.
     - name: flags
       offset: 8
       width_bytes: 4
@@ -66,11 +82,26 @@ submission_descriptor:
       width_bytes: 4
       type: u32
       description: Opaque tag returned in the completion record.
-    - name: reserved0
+    - name: opcode_group
       offset: 20
-      width_bytes: 4
-      type: u32
-      description: Reserved; must be 0.
+      width_bytes: 1
+      type: u8
+      description: Opcode group selector (see opcode_model.opcode_groups).
+    - name: format_primary
+      offset: 21
+      width_bytes: 1
+      type: u8
+      description: Primary numeric format ID (see formats spec).
+    - name: format_aux
+      offset: 22
+      width_bytes: 1
+      type: u8
+      description: Secondary numeric format ID (vector element or auxiliary format).
+    - name: format_flags
+      offset: 23
+      width_bytes: 1
+      type: u8
+      description: Format flags/reserved (must be 0).
     - name: operands_ptr
       offset: 24
       width_bytes: 8
@@ -91,15 +122,30 @@ submission_descriptor:
       width_bytes: 4
       type: u32
       description: Stride in bytes between result elements (0=contiguous).
-    - name: reserved1
+    - name: tensor_desc_ptr
       offset: 48
       width_bytes: 8
       type: u64
-      description: Reserved; must be 0.
-    - name: reserved2
+      description: Optional pointer to tensor descriptor for P4 operations (0 if unused).
+    - name: tensor_desc_len
       offset: 56
-      width_bytes: 8
-      type: u64
+      width_bytes: 2
+      type: u16
+      description: Tensor descriptor length in bytes (0 if unused).
+    - name: tensor_rank
+      offset: 58
+      width_bytes: 1
+      type: u8
+      description: Tensor rank (0 if unused).
+    - name: tensor_desc_flags
+      offset: 59
+      width_bytes: 1
+      type: u8
+      description: Tensor descriptor flags (reserved).
+    - name: reserved2
+      offset: 60
+      width_bytes: 4
+      type: u32
       description: Reserved; must be 0.
 
 operand_descriptor:
@@ -135,6 +181,98 @@ operand_descriptor:
       description: Reserved; must be 0.
     - name: reserved1
       offset: 24
+      width_bytes: 8
+      type: u64
+      description: Reserved; must be 0.
+
+tensor_descriptor:
+  name: CAI_TENSOR_DESC_V1
+  version: 1
+  size_bytes: 64
+  description: Optional tensor descriptor for P4 matrix/tensor operations (shape/stride metadata).
+  fields:
+    - name: desc_version
+      offset: 0
+      width_bytes: 2
+      type: u16
+      description: Descriptor format version (must be 1 for v1.0).
+    - name: desc_size_dw
+      offset: 2
+      width_bytes: 2
+      type: u16
+      description: Descriptor size in 32-bit words (must be 16 for this format).
+    - name: rank
+      offset: 4
+      width_bytes: 1
+      type: u8
+      description: Tensor rank (number of dimensions).
+    - name: elem_format
+      offset: 5
+      width_bytes: 1
+      type: u8
+      description: Element numeric format ID (see formats spec).
+    - name: reserved0
+      offset: 6
+      width_bytes: 2
+      type: u16
+      description: Reserved; must be 0.
+    - name: flags
+      offset: 8
+      width_bytes: 4
+      type: u32
+      description: Tensor descriptor flags (reserved).
+    - name: shape0
+      offset: 12
+      width_bytes: 4
+      type: u32
+      description: Dimension 0 length.
+    - name: shape1
+      offset: 16
+      width_bytes: 4
+      type: u32
+      description: Dimension 1 length.
+    - name: shape2
+      offset: 20
+      width_bytes: 4
+      type: u32
+      description: Dimension 2 length.
+    - name: shape3
+      offset: 24
+      width_bytes: 4
+      type: u32
+      description: Dimension 3 length.
+    - name: stride0
+      offset: 28
+      width_bytes: 4
+      type: u32
+      description: Dimension 0 stride in elements.
+    - name: stride1
+      offset: 32
+      width_bytes: 4
+      type: u32
+      description: Dimension 1 stride in elements.
+    - name: stride2
+      offset: 36
+      width_bytes: 4
+      type: u32
+      description: Dimension 2 stride in elements.
+    - name: stride3
+      offset: 40
+      width_bytes: 4
+      type: u32
+      description: Dimension 3 stride in elements.
+    - name: reserved1
+      offset: 44
+      width_bytes: 4
+      type: u32
+      description: Reserved; must be 0.
+    - name: reserved2
+      offset: 48
+      width_bytes: 8
+      type: u64
+      description: Reserved; must be 0.
+    - name: reserved3
+      offset: 56
       width_bytes: 8
       type: u64
       description: Reserved; must be 0.
@@ -189,6 +327,9 @@ completion_status_codes:
     description: Feature unsupported for this device/context.
 
 reserved_numeric_ranges:
+  - name: cai_opcode_group_values
+    range: [3, 255]
+    description: Reserved for future opcode group IDs.
   - name: cai_opcode_values
     range: [0x00000001, 0x7FFFFFFF]
     description: Reserved for future standard CAI opcodes.
@@ -210,7 +351,15 @@ examples:
       context_id: 0
       operand_count: 2
       tag: 0x12345678
+      opcode_group: 0
+      format_primary: 0
+      format_aux: 0
+      format_flags: 0
       operands_ptr: 0x0000000010000000
       result_ptr: 0x0000000020000000
       result_len: 256
       result_stride: 0
+      tensor_desc_ptr: 0x0000000000000000
+      tensor_desc_len: 0
+      tensor_rank: 0
+      tensor_desc_flags: 0

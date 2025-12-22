@@ -257,10 +257,11 @@ def _validate_tiers(spec: Dict[str, Any]) -> None:
 
         if ladder["reset_default"] != "P0":
             raise SpecError(f"{where}:{ladder['id']}: reset_default must be P0")
-        if "P7" not in seen_ids:
-            raise SpecError(f"{where}:{ladder['id']}: must define P7")
         if "P0" not in seen_ids:
             raise SpecError(f"{where}:{ladder['id']}: must define P0")
+        requires_p7 = ladder["id"] in ("TIER_LADDER_Z80", "TIER_LADDER_X86")
+        if requires_p7 and "P7" not in seen_ids:
+            raise SpecError(f"{where}:{ladder['id']}: must define P7")
 
 
 def _validate_mode_switch(spec: Dict[str, Any]) -> None:

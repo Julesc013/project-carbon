@@ -68,7 +68,7 @@ block_partitions:
     description: Fabric/interconnect CSRs.
   - name: accelerators
     block_id_range: [0x70, 0x7F]
-    description: Accelerator CSRs (CAI doorbells, queues, status).
+    description: Accelerator CSRs (CAI doorbells, queues, status), including Am951x lineage blocks.
   - name: reserved_future_gpu
     block_id_range: [0x80, 0x9F]
     description: Reserved for future GPU blocks.
@@ -78,6 +78,18 @@ block_partitions:
   - name: reserved
     block_id_range: [0xC0, 0xFF]
     description: Reserved.
+
+reserved_blocks:
+  - name: am9514_vector
+    vendor_id: 0x00
+    block_id: 0x71
+    block_version: 0x0
+    description: Reserved for Am9514 vector accelerator CSRs.
+  - name: am9515_tensor
+    vendor_id: 0x00
+    block_id: 0x72
+    block_version: 0x0
+    description: Reserved for Am9515 matrix/tensor accelerator CSRs.
 
 csrs:
   - name: CSR_ID
@@ -93,7 +105,7 @@ csrs:
     access: CSR_RW
     privilege_min: PRIV_S
     width_bits: 8
-    description: Current tier within the active ladder; tier changes use MODEUP/RETMD.
+    description: Current CPU tier within the active ladder; tier changes use MODEUP/RETMD.
   - name: CSR_MODEFLAGS
     address: 0x00000002
     block: core_common
@@ -446,7 +458,7 @@ csrs:
     access: CSR_RW
     privilege_min: PRIV_S
     width_bits: 32
-    description: Default personality/mode select (P0/P1/P7) for non-CAI paths.
+    description: Default personality/mode select (P0/P1/P2 with P3/P4 reserved) for non-CAI paths.
 
   - name: CSR_AM9513_CTX_SEL
     address: 0x00700010

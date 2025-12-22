@@ -9,6 +9,13 @@ contract:
   strict_tiers:
     description: All tiers operate in strict mode; performance scaling is not a tier feature.
     tiers: [P0, P1, P2, P3, P4, P5, P6, P7]
+  transition_policy:
+    description: Tier transitions are explicit and deterministic.
+    rules:
+      - Tier transitions occur only via MODEUP(target_tier, entry_vector) and RETMD().
+      - MODEUP is monotonic upgrade-only; lateral or downgrade transitions are invalid.
+      - RETMD is the only architectural downgrade path and restores the prior tier.
+      - Nested transitions are optional, but minimum modestack depth requirements still apply.
 
 instructions:
   - name: MODEUP
@@ -16,6 +23,7 @@ instructions:
     description: Upgrade-only transition into a higher compatibility tier.
     rules:
       - Only upgrades are allowed; target_tier must be strictly greater than current_tier.
+      - target_tier must be <= max_tier for the active ladder; otherwise trap.
       - A mode frame is pushed containing previous_tier, previous_modeflags, and return_pc.
       - Prefetch/decode state is flushed as part of the transition.
       - Control transfers to entry_vector after the atomic transition completes.
@@ -34,6 +42,31 @@ instructions:
     traps:
       - modestack_underflow
       - modeframe_corrupt
+
+failure_modes:
+  description: Deterministic behavior for invalid tier transitions (trap + cause code).
+  rules:
+    - Invalid MODEUP/RETMD transitions must trap; no silent failure is permitted.
+    - CSR_CAUSE is set to the matching MODE_TRAP_* code below.
+  trap_causes:
+    - name: MODE_TRAP_INVALID_TARGET
+      value: 0x01
+      description: MODEUP target_tier is not a strict upgrade or is out of range.
+    - name: MODE_TRAP_NOT_PERMITTED
+      value: 0x02
+      description: MODEUP not permitted at current privilege or mode.
+    - name: MODE_TRAP_STACK_OVERFLOW
+      value: 0x03
+      description: MODEUP modestack overflow at architectural minimum depth.
+    - name: MODE_TRAP_INVALID_ENTRY
+      value: 0x04
+      description: MODEUP entry_vector invalid or misaligned.
+    - name: MODE_TRAP_STACK_UNDERFLOW
+      value: 0x05
+      description: RETMD with no prior mode frame.
+    - name: MODE_TRAP_FRAME_CORRUPT
+      value: 0x06
+      description: RETMD detects a corrupt mode frame.
 
 modeflags:
   width_bits: 8

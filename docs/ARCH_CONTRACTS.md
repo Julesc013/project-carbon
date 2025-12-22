@@ -16,7 +16,7 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `P1` | `1` | `8085` | true |
 | `P2` | `2` | `z80` | true |
 | `P3` | `3` | `z180` | true |
-| `P4` | `4` | `eZ80` | true |
+| `P4` | `4` | `eZ80 (ADL/24-bit)` | true |
 | `P5` | `5` | `z280` | true |
 | `P6` | `6` | `z380` | true |
 | `P7` | `7` | `z480` | true |
@@ -38,7 +38,7 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `P6` | `6` | `p6_ia32` | true |
 | `P7` | `7` | `x86_64` | true |
 
-### TIER_LADDER_AMD_FPU (AMD-derived FPU compatibility ladder.)
+### TIER_LADDER_AMD_FPU (AMD-derived FPU compatibility ladder (Am9511 lineage).)
 
 - Reset default: `P0`
 - Upgrade rule: `target_tier > current_tier`
@@ -48,7 +48,9 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 |---:|---:|---|:---:|
 | `P0` | `0` | `am9511` | true |
 | `P1` | `1` | `am9512` | true |
-| `P7` | `7` | `am9513-native` | true |
+| `P2` | `2` | `am9513` | true |
+| `P3` | `3` | `am9514` | true |
+| `P4` | `4` | `am9515` | true |
 
 ## B) Mode Switching Contract
 
@@ -85,7 +87,7 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 |---|---:|---|
 | `CPUID_LEAF_VENDOR` | `0x00000000` | Maximum standard leaf and vendor string. |
 | `CPUID_LEAF_ID` | `0x00000001` | Vendor ID, family ID, model ID, and stepping. |
-| `CPUID_LEAF_TIERS` | `0x00000002` | Active tier ladder and tier limits. |
+| `CPUID_LEAF_TIERS` | `0x00000002` | Presented tier and limits for CPU and FPU lineages. |
 | `CPUID_LEAF_FEATURES0` | `0x00000003` | Base feature bitmap (bits 0..127 across words 0..3). |
 | `CPUID_LEAF_DEVICE_TABLE` | `0x00000004` | Device table (BDT) base and format descriptor. |
 | `CPUID_LEAF_CACHE0` | `0x00000010` | Cache descriptor 0 (if present). |
@@ -109,6 +111,14 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `FEAT_BDT` | `9` | Board Device Table (BDT) provided for device discovery. |
 | `FEAT_TURBO_QUEUE` | `10` | Turbo queue descriptor ring schema implemented. |
 | `FEAT_POLLING_COMPLETE` | `11` | Polling-complete semantics required across devices. |
+| `Z85_UNDOC_Z80` | `12` | Z85 exposes undocumented Z80 opcodes/flags while presenting as P2. |
+| `Z90_Z180_CLASS` | `13` | Z90 is Z180-class while presenting as P3. |
+| `Z380_32BIT_EXTENDED` | `14` | Z380 provides 32-bit extended mode while presenting as P6. |
+| `Z480_NATIVE_64` | `15` | Z480 provides native 64-bit mode while presenting as P7. |
+| `AM9512_IEEE` | `16` | Am9512 adds IEEE ports for missing 9511 functions. |
+| `AM9513_ASYNC` | `17` | Am9513 provides async scalar IEEE execution. |
+| `AM9514_VECTOR` | `18` | Am9514 provides vector/SIMD math support. |
+| `AM9515_TENSOR` | `19` | Am9515 provides matrix/tensor math support. |
 
 ### Example CPUID Leaf Table (IDs)
 
@@ -126,7 +136,7 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | CSR | Address | Access | Min Priv | Description |
 |---|---:|---|---|---|
 | `CSR_ID` | `0x00000000` | `CSR_RO` | `PRIV_U` | Read-only identification register (implementation-defined encoding). |
-| `CSR_TIER` | `0x00000001` | `CSR_RW` | `PRIV_S` | Current tier within the active ladder; tier changes use MODEUP/RETMD. |
+| `CSR_TIER` | `0x00000001` | `CSR_RW` | `PRIV_S` | Current CPU tier within the active ladder; tier changes use MODEUP/RETMD. |
 | `CSR_MODEFLAGS` | `0x00000002` | `CSR_RW` | `PRIV_S` | Architectural MODEFLAGS bitfield (see mode_switch spec). |
 | `CSR_TIME` | `0x00000010` | `CSR_RO` | `PRIV_U` | Cycle counter low word (or full 64-bit counter when read as 64-bit). |
 | `CSR_TIME_HI` | `0x00000011` | `CSR_RO` | `PRIV_U` | Cycle counter high word (when exposed as 2x32-bit). |
@@ -175,7 +185,7 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `CSR_AM9513_ID` | `0x00700000` | `CSR_RO` | `PRIV_U` | Am9513 identification register (implementation-defined encoding). |
 | `CSR_AM9513_CTRL` | `0x00700004` | `CSR_RW` | `PRIV_S` | Am9513 global control (v1.0: enable). |
 | `CSR_AM9513_STATUS` | `0x00700008` | `CSR_RO` | `PRIV_U` | Am9513 global status (busy, pending work, last fault). |
-| `CSR_AM9513_MODE` | `0x0070000c` | `CSR_RW` | `PRIV_S` | Default personality/mode select (P0/P1/P7) for non-CAI paths. |
+| `CSR_AM9513_MODE` | `0x0070000c` | `CSR_RW` | `PRIV_S` | Default personality/mode select (P0/P1/P2 with P3/P4 reserved) for non-CAI paths. |
 | `CSR_AM9513_CTX_SEL` | `0x00700010` | `CSR_RW` | `PRIV_U` | Context selector for CSR register-file/legacy windows. |
 | `CSR_AM9513_CTX_RM` | `0x00700014` | `CSR_RW` | `PRIV_U` | Per-context IEEE rounding mode (uses formats spec rounding IDs). |
 | `CSR_AM9513_CTX_FLAGS` | `0x00700018` | `CSR_RO` | `PRIV_U` | Per-context IEEE exception flags (sticky). |
@@ -322,18 +332,24 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 |---|---:|---:|---|---|
 | `desc_version` | `0` | `2` | `u16` | Descriptor format version (must be 1 for v1.0). |
 | `desc_size_dw` | `2` | `2` | `u16` | Descriptor size in 32-bit words (must be 16 for this format). |
-| `opcode` | `4` | `4` | `u32` | Operation code. |
+| `opcode` | `4` | `4` | `u32` | Operation code within the opcode_group namespace. |
 | `flags` | `8` | `4` | `u32` | Operation flags (reserved bits must be 0). |
 | `context_id` | `12` | `2` | `u16` | Context identifier. |
 | `operand_count` | `14` | `2` | `u16` | Number of operand descriptors in the operand list. |
 | `tag` | `16` | `4` | `u32` | Opaque tag returned in the completion record. |
-| `reserved0` | `20` | `4` | `u32` | Reserved; must be 0. |
+| `opcode_group` | `20` | `1` | `u8` | Opcode group selector (see opcode_model.opcode_groups). |
+| `format_primary` | `21` | `1` | `u8` | Primary numeric format ID (see formats spec). |
+| `format_aux` | `22` | `1` | `u8` | Secondary numeric format ID (vector element or auxiliary format). |
+| `format_flags` | `23` | `1` | `u8` | Format flags/reserved (must be 0). |
 | `operands_ptr` | `24` | `8` | `u64` | Pointer to an array of operand descriptors. |
 | `result_ptr` | `32` | `8` | `u64` | Pointer to the result buffer. |
 | `result_len` | `40` | `4` | `u32` | Result length in bytes (or elements, opcode-defined). |
 | `result_stride` | `44` | `4` | `u32` | Stride in bytes between result elements (0=contiguous). |
-| `reserved1` | `48` | `8` | `u64` | Reserved; must be 0. |
-| `reserved2` | `56` | `8` | `u64` | Reserved; must be 0. |
+| `tensor_desc_ptr` | `48` | `8` | `u64` | Optional pointer to tensor descriptor for P4 operations (0 if unused). |
+| `tensor_desc_len` | `56` | `2` | `u16` | Tensor descriptor length in bytes (0 if unused). |
+| `tensor_rank` | `58` | `1` | `u8` | Tensor rank (0 if unused). |
+| `tensor_desc_flags` | `59` | `1` | `u8` | Tensor descriptor flags (reserved). |
+| `reserved2` | `60` | `4` | `u32` | Reserved; must be 0. |
 
 ### Operand Descriptor (V1)
 
