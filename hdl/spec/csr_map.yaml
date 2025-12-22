@@ -578,6 +578,597 @@ csrs:
     width_bits: 32
     description: Legacy operation issue (opcode-defined stack operands/results).
 
+  # CarbonIO peripheral CSRs (vendor_id=0x00, block_id=0x30, block_version=0x0)
+  - name: CSR_CARBONIO_ID
+    address: 0x00300000
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonIO identification register (implementation-defined encoding).
+  - name: CSR_CARBONIO_STATUS
+    address: 0x00300001
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonIO status summary (busy/error).
+  - name: CSR_CARBONIO_CTRL
+    address: 0x00300002
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: CarbonIO control (enable/reset).
+  - name: CSR_CARBONIO_MODE
+    address: 0x00300003
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: CarbonIO personality/mode selection.
+  - name: CSR_CARBONIO_FEATURE0
+    address: 0x00300004
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonIO feature word 0 (descriptor mirror).
+  - name: CSR_CARBONIO_FEATURE1
+    address: 0x00300005
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonIO feature word 1 (descriptor mirror).
+  - name: CSR_CARBONIO_QUEUE_SUBMIT_BASE_LO
+    address: 0x00300010
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo submission ring base (low 32).
+  - name: CSR_CARBONIO_QUEUE_SUBMIT_BASE_HI
+    address: 0x00300011
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo submission ring base (high 32).
+  - name: CSR_CARBONIO_QUEUE_SUBMIT_MASK
+    address: 0x00300012
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo submission ring mask (entries-1).
+  - name: CSR_CARBONIO_QUEUE_DOORBELL
+    address: 0x00300013
+    block: interrupt_timer
+    access: CSR_WO
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo submission doorbell.
+  - name: CSR_CARBONIO_QUEUE_COMP_BASE_LO
+    address: 0x00300014
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo completion ring base (low 32).
+  - name: CSR_CARBONIO_QUEUE_COMP_BASE_HI
+    address: 0x00300015
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo completion ring base (high 32).
+  - name: CSR_CARBONIO_QUEUE_COMP_MASK
+    address: 0x00300016
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo completion ring mask (entries-1).
+  - name: CSR_CARBONIO_QUEUE_COMP_DOORBELL
+    address: 0x00300017
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Completion doorbell (device -> host).
+  - name: CSR_CARBONIO_QUEUE_STATUS
+    address: 0x00300018
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Turbo queue status.
+  - name: CSR_CARBONIO_PERF0
+    address: 0x00300020
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Performance counter 0 (device-defined).
+  - name: CSR_CARBONIO_PERF1
+    address: 0x00300021
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Performance counter 1 (device-defined).
+
+  - name: CSR_CARBONIO_UART_CFG
+    address: 0x00300030
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: UART configuration (enable, format, timestamp).
+  - name: CSR_CARBONIO_UART_STATUS
+    address: 0x00300031
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: UART status (FIFO state, errors).
+  - name: CSR_CARBONIO_UART_RX_COUNT
+    address: 0x00300032
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 16
+    description: UART RX FIFO count.
+  - name: CSR_CARBONIO_UART_TX_COUNT
+    address: 0x00300033
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 16
+    description: UART TX FIFO count.
+  - name: CSR_CARBONIO_UART_TX_WDATA
+    address: 0x00300034
+    block: interrupt_timer
+    access: CSR_WO
+    privilege_min: PRIV_U
+    width_bits: 8
+    description: UART TX data write (push to FIFO).
+  - name: CSR_CARBONIO_UART_RX_RDATA
+    address: 0x00300035
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 8
+    description: UART RX data read (pop from FIFO).
+  - name: CSR_CARBONIO_UART_WATERMARKS
+    address: 0x00300036
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: UART RX/TX FIFO watermark levels.
+  - name: CSR_CARBONIO_UART_TS_LO
+    address: 0x00300037
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: UART timestamp low word (optional).
+  - name: CSR_CARBONIO_UART_TS_HI
+    address: 0x00300038
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: UART timestamp high word (optional).
+
+  - name: CSR_CARBONIO_PIO_IN
+    address: 0x00300040
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: PIO input value snapshot.
+  - name: CSR_CARBONIO_PIO_OUT
+    address: 0x00300041
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: PIO output latch.
+  - name: CSR_CARBONIO_PIO_DIR
+    address: 0x00300042
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: PIO direction (1=output).
+  - name: CSR_CARBONIO_PIO_EDGE_RDATA
+    address: 0x00300043
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: PIO edge capture FIFO read.
+  - name: CSR_CARBONIO_PIO_EDGE_COUNT
+    address: 0x00300044
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 16
+    description: PIO edge capture FIFO count.
+  - name: CSR_CARBONIO_PIO_FILTER_CFG
+    address: 0x00300045
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: PIO glitch filter configuration (basic v1).
+  - name: CSR_CARBONIO_PIO_MATCH_CFG
+    address: 0x00300046
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: PIO pattern match configuration (basic v1).
+
+  - name: CSR_CARBONIO_TICK_LO
+    address: 0x00300050
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Monotonic tick counter low word.
+  - name: CSR_CARBONIO_TICK_HI
+    address: 0x00300051
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Monotonic tick counter high word.
+  - name: CSR_CARBONIO_TIMER0_LOAD
+    address: 0x00300052
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Timer0 reload value.
+  - name: CSR_CARBONIO_TIMER0_VALUE
+    address: 0x00300053
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Timer0 current value.
+  - name: CSR_CARBONIO_TIMER0_CTRL
+    address: 0x00300054
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Timer0 control (enable/periodic).
+  - name: CSR_CARBONIO_TIMER0_STATUS
+    address: 0x00300055
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Timer0 status (expired).
+  - name: CSR_CARBONIO_TIMER1_LOAD
+    address: 0x00300056
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Timer1 reload value.
+  - name: CSR_CARBONIO_TIMER1_VALUE
+    address: 0x00300057
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Timer1 current value.
+  - name: CSR_CARBONIO_TIMER1_CTRL
+    address: 0x00300058
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Timer1 control (enable/periodic).
+  - name: CSR_CARBONIO_TIMER1_STATUS
+    address: 0x00300059
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Timer1 status (expired).
+
+  - name: CSR_CARBONIO_IRQ_ENABLE
+    address: 0x00300060
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: IRQ enable bits for CarbonIO sources.
+  - name: CSR_CARBONIO_IRQ_PENDING
+    address: 0x00300061
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: IRQ pending bits for CarbonIO sources.
+  - name: CSR_CARBONIO_IRQ_MASK
+    address: 0x00300062
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: IRQ mask/clear bits for CarbonIO sources.
+
+  # CarbonPIC CSRs (vendor_id=0x00, block_id=0x31, block_version=0x0)
+  - name: CSR_CARBONPIC_ID
+    address: 0x00310000
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonPIC identification register.
+  - name: CSR_CARBONPIC_STATUS
+    address: 0x00310001
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonPIC status summary.
+  - name: CSR_CARBONPIC_CTRL
+    address: 0x00310002
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: CarbonPIC control (enable/reset).
+  - name: CSR_CARBONPIC_MODE
+    address: 0x00310003
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: CarbonPIC mode configuration.
+  - name: CSR_CARBONPIC_FEATURE0
+    address: 0x00310004
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonPIC feature word 0.
+  - name: CSR_CARBONPIC_FEATURE1
+    address: 0x00310005
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonPIC feature word 1.
+  - name: CSR_CARBONPIC_SRC_INDEX
+    address: 0x00310020
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 16
+    description: Source index selector for per-source registers.
+  - name: CSR_CARBONPIC_SRC_PRIORITY
+    address: 0x00310021
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 8
+    description: Priority value for selected source.
+  - name: CSR_CARBONPIC_SRC_TARGETS
+    address: 0x00310022
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Target routing mask for selected source.
+  - name: CSR_CARBONPIC_SRC_ENABLE
+    address: 0x00310023
+    block: interrupt_timer
+    access: CSR_RW
+    privilege_min: PRIV_U
+    width_bits: 1
+    description: Enable bit for selected source.
+  - name: CSR_CARBONPIC_SRC_PENDING
+    address: 0x00310024
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 1
+    description: Pending status for selected source.
+  - name: CSR_CARBONPIC_GLOBAL_PENDING
+    address: 0x00310025
+    block: interrupt_timer
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Global pending bitmap.
+
+  # CarbonDMA CSRs (vendor_id=0x00, block_id=0x60, block_version=0x0)
+  - name: CSR_CARBONDMA_ID
+    address: 0x00600000
+    block: fabric_interconnect
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonDMA identification register.
+  - name: CSR_CARBONDMA_STATUS
+    address: 0x00600001
+    block: fabric_interconnect
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonDMA status summary.
+  - name: CSR_CARBONDMA_CTRL
+    address: 0x00600002
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: CarbonDMA control (enable/reset).
+  - name: CSR_CARBONDMA_MODE
+    address: 0x00600003
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: CarbonDMA mode configuration.
+  - name: CSR_CARBONDMA_FEATURE0
+    address: 0x00600004
+    block: fabric_interconnect
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonDMA feature word 0.
+  - name: CSR_CARBONDMA_FEATURE1
+    address: 0x00600005
+    block: fabric_interconnect
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: CarbonDMA feature word 1.
+  - name: CSR_CARBONDMA_QUEUE_SUBMIT_BASE_LO
+    address: 0x00600010
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo submission ring base (low 32).
+  - name: CSR_CARBONDMA_QUEUE_SUBMIT_BASE_HI
+    address: 0x00600011
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo submission ring base (high 32).
+  - name: CSR_CARBONDMA_QUEUE_SUBMIT_MASK
+    address: 0x00600012
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo submission ring mask (entries-1).
+  - name: CSR_CARBONDMA_QUEUE_DOORBELL
+    address: 0x00600013
+    block: fabric_interconnect
+    access: CSR_WO
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo submission doorbell.
+  - name: CSR_CARBONDMA_QUEUE_COMP_BASE_LO
+    address: 0x00600014
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo completion ring base (low 32).
+  - name: CSR_CARBONDMA_QUEUE_COMP_BASE_HI
+    address: 0x00600015
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo completion ring base (high 32).
+  - name: CSR_CARBONDMA_QUEUE_COMP_MASK
+    address: 0x00600016
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Turbo completion ring mask (entries-1).
+  - name: CSR_CARBONDMA_QUEUE_COMP_DOORBELL
+    address: 0x00600017
+    block: fabric_interconnect
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Completion doorbell (device -> host).
+  - name: CSR_CARBONDMA_QUEUE_STATUS
+    address: 0x00600018
+    block: fabric_interconnect
+    access: CSR_RO
+    privilege_min: PRIV_U
+    width_bits: 32
+    description: Turbo queue status.
+  - name: CSR_CARBONDMA_CH_SEL
+    address: 0x00600020
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 8
+    description: Channel index selector for compatibility mode.
+  - name: CSR_CARBONDMA_CH_SRC_LO
+    address: 0x00600021
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Channel source base low word.
+  - name: CSR_CARBONDMA_CH_SRC_HI
+    address: 0x00600022
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Channel source base high word.
+  - name: CSR_CARBONDMA_CH_DST_LO
+    address: 0x00600023
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Channel destination base low word.
+  - name: CSR_CARBONDMA_CH_DST_HI
+    address: 0x00600024
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Channel destination base high word.
+  - name: CSR_CARBONDMA_CH_LEN
+    address: 0x00600025
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Channel transfer length in bytes.
+  - name: CSR_CARBONDMA_CH_CTRL
+    address: 0x00600026
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Channel control (start/opcode/flags).
+  - name: CSR_CARBONDMA_CH_STATUS
+    address: 0x00600027
+    block: fabric_interconnect
+    access: CSR_RO
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Channel status (busy/done/fault).
+  - name: CSR_CARBONDMA_CH_ATTR
+    address: 0x00600028
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Channel fabric attribute overrides.
+  - name: CSR_CARBONDMA_CH_FILL
+    address: 0x00600029
+    block: fabric_interconnect
+    access: CSR_RW
+    privilege_min: PRIV_S
+    width_bits: 32
+    description: Channel fill pattern (for fill opcode).
+
 reserved_numeric_ranges:
   - name: core_common_reg_id
     range: [0x000, 0x0FF]

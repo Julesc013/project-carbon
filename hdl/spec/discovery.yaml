@@ -94,6 +94,28 @@ leafs:
   - id: 0x00000003
     name: CPUID_LEAF_FEATURES0
     description: Base feature bitmap (bits 0..127 across words 0..3).
+  - id: 0x00000004
+    name: CPUID_LEAF_DEVICE_TABLE
+    description: Device table (BDT) base and format descriptor.
+    fields:
+      - word: 0
+        name: bdt_format_version
+        bits: [15, 0]
+      - word: 0
+        name: bdt_entry_size_bytes
+        bits: [31, 16]
+      - word: 1
+        name: bdt_entry_count
+        bits: [15, 0]
+      - word: 1
+        name: bdt_header_size_bytes
+        bits: [31, 16]
+      - word: 2
+        name: bdt_base_addr_lo
+        bits: [31, 0]
+      - word: 3
+        name: bdt_base_addr_hi
+        bits: [31, 0]
   - id: 0x00000010
     name: CPUID_LEAF_CACHE0
     description: Cache descriptor 0 (if present).
@@ -112,7 +134,7 @@ leaf_rules:
   description: Requests for undefined/reserved leaf IDs return all zeros; software must consult max_standard_leaf.
 
 reserved_leaf_ranges:
-  - range: [0x00000004, 0x0000000F]
+  - range: [0x00000005, 0x0000000F]
     description: Reserved for future standard leaves.
   - range: [0x00000012, 0x0000001F]
     description: Reserved for future cache/topology leaves.
@@ -154,8 +176,20 @@ feature_sets:
       - name: FEAT_IOMMU_HOOKS
         bit: 7
         description: IOMMU integration hooks for accelerators/fabric present.
+      - name: FEAT_DEVICE_MODEL
+        bit: 8
+        description: Dual-personality device model and capability descriptor schema implemented.
+      - name: FEAT_BDT
+        bit: 9
+        description: Board Device Table (BDT) provided for device discovery.
+      - name: FEAT_TURBO_QUEUE
+        bit: 10
+        description: Turbo queue descriptor ring schema implemented.
+      - name: FEAT_POLLING_COMPLETE
+        bit: 11
+        description: Polling-complete semantics required across devices.
     reserved_bit_ranges:
-      - range: [8, 63]
+      - range: [12, 63]
         description: Reserved for base feature growth.
       - range: [64, 127]
         description: Reserved for future feature sets.

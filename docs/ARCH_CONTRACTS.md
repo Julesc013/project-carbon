@@ -87,6 +87,7 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `CPUID_LEAF_ID` | `0x00000001` | Vendor ID, family ID, model ID, and stepping. |
 | `CPUID_LEAF_TIERS` | `0x00000002` | Active tier ladder and tier limits. |
 | `CPUID_LEAF_FEATURES0` | `0x00000003` | Base feature bitmap (bits 0..127 across words 0..3). |
+| `CPUID_LEAF_DEVICE_TABLE` | `0x00000004` | Device table (BDT) base and format descriptor. |
 | `CPUID_LEAF_CACHE0` | `0x00000010` | Cache descriptor 0 (if present). |
 | `CPUID_LEAF_TOPOLOGY` | `0x00000011` | Core/thread topology descriptor. |
 | `CPUID_LEAF_ACCEL0` | `0x00000020` | Accelerator presence descriptor 0. |
@@ -104,6 +105,10 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `FEAT_CAPS` | `5` | CAPS transport implemented (Z85/Z90). |
 | `FEAT_AM9513` | `6` | Am9513-class accelerator present. |
 | `FEAT_IOMMU_HOOKS` | `7` | IOMMU integration hooks for accelerators/fabric present. |
+| `FEAT_DEVICE_MODEL` | `8` | Dual-personality device model and capability descriptor schema implemented. |
+| `FEAT_BDT` | `9` | Board Device Table (BDT) provided for device discovery. |
+| `FEAT_TURBO_QUEUE` | `10` | Turbo queue descriptor ring schema implemented. |
+| `FEAT_POLLING_COMPLETE` | `11` | Polling-complete semantics required across devices. |
 
 ### Example CPUID Leaf Table (IDs)
 
@@ -189,6 +194,89 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `CSR_AM9513_LEGACY_POP_LO` | `0x00700050` | `CSR_RO` | `PRIV_U` | Legacy pop result low word (read does not pop; POP_HI commits pop). |
 | `CSR_AM9513_LEGACY_POP_HI` | `0x00700054` | `CSR_RO` | `PRIV_U` | Legacy pop result high word (read triggers pop side-effect). |
 | `CSR_AM9513_LEGACY_OP` | `0x00700058` | `CSR_WO` | `PRIV_U` | Legacy operation issue (opcode-defined stack operands/results). |
+| `CSR_CARBONIO_ID` | `0x00300000` | `CSR_RO` | `PRIV_U` | CarbonIO identification register (implementation-defined encoding). |
+| `CSR_CARBONIO_STATUS` | `0x00300001` | `CSR_RO` | `PRIV_U` | CarbonIO status summary (busy/error). |
+| `CSR_CARBONIO_CTRL` | `0x00300002` | `CSR_RW` | `PRIV_S` | CarbonIO control (enable/reset). |
+| `CSR_CARBONIO_MODE` | `0x00300003` | `CSR_RW` | `PRIV_S` | CarbonIO personality/mode selection. |
+| `CSR_CARBONIO_FEATURE0` | `0x00300004` | `CSR_RO` | `PRIV_U` | CarbonIO feature word 0 (descriptor mirror). |
+| `CSR_CARBONIO_FEATURE1` | `0x00300005` | `CSR_RO` | `PRIV_U` | CarbonIO feature word 1 (descriptor mirror). |
+| `CSR_CARBONIO_QUEUE_SUBMIT_BASE_LO` | `0x00300010` | `CSR_RW` | `PRIV_S` | Turbo submission ring base (low 32). |
+| `CSR_CARBONIO_QUEUE_SUBMIT_BASE_HI` | `0x00300011` | `CSR_RW` | `PRIV_S` | Turbo submission ring base (high 32). |
+| `CSR_CARBONIO_QUEUE_SUBMIT_MASK` | `0x00300012` | `CSR_RW` | `PRIV_S` | Turbo submission ring mask (entries-1). |
+| `CSR_CARBONIO_QUEUE_DOORBELL` | `0x00300013` | `CSR_WO` | `PRIV_S` | Turbo submission doorbell. |
+| `CSR_CARBONIO_QUEUE_COMP_BASE_LO` | `0x00300014` | `CSR_RW` | `PRIV_S` | Turbo completion ring base (low 32). |
+| `CSR_CARBONIO_QUEUE_COMP_BASE_HI` | `0x00300015` | `CSR_RW` | `PRIV_S` | Turbo completion ring base (high 32). |
+| `CSR_CARBONIO_QUEUE_COMP_MASK` | `0x00300016` | `CSR_RW` | `PRIV_S` | Turbo completion ring mask (entries-1). |
+| `CSR_CARBONIO_QUEUE_COMP_DOORBELL` | `0x00300017` | `CSR_RO` | `PRIV_U` | Completion doorbell (device -> host). |
+| `CSR_CARBONIO_QUEUE_STATUS` | `0x00300018` | `CSR_RO` | `PRIV_U` | Turbo queue status. |
+| `CSR_CARBONIO_PERF0` | `0x00300020` | `CSR_RO` | `PRIV_U` | Performance counter 0 (device-defined). |
+| `CSR_CARBONIO_PERF1` | `0x00300021` | `CSR_RO` | `PRIV_U` | Performance counter 1 (device-defined). |
+| `CSR_CARBONIO_UART_CFG` | `0x00300030` | `CSR_RW` | `PRIV_U` | UART configuration (enable, format, timestamp). |
+| `CSR_CARBONIO_UART_STATUS` | `0x00300031` | `CSR_RO` | `PRIV_U` | UART status (FIFO state, errors). |
+| `CSR_CARBONIO_UART_RX_COUNT` | `0x00300032` | `CSR_RO` | `PRIV_U` | UART RX FIFO count. |
+| `CSR_CARBONIO_UART_TX_COUNT` | `0x00300033` | `CSR_RO` | `PRIV_U` | UART TX FIFO count. |
+| `CSR_CARBONIO_UART_TX_WDATA` | `0x00300034` | `CSR_WO` | `PRIV_U` | UART TX data write (push to FIFO). |
+| `CSR_CARBONIO_UART_RX_RDATA` | `0x00300035` | `CSR_RO` | `PRIV_U` | UART RX data read (pop from FIFO). |
+| `CSR_CARBONIO_UART_WATERMARKS` | `0x00300036` | `CSR_RW` | `PRIV_U` | UART RX/TX FIFO watermark levels. |
+| `CSR_CARBONIO_UART_TS_LO` | `0x00300037` | `CSR_RO` | `PRIV_U` | UART timestamp low word (optional). |
+| `CSR_CARBONIO_UART_TS_HI` | `0x00300038` | `CSR_RO` | `PRIV_U` | UART timestamp high word (optional). |
+| `CSR_CARBONIO_PIO_IN` | `0x00300040` | `CSR_RO` | `PRIV_U` | PIO input value snapshot. |
+| `CSR_CARBONIO_PIO_OUT` | `0x00300041` | `CSR_RW` | `PRIV_U` | PIO output latch. |
+| `CSR_CARBONIO_PIO_DIR` | `0x00300042` | `CSR_RW` | `PRIV_U` | PIO direction (1=output). |
+| `CSR_CARBONIO_PIO_EDGE_RDATA` | `0x00300043` | `CSR_RO` | `PRIV_U` | PIO edge capture FIFO read. |
+| `CSR_CARBONIO_PIO_EDGE_COUNT` | `0x00300044` | `CSR_RO` | `PRIV_U` | PIO edge capture FIFO count. |
+| `CSR_CARBONIO_PIO_FILTER_CFG` | `0x00300045` | `CSR_RW` | `PRIV_U` | PIO glitch filter configuration (basic v1). |
+| `CSR_CARBONIO_PIO_MATCH_CFG` | `0x00300046` | `CSR_RW` | `PRIV_U` | PIO pattern match configuration (basic v1). |
+| `CSR_CARBONIO_TICK_LO` | `0x00300050` | `CSR_RO` | `PRIV_U` | Monotonic tick counter low word. |
+| `CSR_CARBONIO_TICK_HI` | `0x00300051` | `CSR_RO` | `PRIV_U` | Monotonic tick counter high word. |
+| `CSR_CARBONIO_TIMER0_LOAD` | `0x00300052` | `CSR_RW` | `PRIV_U` | Timer0 reload value. |
+| `CSR_CARBONIO_TIMER0_VALUE` | `0x00300053` | `CSR_RO` | `PRIV_U` | Timer0 current value. |
+| `CSR_CARBONIO_TIMER0_CTRL` | `0x00300054` | `CSR_RW` | `PRIV_U` | Timer0 control (enable/periodic). |
+| `CSR_CARBONIO_TIMER0_STATUS` | `0x00300055` | `CSR_RO` | `PRIV_U` | Timer0 status (expired). |
+| `CSR_CARBONIO_TIMER1_LOAD` | `0x00300056` | `CSR_RW` | `PRIV_U` | Timer1 reload value. |
+| `CSR_CARBONIO_TIMER1_VALUE` | `0x00300057` | `CSR_RO` | `PRIV_U` | Timer1 current value. |
+| `CSR_CARBONIO_TIMER1_CTRL` | `0x00300058` | `CSR_RW` | `PRIV_U` | Timer1 control (enable/periodic). |
+| `CSR_CARBONIO_TIMER1_STATUS` | `0x00300059` | `CSR_RO` | `PRIV_U` | Timer1 status (expired). |
+| `CSR_CARBONIO_IRQ_ENABLE` | `0x00300060` | `CSR_RW` | `PRIV_U` | IRQ enable bits for CarbonIO sources. |
+| `CSR_CARBONIO_IRQ_PENDING` | `0x00300061` | `CSR_RO` | `PRIV_U` | IRQ pending bits for CarbonIO sources. |
+| `CSR_CARBONIO_IRQ_MASK` | `0x00300062` | `CSR_RW` | `PRIV_U` | IRQ mask/clear bits for CarbonIO sources. |
+| `CSR_CARBONPIC_ID` | `0x00310000` | `CSR_RO` | `PRIV_U` | CarbonPIC identification register. |
+| `CSR_CARBONPIC_STATUS` | `0x00310001` | `CSR_RO` | `PRIV_U` | CarbonPIC status summary. |
+| `CSR_CARBONPIC_CTRL` | `0x00310002` | `CSR_RW` | `PRIV_S` | CarbonPIC control (enable/reset). |
+| `CSR_CARBONPIC_MODE` | `0x00310003` | `CSR_RW` | `PRIV_S` | CarbonPIC mode configuration. |
+| `CSR_CARBONPIC_FEATURE0` | `0x00310004` | `CSR_RO` | `PRIV_U` | CarbonPIC feature word 0. |
+| `CSR_CARBONPIC_FEATURE1` | `0x00310005` | `CSR_RO` | `PRIV_U` | CarbonPIC feature word 1. |
+| `CSR_CARBONPIC_SRC_INDEX` | `0x00310020` | `CSR_RW` | `PRIV_U` | Source index selector for per-source registers. |
+| `CSR_CARBONPIC_SRC_PRIORITY` | `0x00310021` | `CSR_RW` | `PRIV_U` | Priority value for selected source. |
+| `CSR_CARBONPIC_SRC_TARGETS` | `0x00310022` | `CSR_RW` | `PRIV_U` | Target routing mask for selected source. |
+| `CSR_CARBONPIC_SRC_ENABLE` | `0x00310023` | `CSR_RW` | `PRIV_U` | Enable bit for selected source. |
+| `CSR_CARBONPIC_SRC_PENDING` | `0x00310024` | `CSR_RO` | `PRIV_U` | Pending status for selected source. |
+| `CSR_CARBONPIC_GLOBAL_PENDING` | `0x00310025` | `CSR_RO` | `PRIV_U` | Global pending bitmap. |
+| `CSR_CARBONDMA_ID` | `0x00600000` | `CSR_RO` | `PRIV_U` | CarbonDMA identification register. |
+| `CSR_CARBONDMA_STATUS` | `0x00600001` | `CSR_RO` | `PRIV_U` | CarbonDMA status summary. |
+| `CSR_CARBONDMA_CTRL` | `0x00600002` | `CSR_RW` | `PRIV_S` | CarbonDMA control (enable/reset). |
+| `CSR_CARBONDMA_MODE` | `0x00600003` | `CSR_RW` | `PRIV_S` | CarbonDMA mode configuration. |
+| `CSR_CARBONDMA_FEATURE0` | `0x00600004` | `CSR_RO` | `PRIV_U` | CarbonDMA feature word 0. |
+| `CSR_CARBONDMA_FEATURE1` | `0x00600005` | `CSR_RO` | `PRIV_U` | CarbonDMA feature word 1. |
+| `CSR_CARBONDMA_QUEUE_SUBMIT_BASE_LO` | `0x00600010` | `CSR_RW` | `PRIV_S` | Turbo submission ring base (low 32). |
+| `CSR_CARBONDMA_QUEUE_SUBMIT_BASE_HI` | `0x00600011` | `CSR_RW` | `PRIV_S` | Turbo submission ring base (high 32). |
+| `CSR_CARBONDMA_QUEUE_SUBMIT_MASK` | `0x00600012` | `CSR_RW` | `PRIV_S` | Turbo submission ring mask (entries-1). |
+| `CSR_CARBONDMA_QUEUE_DOORBELL` | `0x00600013` | `CSR_WO` | `PRIV_S` | Turbo submission doorbell. |
+| `CSR_CARBONDMA_QUEUE_COMP_BASE_LO` | `0x00600014` | `CSR_RW` | `PRIV_S` | Turbo completion ring base (low 32). |
+| `CSR_CARBONDMA_QUEUE_COMP_BASE_HI` | `0x00600015` | `CSR_RW` | `PRIV_S` | Turbo completion ring base (high 32). |
+| `CSR_CARBONDMA_QUEUE_COMP_MASK` | `0x00600016` | `CSR_RW` | `PRIV_S` | Turbo completion ring mask (entries-1). |
+| `CSR_CARBONDMA_QUEUE_COMP_DOORBELL` | `0x00600017` | `CSR_RO` | `PRIV_U` | Completion doorbell (device -> host). |
+| `CSR_CARBONDMA_QUEUE_STATUS` | `0x00600018` | `CSR_RO` | `PRIV_U` | Turbo queue status. |
+| `CSR_CARBONDMA_CH_SEL` | `0x00600020` | `CSR_RW` | `PRIV_S` | Channel index selector for compatibility mode. |
+| `CSR_CARBONDMA_CH_SRC_LO` | `0x00600021` | `CSR_RW` | `PRIV_S` | Channel source base low word. |
+| `CSR_CARBONDMA_CH_SRC_HI` | `0x00600022` | `CSR_RW` | `PRIV_S` | Channel source base high word. |
+| `CSR_CARBONDMA_CH_DST_LO` | `0x00600023` | `CSR_RW` | `PRIV_S` | Channel destination base low word. |
+| `CSR_CARBONDMA_CH_DST_HI` | `0x00600024` | `CSR_RW` | `PRIV_S` | Channel destination base high word. |
+| `CSR_CARBONDMA_CH_LEN` | `0x00600025` | `CSR_RW` | `PRIV_S` | Channel transfer length in bytes. |
+| `CSR_CARBONDMA_CH_CTRL` | `0x00600026` | `CSR_RW` | `PRIV_S` | Channel control (start/opcode/flags). |
+| `CSR_CARBONDMA_CH_STATUS` | `0x00600027` | `CSR_RO` | `PRIV_S` | Channel status (busy/done/fault). |
+| `CSR_CARBONDMA_CH_ATTR` | `0x00600028` | `CSR_RW` | `PRIV_S` | Channel fabric attribute overrides. |
+| `CSR_CARBONDMA_CH_FILL` | `0x00600029` | `CSR_RW` | `PRIV_S` | Channel fill pattern (for fill opcode). |
 
 ## E) Fabric Transaction Contract
 
@@ -298,7 +386,179 @@ result_len: 256
 result_stride: 0
 ```
 
-## G) Z90 Fast-Path ISA (Opcode Pages)
+## G) Device Model, BDT, and Turbo Queues
+
+### Dual Personality Device Model
+
+- Universal model for all Carbon devices; each device exposes a compatibility personality and a turbo personality.
+
+### Compatibility Personality
+
+- Ordered I/O semantics; reads and writes observe program order.
+- WAIT/ready backpressure is honored; no hidden reordering.
+- Registers are deterministic; no turbo-only side effects.
+
+### Turbo Personality
+
+- Uses fast data-plane paths (queues, DMA, or large FIFOs).
+- May complete at different speeds than compatibility mode, but results must match.
+- Turbo features are gated by MODEFLAGS and tier policy.
+
+### Polling-Complete Semantics
+
+- Every operation must have a completion indicator that can be polled without interrupts.
+- Completion indicators must be deterministic and monotonic for a given operation.
+- Interrupts, if present, are optional accelerators for the same completion state.
+
+### Device Class IDs
+
+| Class | Value | Description |
+|---|---:|---|
+| `DEVCLASS_CPU` | `0x0001` | CPU cores (Z85/Z90/eZ90/8096/etc). |
+| `DEVCLASS_FPU` | `0x0002` | FPU/accelerator cores (Am951x-class, 8097). |
+| `DEVCLASS_UART` | `0x0010` | UART console devices. |
+| `DEVCLASS_SIO` | `0x0011` | Serial I/O controllers (multi-channel). |
+| `DEVCLASS_PIO` | `0x0012` | Parallel I/O controllers. |
+| `DEVCLASS_TIMER` | `0x0013` | Timers/CTC blocks and monotonic ticks. |
+| `DEVCLASS_IRQ_CTRL` | `0x0014` | Interrupt controllers / routers. |
+| `DEVCLASS_DMA` | `0x0020` | DMA engines (mem-to-mem, scatter/gather). |
+| `DEVCLASS_BLOCK_STORAGE` | `0x0030` | Block storage devices (fixed blocks). |
+| `DEVCLASS_CHAR_STORAGE` | `0x0031` | Character/stream storage devices. |
+| `DEVCLASS_RTC` | `0x0032` | Real-time clock devices. |
+| `DEVCLASS_GPIO` | `0x0033` | General-purpose I/O pin controllers. |
+| `DEVCLASS_TRACE` | `0x0034` | Trace/telemetry devices. |
+
+### BDT Header (V1)
+
+- Format: `BDT_HEADER_V1`, version `1`, size `16` bytes
+
+| Field | Offset | Width (bytes) | Type | Description |
+|---|---:|---:|---|---|
+| `signature` | `0` | `4` | `u32` | ASCII "CBDT" in little-endian (0x54444243). |
+| `header_version` | `4` | `2` | `u16` | Header format version (must be 1). |
+| `header_size` | `6` | `2` | `u16` | Header size in bytes (must be 16 for v1). |
+| `entry_size` | `8` | `2` | `u16` | Device capability descriptor entry size in bytes. |
+| `entry_count` | `10` | `2` | `u16` | Number of device entries in the BDT. |
+| `total_size` | `12` | `4` | `u32` | Total size of the BDT region (header + entries). |
+
+### Device Capability Descriptor (V1)
+
+- Format: `DEVICE_CAP_DESC_V1`, version `1`, size `64` bytes
+
+| Field | Offset | Width (bytes) | Type | Description |
+|---|---:|---:|---|---|
+| `desc_version` | `0` | `2` | `u16` | Descriptor format version (must be 1). |
+| `desc_size_bytes` | `2` | `2` | `u16` | Descriptor size in bytes (must be 64 for v1). |
+| `class_id` | `4` | `2` | `u16` | Primary device class ID (see device_classes). |
+| `subclass_id` | `6` | `2` | `u16` | Subclass ID within the device class (0 if unused). |
+| `vendor_id` | `8` | `2` | `u16` | Vendor ID (0x0000 for Project Carbon). |
+| `device_id` | `10` | `2` | `u16` | Device ID within the vendor namespace. |
+| `instance_id` | `12` | `2` | `u16` | Instance index for multiple identical devices. |
+| `revision_id` | `14` | `2` | `u16` | Device revision ID (implementation-defined). |
+| `compat_flags` | `16` | `4` | `u32` | Compatibility personality feature flags (compat_feature_bits). |
+| `turbo_flags` | `20` | `4` | `u32` | Turbo personality feature flags (turbo_feature_bits). |
+| `feature_word0` | `24` | `4` | `u32` | Standard numeric feature fields (feature_fields word 0). |
+| `feature_word1` | `28` | `4` | `u32` | Standard numeric feature fields (feature_fields word 1). |
+| `csr_base` | `32` | `8` | `u64` | CSR base address (0 if none). |
+| `compat_io_base` | `40` | `8` | `u64` | Compatibility I/O base (port or MMIO base; 0 if none). |
+| `mmio_base` | `48` | `8` | `u64` | High-level MMIO base for device windows (0 if none). |
+| `mmio_size` | `56` | `4` | `u32` | MMIO window size in bytes (0 if none). |
+| `queue_count` | `60` | `2` | `u16` | Number of turbo queues exposed by the device. |
+| `irq_count` | `62` | `2` | `u16` | Number of IRQ sources exposed by the device. |
+
+### Device Compatibility Feature Bits
+
+| Feature | Bit | Description |
+|---|---:|---|
+| `DEVFEAT_COMPAT_POLLING` | `0` | Polling-complete semantics implemented. |
+| `DEVFEAT_COMPAT_IRQ` | `1` | Interrupts implemented (optional for completion). |
+| `DEVFEAT_COMPAT_PORT_IO` | `2` | Compatibility register map can be exposed on I/O space. |
+| `DEVFEAT_COMPAT_MMIO` | `3` | Compatibility register map can be exposed on MMIO space. |
+| `DEVFEAT_COMPAT_WAIT` | `4` | WAIT/backpressure on compatibility accesses is honored. |
+
+### Device Turbo Feature Bits
+
+| Feature | Bit | Description |
+|---|---:|---|
+| `DEVFEAT_TURBO_QUEUE` | `0` | Turbo queue submission/completion rings supported. |
+| `DEVFEAT_TURBO_DMA` | `1` | Device can initiate fabric DMA transactions. |
+| `DEVFEAT_TURBO_TIMESTAMPS` | `2` | Timestamping supported for turbo operations. |
+| `DEVFEAT_TURBO_PERF` | `3` | Performance counters implemented. |
+| `DEVFEAT_TURBO_WATERMARK_IRQ` | `4` | FIFO watermark interrupts available. |
+
+### Device Feature Fields
+
+| Field | Word | Bits | Description |
+|---|---:|---|---|
+| `DEVFEAT_FIELD_RX_FIFO_DEPTH` | `0` | `7:0` | RX FIFO depth in entries (0 if not present). |
+| `DEVFEAT_FIELD_TX_FIFO_DEPTH` | `0` | `15:8` | TX FIFO depth in entries (0 if not present). |
+| `DEVFEAT_FIELD_DMA_CHANNELS` | `0` | `23:16` | DMA channel count (0 if not applicable). |
+| `DEVFEAT_FIELD_TIMER_COUNT` | `0` | `31:24` | Timer counter count (0 if not applicable). |
+| `DEVFEAT_FIELD_TIMESTAMP_BITS` | `1` | `7:0` | Timestamp width in bits (0 if not supported). |
+| `DEVFEAT_FIELD_QUEUE_COUNT` | `1` | `15:8` | Turbo queue count (0 if none). |
+| `DEVFEAT_FIELD_QUEUE_DEPTH` | `1` | `31:16` | Turbo queue ring depth (entries, 0 if not present). |
+
+### Device Common CSR Register IDs
+
+| Register | Reg ID | Access | Description |
+|---|---:|---|---|
+| `DEVCSR_ID` | `0x000` | `CSR_RO` | Device identification (class/vendor/device/revision encoding). |
+| `DEVCSR_STATUS` | `0x001` | `CSR_RO` | Device status summary (busy/error flags). |
+| `DEVCSR_CTRL` | `0x002` | `CSR_RW` | Device control (enable/reset). |
+| `DEVCSR_MODE` | `0x003` | `CSR_RW` | Device personality/mode selection. |
+| `DEVCSR_FEATURE0` | `0x004` | `CSR_RO` | Feature word 0 (mirrors descriptor feature_word0). |
+| `DEVCSR_FEATURE1` | `0x005` | `CSR_RO` | Feature word 1 (mirrors descriptor feature_word1). |
+| `DEVCSR_QUEUE_SUBMIT_BASE_LO` | `0x010` | `CSR_RW` | Turbo submission ring base (low 32). |
+| `DEVCSR_QUEUE_SUBMIT_BASE_HI` | `0x011` | `CSR_RW` | Turbo submission ring base (high 32). |
+| `DEVCSR_QUEUE_SUBMIT_MASK` | `0x012` | `CSR_RW` | Turbo submission ring mask (entries-1). |
+| `DEVCSR_QUEUE_DOORBELL` | `0x013` | `CSR_WO` | Turbo submission doorbell. |
+| `DEVCSR_QUEUE_COMP_BASE_LO` | `0x014` | `CSR_RW` | Turbo completion ring base (low 32). |
+| `DEVCSR_QUEUE_COMP_BASE_HI` | `0x015` | `CSR_RW` | Turbo completion ring base (high 32). |
+| `DEVCSR_QUEUE_COMP_MASK` | `0x016` | `CSR_RW` | Turbo completion ring mask (entries-1). |
+| `DEVCSR_QUEUE_COMP_DOORBELL` | `0x017` | `CSR_RO` | Completion doorbell (device -> host pulse). |
+| `DEVCSR_QUEUE_STATUS` | `0x018` | `CSR_RO` | Queue status (head/tail snapshot or device-specific). |
+| `DEVCSR_PERF0` | `0x020` | `CSR_RO` | Performance counter 0 (device-specific meaning). |
+| `DEVCSR_PERF1` | `0x021` | `CSR_RO` | Performance counter 1 (device-specific meaning). |
+
+### Turbo Queue Submission Descriptor (V1)
+
+- Format: `TURBO_SUBMIT_DESC_V1`, version `1`, size `32` bytes
+
+| Field | Offset | Width (bytes) | Type | Description |
+|---|---:|---:|---|---|
+| `desc_version` | `0` | `2` | `u16` | Descriptor format version (must be 1 for v1.0). |
+| `desc_size_dw` | `2` | `2` | `u16` | Descriptor size in 32-bit words (must be 8 for this format). |
+| `queue_id` | `4` | `2` | `u16` | Queue identifier. |
+| `opcode` | `6` | `2` | `u16` | Device-defined operation code. |
+| `flags` | `8` | `4` | `u32` | Operation flags (reserved bits must be 0). |
+| `tag` | `12` | `4` | `u32` | Opaque tag returned in the completion record. |
+| `data_ptr` | `16` | `8` | `u64` | Pointer to payload or buffer (device-defined). |
+| `data_len` | `24` | `4` | `u32` | Payload length in bytes (device-defined). |
+| `data_stride` | `28` | `4` | `u32` | Payload stride in bytes (0=contiguous). |
+
+### Turbo Queue Completion Record (V1)
+
+- Format: `TURBO_COMP_REC_V1`, version `1`, size `16` bytes
+
+| Field | Offset | Width (bytes) | Type | Description |
+|---|---:|---:|---|---|
+| `tag` | `0` | `4` | `u32` | Tag from the submission descriptor. |
+| `status` | `4` | `2` | `u16` | Completion status code. |
+| `ext_status` | `6` | `2` | `u16` | Optional extended status (device-defined). |
+| `bytes_written` | `8` | `4` | `u32` | Optional byte count written (0 if unused). |
+| `reserved0` | `12` | `4` | `u32` | Reserved; must be 0. |
+
+### Turbo Queue Completion Status Codes
+
+| Name | Value | Description |
+|---|---:|---|
+| `TURBO_STATUS_OK` | `0` | Success. |
+| `TURBO_STATUS_INVALID` | `1` | Invalid/unsupported opcode or descriptor. |
+| `TURBO_STATUS_FAULT` | `2` | Access fault or invalid pointer/length. |
+| `TURBO_STATUS_BUSY` | `3` | Device busy or queue full. |
+| `TURBO_STATUS_UNSUPPORTED` | `4` | Feature unsupported. |
+
+## H) Z90 Fast-Path ISA (Opcode Pages)
 
 ### Opcode Pages
 
@@ -341,7 +601,7 @@ result_stride: 0
 | `Z90_P1_OP_LEA` | `3` | LEA Xd, [base + index + disp8]. |
 | `Z90_P1_OP_CAS16` | `4` | CAS16 Xd, [base + disp8], Xs (Xd expected/old, Xs desired; Z90.Z=success). |
 
-## H) Numeric Formats
+## I) Numeric Formats
 
 | Name | Value | Width | Exp | Frac | Bias | Description |
 |---|---:|---:|---:|---:|---:|---|

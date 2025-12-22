@@ -192,6 +192,7 @@ def _load_specs(spec_dir: Path) -> Dict[str, Dict[str, Any]]:
         "mode_switch.yaml",
         "discovery.yaml",
         "csr_map.yaml",
+        "device_model.yaml",
         "formats.yaml",
         "fabric.yaml",
         "cai.yaml",
@@ -438,6 +439,101 @@ def _validate_cai(spec: Dict[str, Any]) -> None:
     _expect_type(spec["completion_status_codes"], list, where=f"{where}:completion_status_codes")
 
 
+def _validate_device_model(spec: Dict[str, Any]) -> None:
+    where = "device_model.yaml"
+
+    for k in [
+        "device_classes",
+        "device_capability_descriptor",
+        "bdt_header",
+        "compat_feature_bits",
+        "turbo_feature_bits",
+        "feature_fields",
+        "device_csr_common",
+        "turbo_submission_descriptor",
+        "turbo_completion_record",
+        "turbo_completion_status_codes",
+    ]:
+        if k not in spec:
+            raise SpecError(f"{where}: missing {k}")
+
+    classes = spec["device_classes"]
+    _expect_type(classes, dict, where=f"{where}:device_classes")
+    _require_keys(classes, ["classes"], where=f"{where}:device_classes")
+    _expect_type(classes["classes"], list, where=f"{where}:device_classes.classes")
+    seen_class_vals = set()
+    for c in classes["classes"]:
+        _expect_type(c, dict, where=f"{where}:device_classes.classes[]")
+        _require_keys(c, ["name", "value", "description"], where=f"{where}:device_classes.classes[]")
+        v = c["value"]
+        if not isinstance(v, int) or v < 0 or v > 0xFFFF:
+            raise SpecError(f"{where}:{c['name']}: class value must be u16")
+        if v in seen_class_vals:
+            raise SpecError(f"{where}:{c['name']}: duplicate class value {v}")
+        seen_class_vals.add(v)
+
+    for desc_key in ["bdt_header", "device_capability_descriptor", "turbo_submission_descriptor", "turbo_completion_record"]:
+        desc = spec[desc_key]
+        _expect_type(desc, dict, where=f"{where}:{desc_key}")
+        _require_keys(desc, ["name", "version", "size_bytes", "fields"], where=f"{where}:{desc_key}")
+        _expect_type(desc["fields"], list, where=f"{where}:{desc_key}.fields")
+
+    for bit_key in ["compat_feature_bits", "turbo_feature_bits"]:
+        bits = spec[bit_key]
+        _expect_type(bits, dict, where=f"{where}:{bit_key}")
+        _require_keys(bits, ["bits"], where=f"{where}:{bit_key}")
+        _expect_type(bits["bits"], list, where=f"{where}:{bit_key}.bits")
+        seen = set()
+        for b in bits["bits"]:
+            _expect_type(b, dict, where=f"{where}:{bit_key}.bits[]")
+            _require_keys(b, ["name", "bit", "description"], where=f"{where}:{bit_key}.bits[]")
+            bit = b["bit"]
+            if not isinstance(bit, int) or bit < 0 or bit > 31:
+                raise SpecError(f"{where}:{b['name']}: feature bit must be 0..31")
+            if bit in seen:
+                raise SpecError(f"{where}:{b['name']}: duplicate feature bit {bit}")
+            seen.add(bit)
+
+    fields = spec["feature_fields"]
+    _expect_type(fields, dict, where=f"{where}:feature_fields")
+    _require_keys(fields, ["fields"], where=f"{where}:feature_fields")
+    _expect_type(fields["fields"], list, where=f"{where}:feature_fields.fields")
+    for f in fields["fields"]:
+        _expect_type(f, dict, where=f"{where}:feature_fields.fields[]")
+        _require_keys(f, ["name", "word", "bits", "description"], where=f"{where}:feature_fields.fields[]")
+        word = f["word"]
+        if not isinstance(word, int) or word < 0 or word > 3:
+            raise SpecError(f"{where}:{f['name']}: word must be 0..3")
+        bits = f["bits"]
+        if not isinstance(bits, list) or len(bits) != 2:
+            raise SpecError(f"{where}:{f['name']}: bits must be [msb, lsb]")
+        msb = bits[0]
+        lsb = bits[1]
+        if not isinstance(msb, int) or not isinstance(lsb, int) or msb < lsb:
+            raise SpecError(f"{where}:{f['name']}: invalid bit range")
+
+    devcsr = spec["device_csr_common"]
+    _expect_type(devcsr, dict, where=f"{where}:device_csr_common")
+    _require_keys(devcsr, ["registers"], where=f"{where}:device_csr_common")
+    _expect_type(devcsr["registers"], list, where=f"{where}:device_csr_common.registers")
+    seen_reg = set()
+    for r in devcsr["registers"]:
+        _expect_type(r, dict, where=f"{where}:device_csr_common.registers[]")
+        _require_keys(r, ["name", "reg_id", "access", "description"], where=f"{where}:device_csr_common.registers[]")
+        reg_id = r["reg_id"]
+        if not isinstance(reg_id, int) or reg_id < 0 or reg_id > 0xFFF:
+            raise SpecError(f"{where}:{r['name']}: reg_id must be 0..0xFFF")
+        if reg_id in seen_reg:
+            raise SpecError(f"{where}:{r['name']}: duplicate reg_id {reg_id}")
+        seen_reg.add(reg_id)
+
+    codes = spec["turbo_completion_status_codes"]
+    _expect_type(codes, list, where=f"{where}:turbo_completion_status_codes")
+    for c in codes:
+        _expect_type(c, dict, where=f"{where}:turbo_completion_status_codes[]")
+        _require_keys(c, ["name", "value", "description"], where=f"{where}:turbo_completion_status_codes[]")
+
+
 def _validate_isa_z90(spec: Dict[str, Any]) -> None:
     where = "isa_z90.yaml"
     pages = spec.get("opcode_pages")
@@ -473,6 +569,7 @@ def _validate_specs(specs: Dict[str, Dict[str, Any]]) -> None:
     _validate_mode_switch(specs["mode_switch.yaml"])
     _validate_discovery(specs["discovery.yaml"])
     _validate_csr_map(specs["csr_map.yaml"])
+    _validate_device_model(specs["device_model.yaml"])
     _validate_formats(specs["formats.yaml"])
     _validate_fabric(specs["fabric.yaml"])
     _validate_cai(specs["cai.yaml"])
@@ -484,6 +581,7 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
     mode = specs["mode_switch.yaml"]
     disc = specs["discovery.yaml"]
     csr = specs["csr_map.yaml"]
+    dev = specs["device_model.yaml"]
     formats = specs["formats.yaml"]
     fabric = specs["fabric.yaml"]
     cai = specs["cai.yaml"]
@@ -632,6 +730,86 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"  localparam int unsigned CARBON_{s['name']} = {s['value']};")
     out.append("")
 
+    out.append("  // Device class identifiers")
+    for c in dev["device_classes"]["classes"]:
+        out.append(f"  localparam int unsigned CARBON_{c['name']} = {int(c['value'])};")
+    out.append("")
+
+    out.append("  // Board Device Table (BDT) header")
+    bdt = dev["bdt_header"]
+    out.append(f"  localparam int unsigned CARBON_{bdt['name']}_VERSION = {bdt['version']};")
+    out.append(f"  localparam int unsigned CARBON_{bdt['name']}_SIZE_BYTES = {bdt['size_bytes']};")
+    for f in bdt["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{bdt['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
+    out.append("  // Device capability descriptor")
+    dcd = dev["device_capability_descriptor"]
+    out.append(f"  localparam int unsigned CARBON_{dcd['name']}_VERSION = {dcd['version']};")
+    out.append(f"  localparam int unsigned CARBON_{dcd['name']}_SIZE_BYTES = {dcd['size_bytes']};")
+    for f in dcd["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{dcd['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
+    out.append("  // Device compatibility feature bits")
+    for feat in dev["compat_feature_bits"]["bits"]:
+        b = int(feat["bit"])
+        out.append(f"  localparam int unsigned CARBON_{feat['name']}_BIT = {b};")
+        out.append(f"  localparam logic [31:0] CARBON_{feat['name']}_MASK = 32'h{1 << b:08x};")
+    out.append("")
+
+    out.append("  // Device turbo feature bits")
+    for feat in dev["turbo_feature_bits"]["bits"]:
+        b = int(feat["bit"])
+        out.append(f"  localparam int unsigned CARBON_{feat['name']}_BIT = {b};")
+        out.append(f"  localparam logic [31:0] CARBON_{feat['name']}_MASK = 32'h{1 << b:08x};")
+    out.append("")
+
+    out.append("  // Device feature field positions")
+    for f in dev["feature_fields"]["fields"]:
+        msb = int(f["bits"][0])
+        lsb = int(f["bits"][1])
+        width = msb - lsb + 1
+        mask = ((1 << width) - 1) << lsb
+        out.append(f"  localparam int unsigned CARBON_{f['name']}_WORD = {int(f['word'])};")
+        out.append(f"  localparam int unsigned CARBON_{f['name']}_LSB = {lsb};")
+        out.append(f"  localparam int unsigned CARBON_{f['name']}_WIDTH = {width};")
+        out.append(f"  localparam logic [31:0] CARBON_{f['name']}_MASK = 32'h{mask:08x};")
+    out.append("")
+
+    out.append("  // Device common CSR register IDs")
+    for r in dev["device_csr_common"]["registers"]:
+        out.append(f"  localparam int unsigned CARBON_{r['name']} = {int(r['reg_id'])};")
+    out.append("")
+
+    out.append("  // Turbo queue descriptor formats")
+    tdesc = dev["turbo_submission_descriptor"]
+    out.append(f"  localparam int unsigned CARBON_{tdesc['name']}_VERSION = {tdesc['version']};")
+    out.append(f"  localparam int unsigned CARBON_{tdesc['name']}_SIZE_BYTES = {tdesc['size_bytes']};")
+    for f in tdesc["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{tdesc['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
+    tcomp = dev["turbo_completion_record"]
+    out.append(f"  localparam int unsigned CARBON_{tcomp['name']}_VERSION = {tcomp['version']};")
+    out.append(f"  localparam int unsigned CARBON_{tcomp['name']}_SIZE_BYTES = {tcomp['size_bytes']};")
+    for f in tcomp["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{tcomp['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
+    out.append("  // Turbo queue completion status codes")
+    for s in dev["turbo_completion_status_codes"]:
+        out.append(f"  localparam int unsigned CARBON_{s['name']} = {s['value']};")
+    out.append("")
+
     out.append("  // Z90 opcode pages and encodings")
     out.append("  // Opcode page prefixes")
     for page in isa_z90["opcode_pages"]:
@@ -668,6 +846,7 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
     mode = specs["mode_switch.yaml"]
     disc = specs["discovery.yaml"]
     csr = specs["csr_map.yaml"]
+    dev = specs["device_model.yaml"]
     formats = specs["formats.yaml"]
     fabric = specs["fabric.yaml"]
     cai = specs["cai.yaml"]
@@ -795,6 +974,78 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"#define CARBON_{s['name']} ({s['value']}u)")
     out.append("")
 
+    out.append("/* Device class identifiers */")
+    for c in dev["device_classes"]["classes"]:
+        out.append(f"#define CARBON_{c['name']} ({int(c['value'])}u)")
+    out.append("")
+
+    out.append("/* Board Device Table (BDT) header */")
+    bdt = dev["bdt_header"]
+    out.append(f"#define CARBON_{bdt['name']}_VERSION ({int(bdt['version'])}u)")
+    out.append(f"#define CARBON_{bdt['name']}_SIZE_BYTES ({int(bdt['size_bytes'])}u)")
+    for f in bdt["fields"]:
+        out.append(f"#define CARBON_{bdt['name']}_OFF_{str(f['name']).upper()} ({int(f['offset'])}u)")
+    out.append("")
+
+    out.append("/* Device capability descriptor */")
+    dcd = dev["device_capability_descriptor"]
+    out.append(f"#define CARBON_{dcd['name']}_VERSION ({int(dcd['version'])}u)")
+    out.append(f"#define CARBON_{dcd['name']}_SIZE_BYTES ({int(dcd['size_bytes'])}u)")
+    for f in dcd["fields"]:
+        out.append(f"#define CARBON_{dcd['name']}_OFF_{str(f['name']).upper()} ({int(f['offset'])}u)")
+    out.append("")
+
+    out.append("/* Device compatibility feature bits */")
+    for feat in dev["compat_feature_bits"]["bits"]:
+        bit = int(feat["bit"])
+        out.append(f"#define CARBON_{feat['name']}_BIT ({bit}u)")
+        out.append(f"#define CARBON_{feat['name']}_MASK (UINT32_C(1) << {bit})")
+    out.append("")
+
+    out.append("/* Device turbo feature bits */")
+    for feat in dev["turbo_feature_bits"]["bits"]:
+        bit = int(feat["bit"])
+        out.append(f"#define CARBON_{feat['name']}_BIT ({bit}u)")
+        out.append(f"#define CARBON_{feat['name']}_MASK (UINT32_C(1) << {bit})")
+    out.append("")
+
+    out.append("/* Device feature field positions */")
+    for f in dev["feature_fields"]["fields"]:
+        msb = int(f["bits"][0])
+        lsb = int(f["bits"][1])
+        width = msb - lsb + 1
+        mask = ((1 << width) - 1) << lsb
+        out.append(f"#define CARBON_{f['name']}_WORD ({int(f['word'])}u)")
+        out.append(f"#define CARBON_{f['name']}_LSB ({lsb}u)")
+        out.append(f"#define CARBON_{f['name']}_WIDTH ({width}u)")
+        out.append(f"#define CARBON_{f['name']}_MASK ({_c_hex_u32(mask)})")
+    out.append("")
+
+    out.append("/* Device common CSR register IDs */")
+    for r in dev["device_csr_common"]["registers"]:
+        out.append(f"#define CARBON_{r['name']} ({int(r['reg_id'])}u)")
+    out.append("")
+
+    out.append("/* Turbo queue descriptor formats */")
+    tdesc = dev["turbo_submission_descriptor"]
+    out.append(f"#define CARBON_{tdesc['name']}_VERSION ({int(tdesc['version'])}u)")
+    out.append(f"#define CARBON_{tdesc['name']}_SIZE_BYTES ({int(tdesc['size_bytes'])}u)")
+    for f in tdesc["fields"]:
+        out.append(f"#define CARBON_{tdesc['name']}_OFF_{str(f['name']).upper()} ({int(f['offset'])}u)")
+    out.append("")
+
+    tcomp = dev["turbo_completion_record"]
+    out.append(f"#define CARBON_{tcomp['name']}_VERSION ({int(tcomp['version'])}u)")
+    out.append(f"#define CARBON_{tcomp['name']}_SIZE_BYTES ({int(tcomp['size_bytes'])}u)")
+    for f in tcomp["fields"]:
+        out.append(f"#define CARBON_{tcomp['name']}_OFF_{str(f['name']).upper()} ({int(f['offset'])}u)")
+    out.append("")
+
+    out.append("/* Turbo queue completion status codes */")
+    for s in dev["turbo_completion_status_codes"]:
+        out.append(f"#define CARBON_{s['name']} ({int(s['value'])}u)")
+    out.append("")
+
     out.append("/* Z90 opcode pages and encodings */")
     out.append("/* Opcode page prefixes */")
     for page in isa_z90["opcode_pages"]:
@@ -826,6 +1077,7 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
     mode = specs["mode_switch.yaml"]
     disc = specs["discovery.yaml"]
     csr = specs["csr_map.yaml"]
+    dev = specs["device_model.yaml"]
     formats = specs["formats.yaml"]
     fabric = specs["fabric.yaml"]
     cai = specs["cai.yaml"]
@@ -1021,7 +1273,134 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
             out.append("```")
             out.append("")
 
-    out.append("## G) Z90 Fast-Path ISA (Opcode Pages)")
+    out.append("## G) Device Model, BDT, and Turbo Queues")
+    out.append("")
+    dpm = dev["dual_personality_device_model"]
+    out.append("### Dual Personality Device Model")
+    out.append("")
+    out.append(f"- {_md_escape(dpm['description'])}")
+    out.append("")
+    out.append("### Compatibility Personality")
+    out.append("")
+    for req in dpm.get("compatibility_personality", {}).get("requirements", []):
+        out.append(f"- {_md_escape(req)}")
+    out.append("")
+    out.append("### Turbo Personality")
+    out.append("")
+    for req in dpm.get("turbo_personality", {}).get("requirements", []):
+        out.append(f"- {_md_escape(req)}")
+    out.append("")
+    out.append("### Polling-Complete Semantics")
+    out.append("")
+    for req in dev.get("polling_completion", {}).get("requirements", []):
+        out.append(f"- {_md_escape(req)}")
+    out.append("")
+
+    out.append("### Device Class IDs")
+    out.append("")
+    out.append("| Class | Value | Description |")
+    out.append("|---|---:|---|")
+    for c in dev["device_classes"]["classes"]:
+        out.append(f"| `{c['name']}` | `{_fmt_hex(int(c['value']), 16)}` | {_md_escape(c['description'])} |")
+    out.append("")
+
+    out.append("### BDT Header (V1)")
+    out.append("")
+    bdt = dev["bdt_header"]
+    out.append(f"- Format: `{bdt['name']}`, version `{bdt['version']}`, size `{bdt['size_bytes']}` bytes")
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in bdt["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Device Capability Descriptor (V1)")
+    out.append("")
+    dcd = dev["device_capability_descriptor"]
+    out.append(f"- Format: `{dcd['name']}`, version `{dcd['version']}`, size `{dcd['size_bytes']}` bytes")
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in dcd["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Device Compatibility Feature Bits")
+    out.append("")
+    out.append("| Feature | Bit | Description |")
+    out.append("|---|---:|---|")
+    for feat in dev["compat_feature_bits"]["bits"]:
+        out.append(f"| `{feat['name']}` | `{feat['bit']}` | {_md_escape(feat['description'])} |")
+    out.append("")
+
+    out.append("### Device Turbo Feature Bits")
+    out.append("")
+    out.append("| Feature | Bit | Description |")
+    out.append("|---|---:|---|")
+    for feat in dev["turbo_feature_bits"]["bits"]:
+        out.append(f"| `{feat['name']}` | `{feat['bit']}` | {_md_escape(feat['description'])} |")
+    out.append("")
+
+    out.append("### Device Feature Fields")
+    out.append("")
+    out.append("| Field | Word | Bits | Description |")
+    out.append("|---|---:|---|---|")
+    for f in dev["feature_fields"]["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['word']}` | `{f['bits'][0]}:{f['bits'][1]}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Device Common CSR Register IDs")
+    out.append("")
+    out.append("| Register | Reg ID | Access | Description |")
+    out.append("|---|---:|---|---|")
+    for r in dev["device_csr_common"]["registers"]:
+        out.append(
+            f"| `{r['name']}` | `{_fmt_hex(int(r['reg_id']), 12)}` | `{r['access']}` | {_md_escape(r['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Turbo Queue Submission Descriptor (V1)")
+    out.append("")
+    tdesc = dev["turbo_submission_descriptor"]
+    out.append(f"- Format: `{tdesc['name']}`, version `{tdesc['version']}`, size `{tdesc['size_bytes']}` bytes")
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in tdesc["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Turbo Queue Completion Record (V1)")
+    out.append("")
+    tcomp = dev["turbo_completion_record"]
+    out.append(f"- Format: `{tcomp['name']}`, version `{tcomp['version']}`, size `{tcomp['size_bytes']}` bytes")
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in tcomp["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Turbo Queue Completion Status Codes")
+    out.append("")
+    out.append("| Name | Value | Description |")
+    out.append("|---|---:|---|")
+    for s in dev["turbo_completion_status_codes"]:
+        out.append(f"| `{s['name']}` | `{s['value']}` | {_md_escape(s['description'])} |")
+    out.append("")
+
+    out.append("## H) Z90 Fast-Path ISA (Opcode Pages)")
     out.append("")
     out.append("### Opcode Pages")
     out.append("")
@@ -1058,7 +1437,7 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"| `{o['name']}` | `{o['value']}` | {_md_escape(o['description'])} |")
     out.append("")
 
-    out.append("## H) Numeric Formats")
+    out.append("## I) Numeric Formats")
     out.append("")
     out.append("| Name | Value | Width | Exp | Frac | Bias | Description |")
     out.append("|---|---:|---:|---:|---:|---:|---|")

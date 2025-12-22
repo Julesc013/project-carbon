@@ -1,0 +1,483 @@
+spec_version: 1.0
+name: device_model
+description: Dual-personality device model, capability descriptors, and turbo queue schema.
+revision: v1.0.0
+created: 2025-12-22
+stable: true
+
+dual_personality_device_model:
+  description: Universal model for all Carbon devices; each device exposes a compatibility personality and a turbo personality.
+  compatibility_personality:
+    description: Legacy-compatible, ordered, deterministic behavior suitable for RC2014/CP-M era software.
+    requirements:
+      - Ordered I/O semantics; reads and writes observe program order.
+      - WAIT/ready backpressure is honored; no hidden reordering.
+      - Registers are deterministic; no turbo-only side effects.
+  turbo_personality:
+    description: High-throughput internal engine accessed via queues/FIFOs/DMA while preserving functional determinism.
+    requirements:
+      - Uses fast data-plane paths (queues, DMA, or large FIFOs).
+      - May complete at different speeds than compatibility mode, but results must match.
+      - Turbo features are gated by MODEFLAGS and tier policy.
+  selection:
+    description: Software selects the active personality via tier/mode policy and device control registers.
+    rules:
+      - MODEFLAG_STRICT forces compatibility personality even when turbo tiers are active.
+      - Devices must report both personalities in capability descriptors if implemented.
+
+polling_completion:
+  description: All devices must provide a deterministic, polling-friendly completion mechanism.
+  requirements:
+    - Every operation must have a completion indicator that can be polled without interrupts.
+    - Completion indicators must be deterministic and monotonic for a given operation.
+    - Interrupts, if present, are optional accelerators for the same completion state.
+
+bdt_header:
+  name: BDT_HEADER_V1
+  version: 1
+  size_bytes: 16
+  description: Board Device Table header placed at the base of the BDT region.
+  fields:
+    - name: signature
+      offset: 0
+      width_bytes: 4
+      type: u32
+      description: ASCII "CBDT" in little-endian (0x54444243).
+    - name: header_version
+      offset: 4
+      width_bytes: 2
+      type: u16
+      description: Header format version (must be 1).
+    - name: header_size
+      offset: 6
+      width_bytes: 2
+      type: u16
+      description: Header size in bytes (must be 16 for v1).
+    - name: entry_size
+      offset: 8
+      width_bytes: 2
+      type: u16
+      description: Device capability descriptor entry size in bytes.
+    - name: entry_count
+      offset: 10
+      width_bytes: 2
+      type: u16
+      description: Number of device entries in the BDT.
+    - name: total_size
+      offset: 12
+      width_bytes: 4
+      type: u32
+      description: Total size of the BDT region (header + entries).
+
+device_capability_descriptor:
+  name: DEVICE_CAP_DESC_V1
+  version: 1
+  size_bytes: 64
+  description: Fixed-size descriptor used by BDT and CPUID/CAPS to describe devices.
+  fields:
+    - name: desc_version
+      offset: 0
+      width_bytes: 2
+      type: u16
+      description: Descriptor format version (must be 1).
+    - name: desc_size_bytes
+      offset: 2
+      width_bytes: 2
+      type: u16
+      description: Descriptor size in bytes (must be 64 for v1).
+    - name: class_id
+      offset: 4
+      width_bytes: 2
+      type: u16
+      description: Primary device class ID (see device_classes).
+    - name: subclass_id
+      offset: 6
+      width_bytes: 2
+      type: u16
+      description: Subclass ID within the device class (0 if unused).
+    - name: vendor_id
+      offset: 8
+      width_bytes: 2
+      type: u16
+      description: Vendor ID (0x0000 for Project Carbon).
+    - name: device_id
+      offset: 10
+      width_bytes: 2
+      type: u16
+      description: Device ID within the vendor namespace.
+    - name: instance_id
+      offset: 12
+      width_bytes: 2
+      type: u16
+      description: Instance index for multiple identical devices.
+    - name: revision_id
+      offset: 14
+      width_bytes: 2
+      type: u16
+      description: Device revision ID (implementation-defined).
+    - name: compat_flags
+      offset: 16
+      width_bytes: 4
+      type: u32
+      description: Compatibility personality feature flags (compat_feature_bits).
+    - name: turbo_flags
+      offset: 20
+      width_bytes: 4
+      type: u32
+      description: Turbo personality feature flags (turbo_feature_bits).
+    - name: feature_word0
+      offset: 24
+      width_bytes: 4
+      type: u32
+      description: Standard numeric feature fields (feature_fields word 0).
+    - name: feature_word1
+      offset: 28
+      width_bytes: 4
+      type: u32
+      description: Standard numeric feature fields (feature_fields word 1).
+    - name: csr_base
+      offset: 32
+      width_bytes: 8
+      type: u64
+      description: CSR base address (0 if none).
+    - name: compat_io_base
+      offset: 40
+      width_bytes: 8
+      type: u64
+      description: Compatibility I/O base (port or MMIO base; 0 if none).
+    - name: mmio_base
+      offset: 48
+      width_bytes: 8
+      type: u64
+      description: High-level MMIO base for device windows (0 if none).
+    - name: mmio_size
+      offset: 56
+      width_bytes: 4
+      type: u32
+      description: MMIO window size in bytes (0 if none).
+    - name: queue_count
+      offset: 60
+      width_bytes: 2
+      type: u16
+      description: Number of turbo queues exposed by the device.
+    - name: irq_count
+      offset: 62
+      width_bytes: 2
+      type: u16
+      description: Number of IRQ sources exposed by the device.
+
+device_classes:
+  description: Canonical device class identifiers for CPUID/BDT enumeration.
+  class_id_bits: 16
+  classes:
+    - name: DEVCLASS_CPU
+      value: 0x0001
+      description: CPU cores (Z85/Z90/eZ90/8096/etc).
+    - name: DEVCLASS_FPU
+      value: 0x0002
+      description: FPU/accelerator cores (Am951x-class, 8097).
+    - name: DEVCLASS_UART
+      value: 0x0010
+      description: UART console devices.
+    - name: DEVCLASS_SIO
+      value: 0x0011
+      description: Serial I/O controllers (multi-channel).
+    - name: DEVCLASS_PIO
+      value: 0x0012
+      description: Parallel I/O controllers.
+    - name: DEVCLASS_TIMER
+      value: 0x0013
+      description: Timers/CTC blocks and monotonic ticks.
+    - name: DEVCLASS_IRQ_CTRL
+      value: 0x0014
+      description: Interrupt controllers / routers.
+    - name: DEVCLASS_DMA
+      value: 0x0020
+      description: DMA engines (mem-to-mem, scatter/gather).
+    - name: DEVCLASS_BLOCK_STORAGE
+      value: 0x0030
+      description: Block storage devices (fixed blocks).
+    - name: DEVCLASS_CHAR_STORAGE
+      value: 0x0031
+      description: Character/stream storage devices.
+    - name: DEVCLASS_RTC
+      value: 0x0032
+      description: Real-time clock devices.
+    - name: DEVCLASS_GPIO
+      value: 0x0033
+      description: General-purpose I/O pin controllers.
+    - name: DEVCLASS_TRACE
+      value: 0x0034
+      description: Trace/telemetry devices.
+  reserved_ranges:
+    - range: [0x0100, 0x01FF]
+      description: Reserved for future GPU-class devices.
+    - range: [0x0200, 0x02FF]
+      description: Reserved for future PPU-class devices.
+    - range: [0x0300, 0x0FFF]
+      description: Reserved for future standard peripherals.
+    - range: [0x1000, 0xFFFF]
+      description: Reserved for vendor-specific classes.
+
+compat_feature_bits:
+  description: Compatibility personality feature flags (compat_flags).
+  bits:
+    - name: DEVFEAT_COMPAT_POLLING
+      bit: 0
+      description: Polling-complete semantics implemented.
+    - name: DEVFEAT_COMPAT_IRQ
+      bit: 1
+      description: Interrupts implemented (optional for completion).
+    - name: DEVFEAT_COMPAT_PORT_IO
+      bit: 2
+      description: Compatibility register map can be exposed on I/O space.
+    - name: DEVFEAT_COMPAT_MMIO
+      bit: 3
+      description: Compatibility register map can be exposed on MMIO space.
+    - name: DEVFEAT_COMPAT_WAIT
+      bit: 4
+      description: WAIT/backpressure on compatibility accesses is honored.
+
+turbo_feature_bits:
+  description: Turbo personality feature flags (turbo_flags).
+  bits:
+    - name: DEVFEAT_TURBO_QUEUE
+      bit: 0
+      description: Turbo queue submission/completion rings supported.
+    - name: DEVFEAT_TURBO_DMA
+      bit: 1
+      description: Device can initiate fabric DMA transactions.
+    - name: DEVFEAT_TURBO_TIMESTAMPS
+      bit: 2
+      description: Timestamping supported for turbo operations.
+    - name: DEVFEAT_TURBO_PERF
+      bit: 3
+      description: Performance counters implemented.
+    - name: DEVFEAT_TURBO_WATERMARK_IRQ
+      bit: 4
+      description: FIFO watermark interrupts available.
+
+feature_fields:
+  description: Standard numeric feature fields packed into feature_word0/1.
+  fields:
+    - name: DEVFEAT_FIELD_RX_FIFO_DEPTH
+      word: 0
+      bits: [7, 0]
+      description: RX FIFO depth in entries (0 if not present).
+    - name: DEVFEAT_FIELD_TX_FIFO_DEPTH
+      word: 0
+      bits: [15, 8]
+      description: TX FIFO depth in entries (0 if not present).
+    - name: DEVFEAT_FIELD_DMA_CHANNELS
+      word: 0
+      bits: [23, 16]
+      description: DMA channel count (0 if not applicable).
+    - name: DEVFEAT_FIELD_TIMER_COUNT
+      word: 0
+      bits: [31, 24]
+      description: Timer counter count (0 if not applicable).
+    - name: DEVFEAT_FIELD_TIMESTAMP_BITS
+      word: 1
+      bits: [7, 0]
+      description: Timestamp width in bits (0 if not supported).
+    - name: DEVFEAT_FIELD_QUEUE_COUNT
+      word: 1
+      bits: [15, 8]
+      description: Turbo queue count (0 if none).
+    - name: DEVFEAT_FIELD_QUEUE_DEPTH
+      word: 1
+      bits: [31, 16]
+      description: Turbo queue ring depth (entries, 0 if not present).
+
+device_csr_common:
+  description: Standard CSR register IDs present in every device block.
+  reg_id_bits: 12
+  registers:
+    - name: DEVCSR_ID
+      reg_id: 0x000
+      access: CSR_RO
+      description: Device identification (class/vendor/device/revision encoding).
+    - name: DEVCSR_STATUS
+      reg_id: 0x001
+      access: CSR_RO
+      description: Device status summary (busy/error flags).
+    - name: DEVCSR_CTRL
+      reg_id: 0x002
+      access: CSR_RW
+      description: Device control (enable/reset).
+    - name: DEVCSR_MODE
+      reg_id: 0x003
+      access: CSR_RW
+      description: Device personality/mode selection.
+    - name: DEVCSR_FEATURE0
+      reg_id: 0x004
+      access: CSR_RO
+      description: Feature word 0 (mirrors descriptor feature_word0).
+    - name: DEVCSR_FEATURE1
+      reg_id: 0x005
+      access: CSR_RO
+      description: Feature word 1 (mirrors descriptor feature_word1).
+    - name: DEVCSR_QUEUE_SUBMIT_BASE_LO
+      reg_id: 0x010
+      access: CSR_RW
+      description: Turbo submission ring base (low 32).
+    - name: DEVCSR_QUEUE_SUBMIT_BASE_HI
+      reg_id: 0x011
+      access: CSR_RW
+      description: Turbo submission ring base (high 32).
+    - name: DEVCSR_QUEUE_SUBMIT_MASK
+      reg_id: 0x012
+      access: CSR_RW
+      description: Turbo submission ring mask (entries-1).
+    - name: DEVCSR_QUEUE_DOORBELL
+      reg_id: 0x013
+      access: CSR_WO
+      description: Turbo submission doorbell.
+    - name: DEVCSR_QUEUE_COMP_BASE_LO
+      reg_id: 0x014
+      access: CSR_RW
+      description: Turbo completion ring base (low 32).
+    - name: DEVCSR_QUEUE_COMP_BASE_HI
+      reg_id: 0x015
+      access: CSR_RW
+      description: Turbo completion ring base (high 32).
+    - name: DEVCSR_QUEUE_COMP_MASK
+      reg_id: 0x016
+      access: CSR_RW
+      description: Turbo completion ring mask (entries-1).
+    - name: DEVCSR_QUEUE_COMP_DOORBELL
+      reg_id: 0x017
+      access: CSR_RO
+      description: Completion doorbell (device -> host pulse).
+    - name: DEVCSR_QUEUE_STATUS
+      reg_id: 0x018
+      access: CSR_RO
+      description: Queue status (head/tail snapshot or device-specific).
+    - name: DEVCSR_PERF0
+      reg_id: 0x020
+      access: CSR_RO
+      description: Performance counter 0 (device-specific meaning).
+    - name: DEVCSR_PERF1
+      reg_id: 0x021
+      access: CSR_RO
+      description: Performance counter 1 (device-specific meaning).
+
+turbo_queue_model:
+  description: Standard turbo queue ring model used by peripherals and DMA engines.
+  submission:
+    - A doorbell register notifies the device that new descriptors are available.
+    - Descriptors reside in a memory-backed ring; producer is software, consumer is hardware.
+  completion:
+    - Completions are written to a memory-backed ring; producer is hardware, consumer is software.
+    - Completion may additionally trigger an interrupt or a fabric message.
+  ordering:
+    - Software must ensure descriptor writes are globally visible before ringing the doorbell.
+    - A fence is required between descriptor stores and doorbell writes on weakly-ordered systems.
+  polling:
+    - Software may poll queue status or completion ring entries to detect completion.
+
+turbo_submission_descriptor:
+  name: TURBO_SUBMIT_DESC_V1
+  version: 1
+  size_bytes: 32
+  description: Standard header for turbo queue submissions; payload may be device-defined.
+  fields:
+    - name: desc_version
+      offset: 0
+      width_bytes: 2
+      type: u16
+      description: Descriptor format version (must be 1 for v1.0).
+    - name: desc_size_dw
+      offset: 2
+      width_bytes: 2
+      type: u16
+      description: Descriptor size in 32-bit words (must be 8 for this format).
+    - name: queue_id
+      offset: 4
+      width_bytes: 2
+      type: u16
+      description: Queue identifier.
+    - name: opcode
+      offset: 6
+      width_bytes: 2
+      type: u16
+      description: Device-defined operation code.
+    - name: flags
+      offset: 8
+      width_bytes: 4
+      type: u32
+      description: Operation flags (reserved bits must be 0).
+    - name: tag
+      offset: 12
+      width_bytes: 4
+      type: u32
+      description: Opaque tag returned in the completion record.
+    - name: data_ptr
+      offset: 16
+      width_bytes: 8
+      type: u64
+      description: Pointer to payload or buffer (device-defined).
+    - name: data_len
+      offset: 24
+      width_bytes: 4
+      type: u32
+      description: Payload length in bytes (device-defined).
+    - name: data_stride
+      offset: 28
+      width_bytes: 4
+      type: u32
+      description: Payload stride in bytes (0=contiguous).
+
+turbo_completion_record:
+  name: TURBO_COMP_REC_V1
+  version: 1
+  size_bytes: 16
+  description: Completion record for turbo queue submissions.
+  fields:
+    - name: tag
+      offset: 0
+      width_bytes: 4
+      type: u32
+      description: Tag from the submission descriptor.
+    - name: status
+      offset: 4
+      width_bytes: 2
+      type: u16
+      description: Completion status code.
+    - name: ext_status
+      offset: 6
+      width_bytes: 2
+      type: u16
+      description: Optional extended status (device-defined).
+    - name: bytes_written
+      offset: 8
+      width_bytes: 4
+      type: u32
+      description: Optional byte count written (0 if unused).
+    - name: reserved0
+      offset: 12
+      width_bytes: 4
+      type: u32
+      description: Reserved; must be 0.
+
+turbo_completion_status_codes:
+  - name: TURBO_STATUS_OK
+    value: 0
+    description: Success.
+  - name: TURBO_STATUS_INVALID
+    value: 1
+    description: Invalid/unsupported opcode or descriptor.
+  - name: TURBO_STATUS_FAULT
+    value: 2
+    description: Access fault or invalid pointer/length.
+  - name: TURBO_STATUS_BUSY
+    value: 3
+    description: Device busy or queue full.
+  - name: TURBO_STATUS_UNSUPPORTED
+    value: 4
+    description: Feature unsupported.
+
+reserved_numeric_ranges:
+  - name: device_class_values
+    range: [0x0000, 0xFFFF]
+    description: Unassigned values are reserved.
