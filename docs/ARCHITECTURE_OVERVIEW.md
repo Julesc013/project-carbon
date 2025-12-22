@@ -13,8 +13,8 @@ rendered summary is `docs/ARCH_CONTRACTS.md` (auto-generated).
 ## Compatibility Tiers
 
 - Tiers form monotonic ladders: reset starts at `P0`; upgrades only; downgrades only via `RETMD`.
-- Three ladders are defined: Z80-derived, x86-derived, and AMD-derived FPU.
-- All tiers are **strict**; the ladder ends at `P7` (Z480 for Z80-derived, x86-64 for x86-derived) with no turbo tier.
+- Three ladders are defined: Z80-derived CPU (8080 → Z480, `P0`..`P7`), x86-derived CPU (`P0`..`P7`), and Am95xx FPU (Am9511 → Am9515, `P0`..`P4`, `P5`..`P15` reserved).
+- Presented tiers are reported via discovery; optional supersets are exposed via feature bits (e.g., Z85 undocumented Z80, Z90 Z180-class, Z380 32-bit extended, Z480 native 64, Am9512 IEEE, Am9513 async, Am9514 vector, Am9515 tensor).
 
 ## Mode Switching
 
@@ -28,6 +28,7 @@ rendered summary is `docs/ARCH_CONTRACTS.md` (auto-generated).
 - A unified leaf model describes vendor/family/model/stepping, supported ladder + max tier, feature bitmaps, topology, cache, accelerators, and errata.
 - **Z480 P7**: `CPUID` instruction transport.
 - **Z85/Z90**: `CAPS` index+data transport that mirrors the same leaf IDs and packing.
+- Discovery reports presented tier and max tier for both CPU and FPU lineages, with optional extras described by feature bits.
 
 ## CSR Model
 
