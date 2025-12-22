@@ -20,8 +20,11 @@
 #
 # Uses Icarus Verilog if available.
 
+SIM      ?= iverilog
 IVERILOG ?= iverilog
 VVP      ?= vvp
+VERILATOR ?= verilator
+VERILATOR_FLAGS ?= -Wall --binary --timing -sv
 
 BUILD_DIR := build
 
@@ -230,6 +233,19 @@ X96_8097_SV := \
 
 IVERILOG_FLAGS := -g2012 -Wall -Wno-timescale
 
+ifeq ($(SIM),verilator)
+define run_tb
+        mkdir -p $(BUILD_DIR)/verilator/$1
+        $(VERILATOR) $(VERILATOR_FLAGS) --top-module $1 -Mdir $(BUILD_DIR)/verilator/$1 -o $(BUILD_DIR)/verilator/$1/$1 $2
+        $(BUILD_DIR)/verilator/$1/$1
+endef
+else
+define run_tb
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/$1.vvp $2
+	$(VVP) $(BUILD_DIR)/$1.vvp
+endef
+endif
+
 .PHONY: all clean tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_carbonio tb_carbondma tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
 all: tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
 
@@ -237,88 +253,67 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
 tb_fabric_arbiter: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_fabric_arbiter.vvp $(COMMON_SV) tb/tb_fabric_arbiter.sv
-	$(VVP) $(BUILD_DIR)/tb_fabric_arbiter.vvp
+	$(call run_tb,tb_fabric_arbiter,$(COMMON_SV) tb/tb_fabric_arbiter.sv)
 
 tb_fabric_contract: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_fabric_contract.vvp $(COMMON_SV) tb/tb_fabric_contract.sv
-	$(VVP) $(BUILD_DIR)/tb_fabric_contract.vvp
+	$(call run_tb,tb_fabric_contract,$(COMMON_SV) tb/tb_fabric_contract.sv)
 
 tb_csr_contract: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_csr_contract.vvp $(COMMON_SV) tb/tb_csr_contract.sv
-	$(VVP) $(BUILD_DIR)/tb_csr_contract.vvp
+	$(call run_tb,tb_csr_contract,$(COMMON_SV) tb/tb_csr_contract.sv)
 
 tb_irq_contract: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_irq_contract.vvp $(COMMON_SV) tb/tb_irq_contract.sv
-	$(VVP) $(BUILD_DIR)/tb_irq_contract.vvp
+	$(call run_tb,tb_irq_contract,$(COMMON_SV) tb/tb_irq_contract.sv)
 
 tb_irq_ctrl: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_irq_ctrl.vvp $(COMMON_SV) tb/tb_irq_ctrl.sv
-	$(VVP) $(BUILD_DIR)/tb_irq_ctrl.vvp
+	$(call run_tb,tb_irq_ctrl,$(COMMON_SV) tb/tb_irq_ctrl.sv)
 
 tb_ipi_mailbox: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_ipi_mailbox.vvp $(COMMON_SV) tb/tb_ipi_mailbox.sv
-	$(VVP) $(BUILD_DIR)/tb_ipi_mailbox.vvp
+	$(call run_tb,tb_ipi_mailbox,$(COMMON_SV) tb/tb_ipi_mailbox.sv)
 
 tb_trace_ring: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_trace_ring.vvp $(COMMON_SV) tb/tb_trace_ring.sv
-	$(VVP) $(BUILD_DIR)/tb_trace_ring.vvp
+	$(call run_tb,tb_trace_ring,$(COMMON_SV) tb/tb_trace_ring.sv)
 
 tb_cai_contract: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_cai_contract.vvp $(COMMON_SV) $(AM9513_RTL_SV) tb/tb_cai_contract.sv
-	$(VVP) $(BUILD_DIR)/tb_cai_contract.vvp
+	$(call run_tb,tb_cai_contract,$(COMMON_SV) $(AM9513_RTL_SV) tb/tb_cai_contract.sv)
 
 tb_z85: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_z85.vvp $(COMMON_SV) $(Z85_SV)
-	$(VVP) $(BUILD_DIR)/tb_z85.vvp
+	$(call run_tb,tb_z85,$(COMMON_SV) $(Z85_SV))
 
 tb_z90: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_z90.vvp $(COMMON_SV) $(Z90_SV)
-	$(VVP) $(BUILD_DIR)/tb_z90.vvp
+	$(call run_tb,tb_z90,$(COMMON_SV) $(Z90_SV))
 
 tb_am9513: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_am9513.vvp $(COMMON_SV) $(AM9513_SV)
-	$(VVP) $(BUILD_DIR)/tb_am9513.vvp
+	$(call run_tb,tb_am9513,$(COMMON_SV) $(AM9513_SV))
 
 tb_carbonio: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbonio.vvp $(COMMON_SV) $(CARBONIO_SV)
-	$(VVP) $(BUILD_DIR)/tb_carbonio.vvp
+	$(call run_tb,tb_carbonio,$(COMMON_SV) $(CARBONIO_SV))
 
 tb_carbondma: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbondma.vvp $(COMMON_SV) $(CARBONDMA_SV)
-	$(VVP) $(BUILD_DIR)/tb_carbondma.vvp
+	$(call run_tb,tb_carbondma,$(COMMON_SV) $(CARBONDMA_SV))
 
 tb_z480_scaffold: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_z480_scaffold.vvp $(COMMON_SV) $(Z480_SV)
-	$(VVP) $(BUILD_DIR)/tb_z480_scaffold.vvp
+	$(call run_tb,tb_z480_scaffold,$(COMMON_SV) $(Z480_SV))
 
 tb_8096: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_8096.vvp $(COMMON_SV) $(X96_8096_SV)
-	$(VVP) $(BUILD_DIR)/tb_8096.vvp
+	$(call run_tb,tb_8096,$(COMMON_SV) $(X96_8096_SV))
 
 tb_8097: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_8097.vvp $(COMMON_SV) $(X96_8097_SV)
-	$(VVP) $(BUILD_DIR)/tb_8097.vvp
+	$(call run_tb,tb_8097,$(COMMON_SV) $(X96_8097_SV))
 
 tb_carbonz80: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbonz80.vvp $(COMMON_SV) $(CARBONZ80_SV)
-	$(VVP) $(BUILD_DIR)/tb_carbonz80.vvp
+	$(call run_tb,tb_carbonz80,$(COMMON_SV) $(CARBONZ80_SV))
 
 tb_carbonz90: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbonz90.vvp $(COMMON_SV) $(CARBONZ90_SV)
-	$(VVP) $(BUILD_DIR)/tb_carbonz90.vvp
+	$(call run_tb,tb_carbonz90,$(COMMON_SV) $(CARBONZ90_SV))
 
 tb_carbonz480: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbonz480.vvp $(COMMON_SV) $(CARBONZ480_SV)
-	$(VVP) $(BUILD_DIR)/tb_carbonz480.vvp
+	$(call run_tb,tb_carbonz480,$(COMMON_SV) $(CARBONZ480_SV))
 
 tb_carbonx86: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbonx86.vvp $(COMMON_SV) $(CARBONX86_SV)
-	$(VVP) $(BUILD_DIR)/tb_carbonx86.vvp
+	$(call run_tb,tb_carbonx86,$(COMMON_SV) $(CARBONX86_SV))
 
 tb_carbonx96: $(BUILD_DIR)
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_carbonx96.vvp $(COMMON_SV) $(CARBONX96_SV)
-	$(VVP) $(BUILD_DIR)/tb_carbonx96.vvp
+	$(call run_tb,tb_carbonx96,$(COMMON_SV) $(CARBONX96_SV))
 
 clean:
 	rm -rf $(BUILD_DIR)

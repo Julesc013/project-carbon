@@ -4,6 +4,9 @@
 # YAML dependencies. Any line of the form `- tb_name` is treated as a test.
 
 contract_tests:
+  - tb_fabric_contract
+  - tb_csr_contract
+  - tb_irq_contract
   - tb_fabric_arbiter
   - tb_irq_ctrl
   - tb_ipi_mailbox
@@ -26,3 +29,10 @@ system_tests:
   - tb_carbonz480
   - tb_carbonx86
   - tb_carbonx96
+
+placeholder_tests:
+  - tb_z380
+  - tb_z480
+  - tb_am9514
+  - tb_am9515
+  - tb_carbonz380

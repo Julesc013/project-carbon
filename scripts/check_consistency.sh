@@ -6,8 +6,18 @@ if ! command -v rg >/dev/null 2>&1; then
   exit 2
 fi
 
+python_cmd=""
+if command -v python3 >/dev/null 2>&1; then
+  python_cmd="python3"
+elif command -v python >/dev/null 2>&1; then
+  python_cmd="python"
+else
+  echo "error: python (or python3) is required for consistency checks." >&2
+  exit 2
+fi
+
 echo "Running spec generator..."
-python hdl/tools/gen_specs.py
+"$python_cmd" hdl/tools/gen_specs.py
 
 echo "Checking for TURBO_UNLIMITED..."
 if rg -n "TURBO_UNLIMITED" .; then
