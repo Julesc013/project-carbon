@@ -19,8 +19,8 @@ module fabric_arbiter_mxn #(
 
     parameter bit HAS_DEFAULT = 1'b1,
     parameter int unsigned DEFAULT_SLAVE = 0,
-    parameter logic [ADDR_W-1:0] SLAVE_BASE [N] = '{default: '0},
-    parameter logic [ADDR_W-1:0] SLAVE_MASK [N] = '{default: '0}
+    parameter logic [N*ADDR_W-1:0] SLAVE_BASE = '0,
+    parameter logic [N*ADDR_W-1:0] SLAVE_MASK = '0
 ) (
     input logic clk,
     input logic rst_n,

@@ -82,20 +82,21 @@ interface csr_if #(
   );
 
 `ifndef SYNTHESIS
-  default clocking cb @(posedge clk);
-  endclocking
-  default disable iff (!rst_n);
-
-  assert property (req_valid && !req_ready |-> $stable(
-      {req_write, req_addr, req_wdata, req_wstrb, req_priv}
-  ))
+`ifdef CARBON_ENABLE_SVA
+  assert property (@(posedge clk) disable iff (!rst_n)
+      (req_valid && !req_ready |-> $stable(
+          {req_write, req_addr, req_wdata, req_wstrb, req_priv}
+      ))
+  )
       else $error("csr_if: request changed while backpressured");
 
-  assert property (rsp_valid && !rsp_ready |-> $stable(
-      {rsp_rdata, rsp_fault, rsp_side_effect}
-  ))
+  assert property (@(posedge clk) disable iff (!rst_n)
+      (rsp_valid && !rsp_ready |-> $stable(
+          {rsp_rdata, rsp_fault, rsp_side_effect}
+      ))
+  )
       else $error("csr_if: response changed while backpressured");
+`endif
 `endif
 
 endinterface : csr_if
-

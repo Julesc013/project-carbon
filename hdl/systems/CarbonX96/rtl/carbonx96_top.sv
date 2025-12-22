@@ -35,19 +35,19 @@ module carbonx96_top (
       .rst_n(rst_n)
   );
 
-  localparam logic [ADDR_W-1:0] SLAVE_BASE [N] = '{
-      ADDR_W'(CARBON_SYSX86_MMIO_BASE),
-      ADDR_W'(CARBON_SYSX86_CARBONIO_BASE),
-      ADDR_W'(CARBON_SYSX86_CARBONDMA_BASE),
+  localparam logic [N*ADDR_W-1:0] SLAVE_BASE = {
+      32'hFFFF_FFFF,
       ADDR_W'(CARBON_SYSX86_ROM_BASE),
-      32'hFFFF_FFFF
+      ADDR_W'(CARBON_SYSX86_CARBONDMA_BASE),
+      ADDR_W'(CARBON_SYSX86_CARBONIO_BASE),
+      ADDR_W'(CARBON_SYSX86_MMIO_BASE)
   };
-  localparam logic [ADDR_W-1:0] SLAVE_MASK [N] = '{
-      ADDR_W'(CARBON_SYSX86_MMIO_MASK),
-      ADDR_W'(CARBON_SYSX86_CARBONIO_MASK),
-      ADDR_W'(CARBON_SYSX86_CARBONDMA_MASK),
+  localparam logic [N*ADDR_W-1:0] SLAVE_MASK = {
+      32'hFFFF_FFFF,
       ADDR_W'(CARBON_SYSX86_ROM_MASK),
-      32'hFFFF_FFFF
+      ADDR_W'(CARBON_SYSX86_CARBONDMA_MASK),
+      ADDR_W'(CARBON_SYSX86_CARBONIO_MASK),
+      ADDR_W'(CARBON_SYSX86_MMIO_MASK)
   };
 
   fabric_arbiter_mxn #(

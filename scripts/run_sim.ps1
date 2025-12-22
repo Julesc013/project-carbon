@@ -1,5 +1,3 @@
-$ErrorActionPreference = "Stop"
-
 param(
   [switch]$All,
   [switch]$List,
@@ -7,6 +5,8 @@ param(
   [string]$Manifest,
   [switch]$NoGen
 )
+
+$ErrorActionPreference = "Stop"
 
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 if (-not $Manifest -or $Manifest -eq "") {
@@ -84,4 +84,3 @@ Write-Host ("Summary: pass=" + $pass + " fail=" + $fail)
 if ($fail -ne 0) {
   throw ("Failed: " + ($failed -join ", "))
 }
-

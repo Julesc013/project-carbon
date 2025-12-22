@@ -46,8 +46,8 @@ module tb_fabric_arbiter;
       .ADDR_W(ADDR_W),
       .DATA_W(DATA_W),
       .ID_W(ID_W),
-      .SLAVE_BASE('{default: 32'h0}),
-      .SLAVE_MASK('{default: 32'h0})
+      .SLAVE_BASE('0),
+      .SLAVE_MASK('0)
   ) dut (
       .clk(clk),
       .rst_n(rst_n),
@@ -195,4 +195,3 @@ module tb_fabric_arbiter;
   end
 
 endmodule
-

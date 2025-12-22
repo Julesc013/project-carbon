@@ -93,20 +93,21 @@ interface fabric_if #(
   );
 
 `ifndef SYNTHESIS
-  default clocking cb @(posedge clk);
-  endclocking
-  default disable iff (!rst_n);
-
+`ifdef CARBON_ENABLE_SVA
   // Hold request stable under backpressure.
-  assert property (req_valid && !req_ready |-> $stable(
-      {req_op, req_addr, req_wdata, req_wstrb, req_size, req_attr, req_id}
-  ))
+  assert property (@(posedge clk) disable iff (!rst_n)
+      (req_valid && !req_ready |-> $stable(
+          {req_op, req_addr, req_wdata, req_wstrb, req_size, req_attr, req_id}
+      ))
+  )
       else $error("fabric_if: request changed while backpressured");
 
   // Hold response stable under backpressure.
-  assert property (rsp_valid && !rsp_ready |-> $stable({rsp_rdata, rsp_code, rsp_id}))
+  assert property (@(posedge clk) disable iff (!rst_n)
+      (rsp_valid && !rsp_ready |-> $stable({rsp_rdata, rsp_code, rsp_id}))
+  )
       else $error("fabric_if: response changed while backpressured");
+`endif
 `endif
 
 endinterface : fabric_if
-

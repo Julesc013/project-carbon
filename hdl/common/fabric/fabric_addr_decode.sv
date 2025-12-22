@@ -7,8 +7,8 @@ module fabric_addr_decode #(
     parameter int unsigned SLV_W = (N <= 1) ? 1 : $clog2(N),
     parameter bit HAS_DEFAULT = 1'b1,
     parameter int unsigned DEFAULT_SLAVE = 0,
-    parameter logic [ADDR_W-1:0] SLAVE_BASE [N] = '{default: '0},
-    parameter logic [ADDR_W-1:0] SLAVE_MASK [N] = '{default: '0}
+    parameter logic [N*ADDR_W-1:0] SLAVE_BASE = '0,
+    parameter logic [N*ADDR_W-1:0] SLAVE_MASK = '0
 ) (
     input  logic [ADDR_W-1:0] addr,
     output logic              hit,
@@ -18,13 +18,21 @@ module fabric_addr_decode #(
   logic [SLV_W-1:0] idx_next;
   logic             hit_next;
 
+  function automatic logic [ADDR_W-1:0] base_at(input int unsigned idx);
+    base_at = SLAVE_BASE[idx*ADDR_W +: ADDR_W];
+  endfunction
+
+  function automatic logic [ADDR_W-1:0] mask_at(input int unsigned idx);
+    mask_at = SLAVE_MASK[idx*ADDR_W +: ADDR_W];
+  endfunction
+
   integer i;
   always_comb begin
     hit_next = 1'b0;
     idx_next = '0;
     for (i = 0; i < int'(N); i++) begin
       if (!hit_next) begin
-        if ((addr & SLAVE_MASK[i]) == SLAVE_BASE[i]) begin
+        if ((addr & mask_at(i)) == base_at(i)) begin
           hit_next = 1'b1;
           idx_next = SLV_W'(i);
         end

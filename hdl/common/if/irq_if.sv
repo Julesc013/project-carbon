@@ -50,14 +50,13 @@ interface irq_if #(
   );
 
 `ifndef SYNTHESIS
-  default clocking cb @(posedge clk);
-  endclocking
-  default disable iff (!rst_n);
-
+`ifdef CARBON_ENABLE_SVA
   // Ack must only occur when an interrupt is presented.
-  assert property (irq_ack |-> irq_valid)
+  assert property (@(posedge clk) disable iff (!rst_n)
+      (irq_ack |-> irq_valid)
+  )
       else $error("irq_if: irq_ack asserted when irq_valid=0");
+`endif
 `endif
 
 endinterface : irq_if
-

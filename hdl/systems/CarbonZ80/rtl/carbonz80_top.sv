@@ -36,19 +36,19 @@ module carbonz80_top (
   );
 
   // Address map: explicit MMIO + ROM, default to RAM.
-  localparam logic [ADDR_W-1:0] SLAVE_BASE [N] = '{
-      ADDR_W'(CARBON_SYS16_MMIO_BASE),
-      ADDR_W'(CARBON_SYS16_CARBONIO_BASE),
-      ADDR_W'(CARBON_SYS16_CARBONDMA_BASE),
+  localparam logic [N*ADDR_W-1:0] SLAVE_BASE = {
+      32'hFFFF_FFFF,
       ADDR_W'(CARBON_SYS16_ROM_BASE),
-      32'hFFFF_FFFF
+      ADDR_W'(CARBON_SYS16_CARBONDMA_BASE),
+      ADDR_W'(CARBON_SYS16_CARBONIO_BASE),
+      ADDR_W'(CARBON_SYS16_MMIO_BASE)
   };
-  localparam logic [ADDR_W-1:0] SLAVE_MASK [N] = '{
-      ADDR_W'(CARBON_SYS16_MMIO_MASK),
-      ADDR_W'(CARBON_SYS16_CARBONIO_MASK),
-      ADDR_W'(CARBON_SYS16_CARBONDMA_MASK),
+  localparam logic [N*ADDR_W-1:0] SLAVE_MASK = {
+      32'hFFFF_FFFF,
       ADDR_W'(CARBON_SYS16_ROM_MASK),
-      32'hFFFF_FFFF
+      ADDR_W'(CARBON_SYS16_CARBONDMA_MASK),
+      ADDR_W'(CARBON_SYS16_CARBONIO_MASK),
+      ADDR_W'(CARBON_SYS16_MMIO_MASK)
   };
 
   fabric_arbiter_mxn #(
