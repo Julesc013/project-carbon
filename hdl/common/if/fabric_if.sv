@@ -21,6 +21,39 @@ interface fabric_if #(
 );
   import carbon_arch_pkg::*;
 
+  // Common attribute presets (ordered + uncacheable semantics).
+  localparam logic [ATTR_W-1:0] FABRIC_ATTR_IO_UNCACHED =
+      logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_IO_SPACE_MASK | CARBON_FABRIC_ATTR_ORDERED_MASK);
+  localparam logic [ATTR_W-1:0] FABRIC_ATTR_CAI_UNCACHED =
+      logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_ORDERED_MASK);
+  localparam logic [ATTR_W-1:0] FABRIC_ATTR_MEM_CACHEABLE =
+      logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_CACHEABLE_MASK);
+
+  function automatic logic [ATTR_W-1:0] fabric_attr_pack(
+      input logic cacheable,
+      input logic ordered,
+      input logic io_space,
+      input logic acquire,
+      input logic release,
+      input logic [CARBON_FABRIC_ATTR_BURST_HINT_WIDTH-1:0] burst_hint,
+      input logic [CARBON_FABRIC_ATTR_QOS_WIDTH-1:0] qos
+  );
+    logic [ATTR_W-1:0] v;
+    begin
+      v = '0;
+      if (cacheable) v |= logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_CACHEABLE_MASK);
+      if (ordered)   v |= logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_ORDERED_MASK);
+      if (io_space)  v |= logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_IO_SPACE_MASK);
+      if (acquire)   v |= logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_ACQUIRE_MASK);
+      if (release)   v |= logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_RELEASE_MASK);
+      v |= (logic [ATTR_W-1:0]'(burst_hint) << CARBON_FABRIC_ATTR_BURST_HINT_LSB) &
+           logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_BURST_HINT_MASK);
+      v |= (logic [ATTR_W-1:0]'(qos) << CARBON_FABRIC_ATTR_QOS_LSB) &
+           logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_QOS_MASK);
+      fabric_attr_pack = v;
+    end
+  endfunction
+
   // Request channel
   logic                 req_valid;
   logic                 req_ready;
@@ -93,7 +126,12 @@ interface fabric_if #(
   );
 
 `ifndef SYNTHESIS
-`ifdef CARBON_ENABLE_SVA
+`ifdef FORMAL
+`define CARBON_SVA_ON
+`elsif CARBON_ENABLE_SVA
+`define CARBON_SVA_ON
+`endif
+`ifdef CARBON_SVA_ON
   // Hold request stable under backpressure.
   assert property (@(posedge clk) disable iff (!rst_n)
       (req_valid && !req_ready |-> $stable(
@@ -107,6 +145,9 @@ interface fabric_if #(
       (rsp_valid && !rsp_ready |-> $stable({rsp_rdata, rsp_code, rsp_id}))
   )
       else $error("fabric_if: response changed while backpressured");
+`endif
+`ifdef CARBON_SVA_ON
+`undef CARBON_SVA_ON
 `endif
 `endif
 

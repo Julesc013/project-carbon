@@ -95,12 +95,20 @@ interface dbg_if #(
   );
 
 `ifndef SYNTHESIS
-`ifdef CARBON_ENABLE_SVA
+`ifdef FORMAL
+`define CARBON_SVA_ON
+`elsif CARBON_ENABLE_SVA
+`define CARBON_SVA_ON
+`endif
+`ifdef CARBON_SVA_ON
   // Trace must remain stable under backpressure.
   assert property (@(posedge clk) disable iff (!rst_n)
       (trace_valid && !trace_ready |-> $stable(trace_data))
   )
       else $error("dbg_if: trace_data changed while backpressured");
+`endif
+`ifdef CARBON_SVA_ON
+`undef CARBON_SVA_ON
 `endif
 `endif
 

@@ -50,12 +50,20 @@ interface irq_if #(
   );
 
 `ifndef SYNTHESIS
-`ifdef CARBON_ENABLE_SVA
+`ifdef FORMAL
+`define CARBON_SVA_ON
+`elsif CARBON_ENABLE_SVA
+`define CARBON_SVA_ON
+`endif
+`ifdef CARBON_SVA_ON
   // Ack must only occur when an interrupt is presented.
   assert property (@(posedge clk) disable iff (!rst_n)
       (irq_ack |-> irq_valid)
   )
       else $error("irq_if: irq_ack asserted when irq_valid=0");
+`endif
+`ifdef CARBON_SVA_ON
+`undef CARBON_SVA_ON
 `endif
 `endif
 

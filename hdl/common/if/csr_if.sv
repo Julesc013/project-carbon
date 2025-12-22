@@ -82,7 +82,12 @@ interface csr_if #(
   );
 
 `ifndef SYNTHESIS
-`ifdef CARBON_ENABLE_SVA
+`ifdef FORMAL
+`define CARBON_SVA_ON
+`elsif CARBON_ENABLE_SVA
+`define CARBON_SVA_ON
+`endif
+`ifdef CARBON_SVA_ON
   assert property (@(posedge clk) disable iff (!rst_n)
       (req_valid && !req_ready |-> $stable(
           {req_write, req_addr, req_wdata, req_wstrb, req_priv}
@@ -96,6 +101,9 @@ interface csr_if #(
       ))
   )
       else $error("csr_if: response changed while backpressured");
+`endif
+`ifdef CARBON_SVA_ON
+`undef CARBON_SVA_ON
 `endif
 `endif
 
