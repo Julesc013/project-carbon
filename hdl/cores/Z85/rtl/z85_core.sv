@@ -1,7 +1,9 @@
 // Project Carbon - Z85 core (strict Z80 engine)
 // z85_core: Minimal strict Z80-compatible core scaffolding.
 
-module z85_core (
+module z85_core #(
+    parameter int unsigned MODESTACK_DEPTH = carbon_arch_pkg::CARBON_MODESTACK_RECOMMENDED_DEPTH
+) (
     input logic clk,
     input logic rst_n,
 
@@ -31,6 +33,9 @@ module z85_core (
 `ifndef SYNTHESIS
   initial begin
     if (IRQ_VEC_W < 8) $fatal(1, "z85_core: irq_if vector width must be >= 8");
+    if (MODESTACK_DEPTH < CARBON_MODESTACK_MIN_DEPTH) begin
+      $fatal(1, "z85_core: MODESTACK_DEPTH must be >= CARBON_MODESTACK_MIN_DEPTH");
+    end
   end
 `endif
 
@@ -38,6 +43,8 @@ module z85_core (
       FAB_ATTR_W'(CARBON_FABRIC_ATTR_CACHEABLE_MASK);
   localparam logic [FAB_ATTR_W-1:0] IO_ATTR =
       FAB_ATTR_W'(CARBON_FABRIC_ATTR_ORDERED_MASK | CARBON_FABRIC_ATTR_IO_SPACE_MASK);
+  localparam int unsigned MD_SP_W =
+      (MODESTACK_DEPTH < 2) ? 1 : $clog2(MODESTACK_DEPTH + 1);
 
   // --------------------------------------------------------------------------
   // Core-local trap causes (implementation-defined)
@@ -45,6 +52,9 @@ module z85_core (
   localparam logic [31:0] Z85_CAUSE_ILLEGAL_INSN = 32'h0000_0001;
   localparam logic [31:0] Z85_CAUSE_BUS_FAULT    = 32'h0000_0002;
   localparam logic [31:0] Z85_CAUSE_IM0_UNSUP    = 32'h0000_0003;
+  localparam logic [31:0] Z85_CAUSE_MODESTACK_OVERFLOW  = 32'h0000_0010;
+  localparam logic [31:0] Z85_CAUSE_MODESTACK_UNDERFLOW = 32'h0000_0011;
+  localparam logic [31:0] Z85_CAUSE_MODEUP_INVALID      = 32'h0000_0012;
 
   // --------------------------------------------------------------------------
   // CSR implementation (minimal + CAPS/CPUID window)
@@ -64,6 +74,17 @@ module z85_core (
   logic [31:0] csr_cpuid_leaf_q;
   logic [31:0] csr_cpuid_subleaf_q;
 
+  // Mode stack (tier/modeflags/return PC)
+  logic [MD_SP_W-1:0] md_sp_q;
+  logic [7:0]  md_tier_q  [MODESTACK_DEPTH];
+  logic [7:0]  md_flags_q [MODESTACK_DEPTH];
+  logic [15:0] md_pc_q    [MODESTACK_DEPTH];
+
+  // MODEUP/RETMD decode staging
+  logic [7:0] mode_op0_q;
+  logic [7:0] mode_op1_q;
+  logic [7:0] mode_target_q;
+
   // CSR-originated debug pulses (optional)
   logic csr_halt_pulse_q;
   logic csr_run_pulse_q;
@@ -82,6 +103,10 @@ module z85_core (
 
   wire csr_req_fire = csr.req_valid && csr.req_ready;
   wire csr_rsp_fire = csr.rsp_valid && csr.rsp_ready;
+  wire csr_modeflags_wr = csr_req_fire && csr.req_write &&
+      (csr.req_addr == CARBON_CSR_MODEFLAGS);
+  wire [7:0] csr_modeflags_wdata =
+      csr.req_wdata[7:0] & (CARBON_MODEFLAG_STRICT_MASK | CARBON_MODEFLAG_INTMASK_MASK);
 
   localparam logic [31:0] Z85_FEAT_WORD0 =
       CARBON_FEAT_MODE_SWITCH_MASK |
@@ -158,8 +183,6 @@ module z85_core (
       csr_epc_q       <= '0;
       csr_trace_ctl_q <= '0;
       cycle_q         <= 64'd0;
-      csr_modeflags_q <= CARBON_MODEFLAG_STRICT_MASK;
-      csr_tier_q      <= 8'(CARBON_Z80_DERIVED_TIER_P0_I8080);
       csr_cpuid_leaf_q <= 32'h0;
       csr_cpuid_subleaf_q <= 32'h0;
       csr_halt_pulse_q <= 1'b0;
@@ -195,10 +218,7 @@ module z85_core (
           end
           CARBON_CSR_MODEFLAGS: begin
             if (!csr.req_write) csr_rsp_rdata_q[7:0] <= csr_modeflags_q;
-            else begin
-              csr_modeflags_q <= csr.req_wdata[7:0] & (CARBON_MODEFLAG_STRICT_MASK | CARBON_MODEFLAG_INTMASK_MASK);
-              csr_rsp_side_q <= 1'b1;
-            end
+            else csr_rsp_side_q <= 1'b1;
           end
           CARBON_CSR_TIME: begin
             if (!csr.req_write) csr_rsp_rdata_q <= cycle_q[31:0];
@@ -491,7 +511,10 @@ module z85_core (
     IMM8_JR_COND,
     IMM8_DJNZ,
     IMM8_OUT_N_A,
-    IMM8_IN_A_N
+    IMM8_IN_A_N,
+    IMM8_MODE_OP0,
+    IMM8_MODE_OP1,
+    IMM8_MODE_TIER
   } imm8_ctx_e;
   imm8_ctx_e imm8_ctx_q;
   logic [2:0] imm8_r_q;
@@ -510,7 +533,8 @@ module z85_core (
     IMM16_JP,
     IMM16_JP_COND,
     IMM16_CALL,
-    IMM16_CALL_COND
+    IMM16_CALL_COND,
+    IMM16_MODE_ENTRY
   } imm16_ctx_e;
   imm16_ctx_e imm16_ctx_q;
   logic [1:0] imm16_dd_q;
@@ -593,6 +617,7 @@ module z85_core (
   // --------------------------------------------------------------------------
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
+      int i;
       state_q <= ST_RESET;
       state_after_bus_q <= ST_BOUNDARY;
       bus_dest_q <= DEST_NONE;
@@ -658,6 +683,18 @@ module z85_core (
       block_addr_q <= '0;
       block_port_q <= '0;
 
+      csr_modeflags_q <= CARBON_MODEFLAG_STRICT_MASK;
+      csr_tier_q <= 8'(CARBON_Z80_DERIVED_TIER_P0_I8080);
+      md_sp_q <= '0;
+      mode_op0_q <= '0;
+      mode_op1_q <= '0;
+      mode_target_q <= '0;
+      for (i = 0; i < int'(MODESTACK_DEPTH); i++) begin
+        md_tier_q[i] <= '0;
+        md_flags_q[i] <= '0;
+        md_pc_q[i] <= '0;
+      end
+
       dbg_halted_q <= 1'b0;
       dbg_step_pending_q <= 1'b0;
       dbg_step_inflight_q <= 1'b0;
@@ -673,6 +710,7 @@ module z85_core (
       dbg_step_ack_q <= 1'b0;
       irq_ack_q <= 1'b0;
       core_trap_pulse_q <= 1'b0;
+      if (csr_modeflags_wr) csr_modeflags_q <= csr_modeflags_wdata;
 
       unique case (state_q)
         ST_RESET: begin
@@ -916,8 +954,42 @@ module z85_core (
 
         ST_EXEC: begin
           logic handled;
+          logic tier_illegal;
+          logic tier_is_p0;
+          logic tier_is_p1;
+          logic tier_is_p2;
           handled = 1'b0;
+          tier_illegal = 1'b0;
+          tier_is_p0 = (csr_tier_q == 8'(CARBON_Z80_DERIVED_TIER_P0_I8080));
+          tier_is_p1 = (csr_tier_q == 8'(CARBON_Z80_DERIVED_TIER_P1_I8085));
+          tier_is_p2 = (csr_tier_q == 8'(CARBON_Z80_DERIVED_TIER_P2_Z80));
 
+          if (!tier_is_p2) begin
+            if (csr_tier_q > 8'(CARBON_Z80_DERIVED_TIER_P2_Z80)) begin
+              tier_illegal = 1'b1;
+            end else if (idx_q != Z85_IDX_NONE) begin
+              tier_illegal = 1'b1;
+            end else if (grp_q != Z85_GRP_BASE) begin
+              if (!((grp_q == Z85_GRP_ED) && (opcode_q == CARBON_Z90_OPPAGE_P0_PREFIX1))) begin
+                tier_illegal = 1'b1;
+              end
+            end else begin
+              if (opcode_q == 8'h08 || opcode_q == 8'h10 || opcode_q == 8'h18 ||
+                  opcode_q == 8'h28 || opcode_q == 8'h38 || opcode_q == 8'hD9) begin
+                tier_illegal = 1'b1;
+              end else if (tier_is_p0 && (opcode_q == 8'h20 || opcode_q == 8'h30)) begin
+                tier_illegal = 1'b1;
+              end
+            end
+          end
+
+          if (tier_illegal) begin
+            trapped_q <= 1'b1;
+            core_trap_pulse_q <= 1'b1;
+            core_trap_cause_q <= Z85_CAUSE_ILLEGAL_INSN;
+            core_trap_epc_q <= {16'h0000, insn_pc_q};
+            state_q <= ST_TRAP;
+          end else begin
           // BASE group
           if (grp_q == Z85_GRP_BASE) begin
             logic [1:0] x;
@@ -936,7 +1008,12 @@ module z85_core (
             ea = hl_eff_addr(s_q, idx_q, disp_q);
 
             handled = 1'b1;
-            unique case (x)
+            if (tier_is_p1 && (opcode_q == 8'h20 || opcode_q == 8'h30)) begin
+              // 8085 RIM/SIM stubs: deterministic no-side-effect behavior.
+              if (opcode_q == 8'h20) s_q.A <= 8'h00;
+              state_q <= ST_BOUNDARY;
+            end else begin
+              unique case (x)
               2'd0: begin
                 unique case (z)
                   3'd0: begin
@@ -1260,6 +1337,7 @@ module z85_core (
                 endcase
               end
             endcase
+            end
           end
 
           // CB / DDCB group
@@ -1302,7 +1380,10 @@ module z85_core (
             logic [15:0] port;
             port = {s_q.B, s_q.C};
             handled = 1'b1;
-            if ((opcode_q & 8'hC7) == 8'h40) begin
+            if (opcode_q == CARBON_Z90_OPPAGE_P0_PREFIX1) begin
+              imm8_ctx_q <= IMM8_MODE_OP0;
+              start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
+            end else if ((opcode_q & 8'hC7) == 8'h40) begin
               mem_rd_ctx_q <= MEMRD_IN;
               mem_rd_r_q <= opcode_q[5:3];
               mem_rd_is_io_q <= 1'b1;
@@ -1444,6 +1525,7 @@ module z85_core (
             core_trap_epc_q <= {16'h0000, insn_pc_q};
             state_q <= ST_TRAP;
           end
+          end
         end
 
         ST_IMM8_DONE: begin
@@ -1502,6 +1584,63 @@ module z85_core (
               mem_rd_is_io_q <= 1'b1;
               mem_addr_q <= {s_q.A, imm8_q};
               start_bus_read(1'b1, {s_q.A, imm8_q}, DEST_TMP8, ST_MEM_RD_DONE);
+            end
+            IMM8_MODE_OP0: begin
+              mode_op0_q <= imm8_q;
+              imm8_ctx_q <= IMM8_MODE_OP1;
+              start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
+            end
+            IMM8_MODE_OP1: begin
+              logic [3:0] major;
+              logic [3:0] sub;
+              logic [3:0] rs;
+              mode_op1_q <= imm8_q;
+              major = mode_op0_q[7:4];
+              sub = imm8_q[7:4];
+              rs = imm8_q[3:0];
+              if (major != 4'(CARBON_Z90_P0_MAJOR_SYS)) begin
+                trapped_q <= 1'b1;
+                core_trap_pulse_q <= 1'b1;
+                core_trap_cause_q <= Z85_CAUSE_ILLEGAL_INSN;
+                core_trap_epc_q <= {16'h0000, insn_pc_q};
+                state_q <= ST_TRAP;
+              end else if (sub == 4'(CARBON_Z90_P0_SUB_MODEUP)) begin
+                if (rs != 4'd0) begin
+                  trapped_q <= 1'b1;
+                  core_trap_pulse_q <= 1'b1;
+                  core_trap_cause_q <= Z85_CAUSE_MODEUP_INVALID;
+                  core_trap_epc_q <= {16'h0000, insn_pc_q};
+                  state_q <= ST_TRAP;
+                end else begin
+                  imm8_ctx_q <= IMM8_MODE_TIER;
+                  start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
+                end
+              end else if (sub == 4'(CARBON_Z90_P0_SUB_RETMD)) begin
+                if (md_sp_q == 0) begin
+                  trapped_q <= 1'b1;
+                  core_trap_pulse_q <= 1'b1;
+                  core_trap_cause_q <= Z85_CAUSE_MODESTACK_UNDERFLOW;
+                  core_trap_epc_q <= {16'h0000, insn_pc_q};
+                  state_q <= ST_TRAP;
+                end else begin
+                  md_sp_q <= md_sp_q - 1'b1;
+                  csr_tier_q <= md_tier_q[md_sp_q - 1'b1];
+                  csr_modeflags_q <= md_flags_q[md_sp_q - 1'b1];
+                  s_q.PC <= md_pc_q[md_sp_q - 1'b1];
+                  state_q <= ST_BOUNDARY;
+                end
+              end else begin
+                trapped_q <= 1'b1;
+                core_trap_pulse_q <= 1'b1;
+                core_trap_cause_q <= Z85_CAUSE_ILLEGAL_INSN;
+                core_trap_epc_q <= {16'h0000, insn_pc_q};
+                state_q <= ST_TRAP;
+              end
+            end
+            IMM8_MODE_TIER: begin
+              mode_target_q <= imm8_q;
+              imm16_ctx_q <= IMM16_MODE_ENTRY;
+              start_bus_read(1'b0, s_q.PC, DEST_IMM16_LO, ST_IMM16_HI);
             end
             default: state_q <= ST_BOUNDARY;
           endcase
@@ -1571,6 +1710,30 @@ module z85_core (
                 s_q.PC <= imm16_q;
                 state_q <= ST_INT_PUSH_HI;
               end else begin
+                state_q <= ST_BOUNDARY;
+              end
+            end
+            IMM16_MODE_ENTRY: begin
+              if (mode_target_q <= csr_tier_q ||
+                  mode_target_q > 8'(CARBON_Z80_DERIVED_TIER_P2_Z80)) begin
+                trapped_q <= 1'b1;
+                core_trap_pulse_q <= 1'b1;
+                core_trap_cause_q <= Z85_CAUSE_MODEUP_INVALID;
+                core_trap_epc_q <= {16'h0000, insn_pc_q};
+                state_q <= ST_TRAP;
+              end else if (md_sp_q == MD_SP_W'(MODESTACK_DEPTH)) begin
+                trapped_q <= 1'b1;
+                core_trap_pulse_q <= 1'b1;
+                core_trap_cause_q <= Z85_CAUSE_MODESTACK_OVERFLOW;
+                core_trap_epc_q <= {16'h0000, insn_pc_q};
+                state_q <= ST_TRAP;
+              end else begin
+                md_tier_q[md_sp_q] <= csr_tier_q;
+                md_flags_q[md_sp_q] <= csr_modeflags_q;
+                md_pc_q[md_sp_q] <= s_q.PC;
+                md_sp_q <= md_sp_q + 1'b1;
+                csr_tier_q <= mode_target_q;
+                s_q.PC <= imm16_q;
                 state_q <= ST_BOUNDARY;
               end
             end

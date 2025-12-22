@@ -2,12 +2,27 @@
 // z85_ref_model: Slow, simple behavioral model used for TB comparison.
 
 module z85_ref_model;
+  import carbon_arch_pkg::*;
   import z85_regfile_pkg::*;
   import z85_decode_pkg::*;
   import z85_flags_pkg::*;
 
+  localparam int unsigned MODESTACK_DEPTH = CARBON_MODESTACK_RECOMMENDED_DEPTH;
+
+  localparam logic [31:0] Z85_CAUSE_ILLEGAL_INSN = 32'h0000_0001;
+  localparam logic [31:0] Z85_CAUSE_MODESTACK_OVERFLOW  = 32'h0000_0010;
+  localparam logic [31:0] Z85_CAUSE_MODESTACK_UNDERFLOW = 32'h0000_0011;
+  localparam logic [31:0] Z85_CAUSE_MODEUP_INVALID      = 32'h0000_0012;
+
   // Public state (TBs may compare directly).
   z85_state_t s;
+
+  logic [7:0] tier;
+  logic [7:0] modeflags;
+  int unsigned md_sp;
+  logic [7:0]  md_tier  [MODESTACK_DEPTH];
+  logic [7:0]  md_flags [MODESTACK_DEPTH];
+  logic [15:0] md_pc    [MODESTACK_DEPTH];
 
   logic        trapped;
   logic        ei_delay;
@@ -76,6 +91,14 @@ module z85_ref_model;
       s.PC = 16'h0000;
       s.IM = 2'd0;
       s.halt_latch = 1'b0;
+      tier = 8'(CARBON_Z80_DERIVED_TIER_P0_I8080);
+      modeflags = CARBON_MODEFLAG_STRICT_MASK;
+      md_sp = 0;
+      for (i = 0; i < int'(MODESTACK_DEPTH); i++) begin
+        md_tier[i] = '0;
+        md_flags[i] = '0;
+        md_pc[i] = '0;
+      end
       trapped = 1'b0;
       ei_delay = 1'b0;
       cause = '0;
@@ -92,6 +115,10 @@ module z85_ref_model;
   task automatic step(input logic irq_valid, input logic irq_is_nmi, input logic [7:0] irq_byte);
     logic inhibit_int;
     logic inject_im0;
+    logic tier_illegal;
+    logic tier_is_p0;
+    logic tier_is_p1;
+    logic tier_is_p2;
     logic [15:0] start_pc;
     z85_idx_sel_e idx;
     z85_grp_e grp;
@@ -191,6 +218,36 @@ module z85_ref_model;
         s.PC = s.PC + 16'd1;
       end
 
+      tier_is_p0 = (tier == 8'(CARBON_Z80_DERIVED_TIER_P0_I8080));
+      tier_is_p1 = (tier == 8'(CARBON_Z80_DERIVED_TIER_P1_I8085));
+      tier_is_p2 = (tier == 8'(CARBON_Z80_DERIVED_TIER_P2_Z80));
+      tier_illegal = 1'b0;
+      if (!tier_is_p2) begin
+        if (tier > 8'(CARBON_Z80_DERIVED_TIER_P2_Z80)) begin
+          tier_illegal = 1'b1;
+        end else if (idx != Z85_IDX_NONE) begin
+          tier_illegal = 1'b1;
+        end else if (grp != Z85_GRP_BASE) begin
+          if (!((grp == Z85_GRP_ED) && (op == CARBON_Z90_OPPAGE_P0_PREFIX1))) begin
+            tier_illegal = 1'b1;
+          end
+        end else begin
+          if (op == 8'h08 || op == 8'h10 || op == 8'h18 ||
+              op == 8'h28 || op == 8'h38 || op == 8'hD9) begin
+            tier_illegal = 1'b1;
+          end else if (tier_is_p0 && (op == 8'h20 || op == 8'h30)) begin
+            tier_illegal = 1'b1;
+          end
+        end
+      end
+
+      if (tier_illegal) begin
+        trapped = 1'b1;
+        cause = Z85_CAUSE_ILLEGAL_INSN;
+        epc = {16'h0000, start_pc};
+        return;
+      end
+
       // Execute Z80 instruction semantics.
       unique case (grp)
         Z85_GRP_BASE: begin
@@ -212,6 +269,10 @@ module z85_ref_model;
           q = op_q(op);
           ea = hl_eff_addr(s, idx, disp);
 
+          if (tier_is_p1 && (op == 8'h20 || op == 8'h30)) begin
+            // 8085 RIM/SIM stubs: deterministic no-side-effect behavior.
+            if (op == 8'h20) s.A = 8'h00;
+          end else begin
           unique case (x)
             2'd0: begin
               unique case (z)
@@ -516,6 +577,7 @@ module z85_ref_model;
               endcase
             end
           endcase
+          end
         end
 
         Z85_GRP_CB, Z85_GRP_DDCB: begin
@@ -557,7 +619,74 @@ module z85_ref_model;
           z85_alu8_t o2;
           z85_alu16_t o16;
 
-          if ((op & 8'hC7) == 8'h40) begin
+          if (op == CARBON_Z90_OPPAGE_P0_PREFIX1) begin
+            logic [7:0] op0;
+            logic [7:0] op1;
+            logic [3:0] major;
+            logic [3:0] sub;
+            logic [3:0] rs;
+            logic [7:0] target;
+            logic [15:0] entry;
+            op0 = rd8(s.PC);
+            s.PC = s.PC + 16'd1;
+            op1 = rd8(s.PC);
+            s.PC = s.PC + 16'd1;
+            major = op0[7:4];
+            sub = op1[7:4];
+            rs = op1[3:0];
+
+            if (major != 4'(CARBON_Z90_P0_MAJOR_SYS)) begin
+              trapped = 1'b1;
+              cause = Z85_CAUSE_ILLEGAL_INSN;
+              epc = {16'h0000, start_pc};
+              return;
+            end else if (sub == 4'(CARBON_Z90_P0_SUB_MODEUP)) begin
+              if (rs != 4'd0) begin
+                trapped = 1'b1;
+                cause = Z85_CAUSE_MODEUP_INVALID;
+                epc = {16'h0000, start_pc};
+                return;
+              end
+              target = rd8(s.PC);
+              s.PC = s.PC + 16'd1;
+              entry = rd16(s.PC);
+              s.PC = s.PC + 16'd2;
+              if (target <= tier || target > 8'(CARBON_Z80_DERIVED_TIER_P2_Z80)) begin
+                trapped = 1'b1;
+                cause = Z85_CAUSE_MODEUP_INVALID;
+                epc = {16'h0000, start_pc};
+                return;
+              end else if (md_sp >= MODESTACK_DEPTH) begin
+                trapped = 1'b1;
+                cause = Z85_CAUSE_MODESTACK_OVERFLOW;
+                epc = {16'h0000, start_pc};
+                return;
+              end else begin
+                md_tier[md_sp] = tier;
+                md_flags[md_sp] = modeflags;
+                md_pc[md_sp] = s.PC;
+                md_sp = md_sp + 1;
+                tier = target;
+                s.PC = entry;
+              end
+            end else if (sub == 4'(CARBON_Z90_P0_SUB_RETMD)) begin
+              if (md_sp == 0) begin
+                trapped = 1'b1;
+                cause = Z85_CAUSE_MODESTACK_UNDERFLOW;
+                epc = {16'h0000, start_pc};
+                return;
+              end
+              md_sp = md_sp - 1;
+              tier = md_tier[md_sp];
+              modeflags = md_flags[md_sp];
+              s.PC = md_pc[md_sp];
+            end else begin
+              trapped = 1'b1;
+              cause = Z85_CAUSE_ILLEGAL_INSN;
+              epc = {16'h0000, start_pc};
+              return;
+            end
+          end else if ((op & 8'hC7) == 8'h40) begin
             v = rdio({s.B, s.C});
             o2 = alu_in8_flags(v, s.F);
             s.F = o2.f;
