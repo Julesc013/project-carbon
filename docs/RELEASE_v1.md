@@ -17,9 +17,9 @@ See `hdl/sim/README.md` for simulator prerequisites and details.
 
 ## What v1.0 includes
 
-- Cores: Z85, Z90, eZ90 (P7 scaffold), 8096, 8097
+- Cores: Z85, Z90, Z480 (P7 scaffold), 8096, 8097
 - Accelerator: Am9513 with legacy (9511/9512) personalities and native CAI path
-- Systems: CarbonZ80/CarbonZ90/CarbonEZ90/CarbonX86/CarbonX96 simulation tops, RAM/ROM/MMIO, and smoke TBs
+- Systems: CarbonZ80/CarbonZ90/CarbonZ480/CarbonX86/CarbonX96 simulation tops, RAM/ROM/MMIO, and smoke TBs
 - Verification: contract tests for `fabric_if`, CAI descriptor/completion handling, and basic CSR privilege gating plumbing
 
 ## Deferred features (explicit)
@@ -32,4 +32,3 @@ See `docs/DEFERRED.md` for the project-wide deferred list, organized by subsyste
 - New cores should land under `hdl/cores/<name>/rtl` with TBs under `hdl/cores/<name>/tb`
 - New systems should land under `hdl/systems/<name>/rtl` with smoke TBs under `hdl/systems/<name>/tb`
 - Add new regression entries to `hdl/sim/tests/regress.yaml` and a Make target under `hdl/sim/Makefile`
-

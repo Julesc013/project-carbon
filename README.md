@@ -20,7 +20,7 @@ What it is **not**:
 - Frozen v1.0 architecture contracts in `hdl/spec/*.yaml` with generated SystemVerilog/C constants.
 - Compatibility tier ladders and a single mode-switching contract (`MODEUP`/`RETMD`).
 - Shared HDL interfaces (fabric/CSR/IRQ/debug/accelerator) plus contract tests.
-- SystemVerilog cores: Z85, Z90, eZ90 (P7 scaffold), 8096, 8097, Am9513.
+- SystemVerilog cores: Z85, Z90, Z480 (P7 scaffold), 8096, 8097, Am9513.
 - Integrated system simulation tops and regression runner targeting Icarus Verilog.
 - `carbon-sim` C++ simulator for CP/M 2.2 and RomWBW-style platforms (ROMs not included).
 - KiCad hardware: a Carbon_Z80 project plus a KiCad 9 schematic skeleton generator.
@@ -52,7 +52,7 @@ What it is **not**:
 - **Determinism & reproducibility**: generators are deterministic; CI verifies generated outputs are committed.
 - **Explicit contracts**: shared enums/bitfields/opcode pages/queue formats live in specs, not ad-hoc RTL.
 - **Portability-minded tooling**: scripts exist for POSIX shell and PowerShell; generators avoid third-party dependencies.
-- **Long-term maintainability**: clean module boundaries (notably the eZ90 scaffold) so implementations can evolve behind stable interfaces.
+- **Long-term maintainability**: clean module boundaries (notably the Z480 scaffold) so implementations can evolve behind stable interfaces.
 
 ## 5. Supported platforms (summary)
 
@@ -85,7 +85,7 @@ Not a fit if you need:
 - **Contracts are the source of truth**: `hdl/spec/*.yaml` drives generated headers/packages and the rendered contract reference.
 - **Generated outputs are treated as artifacts**: `hdl/gen/*` and `docs/ARCH_CONTRACTS.md` are generated and committed (verified in CI).
 - **Minimal dependency stance**: key tooling is dependency-light (e.g., a deterministic, stdlib-only spec generator; a simple regression manifest; JSON-in-YAML KiCad mapping specs).
-- **Compatibility and gating are explicit**: tier ladders, `MODEUP`/`RETMD`, and “strict vs turbo” behavior are architectural concepts, not local hacks.
+- **Compatibility and gating are explicit**: tier ladders, `MODEUP`/`RETMD`, and strict-mode extension gating are architectural concepts, not local hacks.
 - **Generated vs hand-edited separation**: `schem/kicad9/generated/` is safe to overwrite; `schem/kicad9/manual/` is not.
 
 ## 8. Repository structure (map)

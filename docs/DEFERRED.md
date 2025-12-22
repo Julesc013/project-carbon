@@ -14,7 +14,7 @@ This file explicitly lists what is *not* implemented in v1.0, by subsystem.
 - Wider/extended instruction coverage beyond the implemented subset
 - Full CAI software stack/driver integration (descriptor setup in real firmware/OS)
 
-## eZ90 (P7 scaffold)
+## Z480 (P7 scaffold)
 
 - Full ISA definition and decode/execute coverage (current v1 is a structural scaffold)
 - Full OoO engine (rename/ROB/LSQ/scheduler are skeletal)
@@ -40,4 +40,3 @@ This file explicitly lists what is *not* implemented in v1.0, by subsystem.
 - Real pin-timing RC2014/S-100 physical adapters (stubs exist only)
 - Rich peripheral models (UART/SPI/IDE/video), DMA engines, and full interrupt routing policies
 - Full firmware/OS loader stacks; boot ROMs are minimal signatures for simulation bring-up
-
