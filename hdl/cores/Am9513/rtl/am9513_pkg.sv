@@ -9,7 +9,7 @@ package am9513_pkg;
   // --------------------------------------------------------------------------
   localparam logic [7:0] AM9513_P0_AM9511 = 8'(CARBON_AMD_FPU_TIER_P0_AM9511);
   localparam logic [7:0] AM9513_P1_AM9512 = 8'(CARBON_AMD_FPU_TIER_P1_AM9512);
-  localparam logic [7:0] AM9513_P7_NATIVE = 8'(CARBON_AMD_FPU_TIER_P7_AM9513_NATIVE);
+  localparam logic [7:0] AM9513_P2_AM9513 = 8'(CARBON_AMD_FPU_TIER_P2_AM9513);
 
   // --------------------------------------------------------------------------
   // IEEE exception flags (sticky, per-context)
@@ -75,7 +75,7 @@ package am9513_pkg;
   // CAI submit descriptor flags (am9513-specific; v1)
   // --------------------------------------------------------------------------
   localparam int unsigned AM9513_SUBMIT_FLAG_MODE_VALID_BIT = 0;
-  localparam int unsigned AM9513_SUBMIT_FLAG_MODE_LSB = 1; // 3 bits: 0,1,7
+  localparam int unsigned AM9513_SUBMIT_FLAG_MODE_LSB = 1; // 3 bits: 0,1,2 (P0/P1/P2)
   localparam int unsigned AM9513_SUBMIT_FLAG_MODE_WIDTH = 3;
 
   localparam int unsigned AM9513_SUBMIT_FLAG_RESULT_REG_BIT = 4;

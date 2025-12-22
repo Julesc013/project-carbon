@@ -57,16 +57,23 @@ module cpuid_block #(
         w1 = Z480_CHIP_FLAGS;
       end
       CARBON_CPUID_LEAF_TIERS: begin
+        // word0: CPU ladder/tier reporting
         w0[7:0]   = 8'(CARBON_TIER_LADDER_Z80);
         w0[15:8]  = 8'(CARBON_Z80_DERIVED_TIER_P7_Z480);
         w0[23:16] = 8'(CARBON_Z80_DERIVED_TIER_P7_Z480);
-        w1        = 32'h0000_0000;
+        w0[31:24] = 8'h00;
+        // word1: FPU ladder/tier reporting (scaffold defaults to P0)
+        w1[7:0]   = 8'(CARBON_TIER_LADDER_AMD_FPU);
+        w1[15:8]  = 8'(CARBON_AMD_FPU_TIER_P0_AM9511);
+        w1[23:16] = 8'(CARBON_AMD_FPU_TIER_P0_AM9511);
+        w1[31:24] = 8'h00;
       end
       CARBON_CPUID_LEAF_FEATURES0: begin
         w0 = CARBON_FEAT_CSR_NAMESPACE_MASK |
             CARBON_FEAT_FABRIC_MASK |
             CARBON_FEAT_CPUID_MASK |
-            CARBON_FEAT_IOMMU_HOOKS_MASK;
+            CARBON_FEAT_IOMMU_HOOKS_MASK |
+            CARBON_Z480_NATIVE_64_MASK;
       end
       CARBON_CPUID_LEAF_TOPOLOGY: begin
         // word0: [15:0]=core_count, [31:16]=threads_per_core (v1 fixed 1)

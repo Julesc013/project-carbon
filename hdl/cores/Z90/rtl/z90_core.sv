@@ -249,12 +249,12 @@ module z90_core #(
     end
   endfunction
 
-  function automatic logic z90_turbo_allowed();
+  function automatic logic z90_fastpath_allowed();
     logic strict;
     begin
       strict = (modeflags_q & CARBON_MODEFLAG_STRICT_MASK) != 0;
-      z90_turbo_allowed =
-          (!strict) && (tier_q == 8'(CARBON_Z80_DERIVED_TIER_P7_Z480));
+      z90_fastpath_allowed =
+          (!strict) && (tier_q == 8'(CARBON_Z80_DERIVED_TIER_P3_Z180));
     end
   endfunction
 
@@ -693,7 +693,7 @@ module z90_core #(
               (major == 4'(CARBON_Z90_P0_MAJOR_SYS)) &&
               ((sub == 4'(CARBON_Z90_P0_SUB_MODEUP)) || (sub == 4'(CARBON_Z90_P0_SUB_RETMD)));
 
-          if (!is_modeop && !z90_turbo_allowed()) begin
+          if (!is_modeop && !z90_fastpath_allowed()) begin
             trap_now(Z90_CAUSE_ILLEGAL_INSN);
           end else begin
             unique case (major)
@@ -888,7 +888,7 @@ module z90_core #(
           logic signed [16:0] addr_s;
           logic [15:0] eff;
 
-          if (!z90_turbo_allowed()) begin
+          if (!z90_fastpath_allowed()) begin
             trap_now(Z90_CAUSE_ILLEGAL_INSN);
           end else begin
             major = hi_nibble(b2_q);
