@@ -344,6 +344,11 @@ package carbon_arch_pkg;
   localparam int unsigned CARBON_FABRIC_RESP_TIMEOUT = 3;
   localparam int unsigned CARBON_FABRIC_RESP_ECC_ERR = 4;
 
+  // CAI opcode groups
+  localparam int unsigned CARBON_CAI_OPGROUP_SCALAR = 0;
+  localparam int unsigned CARBON_CAI_OPGROUP_VECTOR = 1;
+  localparam int unsigned CARBON_CAI_OPGROUP_TENSOR = 2;
+
   // CAI descriptor formats
   localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_VERSION = 1;
   localparam int unsigned CARBON_CAI_SUBMIT_DESC_V1_SIZE_BYTES = 64;
@@ -376,6 +381,26 @@ package carbon_arch_pkg;
   localparam int unsigned CARBON_CAI_OPERAND_DESC_V1_OFF_FLAGS = 16;
   localparam int unsigned CARBON_CAI_OPERAND_DESC_V1_OFF_RESERVED0 = 20;
   localparam int unsigned CARBON_CAI_OPERAND_DESC_V1_OFF_RESERVED1 = 24;
+
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_VERSION = 1;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_SIZE_BYTES = 64;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_DESC_VERSION = 0;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_DESC_SIZE_DW = 2;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_RANK = 4;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_ELEM_FORMAT = 5;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_RESERVED0 = 6;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_FLAGS = 8;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_SHAPE0 = 12;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_SHAPE1 = 16;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_SHAPE2 = 20;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_SHAPE3 = 24;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_STRIDE0 = 28;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_STRIDE1 = 32;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_STRIDE2 = 36;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_STRIDE3 = 40;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_RESERVED1 = 44;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_RESERVED2 = 48;
+  localparam int unsigned CARBON_CAI_TENSOR_DESC_V1_OFF_RESERVED3 = 56;
 
   localparam int unsigned CARBON_CAI_COMP_REC_V1_VERSION = 1;
   localparam int unsigned CARBON_CAI_COMP_REC_V1_SIZE_BYTES = 16;

@@ -429,10 +429,34 @@ def _validate_fabric(spec: Dict[str, Any]) -> None:
 
 def _validate_cai(spec: Dict[str, Any]) -> None:
     where = "cai.yaml"
-    for k in ["submission_descriptor", "operand_descriptor", "completion_record", "completion_status_codes"]:
+    for k in [
+        "opcode_model",
+        "submission_descriptor",
+        "operand_descriptor",
+        "tensor_descriptor",
+        "completion_record",
+        "completion_status_codes",
+    ]:
         if k not in spec:
             raise SpecError(f"{where}: missing {k}")
-    for desc_key in ["submission_descriptor", "operand_descriptor", "completion_record"]:
+
+    opcode_model = spec["opcode_model"]
+    _expect_type(opcode_model, dict, where=f"{where}:opcode_model")
+    _require_keys(opcode_model, ["opcode_groups"], where=f"{where}:opcode_model")
+    groups = opcode_model["opcode_groups"]
+    _expect_type(groups, list, where=f"{where}:opcode_model.opcode_groups")
+    seen = set()
+    for g in groups:
+        _expect_type(g, dict, where=f"{where}:opcode_model.opcode_groups[]")
+        _require_keys(g, ["name", "value", "description"], where=f"{where}:opcode_model.opcode_groups[]")
+        v = g["value"]
+        if not isinstance(v, int) or v < 0 or v > 255:
+            raise SpecError(f"{where}:{g['name']}: opcode group value must be 0..255")
+        if v in seen:
+            raise SpecError(f"{where}:{g['name']}: duplicate opcode group value {v}")
+        seen.add(v)
+
+    for desc_key in ["submission_descriptor", "operand_descriptor", "tensor_descriptor", "completion_record"]:
         desc = spec[desc_key]
         _expect_type(desc, dict, where=f"{where}:{desc_key}")
         _require_keys(desc, ["name", "version", "size_bytes", "fields"], where=f"{where}:{desc_key}")
@@ -698,6 +722,11 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"  localparam int unsigned CARBON_{rc['name']} = {rc['value']};")
     out.append("")
 
+    out.append("  // CAI opcode groups")
+    for group in cai["opcode_model"]["opcode_groups"]:
+        out.append(f"  localparam int unsigned CARBON_{group['name']} = {int(group['value'])};")
+    out.append("")
+
     out.append("  // CAI descriptor formats")
     submit = cai["submission_descriptor"]
     out.append(f"  localparam int unsigned CARBON_{submit['name']}_VERSION = {submit['version']};")
@@ -714,6 +743,15 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
     for f in opdesc["fields"]:
         out.append(
             f"  localparam int unsigned CARBON_{opdesc['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
+    tdesc = cai["tensor_descriptor"]
+    out.append(f"  localparam int unsigned CARBON_{tdesc['name']}_VERSION = {tdesc['version']};")
+    out.append(f"  localparam int unsigned CARBON_{tdesc['name']}_SIZE_BYTES = {tdesc['size_bytes']};")
+    for f in tdesc["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{tdesc['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
         )
     out.append("")
 
@@ -948,6 +986,11 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"#define CARBON_{rc['name']} ({rc['value']}u)")
     out.append("")
 
+    out.append("/* CAI opcode groups */")
+    for group in cai["opcode_model"]["opcode_groups"]:
+        out.append(f"#define CARBON_{group['name']} ({int(group['value'])}u)")
+    out.append("")
+
     out.append("/* CAI descriptor formats */")
     submit = cai["submission_descriptor"]
     out.append(f"#define CARBON_{submit['name']}_VERSION ({submit['version']}u)")
@@ -961,6 +1004,13 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
     out.append(f"#define CARBON_{opdesc['name']}_SIZE_BYTES ({opdesc['size_bytes']}u)")
     for f in opdesc["fields"]:
         out.append(f"#define CARBON_{opdesc['name']}_OFF_{str(f['name']).upper()} ({f['offset']}u)")
+    out.append("")
+
+    tdesc = cai["tensor_descriptor"]
+    out.append(f"#define CARBON_{tdesc['name']}_VERSION ({tdesc['version']}u)")
+    out.append(f"#define CARBON_{tdesc['name']}_SIZE_BYTES ({tdesc['size_bytes']}u)")
+    for f in tdesc["fields"]:
+        out.append(f"#define CARBON_{tdesc['name']}_OFF_{str(f['name']).upper()} ({f['offset']}u)")
     out.append("")
 
     comp = cai["completion_record"]
@@ -1092,6 +1142,20 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
 
     out.append("## A) Compatibility Tier Ladders")
     out.append("")
+    if "presentation_model" in tiers:
+        pres = tiers["presentation_model"]
+        out.append("### Presentation Model")
+        out.append("")
+        if isinstance(pres, dict):
+            if "name" in pres:
+                out.append(f"- Name: `{pres['name']}`")
+            if "description" in pres:
+                out.append(f"- Description: {_md_escape(pres['description'])}")
+            rules = pres.get("rules")
+            if isinstance(rules, list):
+                for rule in rules:
+                    out.append(f"- {_md_escape(rule)}")
+        out.append("")
     for ladder in tiers["ladders"]:
         out.append(f"### {ladder['id']} ({_md_escape(ladder['description'])})")
         out.append("")
@@ -1107,6 +1171,22 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
                 f"| `{t['id']}` | `{t['value']}` | `{_md_escape(t['label'])}` | {strict} |"
             )
         out.append("")
+        overrides = ladder.get("presentation_overrides")
+        if isinstance(overrides, list) and overrides:
+            out.append("#### Presentation Overrides")
+            out.append("")
+            out.append("| Part | Presents As | Feature Bits | Description |")
+            out.append("|---|---|---|---|")
+            for ov in overrides:
+                bits = ""
+                if isinstance(ov, dict):
+                    feat_bits = ov.get("feature_bits")
+                    if isinstance(feat_bits, list):
+                        bits = ", ".join([f"`{b}`" for b in feat_bits])
+                    out.append(
+                        f"| `{ov.get('part','')}` | `{ov.get('presents_as','')}` | {bits} | {_md_escape(ov.get('description',''))} |"
+                    )
+            out.append("")
 
     out.append("## B) Mode Switching Contract")
     out.append("")
@@ -1202,6 +1282,16 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
 
     out.append("## F) Carbon Accelerator Interface (CAI)")
     out.append("")
+    out.append("### Opcode Groups")
+    out.append("")
+    out.append("| Name | Value | Description |")
+    out.append("|---|---:|---|")
+    for group in cai["opcode_model"]["opcode_groups"]:
+        out.append(
+            f"| `{group['name']}` | `{group['value']}` | {_md_escape(group['description'])} |"
+        )
+    out.append("")
+
     out.append("### Submission Descriptor (V1)")
     out.append("")
     submit = cai["submission_descriptor"]
@@ -1223,6 +1313,21 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
     out.append("| Field | Offset | Width (bytes) | Type | Description |")
     out.append("|---|---:|---:|---|---|")
     for f in opdesc["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### Tensor Descriptor (V1)")
+    out.append("")
+    tdesc = cai["tensor_descriptor"]
+    out.append(
+        f"- Format: `{tdesc['name']}`, version `{tdesc['version']}`, size `{tdesc['size_bytes']}` bytes"
+    )
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in tdesc["fields"]:
         out.append(
             f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
         )
@@ -1263,10 +1368,18 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
                 "context_id",
                 "operand_count",
                 "tag",
+                "opcode_group",
+                "format_primary",
+                "format_aux",
+                "format_flags",
                 "operands_ptr",
                 "result_ptr",
                 "result_len",
                 "result_stride",
+                "tensor_desc_ptr",
+                "tensor_desc_len",
+                "tensor_rank",
+                "tensor_desc_flags",
             ]:
                 if k in desc:
                     out.append(f"{k}: {desc[k]}")

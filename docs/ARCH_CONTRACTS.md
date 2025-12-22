@@ -4,6 +4,14 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 
 ## A) Compatibility Tier Ladders
 
+### Presentation Model
+
+- Name: `presented_tier`
+- Description: Reported tier value exposed to software for compatibility decisions.
+- Presented tier is reported by discovery, even if internal implementation is a superset.
+- Optional or undocumented behaviors are reported via feature bits, not by elevating the tier.
+- Reset always starts in P0 for every ladder.
+
 ### TIER_LADDER_Z80 (Z80-derived compatibility ladder.)
 
 - Reset default: `P0`
@@ -20,6 +28,15 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `P5` | `5` | `z280` | true |
 | `P6` | `6` | `z380` | true |
 | `P7` | `7` | `z480` | true |
+
+#### Presentation Overrides
+
+| Part | Presents As | Feature Bits | Description |
+|---|---|---|---|
+| `Z85` | `P2` | `Z85_UNDOC_Z80` | Z85 presents as Z80 (P2) while exposing undocumented Z80 behaviors via feature bits. |
+| `Z90` | `P3` | `Z90_Z180_CLASS` | Z90 presents as Z180-compatible (P3). |
+| `Z380` | `P6` | `Z380_32BIT_EXTENDED` | Z380 presents as P6 and advertises 32-bit extensions via feature bits. |
+| `Z480` | `P7` | `Z480_NATIVE_64` | Z480 presents as P7 and advertises native 64-bit mode via feature bits. |
 
 ### TIER_LADDER_X86 (x86-derived compatibility ladder.)
 
@@ -51,6 +68,15 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `P2` | `2` | `am9513` | true |
 | `P3` | `3` | `am9514` | true |
 | `P4` | `4` | `am9515` | true |
+
+#### Presentation Overrides
+
+| Part | Presents As | Feature Bits | Description |
+|---|---|---|---|
+| `AM9512` | `P1` | `AM9512_IEEE` | Am9512 presents as P1 and advertises IEEE additions via feature bits. |
+| `AM9513` | `P2` | `AM9513_ASYNC` | Am9513 presents as P2 and advertises async scalar capability via feature bits. |
+| `AM9514` | `P3` | `AM9514_VECTOR` | Am9514 presents as P3 and advertises vector capability via feature bits. |
+| `AM9515` | `P4` | `AM9515_TENSOR` | Am9515 presents as P4 and advertises tensor capability via feature bits. |
 
 ## B) Mode Switching Contract
 
@@ -324,6 +350,14 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 
 ## F) Carbon Accelerator Interface (CAI)
 
+### Opcode Groups
+
+| Name | Value | Description |
+|---|---:|---|
+| `CAI_OPGROUP_SCALAR` | `0` | Scalar/legacy math operations (Am9511/Am9512/Am9513 class). |
+| `CAI_OPGROUP_VECTOR` | `1` | Vector/SIMD math operations (Am9514 class). |
+| `CAI_OPGROUP_TENSOR` | `2` | Matrix/tensor math operations (Am9515 class). |
+
 ### Submission Descriptor (V1)
 
 - Format: `CAI_SUBMIT_DESC_V1`, version `1`, size `64` bytes
@@ -364,6 +398,30 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `reserved0` | `20` | `4` | `u32` | Reserved; must be 0. |
 | `reserved1` | `24` | `8` | `u64` | Reserved; must be 0. |
 
+### Tensor Descriptor (V1)
+
+- Format: `CAI_TENSOR_DESC_V1`, version `1`, size `64` bytes
+
+| Field | Offset | Width (bytes) | Type | Description |
+|---|---:|---:|---|---|
+| `desc_version` | `0` | `2` | `u16` | Descriptor format version (must be 1 for v1.0). |
+| `desc_size_dw` | `2` | `2` | `u16` | Descriptor size in 32-bit words (must be 16 for this format). |
+| `rank` | `4` | `1` | `u8` | Tensor rank (number of dimensions). |
+| `elem_format` | `5` | `1` | `u8` | Element numeric format ID (see formats spec). |
+| `reserved0` | `6` | `2` | `u16` | Reserved; must be 0. |
+| `flags` | `8` | `4` | `u32` | Tensor descriptor flags (reserved). |
+| `shape0` | `12` | `4` | `u32` | Dimension 0 length. |
+| `shape1` | `16` | `4` | `u32` | Dimension 1 length. |
+| `shape2` | `20` | `4` | `u32` | Dimension 2 length. |
+| `shape3` | `24` | `4` | `u32` | Dimension 3 length. |
+| `stride0` | `28` | `4` | `u32` | Dimension 0 stride in elements. |
+| `stride1` | `32` | `4` | `u32` | Dimension 1 stride in elements. |
+| `stride2` | `36` | `4` | `u32` | Dimension 2 stride in elements. |
+| `stride3` | `40` | `4` | `u32` | Dimension 3 stride in elements. |
+| `reserved1` | `44` | `4` | `u32` | Reserved; must be 0. |
+| `reserved2` | `48` | `8` | `u64` | Reserved; must be 0. |
+| `reserved3` | `56` | `8` | `u64` | Reserved; must be 0. |
+
 ### Completion Record (V1)
 
 - Format: `CAI_COMP_REC_V1`, version `1`, size `16` bytes
@@ -396,10 +454,18 @@ flags: 0
 context_id: 0
 operand_count: 2
 tag: 305419896
+opcode_group: 0
+format_primary: 0
+format_aux: 0
+format_flags: 0
 operands_ptr: 268435456
 result_ptr: 536870912
 result_len: 256
 result_stride: 0
+tensor_desc_ptr: 0
+tensor_desc_len: 0
+tensor_rank: 0
+tensor_desc_flags: 0
 ```
 
 ## G) Device Model, BDT, and Turbo Queues
