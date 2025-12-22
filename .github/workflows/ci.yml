@@ -16,14 +16,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y iverilog make
 
+      - name: Run generator
+        run: bash scripts/gen_arch.sh
+
       - name: Run consistency checks
         run: bash scripts/check_consistency.sh
 
       - name: Verify generated outputs are committed
         run: git diff --exit-code
 
-      - name: Run regression
-        run: bash scripts/run_sim.sh --all --no-gen
+      - name: Run contract regression
+        run: bash scripts/run_sim.sh --all --suite contract --no-gen
 
       - name: Upload sim logs (on failure)
         if: failure()
