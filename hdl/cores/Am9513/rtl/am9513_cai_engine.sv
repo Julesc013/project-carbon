@@ -175,7 +175,7 @@ module am9513_cai_engine #(
     if (exec_valid_q && ((st_q == ST_RESULT_WR) || (st_q == ST_COMP_WR))) begin
       flags_or_we = 1'b1;
       flags_or_mask = exec_q.exc_flags;
-      if (result_to_reg_q && (eff_mode_q == AM9513_P7_TURBO) &&
+      if (result_to_reg_q && (eff_mode_q == AM9513_P7_NATIVE) &&
           (exec_q.cai_status == 16'(CARBON_CAI_STATUS_OK))) begin
         rf_we = 1'b1;
         rf_index = result_reg_q;
@@ -527,7 +527,7 @@ module am9513_cai_engine #(
             // Decide per operand whether to read from regfile or memory.
             if (opval_idx_q == desc_operand_count_q) begin
               st_q <= ST_EXEC;
-            end else if ((eff_mode_q != AM9513_P7_TURBO) &&
+            end else if ((eff_mode_q != AM9513_P7_NATIVE) &&
                          op_flags_q[opval_idx_q][AM9513_OPERAND_FLAG_IS_REG_BIT]) begin
               comp_status_q <= 16'(CARBON_CAI_STATUS_UNSUPPORTED);
               comp_bytes_q <= '0;
@@ -602,7 +602,7 @@ module am9513_cai_engine #(
               comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
               comp_bytes_q <= '0;
               st_q <= ST_COMP_WR;
-            end else if (result_to_reg_q && (eff_mode_q != AM9513_P7_TURBO)) begin
+            end else if (result_to_reg_q && (eff_mode_q != AM9513_P7_NATIVE)) begin
               comp_status_q <= 16'(CARBON_CAI_STATUS_UNSUPPORTED);
               comp_bytes_q <= '0;
               st_q <= ST_COMP_WR;
@@ -617,7 +617,7 @@ module am9513_cai_engine #(
               comp_bytes_q <= ex.bytes_written;
 
               // If result goes to register, skip memory write.
-              if (result_to_reg_q && (eff_mode_q == AM9513_P7_TURBO) &&
+              if (result_to_reg_q && (eff_mode_q == AM9513_P7_NATIVE) &&
                   (ex.cai_status == 16'(CARBON_CAI_STATUS_OK))) begin
                 comp_bytes_q <= 32'h0;
                 st_q <= ST_COMP_WR;

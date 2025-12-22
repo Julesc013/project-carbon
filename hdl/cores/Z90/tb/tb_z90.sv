@@ -147,7 +147,7 @@ module tb_z90;
       write_mem90(16'h0001, CARBON_Z90_OPPAGE_P0_PREFIX1);
       write_mem90(16'h0002, op0);
       write_mem90(16'h0003, op1);
-      write_mem90(16'h0004, 8'(CARBON_Z80_DERIVED_TIER_P7_TURBO_UNLIMITED));
+      write_mem90(16'h0004, 8'(CARBON_Z80_DERIVED_TIER_P7_Z480));
       write_mem90(16'h0005, 8'h20);
       write_mem90(16'h0006, 8'h00);
       write_mem90(16'h0007, 8'h76); // HALT (return target after RETMD)
@@ -294,4 +294,3 @@ module tb_z90;
   end
 
 endmodule
-

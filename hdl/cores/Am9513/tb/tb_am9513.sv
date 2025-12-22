@@ -367,7 +367,7 @@ module tb_am9513;
     if (fault) $fatal(1, "comp_mask fault");
     bfm.csr_write(CARBON_CSR_AM9513_CAI_IRQ_ENABLE, 32'h0, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "irq_en fault");
-    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P7_TURBO}, 4'hF, 2'b01, fault);
+    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P7_NATIVE}, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "mode fault");
     bfm.csr_write(CARBON_CSR_AM9513_CTRL, 32'h1, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "ctrl fault");
@@ -665,7 +665,7 @@ module tb_am9513;
     // Now override to P7 and retry.
     cai_submit_and_wait(am9513_opcode(AM9513_FUNC_ADD, 8'(CARBON_FMT_BINARY32)),
                         (32'(1) << AM9513_SUBMIT_FLAG_MODE_VALID_BIT) |
-                        (32'(AM9513_P7_TURBO) << AM9513_SUBMIT_FLAG_MODE_LSB) |
+                        (32'(AM9513_P7_NATIVE) << AM9513_SUBMIT_FLAG_MODE_LSB) |
                         (32'(1) << AM9513_SUBMIT_FLAG_RESULT_REG_BIT) |
                         (32'(2) << AM9513_SUBMIT_FLAG_RESULT_REG_LSB),
                         16'h0000, 16'd2, 64'(opdesc_base), 64'h0, 32'h0, 32'h0,
@@ -674,7 +674,7 @@ module tb_am9513;
     if (csr_rf_read64(16'h0000, 4'd2)[31:0] != 32'h4040_0000) $fatal(1, "rf fastpath wrong");
 
     // Restore default mode to P7 for remaining tests.
-    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P7_TURBO}, 4'hF, 2'b01, fault);
+    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P7_NATIVE}, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "mode(P7) fault");
 
     // ----------------------------------------------------------------------

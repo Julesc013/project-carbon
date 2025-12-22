@@ -74,7 +74,7 @@ module fpu_8097 (
   logic [63:0] rf_q [16];
 
   wire tier_p0 = (tier_q == 8'(CARBON_X86_DERIVED_TIER_P0_I8086_8087));
-  wire tier_p7 = (tier_q == 8'(CARBON_X86_DERIVED_TIER_P7_TURBO_UNLIMITED));
+  wire tier_p7 = (tier_q == 8'(CARBON_X86_DERIVED_TIER_P7_X86_64));
   wire tier_supported = tier_p0 || tier_p7;
   wire turbo_allowed = tier_p7 && !modeflags_q[CARBON_MODEFLAG_STRICT_BIT];
 
@@ -243,7 +243,7 @@ module fpu_8097 (
               if (csr.req_priv < CSR_PRIV_W'(1)) begin
                 csr_rsp_fault_q <= 1'b1;
               end else if (!((csr.req_wdata[7:0] == 8'(CARBON_X86_DERIVED_TIER_P0_I8086_8087)) ||
-                             (csr.req_wdata[7:0] == 8'(CARBON_X86_DERIVED_TIER_P7_TURBO_UNLIMITED)))) begin
+                             (csr.req_wdata[7:0] == 8'(CARBON_X86_DERIVED_TIER_P7_X86_64)))) begin
                 csr_rsp_fault_q <= 1'b1;
                 fault_code_q <= FPU8097_FAULT_BAD_TIER;
               end else begin
@@ -745,4 +745,3 @@ module fpu_8097 (
   end
 
 endmodule : fpu_8097
-

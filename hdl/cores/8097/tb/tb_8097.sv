@@ -153,7 +153,7 @@ module tb_8097;
     // ----------------------------------------------------------------------
     csrdrv.csr_write(CARBON_CSR_8097_MODEFLAGS, 32'h0000_0000, 4'hF, 2'(1), fault);
     if (fault) $fatal(1, "MODEFLAGS write fault");
-    csrdrv.csr_write(CARBON_CSR_8097_TIER, 32'(CARBON_X86_DERIVED_TIER_P7_TURBO_UNLIMITED), 4'hF, 2'(1), fault);
+    csrdrv.csr_write(CARBON_CSR_8097_TIER, 32'(CARBON_X86_DERIVED_TIER_P7_X86_64), 4'hF, 2'(1), fault);
     if (fault) $fatal(1, "TIER write fault");
 
     // F0 = 1.0
@@ -192,4 +192,3 @@ module tb_8097;
   end
 
 endmodule
-

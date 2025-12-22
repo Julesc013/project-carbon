@@ -304,7 +304,7 @@ module cpu_8096_core #(
   logic [15:0] str_src_off_q;
   logic [15:0] str_dst_off_q;
 
-  wire tier_p7 = (tier_q == 8'(CARBON_X86_DERIVED_TIER_P7_TURBO_UNLIMITED));
+  wire tier_p7 = (tier_q == 8'(CARBON_X86_DERIVED_TIER_P7_X86_64));
   wire turbo_allowed = tier_p7 && !modeflags_q[CARBON_MODEFLAG_STRICT_BIT];
 
   // --------------------------------------------------------------------------
@@ -816,7 +816,7 @@ module cpu_8096_core #(
               csr_cause_q <= X96_CAUSE_MODEUP_INVALID;
               csr_epc_q <= {cs_q, ip_q};
               state_q <= ST_TRAP;
-            end else if (target != 8'(CARBON_X86_DERIVED_TIER_P7_TURBO_UNLIMITED)) begin
+            end else if (target != 8'(CARBON_X86_DERIVED_TIER_P7_X86_64)) begin
               // P1-P6 trap in v1.
               halt_trap_q <= 1'b1;
               csr_cause_q <= X96_CAUSE_UNIMPL_TIER;

@@ -9,7 +9,7 @@ package am9513_pkg;
   // --------------------------------------------------------------------------
   localparam logic [7:0] AM9513_P0_AM9511 = 8'(CARBON_AMD_FPU_TIER_P0_AM9511);
   localparam logic [7:0] AM9513_P1_AM9512 = 8'(CARBON_AMD_FPU_TIER_P1_AM9512);
-  localparam logic [7:0] AM9513_P7_TURBO  = 8'(CARBON_AMD_FPU_TIER_P7_TURBO_UNLIMITED);
+  localparam logic [7:0] AM9513_P7_NATIVE = 8'(CARBON_AMD_FPU_TIER_P7_AM9513_NATIVE);
 
   // --------------------------------------------------------------------------
   // IEEE exception flags (sticky, per-context)

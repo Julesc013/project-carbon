@@ -254,7 +254,7 @@ module z90_core #(
     begin
       strict = (modeflags_q & CARBON_MODEFLAG_STRICT_MASK) != 0;
       z90_turbo_allowed =
-          (!strict) && (tier_q == 8'(CARBON_Z80_DERIVED_TIER_P7_TURBO_UNLIMITED));
+          (!strict) && (tier_q == 8'(CARBON_Z80_DERIVED_TIER_P7_Z480));
     end
   endfunction
 
