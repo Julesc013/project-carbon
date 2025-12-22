@@ -230,8 +230,8 @@ X96_8097_SV := \
 
 IVERILOG_FLAGS := -g2012 -Wall -Wno-timescale
 
-.PHONY: all clean tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_carbonio tb_carbondma tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
-all: tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
+.PHONY: all clean tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_carbonio tb_carbondma tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
+all: tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -239,6 +239,18 @@ $(BUILD_DIR):
 tb_fabric_arbiter: $(BUILD_DIR)
 	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_fabric_arbiter.vvp $(COMMON_SV) tb/tb_fabric_arbiter.sv
 	$(VVP) $(BUILD_DIR)/tb_fabric_arbiter.vvp
+
+tb_fabric_contract: $(BUILD_DIR)
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_fabric_contract.vvp $(COMMON_SV) tb/tb_fabric_contract.sv
+	$(VVP) $(BUILD_DIR)/tb_fabric_contract.vvp
+
+tb_csr_contract: $(BUILD_DIR)
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_csr_contract.vvp $(COMMON_SV) tb/tb_csr_contract.sv
+	$(VVP) $(BUILD_DIR)/tb_csr_contract.vvp
+
+tb_irq_contract: $(BUILD_DIR)
+	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_irq_contract.vvp $(COMMON_SV) tb/tb_irq_contract.sv
+	$(VVP) $(BUILD_DIR)/tb_irq_contract.vvp
 
 tb_irq_ctrl: $(BUILD_DIR)
 	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/tb_irq_ctrl.vvp $(COMMON_SV) tb/tb_irq_ctrl.sv

@@ -12,7 +12,9 @@ module fabric_mem_bfm #(
 
     parameter int unsigned MEM_BYTES = 4096,
     parameter int unsigned RESP_LATENCY = 1,
-    parameter int unsigned STALL_MASK = 0
+    parameter int unsigned STALL_MASK = 0,
+    parameter string INIT_FILE = "",
+    parameter bit INIT_FILE_IS_HEX = 1'b1
 ) (
     input logic clk,
     input logic rst_n,
@@ -33,7 +35,9 @@ module fabric_mem_bfm #(
   logic [7:0] mem [MEM_BYTES];
 
   logic [31:0] lfsr_q;
-  wire stall_now = (STALL_MASK != 0) && ((lfsr_q & STALL_MASK) == 0);
+  logic [31:0] stall_mask_q;
+  logic        stall_enable_q;
+  wire stall_now = stall_enable_q && (stall_mask_q != 0) && ((lfsr_q & stall_mask_q) == 0);
 
   // Single outstanding transaction.
   logic                busy_q;
@@ -93,9 +97,40 @@ module fabric_mem_bfm #(
     end
   endtask
 
+`ifndef SYNTHESIS
+  task automatic mem_load_hex(input string path);
+    $readmemh(path, mem);
+  endtask
+
+  task automatic mem_load_bin(input string path);
+    $readmemb(path, mem);
+  endtask
+
+  task automatic set_stall_mask(input logic [31:0] mask);
+    stall_mask_q = mask;
+  endtask
+
+  task automatic set_stall_enable(input logic enable);
+    stall_enable_q = enable;
+  endtask
+
+  integer init_i;
+  initial begin
+    for (init_i = 0; init_i < MEM_BYTES; init_i++) begin
+      mem[init_i] = 8'h00;
+    end
+    if (INIT_FILE != "") begin
+      if (INIT_FILE_IS_HEX) $readmemh(INIT_FILE, mem);
+      else $readmemb(INIT_FILE, mem);
+    end
+  end
+`endif
+
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       lfsr_q      <= 32'h1;
+      stall_mask_q <= STALL_MASK;
+      stall_enable_q <= 1'b1;
       busy_q      <= 1'b0;
       delay_q     <= '0;
       rsp_valid_q <= 1'b0;

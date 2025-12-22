@@ -19,13 +19,16 @@ module tb_cai_contract;
   logic clk;
   logic rst_n;
 
-  initial clk = 1'b0;
-  always #5 clk = ~clk;
+  clock_reset_bfm #(
+      .CLK_PERIOD(10ns),
+      .RESET_CYCLES(5)
+  ) clk_rst (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
 
   initial begin
-    rst_n = 1'b0;
-    repeat (5) @(posedge clk);
-    rst_n = 1'b1;
+    clk_rst.apply_reset();
   end
 
   csr_if   csr   (.clk(clk), .rst_n(rst_n));
@@ -187,8 +190,8 @@ module tb_cai_contract;
     bfm.csr_write(CARBON_CSR_AM9513_CAI_COMP_RING_MASK, 32'(COMP_MASK), 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "comp_mask fault");
 
-    // Enable accelerator and default to P7.
-    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P7_NATIVE}, 4'hF, 2'b01, fault);
+    // Enable accelerator and default to P2.
+    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P2_AM9513}, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "mode fault");
     bfm.csr_write(CARBON_CSR_AM9513_ENABLE, 32'h1, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "enable fault");
@@ -219,7 +222,11 @@ module tb_cai_contract;
                          64'(opdesc_base),
                          64'(res_ptr),
                          32'd4,
-                         32'h0);
+                         32'h0,
+                         8'(CARBON_CAI_OPGROUP_SCALAR),
+                         8'(CARBON_FMT_BINARY32),
+                         8'h00,
+                         8'h00);
     cai_write_submit_desc(0, desc);
 
     cai.submit_doorbell <= 1'b1;
@@ -251,7 +258,11 @@ module tb_cai_contract;
                          64'(opdesc_base),
                          64'(res_ptr_bad),
                          32'd4,
-                         32'h0);
+                         32'h0,
+                         8'(CARBON_CAI_OPGROUP_SCALAR),
+                         8'(CARBON_FMT_BINARY32),
+                         8'h00,
+                         8'h00);
     desc[(CARBON_CAI_SUBMIT_DESC_V1_OFF_DESC_VERSION*8) +: 16] = 16'(CARBON_CAI_SUBMIT_DESC_V1_VERSION + 1);
     cai_write_submit_desc(1, desc);
 
