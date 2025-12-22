@@ -10,16 +10,16 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 - Upgrade rule: `target_tier > current_tier`
 - Downgrade rule: `only via RETMD`
 
-| Tier | Value | Label | Strict | Turbo |
-|---:|---:|---|:---:|:---:|
-| `P0` | `0` | `8080` | true |  |
-| `P1` | `1` | `8085` | true |  |
-| `P2` | `2` | `z80` | true |  |
-| `P3` | `3` | `z180` | true |  |
-| `P4` | `4` | `z280` | true |  |
-| `P5` | `5` | `z380` | true |  |
-| `P6` | `6` | `eZ80` | true |  |
-| `P7` | `7` | `TURBO_UNLIMITED` |  | true |
+| Tier | Value | Label | Strict |
+|---:|---:|---|:---:|
+| `P0` | `0` | `8080` | true |
+| `P1` | `1` | `8085` | true |
+| `P2` | `2` | `z80` | true |
+| `P3` | `3` | `z180` | true |
+| `P4` | `4` | `eZ80` | true |
+| `P5` | `5` | `z280` | true |
+| `P6` | `6` | `z380` | true |
+| `P7` | `7` | `z480` | true |
 
 ### TIER_LADDER_X86 (x86-derived compatibility ladder.)
 
@@ -27,16 +27,16 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 - Upgrade rule: `target_tier > current_tier`
 - Downgrade rule: `only via RETMD`
 
-| Tier | Value | Label | Strict | Turbo |
-|---:|---:|---|:---:|:---:|
-| `P0` | `0` | `8086/8087` | true |  |
-| `P1` | `1` | `286/287` | true |  |
-| `P2` | `2` | `386/387` | true |  |
-| `P3` | `3` | `486/487` | true |  |
-| `P4` | `4` | `586/587` | true |  |
-| `P5` | `5` | `686/687` | true |  |
-| `P6` | `6` | `786/787` | true |  |
-| `P7` | `7` | `TURBO_UNLIMITED` |  | true |
+| Tier | Value | Label | Strict |
+|---:|---:|---|:---:|
+| `P0` | `0` | `8086/8087` | true |
+| `P1` | `1` | `80186/80187` | true |
+| `P2` | `2` | `80286/80287` | true |
+| `P3` | `3` | `80386/80387` | true |
+| `P4` | `4` | `80486/80487` | true |
+| `P5` | `5` | `pentium_ia32` | true |
+| `P6` | `6` | `p6_ia32` | true |
+| `P7` | `7` | `x86_64` | true |
 
 ### TIER_LADDER_AMD_FPU (AMD-derived FPU compatibility ladder.)
 
@@ -44,11 +44,11 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 - Upgrade rule: `target_tier > current_tier`
 - Downgrade rule: `only via RETMD`
 
-| Tier | Value | Label | Strict | Turbo |
-|---:|---:|---|:---:|:---:|
-| `P0` | `0` | `am9511` | true |  |
-| `P1` | `1` | `am9512` | true |  |
-| `P7` | `7` | `TURBO_UNLIMITED` |  | true |
+| Tier | Value | Label | Strict |
+|---:|---:|---|:---:|
+| `P0` | `0` | `am9511` | true |
+| `P1` | `1` | `am9512` | true |
+| `P7` | `7` | `am9513-native` | true |
 
 ## B) Mode Switching Contract
 
@@ -65,7 +65,7 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 
 | Name | Bit | Reset | Description |
 |---|---:|---:|---|
-| `MODEFLAG_STRICT` | `0` | `1` | When 1, turbo/extension behaviors are disabled regardless of tier. |
+| `MODEFLAG_STRICT` | `0` | `1` | When 1, extension behaviors are disabled regardless of tier. |
 | `MODEFLAG_INTMASK` | `1` | `0` | Architectural interrupt mask hint; when 1, mask interrupts (implementation-defined sources). |
 
 ### MODESTACK
@@ -101,7 +101,7 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `FEAT_CSR_NAMESPACE` | `1` | Carbon CSR namespace and access model implemented. |
 | `FEAT_FABRIC` | `2` | Carbon internal fabric transaction contract implemented. |
 | `FEAT_CAI` | `3` | Carbon Accelerator Interface (CAI) implemented. |
-| `FEAT_CPUID` | `4` | CPUID instruction transport implemented (eZ90 P7). |
+| `FEAT_CPUID` | `4` | CPUID instruction transport implemented (Z480 P7). |
 | `FEAT_CAPS` | `5` | CAPS transport implemented (Z85/Z90). |
 | `FEAT_AM9513` | `6` | Am9513-class accelerator present. |
 | `FEAT_IOMMU_HOOKS` | `7` | IOMMU integration hooks for accelerators/fabric present. |
@@ -414,7 +414,7 @@ result_stride: 0
 
 | Class | Value | Description |
 |---|---:|---|
-| `DEVCLASS_CPU` | `0x0001` | CPU cores (Z85/Z90/eZ90/8096/etc). |
+| `DEVCLASS_CPU` | `0x0001` | CPU cores (Z85/Z90/Z480/8096/etc). |
 | `DEVCLASS_FPU` | `0x0002` | FPU/accelerator cores (Am951x-class, 8097). |
 | `DEVCLASS_UART` | `0x0010` | UART console devices. |
 | `DEVCLASS_SIO` | `0x0011` | Serial I/O controllers (multi-channel). |

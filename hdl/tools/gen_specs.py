@@ -258,7 +258,7 @@ def _validate_tiers(spec: Dict[str, Any]) -> None:
         if ladder["reset_default"] != "P0":
             raise SpecError(f"{where}:{ladder['id']}: reset_default must be P0")
         if "P7" not in seen_ids:
-            raise SpecError(f"{where}:{ladder['id']}: must define P7 (TURBO_UNLIMITED)")
+            raise SpecError(f"{where}:{ladder['id']}: must define P7")
         if "P0" not in seen_ids:
             raise SpecError(f"{where}:{ladder['id']}: must define P0")
 
@@ -1098,13 +1098,12 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"- Upgrade rule: `{ladder['upgrade_rule']}`")
         out.append(f"- Downgrade rule: `{ladder['downgrade_rule']}`")
         out.append("")
-        out.append("| Tier | Value | Label | Strict | Turbo |")
-        out.append("|---:|---:|---|:---:|:---:|")
+        out.append("| Tier | Value | Label | Strict |")
+        out.append("|---:|---:|---|:---:|")
         for t in ladder["tiers"]:
-            turbo = "true" if bool(t.get("turbo", False)) else ""
             strict = "true" if bool(t.get("strict", False)) else ""
             out.append(
-                f"| `{t['id']}` | `{t['value']}` | `{_md_escape(t['label'])}` | {strict} | {turbo} |"
+                f"| `{t['id']}` | `{t['value']}` | `{_md_escape(t['label'])}` | {strict} |"
             )
         out.append("")
 
