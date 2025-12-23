@@ -116,7 +116,7 @@ if [ "$do_list" -eq 1 ]; then
 import sys
 path = sys.argv[1]
 suite = sys.argv[2] if len(sys.argv) > 2 else "all"
-sections = {"contract_tests": [], "core_tests": [], "system_tests": [], "placeholder_tests": [], "optional_local_tests": []}
+sections = {"contract_tests": [], "core_tests": [], "system_smoke_tests": [], "system_tests": [], "placeholder_tests": [], "optional_local_tests": []}
 current = None
 for raw in open(path, "r", encoding="utf-8"):
     line = raw.split("#", 1)[0].rstrip()
@@ -136,7 +136,7 @@ for raw in open(path, "r", encoding="utf-8"):
         sections[current].append(name)
 alias = {
     "all": ["contract_tests", "core_tests", "system_tests"],
-    "smoke": ["contract_tests", "system_tests"],
+    "smoke": ["contract_tests", "system_smoke_tests"],
     "contract": ["contract_tests"],
     "core": ["core_tests"],
     "system": ["system_tests"],
@@ -164,7 +164,7 @@ else
 import sys
 path = sys.argv[1]
 suite = sys.argv[2] if len(sys.argv) > 2 else "all"
-sections = {"contract_tests": [], "core_tests": [], "system_tests": [], "placeholder_tests": [], "optional_local_tests": []}
+sections = {"contract_tests": [], "core_tests": [], "system_smoke_tests": [], "system_tests": [], "placeholder_tests": [], "optional_local_tests": []}
 current = None
 for raw in open(path, "r", encoding="utf-8"):
     line = raw.split("#", 1)[0].rstrip()
@@ -184,7 +184,7 @@ for raw in open(path, "r", encoding="utf-8"):
         sections[current].append(name)
 alias = {
     "all": ["contract_tests", "core_tests", "system_tests"],
-    "smoke": ["contract_tests", "system_tests"],
+    "smoke": ["contract_tests", "system_smoke_tests"],
     "contract": ["contract_tests"],
     "core": ["core_tests"],
     "system": ["system_tests"],

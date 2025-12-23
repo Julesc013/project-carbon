@@ -57,6 +57,7 @@ if ($List -and $Test) {
 $sections = @{
   contract_tests = @()
   core_tests = @()
+  system_smoke_tests = @()
   system_tests = @()
   placeholder_tests = @()
   optional_local_tests = @()
@@ -80,7 +81,7 @@ foreach ($line in Get-Content $Manifest) {
 
 $alias = @{
   all = @("contract_tests","core_tests","system_tests")
-  smoke = @("contract_tests","system_tests")
+  smoke = @("contract_tests","system_smoke_tests")
   contract = @("contract_tests")
   core = @("core_tests")
   system = @("system_tests")

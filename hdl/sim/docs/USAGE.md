@@ -39,7 +39,8 @@ defines named sections:
 
 - `contract_tests` for interface and fabric contracts
 - `core_tests` for core-level unit tests
-- `system_tests` for full-system smoke tests
+- `system_smoke_tests` for minimal system smoke/tier tests
+- `system_tests` for full system tests
 - `placeholder_tests` for not-yet-implemented targets (not run by default)
 - `optional_local_tests` for local-only tests that may require extra assets
 

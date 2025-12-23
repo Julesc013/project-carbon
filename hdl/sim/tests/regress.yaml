@@ -24,8 +24,16 @@ core_tests:
   - tb_carbondma
   - tb_z480_scaffold
   - tb_z480_core_basic
-  - tb_8096
-  - tb_8097
+
+system_smoke_tests:
+  - tb_carbonz80
+  - tb_carbonz80_tiers
+  - tb_carbonz90
+  - tb_carbonz90_tiers
+  - tb_carbonz380_smoke
+  - tb_carbonz380_tiers
+  - tb_carbonz480_smoke
+  - tb_tier_host_ctrl
 
 system_tests:
   - tb_carbonz80
@@ -37,13 +45,15 @@ system_tests:
   - tb_carbonz480
   - tb_carbonz480_smoke
   - tb_tier_host_ctrl
-  - tb_carbonx86
-  - tb_carbonx96
 
 placeholder_tests:
   - tb_z380
   - tb_z480
   - tb_carbonz380
+  - tb_carbonx86
+  - tb_carbonx96
+  - tb_8096
+  - tb_8097
 
 optional_local_tests:
   - tb_z85_zex
