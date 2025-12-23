@@ -14,6 +14,41 @@ package z480_pkg;
   } z480_priv_e;
 
   // --------------------------------------------------------------------------
+  // Z480 ISA v1 encoding (MIPS-like 32-bit fixed width)
+  // --------------------------------------------------------------------------
+  localparam logic [5:0] Z480_OP_SPECIAL  = 6'h00;
+  localparam logic [5:0] Z480_OP_J        = 6'h02;
+  localparam logic [5:0] Z480_OP_JAL      = 6'h03;
+  localparam logic [5:0] Z480_OP_BEQ      = 6'h04;
+  localparam logic [5:0] Z480_OP_BNE      = 6'h05;
+  localparam logic [5:0] Z480_OP_ADDI     = 6'h08;
+  localparam logic [5:0] Z480_OP_LDB      = 6'h20;
+  localparam logic [5:0] Z480_OP_LDH      = 6'h21;
+  localparam logic [5:0] Z480_OP_LDW      = 6'h23;
+  localparam logic [5:0] Z480_OP_LDD      = 6'h24;
+  localparam logic [5:0] Z480_OP_LDQ      = 6'h25;
+  localparam logic [5:0] Z480_OP_STB      = 6'h28;
+  localparam logic [5:0] Z480_OP_STH      = 6'h29;
+  localparam logic [5:0] Z480_OP_STW      = 6'h2b;
+  localparam logic [5:0] Z480_OP_STD      = 6'h2c;
+  localparam logic [5:0] Z480_OP_STQ      = 6'h2d;
+  localparam logic [5:0] Z480_OP_CSRR     = 6'h30;
+  localparam logic [5:0] Z480_OP_CSRW     = 6'h31;
+  localparam logic [5:0] Z480_OP_MODEUP   = 6'h32;
+  localparam logic [5:0] Z480_OP_RETMD    = 6'h33;
+  localparam logic [5:0] Z480_OP_FENCE    = 6'h34;
+  localparam logic [5:0] Z480_OP_FENCE_IO = 6'h35;
+  localparam logic [5:0] Z480_OP_RFE      = 6'h36;
+
+  localparam logic [5:0] Z480_FUNCT_NOP   = 6'h00;
+  localparam logic [5:0] Z480_FUNCT_JR    = 6'h08;
+  localparam logic [5:0] Z480_FUNCT_ADD   = 6'h20;
+  localparam logic [5:0] Z480_FUNCT_SUB   = 6'h22;
+  localparam logic [5:0] Z480_FUNCT_AND   = 6'h24;
+  localparam logic [5:0] Z480_FUNCT_OR    = 6'h25;
+  localparam logic [5:0] Z480_FUNCT_XOR   = 6'h26;
+
+  // --------------------------------------------------------------------------
   // Basic uop model (v1 scaffold)
   // --------------------------------------------------------------------------
   typedef enum logic [7:0] {

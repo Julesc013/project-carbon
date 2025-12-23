@@ -1,5 +1,5 @@
 // Project Carbon - Z480 P7 core
-// z480_core: Minimal in-order scaffold for the native 64-bit tier.
+// z480_core: Minimal in-order core for the native 64-bit tier (ISA v1).
 
 module z480_core #(
     parameter logic [31:0] IO_BASE = 32'h000F_0000,
@@ -24,11 +24,21 @@ module z480_core #(
   localparam int unsigned FAB_ATTR_W = $bits(mem_if.req_attr);
   localparam int unsigned FAB_ID_W   = $bits(mem_if.req_id);
   localparam int unsigned FAB_CODE_W = $bits(mem_if.rsp_code);
+  localparam int unsigned BYTES_PER_WORD = (FAB_DATA_W / 8);
 
   localparam logic [FAB_ATTR_W-1:0] MEM_ATTR =
       FAB_ATTR_W'(CARBON_FABRIC_ATTR_CACHEABLE_MASK);
   localparam logic [FAB_ATTR_W-1:0] IO_ATTR =
       FAB_ATTR_W'(CARBON_FABRIC_ATTR_ORDERED_MASK | CARBON_FABRIC_ATTR_IO_SPACE_MASK);
+
+  // --------------------------------------------------------------------------
+  // Trap causes (implementation-defined).
+  // --------------------------------------------------------------------------
+  localparam logic [31:0] Z480_CAUSE_ILLEGAL = 32'h0000_0001;
+  localparam logic [31:0] Z480_CAUSE_BUS     = 32'h0000_0002;
+  localparam logic [31:0] Z480_CAUSE_ALIGN   = 32'h0000_0003;
+  localparam logic [31:0] Z480_CAUSE_CSR     = 32'h0000_0004;
+  localparam logic [31:0] Z480_CAUSE_MODEUP_INVALID = 32'h0000_0012;
 
   // --------------------------------------------------------------------------
   // CSR implementation (minimal + CPUID window).
@@ -56,6 +66,11 @@ module z480_core #(
   logic        core_trap_pulse_q;
   logic [31:0] core_trap_cause_q;
   logic [31:0] core_trap_epc_q;
+
+  // Core-originated CSR write (for CSRW)
+  logic        core_csr_write_pulse_q;
+  logic [31:0] core_csr_write_addr_q;
+  logic [31:0] core_csr_write_data_q;
 
   assign csr.req_ready       = !csr_rsp_valid_q;
   assign csr.rsp_valid       = csr_rsp_valid_q;
@@ -88,6 +103,54 @@ module z480_core #(
       .data3(cpuid_data3)
   );
 
+  function automatic logic [31:0] csr_read_word(
+      input logic [31:0] addr,
+      output logic fault
+  );
+    logic [31:0] v;
+    begin
+      v = 32'h0;
+      fault = 1'b0;
+      unique case (addr)
+        CARBON_CSR_ID: v = 32'h5A34_8001;
+        CARBON_CSR_TIER: v[7:0] = csr_tier_q;
+        CARBON_CSR_MODEFLAGS: v[7:0] = csr_modeflags_q;
+        CARBON_CSR_TIME: v = cycle_q[31:0];
+        CARBON_CSR_TIME_HI: v = cycle_q[63:32];
+        CARBON_CSR_CAUSE: v = csr_cause_q;
+        CARBON_CSR_EPC: v = csr_epc_q;
+        CARBON_CSR_CPUID_LEAF: v = csr_cpuid_leaf_q;
+        CARBON_CSR_CPUID_SUBLEAF: v = csr_cpuid_subleaf_q;
+        CARBON_CSR_CPUID_DATA0_LO: v = cpuid_data0[31:0];
+        CARBON_CSR_CPUID_DATA0_HI: v = cpuid_data0[63:32];
+        CARBON_CSR_CPUID_DATA1_LO: v = cpuid_data1[31:0];
+        CARBON_CSR_CPUID_DATA1_HI: v = cpuid_data1[63:32];
+        CARBON_CSR_CPUID_DATA2_LO: v = cpuid_data2[31:0];
+        CARBON_CSR_CPUID_DATA2_HI: v = cpuid_data2[63:32];
+        CARBON_CSR_CPUID_DATA3_LO: v = cpuid_data3[31:0];
+        CARBON_CSR_CPUID_DATA3_HI: v = cpuid_data3[63:32];
+        default: begin
+          fault = 1'b1;
+          v = 32'h0;
+        end
+      endcase
+      csr_read_word = v;
+    end
+  endfunction
+
+  function automatic logic csr_write_ok(input logic [31:0] addr);
+    begin
+      unique case (addr)
+        CARBON_CSR_MODEFLAGS,
+        CARBON_CSR_EPC,
+        CARBON_CSR_CPUID_LEAF,
+        CARBON_CSR_CPUID_SUBLEAF,
+        CARBON_CSR_TRACE_CTL: csr_write_ok = 1'b1;
+        default: csr_write_ok = 1'b0;
+      endcase
+    end
+  endfunction
+
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       csr_rsp_valid_q <= 1'b0;
@@ -100,6 +163,8 @@ module z480_core #(
       cycle_q         <= 64'd0;
       csr_cpuid_leaf_q <= 32'h0;
       csr_cpuid_subleaf_q <= 32'h0;
+      csr_modeflags_q <= CARBON_MODEFLAG_STRICT_MASK;
+      csr_tier_q <= 8'(CARBON_Z80_DERIVED_TIER_P7_Z480);
       csr_halt_pulse_q <= 1'b0;
       csr_run_pulse_q  <= 1'b0;
       csr_step_pulse_q <= 1'b0;
@@ -115,6 +180,8 @@ module z480_core #(
         csr_cause_q <= core_trap_cause_q;
         csr_epc_q   <= core_trap_epc_q;
       end
+
+      if (csr_modeflags_wr) csr_modeflags_q <= csr_modeflags_wdata;
 
       if (csr_req_fire) begin
         csr_rsp_valid_q <= 1'b1;
@@ -246,6 +313,19 @@ module z480_core #(
           end
         endcase
       end
+
+      if (core_csr_write_pulse_q) begin
+        unique case (core_csr_write_addr_q)
+          CARBON_CSR_MODEFLAGS: csr_modeflags_q <=
+              core_csr_write_data_q[7:0] &
+              (CARBON_MODEFLAG_STRICT_MASK | CARBON_MODEFLAG_INTMASK_MASK);
+          CARBON_CSR_EPC: csr_epc_q <= core_csr_write_data_q;
+          CARBON_CSR_CPUID_LEAF: csr_cpuid_leaf_q <= core_csr_write_data_q;
+          CARBON_CSR_CPUID_SUBLEAF: csr_cpuid_subleaf_q <= core_csr_write_data_q;
+          CARBON_CSR_TRACE_CTL: csr_trace_ctl_q <= core_csr_write_data_q;
+          default: begin end
+        endcase
+      end
     end
   end
 
@@ -268,23 +348,50 @@ module z480_core #(
   assign dbg.trace_data  = '0;
 
   // --------------------------------------------------------------------------
-  // Simple fetch/execute scaffold (NOP only in v1 skeleton).
+  // Simple in-order pipeline (single outstanding fabric op).
   // --------------------------------------------------------------------------
-  typedef enum logic [2:0] {
+  typedef enum logic [3:0] {
     ST_RESET,
     ST_BOUNDARY,
     ST_BUS_REQ,
     ST_BUS_RSP,
     ST_DECODE,
+    ST_MEM_LOAD_HI,
+    ST_MEM_STORE_HI,
+    ST_MEM_COMMIT,
     ST_TRAP
   } state_e;
 
+  typedef enum logic [1:0] {
+    DEST_NONE,
+    DEST_INSTR,
+    DEST_LOAD_LO,
+    DEST_LOAD_HI
+  } dest_e;
+
   state_e state_q;
   state_e state_after_bus_q;
+  dest_e  bus_dest_q;
 
   logic [63:0] pc_q;
+  logic [63:0] instr_pc_q;
   logic [31:0] instr_q;
   logic trapped_q;
+
+  // Register file
+  logic [63:0] gpr_q [0:31];
+
+  // Load/store context
+  logic [63:0] load_addr_q;
+  logic [3:0]  load_size_q;
+  logic        load_sign_q;
+  logic [4:0]  load_rd_q;
+  logic [31:0] load_data_lo_q;
+  logic [31:0] load_data_hi_q;
+
+  logic [63:0] store_addr_q;
+  logic [3:0]  store_size_q;
+  logic [63:0] store_data_q;
 
   logic [FAB_OP_W-1:0]   bus_op_q;
   logic [FAB_ADDR_W-1:0] bus_addr_q;
@@ -306,6 +413,29 @@ module z480_core #(
   wire req_fire = mem_if.req_valid && mem_if.req_ready;
   wire rsp_fire = mem_if.rsp_valid && mem_if.rsp_ready;
 
+  function automatic logic [FAB_SIZE_W-1:0] size_to_code(input int unsigned size_bytes);
+    begin
+      unique case (size_bytes)
+        1: size_to_code = FAB_SIZE_W'(0);
+        2: size_to_code = FAB_SIZE_W'(1);
+        4: size_to_code = FAB_SIZE_W'(2);
+        8: size_to_code = FAB_SIZE_W'(3);
+        default: size_to_code = FAB_SIZE_W'(0);
+      endcase
+    end
+  endfunction
+
+  function automatic logic [FAB_STRB_W-1:0] wstrb_for_size(input int unsigned size_bytes);
+    begin
+      unique case (size_bytes)
+        1: wstrb_for_size = FAB_STRB_W'(1);
+        2: wstrb_for_size = FAB_STRB_W'(3);
+        4: wstrb_for_size = FAB_STRB_W'(15);
+        default: wstrb_for_size = FAB_STRB_W'(0);
+      endcase
+    end
+  endfunction
+
   function automatic logic is_io_addr(input logic [63:0] addr);
     logic [31:0] lo;
     begin
@@ -314,15 +444,88 @@ module z480_core #(
     end
   endfunction
 
+  task automatic start_bus_read(
+      input logic [63:0] addr,
+      input int unsigned size_bytes,
+      input dest_e dest,
+      input state_e next_state
+  );
+    begin
+      bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
+      bus_addr_q <= FAB_ADDR_W'(addr[FAB_ADDR_W-1:0]);
+      bus_wdata_q <= '0;
+      bus_wstrb_q <= '0;
+      bus_size_q <= size_to_code(size_bytes);
+      bus_attr_q <= is_io_addr(addr) ? IO_ATTR : MEM_ATTR;
+      bus_dest_q <= dest;
+      state_after_bus_q <= next_state;
+      state_q <= ST_BUS_REQ;
+    end
+  endtask
+
+  task automatic start_bus_write(
+      input logic [63:0] addr,
+      input logic [FAB_DATA_W-1:0] data,
+      input logic [FAB_STRB_W-1:0] wstrb,
+      input int unsigned size_bytes,
+      input state_e next_state
+  );
+    begin
+      bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_WRITE);
+      bus_addr_q <= FAB_ADDR_W'(addr[FAB_ADDR_W-1:0]);
+      bus_wdata_q <= data;
+      bus_wstrb_q <= wstrb;
+      bus_size_q <= size_to_code(size_bytes);
+      bus_attr_q <= is_io_addr(addr) ? IO_ATTR : MEM_ATTR;
+      bus_dest_q <= DEST_NONE;
+      state_after_bus_q <= next_state;
+      state_q <= ST_BUS_REQ;
+    end
+  endtask
+
+  task automatic write_gpr(input logic [4:0] rd, input logic [63:0] value);
+    begin
+      if (rd != 5'd0) gpr_q[rd] <= value;
+    end
+  endtask
+
+  wire [5:0] op = instr_q[31:26];
+  wire [4:0] rs = instr_q[25:21];
+  wire [4:0] rt = instr_q[20:16];
+  wire [4:0] rd = instr_q[15:11];
+  wire [5:0] funct = instr_q[5:0];
+  wire [15:0] imm16 = instr_q[15:0];
+  wire signed [15:0] simm16 = instr_q[15:0];
+  wire [25:0] imm26 = instr_q[25:0];
+
+  // --------------------------------------------------------------------------
+  // Core FSM
+  // --------------------------------------------------------------------------
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
+      int i;
       state_q <= ST_RESET;
       state_after_bus_q <= ST_BOUNDARY;
+      bus_dest_q <= DEST_NONE;
       pc_q <= 64'h0;
+      instr_pc_q <= 64'h0;
       instr_q <= 32'h0;
       trapped_q <= 1'b0;
-      csr_modeflags_q <= CARBON_MODEFLAG_STRICT_MASK;
-      csr_tier_q <= 8'(CARBON_Z80_DERIVED_TIER_P7_Z480);
+
+      for (i = 0; i < 32; i++) begin
+        gpr_q[i] <= 64'h0;
+      end
+
+      load_addr_q <= '0;
+      load_size_q <= '0;
+      load_sign_q <= 1'b0;
+      load_rd_q <= '0;
+      load_data_lo_q <= '0;
+      load_data_hi_q <= '0;
+
+      store_addr_q <= '0;
+      store_size_q <= '0;
+      store_data_q <= '0;
 
       dbg_halted_q <= 1'b0;
       dbg_step_pending_q <= 1'b0;
@@ -333,6 +536,10 @@ module z480_core #(
       core_trap_cause_q <= '0;
       core_trap_epc_q   <= '0;
 
+      core_csr_write_pulse_q <= 1'b0;
+      core_csr_write_addr_q <= '0;
+      core_csr_write_data_q <= '0;
+
       bus_op_q <= '0;
       bus_addr_q <= '0;
       bus_wdata_q <= '0;
@@ -342,8 +549,9 @@ module z480_core #(
     end else begin
       dbg_step_ack_q <= 1'b0;
       core_trap_pulse_q <= 1'b0;
+      core_csr_write_pulse_q <= 1'b0;
 
-      if (csr_modeflags_wr) csr_modeflags_q <= csr_modeflags_wdata;
+      gpr_q[0] <= 64'h0;
 
       unique case (state_q)
         ST_RESET: begin
@@ -379,14 +587,15 @@ module z480_core #(
               dbg_step_inflight_q <= 1'b1;
             end
 
-            bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-            bus_addr_q <= FAB_ADDR_W'(pc_q[FAB_ADDR_W-1:0]);
-            bus_wdata_q <= '0;
-            bus_wstrb_q <= '0;
-            bus_size_q <= FAB_SIZE_W'(2);
-            bus_attr_q <= is_io_addr(pc_q) ? IO_ATTR : MEM_ATTR;
-            state_after_bus_q <= ST_DECODE;
-            state_q <= ST_BUS_REQ;
+            if (pc_q[1:0] != 2'b00) begin
+              trapped_q <= 1'b1;
+              core_trap_pulse_q <= 1'b1;
+              core_trap_cause_q <= Z480_CAUSE_ALIGN;
+              core_trap_epc_q <= pc_q[31:0];
+              state_q <= ST_TRAP;
+            end else begin
+              start_bus_read(pc_q, 4, DEST_INSTR, ST_DECODE);
+            end
           end
         end
 
@@ -397,38 +606,291 @@ module z480_core #(
         ST_BUS_RSP: begin
           if (rsp_fire) begin
             if (mem_if.rsp_code != FAB_CODE_W'(CARBON_FABRIC_RESP_OK)) begin
+              logic [31:0] fault_epc;
+              fault_epc = (bus_dest_q == DEST_INSTR) ? pc_q[31:0] : instr_pc_q[31:0];
               trapped_q <= 1'b1;
               core_trap_pulse_q <= 1'b1;
-              core_trap_cause_q <= 32'h0000_0002;
-              core_trap_epc_q <= pc_q[31:0];
+              core_trap_cause_q <= Z480_CAUSE_BUS;
+              core_trap_epc_q <= fault_epc;
               state_q <= ST_TRAP;
             end else begin
-              instr_q <= mem_if.rsp_rdata[31:0];
-              pc_q <= pc_q + 64'd4;
+              unique case (bus_dest_q)
+                DEST_INSTR: begin
+                  instr_pc_q <= pc_q;
+                  instr_q <= mem_if.rsp_rdata[31:0];
+                  pc_q <= pc_q + 64'd4;
+                end
+                DEST_LOAD_LO: begin
+                  load_data_lo_q <= mem_if.rsp_rdata[31:0];
+                end
+                DEST_LOAD_HI: begin
+                  load_data_hi_q <= mem_if.rsp_rdata[31:0];
+                end
+                default: begin end
+              endcase
               state_q <= state_after_bus_q;
             end
           end
         end
 
         ST_DECODE: begin
-          state_q <= ST_BOUNDARY; // NOP-only skeleton
+          logic [63:0] rs_val;
+          logic [63:0] rt_val;
+          logic [63:0] result;
+          logic [63:0] addr;
+          logic csr_fault;
+          logic [31:0] csr_rdata;
+
+          rs_val = gpr_q[rs];
+          rt_val = gpr_q[rt];
+          result = 64'h0;
+          addr = rs_val + {{48{simm16[15]}}, simm16};
+          csr_fault = 1'b0;
+          csr_rdata = 32'h0;
+
+          unique case (op)
+            Z480_OP_SPECIAL: begin
+              unique case (funct)
+                Z480_FUNCT_NOP: begin
+                  state_q <= ST_BOUNDARY;
+                end
+                Z480_FUNCT_ADD: begin
+                  result = rs_val + rt_val;
+                  write_gpr(rd, result);
+                  state_q <= ST_BOUNDARY;
+                end
+                Z480_FUNCT_SUB: begin
+                  result = rs_val - rt_val;
+                  write_gpr(rd, result);
+                  state_q <= ST_BOUNDARY;
+                end
+                Z480_FUNCT_AND: begin
+                  result = rs_val & rt_val;
+                  write_gpr(rd, result);
+                  state_q <= ST_BOUNDARY;
+                end
+                Z480_FUNCT_OR: begin
+                  result = rs_val | rt_val;
+                  write_gpr(rd, result);
+                  state_q <= ST_BOUNDARY;
+                end
+                Z480_FUNCT_XOR: begin
+                  result = rs_val ^ rt_val;
+                  write_gpr(rd, result);
+                  state_q <= ST_BOUNDARY;
+                end
+                Z480_FUNCT_JR: begin
+                  pc_q <= rs_val;
+                  state_q <= ST_BOUNDARY;
+                end
+                default: begin
+                  trapped_q <= 1'b1;
+                  core_trap_pulse_q <= 1'b1;
+                  core_trap_cause_q <= Z480_CAUSE_ILLEGAL;
+                  core_trap_epc_q <= instr_pc_q[31:0];
+                  state_q <= ST_TRAP;
+                end
+              endcase
+            end
+            Z480_OP_ADDI: begin
+              result = rs_val + {{48{simm16[15]}}, simm16};
+              write_gpr(rt, result);
+              state_q <= ST_BOUNDARY;
+            end
+            Z480_OP_BEQ: begin
+              if (rs_val == rt_val) begin
+                pc_q <= pc_q + ({{48{simm16[15]}}, simm16} << 2);
+              end
+              state_q <= ST_BOUNDARY;
+            end
+            Z480_OP_BNE: begin
+              if (rs_val != rt_val) begin
+                pc_q <= pc_q + ({{48{simm16[15]}}, simm16} << 2);
+              end
+              state_q <= ST_BOUNDARY;
+            end
+            Z480_OP_J: begin
+              pc_q <= {pc_q[63:28], imm26, 2'b00};
+              state_q <= ST_BOUNDARY;
+            end
+            Z480_OP_JAL: begin
+              write_gpr(5'd31, pc_q);
+              pc_q <= {pc_q[63:28], imm26, 2'b00};
+              state_q <= ST_BOUNDARY;
+            end
+            Z480_OP_LDB: begin
+              load_addr_q <= addr;
+              load_size_q <= 4'd1;
+              load_sign_q <= 1'b1;
+              load_rd_q <= rt;
+              start_bus_read(addr, 1, DEST_LOAD_LO, ST_MEM_COMMIT);
+            end
+            Z480_OP_LDH: begin
+              load_addr_q <= addr;
+              load_size_q <= 4'd2;
+              load_sign_q <= 1'b1;
+              load_rd_q <= rt;
+              start_bus_read(addr, 2, DEST_LOAD_LO, ST_MEM_COMMIT);
+            end
+            Z480_OP_LDW: begin
+              load_addr_q <= addr;
+              load_size_q <= 4'd4;
+              load_sign_q <= 1'b1;
+              load_rd_q <= rt;
+              start_bus_read(addr, 4, DEST_LOAD_LO, ST_MEM_COMMIT);
+            end
+            Z480_OP_LDD: begin
+              load_addr_q <= addr;
+              load_size_q <= 4'd4;
+              load_sign_q <= 1'b1;
+              load_rd_q <= rt;
+              start_bus_read(addr, 4, DEST_LOAD_LO, ST_MEM_COMMIT);
+            end
+            Z480_OP_LDQ: begin
+              load_addr_q <= addr;
+              load_size_q <= 4'd8;
+              load_sign_q <= 1'b0;
+              load_rd_q <= rt;
+              start_bus_read(addr, 4, DEST_LOAD_LO, ST_MEM_LOAD_HI);
+            end
+            Z480_OP_STB: begin
+              store_addr_q <= addr;
+              store_size_q <= 4'd1;
+              store_data_q <= rt_val;
+              start_bus_write(addr, FAB_DATA_W'(rt_val[7:0]), wstrb_for_size(1), 1, ST_BOUNDARY);
+            end
+            Z480_OP_STH: begin
+              store_addr_q <= addr;
+              store_size_q <= 4'd2;
+              store_data_q <= rt_val;
+              start_bus_write(addr, FAB_DATA_W'(rt_val[15:0]), wstrb_for_size(2), 2, ST_BOUNDARY);
+            end
+            Z480_OP_STW: begin
+              store_addr_q <= addr;
+              store_size_q <= 4'd4;
+              store_data_q <= rt_val;
+              start_bus_write(addr, FAB_DATA_W'(rt_val[31:0]), wstrb_for_size(4), 4, ST_BOUNDARY);
+            end
+            Z480_OP_STD: begin
+              store_addr_q <= addr;
+              store_size_q <= 4'd4;
+              store_data_q <= rt_val;
+              start_bus_write(addr, FAB_DATA_W'(rt_val[31:0]), wstrb_for_size(4), 4, ST_BOUNDARY);
+            end
+            Z480_OP_STQ: begin
+              store_addr_q <= addr;
+              store_size_q <= 4'd8;
+              store_data_q <= rt_val;
+              start_bus_write(addr, FAB_DATA_W'(rt_val[31:0]), wstrb_for_size(4), 4, ST_MEM_STORE_HI);
+            end
+            Z480_OP_CSRR: begin
+              csr_rdata = csr_read_word(rs_val[31:0] + {{16{simm16[15]}}, simm16}, csr_fault);
+              if (csr_fault) begin
+                trapped_q <= 1'b1;
+                core_trap_pulse_q <= 1'b1;
+                core_trap_cause_q <= Z480_CAUSE_CSR;
+                core_trap_epc_q <= instr_pc_q[31:0];
+                state_q <= ST_TRAP;
+              end else begin
+                write_gpr(rt, {32'h0, csr_rdata});
+                state_q <= ST_BOUNDARY;
+              end
+            end
+            Z480_OP_CSRW: begin
+              if (csr_write_ok(rs_val[31:0] + {{16{simm16[15]}}, simm16})) begin
+                core_csr_write_pulse_q <= 1'b1;
+                core_csr_write_addr_q <= rs_val[31:0] + {{16{simm16[15]}}, simm16};
+                core_csr_write_data_q <= rt_val[31:0];
+                state_q <= ST_BOUNDARY;
+              end else begin
+                trapped_q <= 1'b1;
+                core_trap_pulse_q <= 1'b1;
+                core_trap_cause_q <= Z480_CAUSE_CSR;
+                core_trap_epc_q <= instr_pc_q[31:0];
+                state_q <= ST_TRAP;
+              end
+            end
+            Z480_OP_FENCE,
+            Z480_OP_FENCE_IO: begin
+              state_q <= ST_BOUNDARY;
+            end
+            Z480_OP_MODEUP,
+            Z480_OP_RETMD: begin
+              trapped_q <= 1'b1;
+              core_trap_pulse_q <= 1'b1;
+              core_trap_cause_q <= Z480_CAUSE_MODEUP_INVALID;
+              core_trap_epc_q <= instr_pc_q[31:0];
+              state_q <= ST_TRAP;
+            end
+            Z480_OP_RFE: begin
+              trapped_q <= 1'b1;
+              core_trap_pulse_q <= 1'b1;
+              core_trap_cause_q <= Z480_CAUSE_ILLEGAL;
+              core_trap_epc_q <= instr_pc_q[31:0];
+              state_q <= ST_TRAP;
+            end
+            default: begin
+              trapped_q <= 1'b1;
+              core_trap_pulse_q <= 1'b1;
+              core_trap_cause_q <= Z480_CAUSE_ILLEGAL;
+              core_trap_epc_q <= instr_pc_q[31:0];
+              state_q <= ST_TRAP;
+            end
+          endcase
+        end
+
+        ST_MEM_LOAD_HI: begin
+          start_bus_read(load_addr_q + 64'd4, 4, DEST_LOAD_HI, ST_MEM_COMMIT);
+        end
+
+        ST_MEM_STORE_HI: begin
+          start_bus_write(store_addr_q + 64'd4,
+                          FAB_DATA_W'(store_data_q[63:32]),
+                          wstrb_for_size(4), 4, ST_BOUNDARY);
+        end
+
+        ST_MEM_COMMIT: begin
+          logic [63:0] load_val;
+          load_val = 64'h0;
+          unique case (load_size_q)
+            4'd1: begin
+              if (load_sign_q) load_val = {{56{load_data_lo_q[7]}}, load_data_lo_q[7:0]};
+              else load_val = {56'h0, load_data_lo_q[7:0]};
+            end
+            4'd2: begin
+              if (load_sign_q) load_val = {{48{load_data_lo_q[15]}}, load_data_lo_q[15:0]};
+              else load_val = {48'h0, load_data_lo_q[15:0]};
+            end
+            4'd4: begin
+              if (load_sign_q) load_val = {{32{load_data_lo_q[31]}}, load_data_lo_q[31:0]};
+              else load_val = {32'h0, load_data_lo_q[31:0]};
+            end
+            4'd8: begin
+              load_val = {load_data_hi_q, load_data_lo_q};
+            end
+            default: begin
+              load_val = 64'h0;
+            end
+          endcase
+          write_gpr(load_rd_q, load_val);
+          state_q <= ST_BOUNDARY;
         end
 
         default: begin
           trapped_q <= 1'b1;
           core_trap_pulse_q <= 1'b1;
-          core_trap_cause_q <= 32'h0000_0001;
-          core_trap_epc_q <= pc_q[31:0];
+          core_trap_cause_q <= Z480_CAUSE_ILLEGAL;
+          core_trap_epc_q <= instr_pc_q[31:0];
           state_q <= ST_TRAP;
         end
       endcase
     end
   end
 
-  // IRQ interface: unused in v1 skeleton.
+  // IRQ interface: unused in v1 ISA subset.
   assign irq.irq_ack = 1'b0;
   assign irq.irq_ack_vector = '0;
 
-  wire _unused = ^{instr_q, mem_if.rsp_id, mem_if.req_attr, mem_if.req_id};
+  wire _unused = ^{mem_if.rsp_id, mem_if.req_attr, mem_if.req_id};
 
 endmodule : z480_core
