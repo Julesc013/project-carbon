@@ -14,7 +14,7 @@ cmake --build build/sim
 You must supply your own CP/M 2.2 boot ROM and disk image (no copyrighted ROMs are included).
 
 ```sh
-carbon-sim --platform cpm22 --rom path/to/cpm22_boot.rom --disk0 path/to/cpm22.dsk --bsp path/to/BSP.bsp
+carbon-sim --platform cpm22 --rom path/to/cpm22_boot.rom --disk0 path/to/cpm22.dsk --bsp path/to/BSP.bsp --load path/to/mem.bin
 ```
 
 Useful flags:
@@ -50,7 +50,7 @@ carbon-sim --platform carbonz380
 carbon-sim --platform carbonz480
 ```
 
-Attach an optional 512-byte block device (IDE/ATA PIO at `0x10`) with `--disk0`.
+Attach an optional 512-byte block device (CpmDiskDevice at `0x10`) with `--disk0`.
 You can also inject a BSP blob at `0xFF00` (default) via `--bsp`:
 
 ```sh
@@ -63,7 +63,7 @@ All disks are raw files.
 
 - `cpm22` uses a 128-byte sector device abstraction (the ROM/BIOS decides layout).
 - `romwbw` uses 512-byte ATA PIO sectors (IDE register model).
-- `carbonz*` platforms use 512-byte ATA PIO sectors (IDE register model).
+- `carbonz*` platforms use the `CpmDiskDevice` 512-byte sector model.
 
 Create a blank image:
 

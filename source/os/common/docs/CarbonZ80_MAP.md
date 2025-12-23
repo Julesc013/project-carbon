@@ -16,7 +16,7 @@
 
 ## Block Device (BSP)
 
-- Kind: `IDE` (8-bit PIO)
+- Kind: `CPMDISK`
 - I/O base: `0x10`
 - Logical block size: 512 bytes
 

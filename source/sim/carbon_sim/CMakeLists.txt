@@ -18,6 +18,7 @@ add_library(carbon_sim_core
   src/cpm_disk.cpp
   src/ide_disk.cpp
   src/interrupt_controller.cpp
+  src/mem_loader.cpp
   src/platform_carbonz.cpp
   src/platform_cpm22.cpp
   src/platform_romwbw.cpp

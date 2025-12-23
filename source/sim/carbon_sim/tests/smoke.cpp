@@ -156,6 +156,78 @@ static int smoke_cpm22(const std::filesystem::path& temp_dir) {
   return 0;
 }
 
+static int smoke_cpm22_memload(const std::filesystem::path& temp_dir) {
+  // ROM stub: disable overlay and jump to 0x0100.
+  const std::vector<u8> rom = {
+      0x3E, 0x00, // MVI A,0
+      0xD3, 0x3F, // OUT 0x3F (disable ROM overlay)
+      0xC3, 0x00, 0x01 // JMP 0x0100
+  };
+
+  // RAM image: program at 0x0100 prints banner via CarbonIO and halts.
+  std::vector<u8> mem(65536, 0x00);
+  std::size_t pc = 0x0100;
+  auto emit = [&](u8 v) { mem[pc++] = v; };
+  auto emit_u16 = [&](u16 v) {
+    emit(static_cast<u8>(v & 0xFFu));
+    emit(static_cast<u8>((v >> 8) & 0xFFu));
+  };
+
+  emit(0x31); // LXI SP,0xFFFE
+  emit_u16(0xFFFE);
+  emit(0x21); // LXI H, msg (patch later)
+  const std::size_t msg_addr_pos = pc;
+  emit_u16(0x0000);
+  const u16 loop_addr = static_cast<u16>(pc);
+  emit(0x7E); // MOV A,M
+  emit(0xB7); // ORA A
+  emit(0xCA); // JZ done (patch later)
+  const std::size_t done_addr_pos = pc;
+  emit_u16(0x0000);
+  emit(0x32); // STA 0xF100
+  emit_u16(0xF100);
+  emit(0x23); // INX H
+  emit(0xC3); // JMP loop
+  emit_u16(loop_addr);
+  const u16 done_addr = static_cast<u16>(pc);
+  emit(0x76); // HALT
+  const u16 msg_addr = static_cast<u16>(pc);
+  const char* msg = "CPM22 MEM OK\r\n";
+  for (const char* p = msg; *p; ++p) {
+    emit(static_cast<u8>(*p));
+  }
+  emit(0x00);
+  mem[msg_addr_pos + 0] = static_cast<u8>(msg_addr & 0xFFu);
+  mem[msg_addr_pos + 1] = static_cast<u8>((msg_addr >> 8) & 0xFFu);
+  mem[done_addr_pos + 0] = static_cast<u8>(done_addr & 0xFFu);
+  mem[done_addr_pos + 1] = static_cast<u8>((done_addr >> 8) & 0xFFu);
+
+  const auto rom_path = temp_dir / "cpm22_mem.rom";
+  const auto disk_path = temp_dir / "cpm22_mem.dsk";
+  const auto mem_path = temp_dir / "cpm22_mem.bin";
+
+  write_file(rom_path, rom);
+  touch_file(disk_path);
+  write_file(mem_path, mem);
+
+  SimConfig cfg;
+  cfg.platform = "cpm22";
+  cfg.rom_path = rom_path.string();
+  cfg.mem_path = mem_path.string();
+  cfg.disk_paths[0] = disk_path.string();
+  cfg.max_cycles = 200000;
+
+  std::ostringstream out;
+  auto machine = create_platform_cpm22(cfg, out);
+  run_to_halt(*machine, cfg.max_cycles);
+
+  if (!contains(out.str(), "CPM22 MEM OK")) {
+    std::cerr << "cpm22 memload smoke: missing banner\n";
+    return 1;
+  }
+  return 0;
+}
+
 static int smoke_romwbw(const std::filesystem::path& temp_dir) {
   // Z80 ROM stub:
   // - prints "RomWBW STUB OK\r\n" to SIO channel A (port 0x80)
@@ -292,6 +364,7 @@ int main() {
 
     int rc = 0;
     rc |= carbon_sim::smoke_cpm22(temp_dir);
+    rc |= carbon_sim::smoke_cpm22_memload(temp_dir);
     rc |= carbon_sim::smoke_romwbw(temp_dir);
     rc |= carbon_sim::smoke_carbonz80();
     rc |= carbon_sim::smoke_carbonz90();

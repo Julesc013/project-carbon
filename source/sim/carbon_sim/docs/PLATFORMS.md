@@ -97,13 +97,13 @@ v1 expects a RomWBW build that uses:
 
 ### I/O map
 
-- IDE/ATA PIO (`IdeDiskDevice`) base `0x10` (optional, 512-byte sectors)
+- Disk (`CpmDiskDevice`) base `0x10` (512-byte sectors)
 
 ### Notes
 
 - If `--rom` is omitted, a built-in stub writes the signature and powers off.
 - The simulator uses the Z80 execution model for the CarbonZ* platforms.
-- The IDE device is a sim-only convenience and is not advertised in the BDT yet.
+- The CpmDisk device is advertised in the BDT; it is present only when a disk image is attached.
 
 ## CarbonZ90 (`--platform carbonz90`)
 
@@ -119,7 +119,7 @@ v1 expects a RomWBW build that uses:
 
 ### I/O map
 
-- IDE/ATA PIO (`IdeDiskDevice`) base `0x10` (optional, 512-byte sectors)
+- Disk (`CpmDiskDevice`) base `0x10` (512-byte sectors)
 
 ### Notes
 
@@ -140,7 +140,7 @@ v1 expects a RomWBW build that uses:
 
 ### I/O map
 
-- IDE/ATA PIO (`IdeDiskDevice`) base `0x10` (optional, 512-byte sectors)
+- Disk (`CpmDiskDevice`) base `0x10` (512-byte sectors)
 
 ### Notes
 
@@ -162,7 +162,7 @@ v1 expects a RomWBW build that uses:
 
 ### I/O map
 
-- IDE/ATA PIO (`IdeDiskDevice`) base `0x10` (optional, 512-byte sectors)
+- Disk (`CpmDiskDevice`) base `0x10` (512-byte sectors)
 
 ### Notes
 

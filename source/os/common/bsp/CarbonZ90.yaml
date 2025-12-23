@@ -7,7 +7,7 @@ bsp:
     kind: CARBONIO_UART
     io_base: 0xF100
   block:
-    kind: IDE
+    kind: CPMDISK
     io_base: 0x0010
     sector_bytes: 512
   timer:

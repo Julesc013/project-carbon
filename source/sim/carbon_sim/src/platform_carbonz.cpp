@@ -9,7 +9,7 @@
 #include "carbon_sim/devices/carbon_mmio.h"
 #include "carbon_sim/devices/carbondma.h"
 #include "carbon_sim/devices/carbonio.h"
-#include "carbon_sim/devices/ide_disk.h"
+#include "carbon_sim/devices/cpm_disk.h"
 #include "carbon_sim/devices/interrupt_controller.h"
 #include "carbon_sim/devices/tier_host_stub.h"
 #include "carbon_sim/platforms/machine.h"
@@ -17,6 +17,7 @@
 #include "carbon_sim/util/bsp_loader.h"
 #include "carbon_sim/util/carbon_constants.h"
 #include "carbon_sim/util/file.h"
+#include "carbon_sim/util/mem_loader.h"
 
 namespace carbon_sim {
 
@@ -30,7 +31,7 @@ static constexpr u16 kCarbonDmaBase = 0xF200;
 static constexpr u16 kTierHostBase = 0xF300;
 static constexpr u16 kBdtBase = 0xF800;
 static constexpr std::size_t kBdtRegionBytes = 1024;
-static constexpr u16 kIdeBase = 0x0010;
+static constexpr u16 kDiskBase = 0x0010;
 
 std::vector<u8> build_signature_rom(const std::array<u8, 4>& sig) {
   std::vector<u8> rom(kSys16RomBytes, 0x00);
@@ -77,9 +78,9 @@ std::vector<u8> load_or_default_rom(const SimConfig& config,
   return rom;
 }
 
-void attach_ide_disks(Machine& m, const SimConfig& config) {
-  m.ide_disk = &m.bus.add_device<IdeDiskDevice>(kIdeBase);
-  for (std::size_t i = 0; i < 2; ++i) {
+void attach_cpm_disks(Machine& m, const SimConfig& config) {
+  m.cpm_disk = &m.bus.add_device<CpmDiskDevice>(kDiskBase);
+  for (std::size_t i = 0; i < m.disks.size(); ++i) {
     if (config.disk_paths[i].empty()) {
       continue;
     }
@@ -87,7 +88,7 @@ void attach_ide_disks(Machine& m, const SimConfig& config) {
     if (!m.disks[i]->is_open()) {
       throw std::runtime_error("failed to open disk: " + config.disk_paths[i]);
     }
-    m.ide_disk->attach_disk(static_cast<int>(i), m.disks[i].get());
+    m.cpm_disk->attach_disk(static_cast<int>(i), m.disks[i].get());
   }
 }
 
@@ -141,7 +142,7 @@ void add_block_desc(std::vector<DeviceDescriptor>& devices) {
   block_desc.device_id = 1;
   block_desc.revision_id = 1;
   block_desc.compat_flags = kCompatPolling | kCompatPortIo;
-  block_desc.compat_io_base = kIdeBase;
+  block_desc.compat_io_base = kDiskBase;
   devices.push_back(block_desc);
 }
 
@@ -165,6 +166,7 @@ std::unique_ptr<Machine> create_carbonz_platform(const SimConfig& config,
   m->bus.map_rom(kSys16RomBase, rom_image);
   m->bus.map_rom(kBdtBase, build_bdt_image(devices));
   m->bus.map_ram(0x0000, 65536);
+  inject_mem_image(m->bus, config.mem_addr, load_mem_image(config.mem_path));
   inject_bsp_blob(m->bus, config.bsp_addr, load_bsp_blob(config.bsp_path));
 
   m->mmio = &m->bus.add_device<CarbonMmioRegs>(kMmioBase, 0u, &console_out);
@@ -184,7 +186,7 @@ std::unique_ptr<Machine> create_carbonz_platform(const SimConfig& config,
   m->caps = nullptr;
   m->cpm_disk = nullptr;
 
-  attach_ide_disks(*m, config);
+  attach_cpm_disks(*m, config);
 
   m->cpu = std::make_unique<Z80>(m->bus, m->irq);
   m->cpu->set_trace(config.trace);

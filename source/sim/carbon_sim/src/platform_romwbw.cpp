@@ -14,6 +14,7 @@
 #include "carbon_sim/util/bsp_loader.h"
 #include "carbon_sim/util/carbon_constants.h"
 #include "carbon_sim/util/file.h"
+#include "carbon_sim/util/mem_loader.h"
 
 namespace carbon_sim {
 
@@ -48,6 +49,7 @@ std::unique_ptr<Machine> create_platform_romwbw(const SimConfig& config, std::os
   // Base memory: 64 KiB RAM; ROM overlays reads at 0x0000.. for the provided image.
   m->bus.map_ram(0x0000, 65536);
   m->bus.add_device<BootRomOverlay>(0x0000, std::move(rom), kRomDisablePort);
+  inject_mem_image(m->bus, config.mem_addr, load_mem_image(config.mem_path));
   inject_bsp_blob(m->bus, config.bsp_addr, load_bsp_blob(config.bsp_path));
 
   m->irq = &m->bus.add_device<InterruptController>();

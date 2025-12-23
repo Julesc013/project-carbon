@@ -22,6 +22,8 @@ static void print_usage(std::string_view exe) {
             << "  --rom PATH          ROM image path\n"
             << "  --bsp PATH          BSP blob path (loaded into RAM before reset)\n"
             << "  --bsp-addr N        BSP load address (default 0xFF00)\n"
+            << "  --load PATH         RAM image path (loaded into RAM before reset)\n"
+            << "  --load-addr N       RAM image load address (default 0x0000)\n"
             << "  --disk0 PATH        Disk image path (raw .dsk)\n"
             << "  --disk1 PATH        Optional disk1 path\n"
             << "  --disk2 PATH        Optional disk2 path\n"
@@ -224,6 +226,30 @@ int main(int argc, char** argv) {
           throw std::runtime_error("--bsp-addr requires a value");
         }
         cfg.bsp_addr = parse_u16(args[++i]);
+        continue;
+      }
+
+      if (auto v = get_opt_value(arg, "--load"); v.has_value()) {
+        cfg.mem_path = *v;
+        continue;
+      }
+      if (arg == "--load") {
+        if (i + 1 >= args.size()) {
+          throw std::runtime_error("--load requires a value");
+        }
+        cfg.mem_path = args[++i];
+        continue;
+      }
+
+      if (auto v = get_opt_value(arg, "--load-addr"); v.has_value()) {
+        cfg.mem_addr = parse_u16(*v);
+        continue;
+      }
+      if (arg == "--load-addr") {
+        if (i + 1 >= args.size()) {
+          throw std::runtime_error("--load-addr requires a value");
+        }
+        cfg.mem_addr = parse_u16(args[++i]);
         continue;
       }
 
