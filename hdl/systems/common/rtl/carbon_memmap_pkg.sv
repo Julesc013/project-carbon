@@ -30,6 +30,9 @@ package carbon_memmap_pkg;
   localparam logic [31:0] CARBON_SYS16_CARBONDMA_BASE = 32'h0000_F200;
   localparam logic [31:0] CARBON_SYS16_CARBONDMA_MASK = 32'hFFFF_FF00; // 256 B window
 
+  localparam logic [31:0] CARBON_SYS16_TIER_HOST_BASE = 32'h0000_F300;
+  localparam logic [31:0] CARBON_SYS16_TIER_HOST_MASK = 32'hFFFF_FF00; // 256 B window
+
   localparam logic [31:0] CARBON_SYS16_FAST_SRAM_BASE = 32'h0000_8000;
   localparam logic [31:0] CARBON_SYS16_FAST_SRAM_MASK = 32'hFFFF_C000; // 16 KiB placeholder window
 
@@ -50,6 +53,9 @@ package carbon_memmap_pkg;
 
   localparam logic [31:0] CARBON_SYSX86_CARBONDMA_BASE = 32'h000F_2000;
   localparam logic [31:0] CARBON_SYSX86_CARBONDMA_MASK = 32'hFFFF_F000; // 4 KiB window
+
+  localparam logic [31:0] CARBON_SYSX86_TIER_HOST_BASE = 32'h000F_3000;
+  localparam logic [31:0] CARBON_SYSX86_TIER_HOST_MASK = 32'hFFFF_F000; // 4 KiB window
 
   localparam logic [31:0] CARBON_SYSX86_FAST_SRAM_BASE = 32'h0008_0000;
   localparam logic [31:0] CARBON_SYSX86_FAST_SRAM_MASK = 32'hFFFF_0000; // 64 KiB placeholder window

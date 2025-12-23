@@ -15,8 +15,32 @@ module carbonz480_top (
   localparam int unsigned DATA_W = 32;
   localparam int unsigned ID_W   = 4;
 
-  localparam int unsigned M = 4; // z480 mem (idle), bootmaster, am9513 dma, carbondma
-  localparam int unsigned N = 5; // mmio, carbonio, carbondma, rom, ram(default)
+  localparam int unsigned M = 9; // z85 mem/io, z90 mem/io, z380 mem/io, z480 mem, am9513 dma, carbondma
+  localparam int unsigned N = 6; // mmio, carbonio, carbondma, tier host, rom, ram(default)
+
+  localparam int unsigned M_Z85_MEM   = 0;
+  localparam int unsigned M_Z85_IO    = 1;
+  localparam int unsigned M_Z90_MEM   = 2;
+  localparam int unsigned M_Z90_IO    = 3;
+  localparam int unsigned M_Z380_MEM  = 4;
+  localparam int unsigned M_Z380_IO   = 5;
+  localparam int unsigned M_Z480_MEM  = 6;
+  localparam int unsigned M_AM9513_DMA = 7;
+  localparam int unsigned M_CARBONDMA = 8;
+
+  localparam int unsigned S_MMIO      = 0;
+  localparam int unsigned S_CARBONIO  = 1;
+  localparam int unsigned S_CARBONDMA = 2;
+  localparam int unsigned S_TIER_HOST = 3;
+  localparam int unsigned S_ROM       = 4;
+  localparam int unsigned S_RAM       = 5;
+
+  localparam logic [1:0] CORE_Z85  = 2'd0;
+  localparam logic [1:0] CORE_Z90  = 2'd1;
+  localparam logic [1:0] CORE_Z380 = 2'd2;
+  localparam logic [1:0] CORE_Z480 = 2'd3;
+
+  localparam logic [63:0] Z480_RESET_PC = 64'h0000_0040;
 
   fabric_if #(
       .ADDR_W(ADDR_W),
@@ -36,20 +60,24 @@ module carbonz480_top (
       .rst_n(rst_n)
   );
 
-  // Reuse the x86-class 1MiB map for v1 bring-up.
+  // CarbonZ480 keeps 16-bit decode compatibility by masking to the low 16 bits.
+  localparam logic [31:0] SYS16_MASK_L16 = 32'h0000_FF00;
+
   localparam logic [N*ADDR_W-1:0] SLAVE_BASE = {
       32'hFFFF_FFFF,
-      ADDR_W'(CARBON_SYSX86_ROM_BASE),
-      ADDR_W'(CARBON_SYSX86_CARBONDMA_BASE),
-      ADDR_W'(CARBON_SYSX86_CARBONIO_BASE),
-      ADDR_W'(CARBON_SYSX86_MMIO_BASE)
+      ADDR_W'(CARBON_SYS16_ROM_BASE),
+      ADDR_W'(CARBON_SYS16_TIER_HOST_BASE),
+      ADDR_W'(CARBON_SYS16_CARBONDMA_BASE),
+      ADDR_W'(CARBON_SYS16_CARBONIO_BASE),
+      ADDR_W'(CARBON_SYS16_MMIO_BASE)
   };
   localparam logic [N*ADDR_W-1:0] SLAVE_MASK = {
       32'hFFFF_FFFF,
-      ADDR_W'(CARBON_SYSX86_ROM_MASK),
-      ADDR_W'(CARBON_SYSX86_CARBONDMA_MASK),
-      ADDR_W'(CARBON_SYSX86_CARBONIO_MASK),
-      ADDR_W'(CARBON_SYSX86_MMIO_MASK)
+      ADDR_W'(SYS16_MASK_L16),
+      ADDR_W'(SYS16_MASK_L16),
+      ADDR_W'(SYS16_MASK_L16),
+      ADDR_W'(SYS16_MASK_L16),
+      ADDR_W'(SYS16_MASK_L16)
   };
 
   fabric_arbiter_mxn #(
@@ -59,7 +87,7 @@ module carbonz480_top (
       .DATA_W(DATA_W),
       .ID_W(ID_W),
       .HAS_DEFAULT(1'b1),
-      .DEFAULT_SLAVE(4),
+      .DEFAULT_SLAVE(5),
       .SLAVE_BASE(SLAVE_BASE),
       .SLAVE_MASK(SLAVE_MASK)
   ) u_fabric (
@@ -70,38 +98,135 @@ module carbonz480_top (
   );
 
   // --------------------------------------------------------------------------
-  // Z480 scaffold core (fabric is intentionally idle in v1)
+  // Tier host controller (Option A personality switch)
   // --------------------------------------------------------------------------
-  csr_if csr_cpu (
-      .clk(clk),
-      .rst_n(rst_n)
-  );
-  dbg_if dbg_cpu (
-      .clk(clk),
-      .rst_n(rst_n)
-  );
-  irq_if #(.N(32)) irq_cpu (
-      .clk(clk),
-      .rst_n(rst_n)
-  );
+  logic [7:0] host_active_tier;
+  logic [1:0] host_active_core;
+  logic [3:0] host_halt_req;
+  logic [3:0] host_run_pulse;
 
-  csr_master_tieoff u_csr_cpu_tie (.csr(csr_cpu));
-  dbg_hub_tieoff    u_dbg_cpu_tie (.dbg(dbg_cpu));
-  irq_src_tieoff    u_irq_cpu_tie (.irq(irq_cpu));
-
-  z480_core u_cpu (
+  tier_host_ctrl #(
+      .BASE_ADDR(CARBON_SYS16_TIER_HOST_BASE)
+  ) u_tier_host (
       .clk(clk),
       .rst_n(rst_n),
-      .mem_if(m_if[0]),
-      .irq(irq_cpu),
-      .csr(csr_cpu),
-      .dbg(dbg_cpu)
+      .bus(s_if[S_TIER_HOST]),
+      .active_tier(host_active_tier),
+      .active_core(host_active_core),
+      .core_halt_req(host_halt_req),
+      .core_run_pulse(host_run_pulse)
   );
 
   // --------------------------------------------------------------------------
-  // Am9513 accelerator (enabled; default mode P7 native); CAI host is tied off.
+  // Hosted core cluster (Z85/Z90/Z380/Z480)
   // --------------------------------------------------------------------------
-  cai_if cai_host (
+  csr_if csr_z85 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  dbg_if dbg_z85 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  irq_if #(.N(32)) irq_z85 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+
+  csr_if csr_z90 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  dbg_if dbg_z90 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  irq_if #(.N(32)) irq_z90 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+
+  csr_if csr_z380 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  dbg_if dbg_z380 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  irq_if #(.N(32)) irq_z380 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+
+  csr_if csr_z480 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  dbg_if dbg_z480 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  irq_if #(.N(32)) irq_z480 (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+
+  csr_master_tieoff u_csr_z85_tie (.csr(csr_z85));
+  csr_master_tieoff u_csr_z90_tie (.csr(csr_z90));
+  csr_master_tieoff u_csr_z380_tie (.csr(csr_z380));
+  csr_master_tieoff u_csr_z480_tie (.csr(csr_z480));
+
+  irq_src_tieoff u_irq_z85_tie (.irq(irq_z85));
+  irq_src_tieoff u_irq_z90_tie (.irq(irq_z90));
+  irq_src_tieoff u_irq_z380_tie (.irq(irq_z380));
+  irq_src_tieoff u_irq_z480_tie (.irq(irq_z480));
+
+  assign dbg_z85.halt_req = host_halt_req[CORE_Z85];
+  assign dbg_z85.run_req  = host_run_pulse[CORE_Z85];
+  assign dbg_z85.step_req = 1'b0;
+  assign dbg_z85.bp_valid  = 1'b0;
+  assign dbg_z85.bp_write  = 1'b0;
+  assign dbg_z85.bp_index  = '0;
+  assign dbg_z85.bp_addr   = '0;
+  assign dbg_z85.bp_kind   = '0;
+  assign dbg_z85.bp_enable = 1'b0;
+  assign dbg_z85.trace_ready = 1'b1;
+
+  assign dbg_z90.halt_req = host_halt_req[CORE_Z90];
+  assign dbg_z90.run_req  = host_run_pulse[CORE_Z90];
+  assign dbg_z90.step_req = 1'b0;
+  assign dbg_z90.bp_valid  = 1'b0;
+  assign dbg_z90.bp_write  = 1'b0;
+  assign dbg_z90.bp_index  = '0;
+  assign dbg_z90.bp_addr   = '0;
+  assign dbg_z90.bp_kind   = '0;
+  assign dbg_z90.bp_enable = 1'b0;
+  assign dbg_z90.trace_ready = 1'b1;
+
+  assign dbg_z380.halt_req = host_halt_req[CORE_Z380];
+  assign dbg_z380.run_req  = host_run_pulse[CORE_Z380];
+  assign dbg_z380.step_req = 1'b0;
+  assign dbg_z380.bp_valid  = 1'b0;
+  assign dbg_z380.bp_write  = 1'b0;
+  assign dbg_z380.bp_index  = '0;
+  assign dbg_z380.bp_addr   = '0;
+  assign dbg_z380.bp_kind   = '0;
+  assign dbg_z380.bp_enable = 1'b0;
+  assign dbg_z380.trace_ready = 1'b1;
+
+  assign dbg_z480.halt_req = host_halt_req[CORE_Z480];
+  assign dbg_z480.run_req  = host_run_pulse[CORE_Z480];
+  assign dbg_z480.step_req = 1'b0;
+  assign dbg_z480.bp_valid  = 1'b0;
+  assign dbg_z480.bp_write  = 1'b0;
+  assign dbg_z480.bp_index  = '0;
+  assign dbg_z480.bp_addr   = '0;
+  assign dbg_z480.bp_kind   = '0;
+  assign dbg_z480.bp_enable = 1'b0;
+  assign dbg_z480.trace_ready = 1'b1;
+
+  cai_if cai_z90 (
       .clk(clk),
       .rst_n(rst_n)
   );
@@ -110,12 +235,58 @@ module carbonz480_top (
       .rst_n(rst_n)
   );
 
-  cai_host_tieoff u_cai_host_tie (.cai(cai_host));
-
   carbon_cai_router u_cai (
-      .cpu(cai_host),
+      .cpu(cai_z90),
       .dev(cai_dev)
   );
+
+  z85_core u_z85 (
+      .clk(clk),
+      .rst_n(rst_n),
+      .mem_if(m_if[M_Z85_MEM]),
+      .io_if(m_if[M_Z85_IO]),
+      .irq(irq_z85),
+      .csr(csr_z85),
+      .dbg(dbg_z85)
+  );
+
+  z90_core u_z90 (
+      .clk(clk),
+      .rst_n(rst_n),
+      .mem_if(m_if[M_Z90_MEM]),
+      .io_if(m_if[M_Z90_IO]),
+      .irq(irq_z90),
+      .csr(csr_z90),
+      .dbg(dbg_z90),
+      .cai(cai_z90)
+  );
+
+  z380_core u_z380 (
+      .clk(clk),
+      .rst_n(rst_n),
+      .mem_if(m_if[M_Z380_MEM]),
+      .io_if(m_if[M_Z380_IO]),
+      .irq(irq_z380),
+      .csr(csr_z380),
+      .dbg(dbg_z380)
+  );
+
+  z480_core #(
+      .IO_BASE(CARBON_SYS16_MMIO_BASE),
+      .IO_MASK(32'h0000_F000),
+      .RESET_PC(Z480_RESET_PC)
+  ) u_z480 (
+      .clk(clk),
+      .rst_n(rst_n),
+      .mem_if(m_if[M_Z480_MEM]),
+      .irq(irq_z480),
+      .csr(csr_z480),
+      .dbg(dbg_z480)
+  );
+
+  // --------------------------------------------------------------------------
+  // Am9513 accelerator (enabled; default mode P2/9513)
+  // --------------------------------------------------------------------------
 
   csr_if csr_fpu (
       .clk(clk),
@@ -126,11 +297,11 @@ module carbonz480_top (
       .clk(clk),
       .rst_n(rst_n),
       .csr(csr_fpu),
-      .mem_if(m_if[2]),
+      .mem_if(m_if[M_AM9513_DMA]),
       .cai(cai_dev)
   );
 
-  // Minimal CSR init for Am9513 (enable + P7 default mode; completion base in RAM).
+  // Minimal CSR init for Am9513 (enable + P2 default mode; completion base in RAM).
   typedef enum logic [2:0] {
     FPU_INIT_CTRL,
     FPU_INIT_MODE,
@@ -175,11 +346,11 @@ module carbonz480_top (
       end
       FPU_INIT_MODE: begin
         fpu_csr_addr  = 32'(CARBON_CSR_AM9513_MODE);
-        fpu_csr_wdata = {24'h000000, 8'(AM9513_P7_NATIVE)};
+        fpu_csr_wdata = {24'h000000, 8'(AM9513_P2_AM9513)};
       end
       FPU_INIT_COMP_LO: begin
         fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_COMP_BASE_LO);
-        fpu_csr_wdata = 32'h0001_0000;
+        fpu_csr_wdata = 32'h0000_4000;
       end
       FPU_INIT_COMP_HI: begin
         fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_COMP_BASE_HI);
@@ -248,11 +419,11 @@ module carbonz480_top (
   logic [31:0] carbonio_pio_dir;
 
   carbonio #(
-      .COMPAT_BASE_ADDR(CARBON_SYSX86_CARBONIO_BASE)
+      .COMPAT_BASE_ADDR(CARBON_SYS16_CARBONIO_BASE)
   ) u_carbonio (
       .clk(clk),
       .rst_n(rst_n),
-      .compat_if(s_if[1]),
+      .compat_if(s_if[S_CARBONIO]),
       .csr(csr_carbonio),
       .dbg(dbg_carbonio),
       .irq(irq_carbonio),
@@ -283,69 +454,102 @@ module carbonz480_top (
   dbg_hub_tieoff    u_dbg_carbondma_tie (.dbg(dbg_carbondma));
 
   carbondma #(
-      .COMPAT_BASE_ADDR(CARBON_SYSX86_CARBONDMA_BASE)
+      .COMPAT_BASE_ADDR(CARBON_SYS16_CARBONDMA_BASE)
   ) u_carbondma (
       .clk(clk),
       .rst_n(rst_n),
-      .compat_if(s_if[2]),
-      .mem_if(m_if[3]),
+      .compat_if(s_if[S_CARBONDMA]),
+      .mem_if(m_if[M_CARBONDMA]),
       .csr(csr_carbondma),
       .dbg(dbg_carbondma)
   );
 
   // --------------------------------------------------------------------------
-  // Boot stub master (writes signature + poweroff through MMIO)
-  // --------------------------------------------------------------------------
-  carbon_fabric_bootmaster #(
-      .MMIO_BASE(CARBON_SYSX86_MMIO_BASE),
-      .SIGNATURE(32'h3038_345A), // "Z480" (little endian bytes)
-      .START_DELAY(8)
-  ) u_boot (
-      .clk(clk),
-      .rst_n(rst_n),
-      .fab(m_if[1]),
-      .done()
-  );
-
-  // --------------------------------------------------------------------------
   // ROM/RAM/MMIO
   // --------------------------------------------------------------------------
-  localparam int unsigned ROM_BYTES = CARBON_SYSX86_ROM_BYTES;
-  localparam int unsigned ROM_USED  = 1;
-  localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE = {
-      {(ROM_BYTES-ROM_USED){8'h00}},
-      8'h00
-  };
+  localparam int unsigned ROM_BYTES = CARBON_SYS16_ROM_BYTES;
+
+  function automatic logic [ROM_BYTES*8-1:0] build_rom_image;
+    logic [ROM_BYTES*8-1:0] tmp;
+    begin
+      tmp = '0;
+      // Z85 boot stub @ 0x0000: LD A,0x07; LD (0xF300),A; HALT
+      tmp[(0*8)+:8] = 8'h3E;
+      tmp[(1*8)+:8] = 8'h07;
+      tmp[(2*8)+:8] = 8'h32;
+      tmp[(3*8)+:8] = 8'h00;
+      tmp[(4*8)+:8] = 8'hF3;
+      tmp[(5*8)+:8] = 8'h76;
+
+      // Z480 monitor stub @ 0x0040 (Z480_RESET_PC)
+      tmp[(64*8)+:8] = 8'h00;
+      tmp[(65*8)+:8] = 8'hF0;
+      tmp[(66*8)+:8] = 8'h01;
+      tmp[(67*8)+:8] = 8'h20;
+      tmp[(68*8)+:8] = 8'h5A;
+      tmp[(69*8)+:8] = 8'h34;
+      tmp[(70*8)+:8] = 8'h02;
+      tmp[(71*8)+:8] = 8'h20;
+      tmp[(72*8)+:8] = 8'h00;
+      tmp[(73*8)+:8] = 8'h00;
+      tmp[(74*8)+:8] = 8'h22;
+      tmp[(75*8)+:8] = 8'hA4;
+      tmp[(76*8)+:8] = 8'h38;
+      tmp[(77*8)+:8] = 8'h30;
+      tmp[(78*8)+:8] = 8'h02;
+      tmp[(79*8)+:8] = 8'h20;
+      tmp[(80*8)+:8] = 8'h02;
+      tmp[(81*8)+:8] = 8'h00;
+      tmp[(82*8)+:8] = 8'h22;
+      tmp[(83*8)+:8] = 8'hA4;
+      tmp[(84*8)+:8] = 8'h01;
+      tmp[(85*8)+:8] = 8'h00;
+      tmp[(86*8)+:8] = 8'h02;
+      tmp[(87*8)+:8] = 8'h20;
+      tmp[(88*8)+:8] = 8'h04;
+      tmp[(89*8)+:8] = 8'h00;
+      tmp[(90*8)+:8] = 8'h22;
+      tmp[(91*8)+:8] = 8'hAC;
+      tmp[(92*8)+:8] = 8'h10;
+      tmp[(93*8)+:8] = 8'h00;
+      tmp[(94*8)+:8] = 8'h00;
+      tmp[(95*8)+:8] = 8'h08;
+
+      build_rom_image = tmp;
+    end
+  endfunction
+
+  localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE = build_rom_image();
 
   carbon_bootrom #(
-      .BASE_ADDR(CARBON_SYSX86_ROM_BASE),
+      .BASE_ADDR(CARBON_SYS16_ROM_BASE),
       .ROM_BYTES(ROM_BYTES),
       .INIT_IMAGE(ROM_IMAGE),
       .RESP_LATENCY(1)
   ) u_rom (
       .clk(clk),
       .rst_n(rst_n),
-      .bus(s_if[3])
+      .bus(s_if[S_ROM])
   );
 
   carbon_sram #(
       .BASE_ADDR(32'h0000_0000),
-      .MEM_BYTES(CARBON_SYSX86_RAM_BYTES),
+      .MEM_BYTES(CARBON_SYS16_RAM_BYTES),
       .RESP_LATENCY(1)
   ) u_ram (
       .clk(clk),
       .rst_n(rst_n),
-      .bus(s_if[4])
+      .bus(s_if[S_RAM])
   );
 
   carbon_mmio_regs #(
-      .BASE_ADDR(CARBON_SYSX86_MMIO_BASE),
+      .BASE_ADDR(CARBON_SYS16_MMIO_BASE),
       .SIGNATURE_RESET(32'h0000_0000),
       .RESP_LATENCY(0)
   ) u_mmio (
       .clk(clk),
       .rst_n(rst_n),
-      .bus(s_if[0]),
+      .bus(s_if[S_MMIO]),
       .signature(signature),
       .poweroff(poweroff),
       .uart_tx_valid(),
@@ -355,6 +559,7 @@ module carbonz480_top (
   wire _unused = ^{fpu_csr_fault, fpu_csr_rdata[0], carbonio_uart_rx_ready,
                    carbonio_uart_tx_valid, carbonio_uart_tx_data, carbonio_pio_out,
                    carbonio_pio_dir, irq_carbonio.irq_valid, irq_carbonio.irq_vector,
-                   irq_carbonio.irq_prio, irq_carbonio.irq_pending};
+                   irq_carbonio.irq_prio, irq_carbonio.irq_pending,
+                   host_active_tier, host_active_core};
 
 endmodule : carbonz480_top

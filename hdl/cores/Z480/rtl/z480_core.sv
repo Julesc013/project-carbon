@@ -3,7 +3,8 @@
 
 module z480_core #(
     parameter logic [31:0] IO_BASE = 32'h000F_0000,
-    parameter logic [31:0] IO_MASK = 32'hFFFF_0000
+    parameter logic [31:0] IO_MASK = 32'hFFFF_0000,
+    parameter logic [63:0] RESET_PC = 64'h0
 ) (
     input logic clk,
     input logic rst_n,
@@ -753,8 +754,8 @@ module z480_core #(
       state_q <= ST_RESET;
       state_after_bus_q <= ST_BOUNDARY;
       bus_dest_q <= DEST_NONE;
-      pc_q <= 64'h0;
-      instr_pc_q <= 64'h0;
+      pc_q <= RESET_PC;
+      instr_pc_q <= RESET_PC;
       instr_q <= 32'h0;
       priv_q <= Z480_PRIV_H;
       prev_priv_q <= Z480_PRIV_H;
@@ -811,7 +812,7 @@ module z480_core #(
 
       unique case (state_q)
         ST_RESET: begin
-          pc_q <= 64'h0;
+          pc_q <= RESET_PC;
           state_q <= ST_BOUNDARY;
         end
 
