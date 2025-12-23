@@ -16,6 +16,7 @@ contract_tests:
 core_tests:
   - tb_z85
   - tb_z90
+  - tb_z380_core
   - tb_am9513
   - tb_carbonio
   - tb_carbondma
@@ -26,6 +27,7 @@ core_tests:
 system_tests:
   - tb_carbonz80
   - tb_carbonz90
+  - tb_carbonz380_smoke
   - tb_carbonz480
   - tb_carbonx86
   - tb_carbonx96
