@@ -963,6 +963,11 @@ module z380_core #(
           logic tier_is_p1;
           logic tier_is_p2;
           logic tier_is_p3;
+          logic tier_is_p4;
+          logic tier_is_p5;
+          logic tier_is_p6;
+          logic tier_is_z80_plus;
+          logic tier_is_z180_plus;
           logic z180_op;
           z85_alu8_t o8;
           z85_alu16_t o16;
@@ -972,6 +977,11 @@ module z380_core #(
           tier_is_p1 = (csr_tier_q == 8'(CARBON_Z80_DERIVED_TIER_P1_I8085));
           tier_is_p2 = (csr_tier_q == 8'(CARBON_Z80_DERIVED_TIER_P2_Z80));
           tier_is_p3 = (csr_tier_q == 8'(CARBON_Z80_DERIVED_TIER_P3_Z180));
+          tier_is_p4 = (csr_tier_q == 8'(CARBON_Z80_DERIVED_TIER_P4_EZ80));
+          tier_is_p5 = (csr_tier_q == 8'(CARBON_Z80_DERIVED_TIER_P5_Z280));
+          tier_is_p6 = (csr_tier_q == 8'(CARBON_Z80_DERIVED_TIER_P6_Z380));
+          tier_is_z80_plus = (tier_is_p2 || tier_is_p3 || tier_is_p4 || tier_is_p5 || tier_is_p6);
+          tier_is_z180_plus = (tier_is_p3 || tier_is_p4 || tier_is_p5 || tier_is_p6);
 
           z180_op = 1'b0;
           if (grp_q == Z85_GRP_ED) begin
@@ -984,10 +994,10 @@ module z380_core #(
             end
           end
 
-          if (csr_tier_q > 8'(CARBON_Z80_DERIVED_TIER_P3_Z180)) begin
+          if (csr_tier_q > 8'(CARBON_Z80_DERIVED_TIER_P6_Z380)) begin
             tier_illegal = 1'b1;
           end else begin
-            if (!tier_is_p2 && !tier_is_p3) begin
+            if (!tier_is_z80_plus) begin
               if (idx_q != Z85_IDX_NONE) begin
                 tier_illegal = 1'b1;
               end else if (grp_q != Z85_GRP_BASE) begin
@@ -1003,7 +1013,7 @@ module z380_core #(
                 end
               end
             end
-            if (!tier_is_p3 && z180_op) begin
+            if (!tier_is_z180_plus && z180_op) begin
               tier_illegal = 1'b1;
             end
           end
@@ -1406,15 +1416,15 @@ module z380_core #(
             if (opcode_q == CARBON_Z90_OPPAGE_P0_PREFIX1) begin
               imm8_ctx_q <= IMM8_MODE_OP0;
               start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
-            end else if (tier_is_p3 && ((opcode_q & 8'hC7) == 8'h00)) begin
+            end else if (tier_is_z180_plus && ((opcode_q & 8'hC7) == 8'h00)) begin
               imm8_ctx_q <= IMM8_IN0;
               imm8_r_q <= opcode_q[5:3];
               start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
-            end else if (tier_is_p3 && ((opcode_q & 8'hC7) == 8'h01)) begin
+            end else if (tier_is_z180_plus && ((opcode_q & 8'hC7) == 8'h01)) begin
               imm8_ctx_q <= IMM8_OUT0;
               imm8_r_q <= opcode_q[5:3];
               start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
-            end else if (tier_is_p3 && ((opcode_q & 8'hCF) == 8'h4C)) begin
+            end else if (tier_is_z180_plus && ((opcode_q & 8'hCF) == 8'h4C)) begin
               logic [1:0] dd;
               logic [15:0] ss_val;
               logic [7:0] hi;
@@ -1427,7 +1437,7 @@ module z380_core #(
               prod = hi * lo;
               set_ss(s_q, dd, Z85_IDX_NONE, prod);
               state_q <= ST_BOUNDARY;
-            end else if (tier_is_p3 && ((opcode_q & 8'hC7) == 8'h04)) begin
+            end else if (tier_is_z180_plus && ((opcode_q & 8'hC7) == 8'h04)) begin
               if (opcode_q[5:3] == 3'd6) begin
                 mem_rd_ctx_q <= MEMRD_TST;
                 mem_addr_q <= get_HL(s_q);
@@ -1437,17 +1447,17 @@ module z380_core #(
                 s_q.F <= o8.f;
                 state_q <= ST_BOUNDARY;
               end
-            end else if (tier_is_p3 && opcode_q == 8'h64) begin
+            end else if (tier_is_z180_plus && opcode_q == 8'h64) begin
               imm8_ctx_q <= IMM8_TST_N;
               start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
-            end else if (tier_is_p3 && opcode_q == 8'h74) begin
+            end else if (tier_is_z180_plus && opcode_q == 8'h74) begin
               mem_rd_ctx_q <= MEMRD_TST;
               mem_addr_q <= port;
               start_bus_read(1'b1, port, DEST_TMP8, ST_MEM_RD_DONE);
-            end else if (tier_is_p3 && opcode_q == 8'h76) begin
+            end else if (tier_is_z180_plus && opcode_q == 8'h76) begin
               s_q.halt_latch <= 1'b1;
               state_q <= ST_BOUNDARY;
-            end else if (tier_is_p3 &&
+            end else if (tier_is_z180_plus &&
                          (opcode_q == 8'h83 || opcode_q == 8'h8B ||
                           opcode_q == 8'h93 || opcode_q == 8'h9B)) begin
               block_kind_q <= BLOCK_OUT;
@@ -1808,7 +1818,7 @@ module z380_core #(
             end
             IMM16_MODE_ENTRY: begin
               if (mode_target_q <= csr_tier_q ||
-                  mode_target_q > 8'(CARBON_Z80_DERIVED_TIER_P3_Z180)) begin
+                  mode_target_q > 8'(CARBON_Z80_DERIVED_TIER_P6_Z380)) begin
                 trapped_q <= 1'b1;
                 core_trap_pulse_q <= 1'b1;
                 core_trap_cause_q <= Z380_CAUSE_MODEUP_INVALID;
