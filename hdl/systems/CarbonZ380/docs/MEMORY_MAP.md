@@ -1,8 +1,9 @@
-# CarbonZ90 — Memory Map (v1)
+# CarbonZ380 — Memory Map (v1)
 
 This system instantiates:
-- `z90_core` (Z180-class core, presents P3)
-- `am9513_accel` (P2 default mode enabled in this system)
+- `z380_core` (P6 native core)
+- `am9513_accel` (P2 default mode, CAI connected)
+- Z380 platform glue (chip-selects, waitgen, refresh)
 - `carbonio` (UART/PIO/Timers/IRQ router)
 - `carbondma` (4-channel DMA engine)
 - Common ROM/RAM/MMIO devices on the fabric
@@ -53,6 +54,6 @@ Static configuration (used by the CAI router + Am9513 init logic):
 
 ## Notes
 
-- Z90 `MODEFLAGS` are initialized by a small CSR sequencer before releasing the core.
+- Z380 `MODEFLAGS` are initialized by a small CSR sequencer before releasing the core.
 - CarbonIO IRQ outputs are not wired to the CPU in this v1 integration (polling only).
-- Compatibility windows must be accessed as ordered I/O (Z90 `io_if` asserts ordered attributes).
+- Compatibility windows must be accessed as ordered I/O (Z380 `io_if` asserts ordered attributes).

@@ -18,11 +18,19 @@ CarbonZ480 uses the 64 KiB SYS16 layout, with **low 16-bit decode** for compatib
 - **CarbonIO compat**: `0x0000_F100`–`0x0000_F1FF` (256 B)
 - **CarbonDMA compat**: `0x0000_F200`–`0x0000_F2FF` (256 B)
 - **Tier host**: `0x0000_F300`–`0x0000_F3FF` (256 B)
-- **Fast SRAM window (reserved)**: `0x0000_8000`–`0x0000_BFFF` (placeholder)
 - **RAM (default)**: 64 KiB SRAM
 
 Upper address bits are ignored for decode so that sign-extended addresses from Z480
 still resolve to the SYS16 compatibility windows.
+
+### RAM conventions (BIOS/DOS placeholders)
+
+These ranges are **conventional reservations** within SYS16 RAM for JC-BIOS/JC-DOS:
+
+- **BIOS RAM**: `0x0000_0100`–`0x0000_01FF` (scratch/stack)
+- **DOS/OS resident**: `0x0000_0200`–`0x0000_1FFF` (placeholder)
+- **TPA (Transient Program Area)**: `0x0000_2000`–`0x0000_EFFF` (placeholder)
+- **Banked RAM window (optional)**: `0x0000_8000`–`0x0000_BFFF` (overlay, if implemented)
 
 ## Boot ROM contents
 
@@ -49,8 +57,14 @@ Base: `0x0000_F200` (see `hdl/cores/CarbonDMA/docs/CarbonDMA_v1.md` for offsets)
 
 Base: `0x0000_F300` (see `docs/platform/TIER_HOSTING.md` for registers)
 
+## CAI rings (v1 integration choices)
+
+- **Submit descriptor base (host-programmed)**: recommended `0x0000_2000`
+- **Submit ring mask**: host-programmed
+- **Completion base (device CSR)**: `0x0000_4000`
+- **Completion ring mask (device CSR)**: `0x0000_00FF` (256-entry ring)
+
 ## Notes / v1 limitations
 
 - CarbonIO IRQ outputs are not wired to a CPU interrupt sink yet (polling only).
-- The Am9513 CAI completion ring base defaults to `0x0000_4000` in RAM.
 - Compatibility windows must be accessed as ordered I/O.
