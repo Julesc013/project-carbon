@@ -18,6 +18,7 @@ CarbonZ480 uses the 64 KiB SYS16 layout, with **low 16-bit decode** for compatib
 - **CarbonIO compat**: `0x0000_F100`–`0x0000_F1FF` (256 B)
 - **CarbonDMA compat**: `0x0000_F200`–`0x0000_F2FF` (256 B)
 - **Tier host**: `0x0000_F300`–`0x0000_F3FF` (256 B)
+- **BDT ROM**: `0x0000_F800`–`0x0000_F9FF` (512 B, read-only)
 - **RAM (default)**: 64 KiB SRAM
 
 Upper address bits are ignored for decode so that sign-extended addresses from Z480
@@ -56,6 +57,10 @@ Base: `0x0000_F200` (see `hdl/cores/CarbonDMA/docs/CarbonDMA_v1.md` for offsets)
 ## Tier host window
 
 Base: `0x0000_F300` (see `docs/platform/TIER_HOSTING.md` for registers)
+
+## BDT region (BSP)
+
+Base: `0x0000_F800` (read-only BDT image generated from `BDT.yaml`)
 
 ## CAI rings (v1 integration choices)
 

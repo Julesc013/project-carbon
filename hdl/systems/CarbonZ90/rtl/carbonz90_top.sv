@@ -16,7 +16,14 @@ module carbonz90_top (
   localparam int unsigned ID_W   = 4;
 
   localparam int unsigned M = 4; // z90 mem, z90 io, am9513 dma, carbondma
-  localparam int unsigned N = 5; // mmio, carbonio, carbondma, rom, ram(default)
+  localparam int unsigned N = 6; // mmio, carbonio, carbondma, bdt, rom, ram(default)
+
+  localparam int unsigned S_MMIO      = 0;
+  localparam int unsigned S_CARBONIO  = 1;
+  localparam int unsigned S_CARBONDMA = 2;
+  localparam int unsigned S_BDT       = 3;
+  localparam int unsigned S_ROM       = 4;
+  localparam int unsigned S_RAM       = 5;
 
   fabric_if #(
       .ADDR_W(ADDR_W),
@@ -39,6 +46,7 @@ module carbonz90_top (
   localparam logic [N*ADDR_W-1:0] SLAVE_BASE = {
       32'hFFFF_FFFF,
       ADDR_W'(CARBON_SYS16_ROM_BASE),
+      ADDR_W'(CARBON_SYS16_BDT_BASE),
       ADDR_W'(CARBON_SYS16_CARBONDMA_BASE),
       ADDR_W'(CARBON_SYS16_CARBONIO_BASE),
       ADDR_W'(CARBON_SYS16_MMIO_BASE)
@@ -46,6 +54,7 @@ module carbonz90_top (
   localparam logic [N*ADDR_W-1:0] SLAVE_MASK = {
       32'hFFFF_FFFF,
       ADDR_W'(CARBON_SYS16_ROM_MASK),
+      ADDR_W'(CARBON_SYS16_BDT_MASK),
       ADDR_W'(CARBON_SYS16_CARBONDMA_MASK),
       ADDR_W'(CARBON_SYS16_CARBONIO_MASK),
       ADDR_W'(CARBON_SYS16_MMIO_MASK)
@@ -58,7 +67,7 @@ module carbonz90_top (
       .DATA_W(DATA_W),
       .ID_W(ID_W),
       .HAS_DEFAULT(1'b1),
-      .DEFAULT_SLAVE(4),
+      .DEFAULT_SLAVE(S_RAM),
       .SLAVE_BASE(SLAVE_BASE),
       .SLAVE_MASK(SLAVE_MASK)
   ) u_fabric (
@@ -326,7 +335,7 @@ module carbonz90_top (
   ) u_carbonio (
       .clk(clk),
       .rst_n(rst_n),
-      .compat_if(s_if[1]),
+      .compat_if(s_if[S_CARBONIO]),
       .csr(csr_carbonio),
       .dbg(dbg_carbonio),
       .irq(irq_carbonio),
@@ -361,7 +370,7 @@ module carbonz90_top (
   ) u_carbondma (
       .clk(clk),
       .rst_n(rst_n),
-      .compat_if(s_if[2]),
+      .compat_if(s_if[S_CARBONDMA]),
       .mem_if(m_if[3]),
       .csr(csr_carbondma),
       .dbg(dbg_carbondma)
@@ -370,8 +379,11 @@ module carbonz90_top (
   // --------------------------------------------------------------------------
   // ROM/RAM/MMIO
   // --------------------------------------------------------------------------
+  `include "bdt_image.svh"
+
   localparam int unsigned ROM_BYTES = CARBON_SYS16_ROM_BYTES;
   localparam int unsigned ROM_USED  = 26;
+  localparam int unsigned BDT_BYTES = BDT_IMAGE_BYTES;
 
   // Z90 boot stub:
   // - write "Z90!" signature to MMIO and power off
@@ -392,7 +404,18 @@ module carbonz90_top (
   ) u_rom (
       .clk(clk),
       .rst_n(rst_n),
-      .bus(s_if[3])
+      .bus(s_if[S_ROM])
+  );
+
+  carbon_bootrom #(
+      .BASE_ADDR(CARBON_SYS16_BDT_BASE),
+      .ROM_BYTES(BDT_BYTES),
+      .INIT_IMAGE(BDT_IMAGE),
+      .RESP_LATENCY(1)
+  ) u_bdt (
+      .clk(clk),
+      .rst_n(rst_n),
+      .bus(s_if[S_BDT])
   );
 
   carbon_sram #(
@@ -402,7 +425,7 @@ module carbonz90_top (
   ) u_ram (
       .clk(clk),
       .rst_n(rst_n),
-      .bus(s_if[4])
+      .bus(s_if[S_RAM])
   );
 
   carbon_mmio_regs #(
@@ -412,7 +435,7 @@ module carbonz90_top (
   ) u_mmio (
       .clk(clk),
       .rst_n(rst_n),
-      .bus(s_if[0]),
+      .bus(s_if[S_MMIO]),
       .signature(signature),
       .poweroff(poweroff),
       .uart_tx_valid(),

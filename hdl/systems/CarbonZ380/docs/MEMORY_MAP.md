@@ -16,6 +16,7 @@ Address decode is **priority-based** (MMIO and ROM override the RAM default mapp
 - **MMIO (system regs)**: `0xF000`–`0xF0FF` (256 B)
 - **CarbonIO compat**: `0xF100`–`0xF1FF` (256 B)
 - **CarbonDMA compat**: `0xF200`–`0xF2FF` (256 B)
+- **BDT ROM**: `0xF800`–`0xF9FF` (512 B, read-only)
 - **RAM (default)**: all other `0x0000`–`0xFFFF` addresses not claimed by ROM/MMIO
 
 ### RAM conventions (BIOS/DOS placeholders)
@@ -42,6 +43,10 @@ Base: `0xF100` (see `hdl/cores/CarbonIO/docs/CarbonIO_v1.md` for register offset
 ## CarbonDMA compatibility window
 
 Base: `0xF200` (see `hdl/cores/CarbonDMA/docs/CarbonDMA_v1.md` for register offsets)
+
+## BDT region (BSP)
+
+Base: `0xF800` (read-only BDT image generated from `BDT.yaml`)
 
 ## CAI rings (v1 integration choices)
 

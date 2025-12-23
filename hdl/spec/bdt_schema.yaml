@@ -1,0 +1,114 @@
+spec_version: 1.0
+name: bdt_schema
+description: Schema for Board Device Table (BDT) manifests used by Carbon BSP stubs.
+revision: v1.0.0
+created: 2025-12-24
+stable: true
+
+bdt_manifest:
+  description: Top-level BDT manifest used to generate ROM images and C headers.
+  fields:
+    - name: bdt
+      type: object
+      required: true
+      fields:
+        - name: name
+          type: string
+          required: false
+          description: Human-readable system name.
+        - name: format_version
+          type: u16
+          required: false
+          description: BDT header format version (defaults to v1).
+        - name: base_addr
+          type: u64
+          required: true
+          description: Base address where the BDT ROM is mapped.
+        - name: region_bytes
+          type: u32
+          required: true
+          description: Total reserved bytes for the BDT region (header + entries + padding).
+        - name: devices
+          type: array
+          required: true
+          item: device_entry
+
+device_entry:
+  description: One device capability descriptor entry (DEVICE_CAP_DESC_V1).
+  fields:
+    - name: name
+      type: string
+      required: false
+      description: Device label for readability.
+    - name: class
+      type: string|u16
+      required: true
+      description: Device class (DEVCLASS_* or numeric).
+    - name: subclass_id
+      type: u16
+      required: false
+      description: Optional subclass ID.
+    - name: vendor_id
+      type: u16
+      required: false
+      description: Vendor ID (0 for Project Carbon).
+    - name: device_id
+      type: u16
+      required: true
+      description: Device ID within the vendor namespace.
+    - name: instance_id
+      type: u16
+      required: false
+      description: Instance index (default 0).
+    - name: revision_id
+      type: u16
+      required: false
+      description: Device revision (default 1).
+    - name: compat_flags
+      type: list|string|u32
+      required: false
+      description: Compatibility feature flags (DEVFEAT_COMPAT_* or numeric).
+    - name: turbo_flags
+      type: list|string|u32
+      required: false
+      description: Turbo feature flags (DEVFEAT_TURBO_* or numeric).
+    - name: feature_word0
+      type: u32
+      required: false
+      description: Raw feature word 0 value (optional).
+    - name: feature_word1
+      type: u32
+      required: false
+      description: Raw feature word 1 value (optional).
+    - name: feature_word0_fields
+      type: object
+      required: false
+      description: Feature field overrides packed into feature word 0.
+    - name: feature_word1_fields
+      type: object
+      required: false
+      description: Feature field overrides packed into feature word 1.
+    - name: csr_base
+      type: u64
+      required: false
+      description: CSR base address (0 if none).
+    - name: compat_io_base
+      type: u64
+      required: false
+      description: Compatibility I/O base (port or MMIO).
+    - name: mmio_base
+      type: u64
+      required: false
+      description: MMIO base for high-level device windows.
+    - name: mmio_size
+      type: u32
+      required: false
+      description: Size of MMIO window in bytes.
+    - name: queue_count
+      type: u16
+      required: false
+      description: Turbo queue count (0 if none).
+    - name: irq_count
+      type: u16
+      required: false
+      description: IRQ source count (0 if none).

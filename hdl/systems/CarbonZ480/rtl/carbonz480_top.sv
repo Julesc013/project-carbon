@@ -16,7 +16,7 @@ module carbonz480_top (
   localparam int unsigned ID_W   = 4;
 
   localparam int unsigned M = 9; // z85 mem/io, z90 mem/io, z380 mem/io, z480 mem, am9513 dma, carbondma
-  localparam int unsigned N = 6; // mmio, carbonio, carbondma, tier host, rom, ram(default)
+  localparam int unsigned N = 7; // mmio, carbonio, carbondma, tier host, bdt, rom, ram(default)
 
   localparam int unsigned M_Z85_MEM   = 0;
   localparam int unsigned M_Z85_IO    = 1;
@@ -32,8 +32,9 @@ module carbonz480_top (
   localparam int unsigned S_CARBONIO  = 1;
   localparam int unsigned S_CARBONDMA = 2;
   localparam int unsigned S_TIER_HOST = 3;
-  localparam int unsigned S_ROM       = 4;
-  localparam int unsigned S_RAM       = 5;
+  localparam int unsigned S_BDT       = 4;
+  localparam int unsigned S_ROM       = 5;
+  localparam int unsigned S_RAM       = 6;
 
   localparam logic [1:0] CORE_Z85  = 2'd0;
   localparam logic [1:0] CORE_Z90  = 2'd1;
@@ -62,10 +63,12 @@ module carbonz480_top (
 
   // CarbonZ480 keeps 16-bit decode compatibility by masking to the low 16 bits.
   localparam logic [31:0] SYS16_MASK_L16 = 32'h0000_FF00;
+  localparam logic [31:0] SYS16_MASK_L16_BDT = 32'h0000_FE00;
 
   localparam logic [N*ADDR_W-1:0] SLAVE_BASE = {
       32'hFFFF_FFFF,
       ADDR_W'(CARBON_SYS16_ROM_BASE),
+      ADDR_W'(CARBON_SYS16_BDT_BASE),
       ADDR_W'(CARBON_SYS16_TIER_HOST_BASE),
       ADDR_W'(CARBON_SYS16_CARBONDMA_BASE),
       ADDR_W'(CARBON_SYS16_CARBONIO_BASE),
@@ -74,6 +77,7 @@ module carbonz480_top (
   localparam logic [N*ADDR_W-1:0] SLAVE_MASK = {
       32'hFFFF_FFFF,
       ADDR_W'(SYS16_MASK_L16),
+      ADDR_W'(SYS16_MASK_L16_BDT),
       ADDR_W'(SYS16_MASK_L16),
       ADDR_W'(SYS16_MASK_L16),
       ADDR_W'(SYS16_MASK_L16),
@@ -87,7 +91,7 @@ module carbonz480_top (
       .DATA_W(DATA_W),
       .ID_W(ID_W),
       .HAS_DEFAULT(1'b1),
-      .DEFAULT_SLAVE(5),
+      .DEFAULT_SLAVE(S_RAM),
       .SLAVE_BASE(SLAVE_BASE),
       .SLAVE_MASK(SLAVE_MASK)
   ) u_fabric (
@@ -467,7 +471,10 @@ module carbonz480_top (
   // --------------------------------------------------------------------------
   // ROM/RAM/MMIO
   // --------------------------------------------------------------------------
+  `include "bdt_image.svh"
+
   localparam int unsigned ROM_BYTES = CARBON_SYS16_ROM_BYTES;
+  localparam int unsigned BDT_BYTES = BDT_IMAGE_BYTES;
 
   function automatic logic [ROM_BYTES*8-1:0] build_rom_image;
     logic [ROM_BYTES*8-1:0] tmp;
@@ -554,6 +561,17 @@ module carbonz480_top (
       .clk(clk),
       .rst_n(rst_n),
       .bus(s_if[S_ROM])
+  );
+
+  carbon_bootrom #(
+      .BASE_ADDR(CARBON_SYS16_BDT_BASE),
+      .ROM_BYTES(BDT_BYTES),
+      .INIT_IMAGE(BDT_IMAGE),
+      .RESP_LATENCY(1)
+  ) u_bdt (
+      .clk(clk),
+      .rst_n(rst_n),
+      .bus(s_if[S_BDT])
   );
 
   carbon_sram #(

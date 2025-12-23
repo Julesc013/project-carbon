@@ -21,6 +21,10 @@ package carbon_memmap_pkg;
   localparam logic [31:0] CARBON_SYS16_ROM_MASK  = 32'hFFFF_FF00; // 256 B window
   localparam int unsigned CARBON_SYS16_ROM_BYTES = 256;
 
+  localparam logic [31:0] CARBON_SYS16_BDT_BASE  = 32'h0000_F800;
+  localparam logic [31:0] CARBON_SYS16_BDT_MASK  = 32'hFFFF_FE00; // 512 B window
+  localparam int unsigned CARBON_SYS16_BDT_BYTES = 512;
+
   localparam logic [31:0] CARBON_SYS16_MMIO_BASE = 32'h0000_F000;
   localparam logic [31:0] CARBON_SYS16_MMIO_MASK = 32'hFFFF_FF00; // 256 B window
 
@@ -44,6 +48,10 @@ package carbon_memmap_pkg;
   localparam logic [31:0] CARBON_SYSX86_ROM_BASE  = 32'h0000_0000;
   localparam logic [31:0] CARBON_SYSX86_ROM_MASK  = 32'hFFFF_F000; // 4 KiB window
   localparam int unsigned CARBON_SYSX86_ROM_BYTES = 4096;
+
+  localparam logic [31:0] CARBON_SYSX86_BDT_BASE  = 32'h000F_8000;
+  localparam logic [31:0] CARBON_SYSX86_BDT_MASK  = 32'hFFFF_FE00; // 512 B window
+  localparam int unsigned CARBON_SYSX86_BDT_BYTES = 512;
 
   localparam logic [31:0] CARBON_SYSX86_MMIO_BASE = 32'h000F_0000;
   localparam logic [31:0] CARBON_SYSX86_MMIO_MASK = 32'hFFFF_F000; // 4 KiB window

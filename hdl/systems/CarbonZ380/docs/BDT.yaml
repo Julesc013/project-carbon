@@ -1,0 +1,43 @@
+bdt:
+  name: CarbonZ380
+  base_addr: 0xF800
+  region_bytes: 512
+  devices:
+    - name: z380_cpu
+      class: DEVCLASS_CPU
+      vendor_id: 0
+      device_id: 0x0380
+      revision_id: 1
+    - name: am9513_accel
+      class: DEVCLASS_FPU
+      vendor_id: 0
+      device_id: 0x9513
+      revision_id: 1
+      compat_flags: [DEVFEAT_COMPAT_POLLING]
+      turbo_flags: [DEVFEAT_TURBO_QUEUE]
+      queue_count: 1
+    - name: carbonio
+      class: DEVCLASS_UART
+      vendor_id: 0
+      device_id: 0x0001
+      revision_id: 1
+      compat_flags: [DEVFEAT_COMPAT_POLLING, DEVFEAT_COMPAT_PORT_IO, DEVFEAT_COMPAT_MMIO, DEVFEAT_COMPAT_WAIT]
+      feature_word0_fields:
+        DEVFEAT_FIELD_RX_FIFO_DEPTH: 64
+        DEVFEAT_FIELD_TX_FIFO_DEPTH: 64
+        DEVFEAT_FIELD_TIMER_COUNT: 2
+      compat_io_base: 0xF100
+      irq_count: 6
+    - name: carbondma
+      class: DEVCLASS_DMA
+      vendor_id: 0
+      device_id: 0x0001
+      revision_id: 1
+      compat_flags: [DEVFEAT_COMPAT_POLLING, DEVFEAT_COMPAT_PORT_IO, DEVFEAT_COMPAT_MMIO, DEVFEAT_COMPAT_WAIT]
+      turbo_flags: [DEVFEAT_TURBO_QUEUE, DEVFEAT_TURBO_DMA]
+      feature_word0_fields:
+        DEVFEAT_FIELD_DMA_CHANNELS: 4
+      feature_word1_fields:
+        DEVFEAT_FIELD_QUEUE_COUNT: 1
+      compat_io_base: 0xF200
+      queue_count: 1
