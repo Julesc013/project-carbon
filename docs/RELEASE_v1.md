@@ -4,25 +4,32 @@ Project Carbon v1.0 is a coherent HDL platform with:
 
 - Generated architecture constants (`hdl/gen/`) from YAML specs
 - Common fabric/CSR/IRQ/CAI infrastructure with contract tests
-- Core/accelerator scaffolds and five integrated Carbon* system simulation tops
-- A unified regression runner and CI configuration
+- CPU cores through Z480 and Am95xx accelerators through Am9515
+- Integrated CarbonZ80/Z90/Z380/Z480 system tops with smoke tests
+- A unified regression runner and consistency checks
 
 ## Quick start (simulation)
 
 - Generate constants: `scripts/gen_arch.sh` or `scripts/gen_arch.ps1`
 - Run all regressions: `scripts/run_sim.sh --all` or `scripts/run_sim.ps1 -All`
 - Run one test directly: `make -C hdl/sim tb_carbonz80`
+- Run host sim: `source/sim/carbon_sim` (see `source/sim/carbon_sim/docs/USAGE.md`)
 
 See `hdl/sim/README.md` for simulator prerequisites and details.
 
 ## What v1.0 includes
 
-- Cores: Z85, Z90, Z480 (P7 scaffold), 8096, 8097
-- Accelerator: Am9513 with legacy (9511/9512) personalities and native CAI path
-- Systems: CarbonZ80/CarbonZ90/CarbonZ480/CarbonX86/CarbonX96 simulation tops, RAM/ROM/MMIO, and smoke TBs
-- Verification: contract tests for `fabric_if`, CAI descriptor/completion handling, and basic CSR privilege gating plumbing
+- CPU tiers: Z85 (P2), Z90 (P3), Z380 (P6), Z480 (P7)
+- FPU tiers: Am9513 (P2), Am9514 (P3), Am9515 (P4), plus Am9511/Am9512 personalities
+- Systems: CarbonZ80/Z90/Z380/Z480 system tops with SYS16 memory maps and smoke/tier tests
+- Platform glue: CarbonIO/CarbonDMA, BDT/BSP scaffolding, tier host controller
+- Verification: contract tests for `fabric_if`, CAI descriptor/completion handling, and CSR plumbing
 
 ## Deferred features (explicit)
+
+- x86/x87 lineage and CarbonX86/CarbonX96 system validation
+- Full CP/M or RomWBW OS integration beyond current sim hooks/stubs
+- Unimplemented opcode coverage where deterministic traps remain
 
 See `docs/DEFERRED.md` for the project-wide deferred list, organized by subsystem.
 
