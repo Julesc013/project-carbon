@@ -20,7 +20,8 @@ What it is **not**:
 - Frozen v1.0 architecture contracts in `hdl/spec/*.yaml` with generated SystemVerilog/C constants.
 - Compatibility tier ladders and a single mode-switching contract (`MODEUP`/`RETMD`).
 - Shared HDL interfaces (fabric/CSR/IRQ/debug/accelerator) plus contract tests.
-- SystemVerilog cores: Z85, Z90, Z480 (P7 scaffold), 8096, 8097, Am9513.
+- SystemVerilog cores: Z85, Z90, Z380, Z480 (P7 subset) and Am9513/Am9514/Am9515.
+- x86/x87 lineage is explicitly deferred in v1.0 (see `docs/DEFERRED.md`).
 - Integrated system simulation tops and regression runner targeting Icarus Verilog.
 - `carbon-sim` C++ simulator for CP/M 2.2 and RomWBW-style platforms (ROMs not included).
 - KiCad hardware: a Carbon_Z80 project plus a KiCad 9 schematic skeleton generator.
@@ -40,7 +41,7 @@ What it is **not**:
 - **HDL simulation & verification**
   - `hdl/sim/*`: Makefile-based smoke/contract/system tests (Icarus Verilog), driven by `hdl/sim/tests/regress.yaml`.
 - **Host-level simulator(s)**
-  - `source/sim/carbon_sim`: `carbon-sim` (C++17) with CP/M 2.2 and RomWBW platform models; optional Verilator backend is scaffolding.
+  - `source/sim/carbon_sim`: `carbon-sim` (C++17) with CP/M 2.2, RomWBW, and CarbonZ platform models; optional Verilator backend is scaffolding.
 - **OS/software/firmware (repository content)**
   - `source/`: currently includes `carbon-sim`, a bundled Small Computer Workshop tool under `source/SCM/`, and placeholder directories (e.g., `source/JC-BIOS`, `source/JC-DOS`).
 - **Schematics**
@@ -146,7 +147,8 @@ Not a fit if you need:
 
 - Repository version: **v1.0.0** (`VERSION`).
 - The **contract/spec layer is frozen for v1.0** and the generator outputs are CI-checked for reproducibility.
-- Several cores and systems are intentionally **subset/scaffold implementations** (e.g., partial legacy ISA coverage, minimal peripherals); see `docs/DEFERRED.md` and the per-core docs under `hdl/cores/*/docs/`.
+- Several cores and systems are intentionally **subset implementations** (e.g., partial legacy ISA coverage, minimal peripherals); see `docs/DEFERRED.md` and the per-core docs under `hdl/cores/*/docs/`.
+- x86/x87 lineage and CarbonX* system validation are deferred for v1.0.
 - The primary “known-good” workflows in v1.0 are spec generation and HDL regression in CI; additional platforms (e.g., `carbon-sim` backends) evolve separately.
 
 ## 12. License
