@@ -79,6 +79,39 @@ package am9513_pkg;
   endfunction
 
   // --------------------------------------------------------------------------
+  // Am9514 vector opcodes (CAI_OPGROUP_VECTOR)
+  // --------------------------------------------------------------------------
+  typedef enum logic [7:0] {
+    AM9514_VEC_ADD        = 8'h01,
+    AM9514_VEC_SUB        = 8'h02,
+    AM9514_VEC_MUL        = 8'h03,
+    AM9514_VEC_FMA        = 8'h04,
+    AM9514_VEC_CONV       = 8'h05,
+    AM9514_VEC_CMP        = 8'h06,
+    AM9514_VEC_MIN        = 8'h07,
+    AM9514_VEC_MAX        = 8'h08,
+    AM9514_VEC_SHUF_SWAP  = 8'h09,
+    AM9514_VEC_SHUF_BCAST = 8'h0A
+  } am9514_vec_func_e;
+
+  function automatic logic [31:0] am9514_opcode(input logic [7:0] func);
+    return AM9513_CAI_VENDOR_BIT | (32'(func) << AM9513_OPC_FUNC_LSB);
+  endfunction
+
+  // --------------------------------------------------------------------------
+  // Am9515 tensor opcodes (CAI_OPGROUP_TENSOR)
+  // --------------------------------------------------------------------------
+  typedef enum logic [7:0] {
+    AM9515_TENSOR_GEMM = 8'h01,
+    AM9515_TENSOR_DOT  = 8'h02,
+    AM9515_TENSOR_SUM  = 8'h03
+  } am9515_tensor_func_e;
+
+  function automatic logic [31:0] am9515_opcode(input logic [7:0] func);
+    return AM9513_CAI_VENDOR_BIT | (32'(func) << AM9513_OPC_FUNC_LSB);
+  endfunction
+
+  // --------------------------------------------------------------------------
   // CAI submit descriptor flags (am9513-specific; v1)
   // --------------------------------------------------------------------------
   localparam int unsigned AM9513_SUBMIT_FLAG_MODE_VALID_BIT = 0;
