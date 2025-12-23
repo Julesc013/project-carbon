@@ -22,18 +22,18 @@ module cpuid_block #(
   localparam logic [31:0] Z480_VENDOR_STR_W2 = 32'h5A2D_4E4F;  // "ON-Z"
   localparam logic [31:0] Z480_VENDOR_STR_W3 = 32'h2030_3834;  // "480 "
 
-  // CPUID_LEAF_ID.word1 chip_flags (implementation-defined for Z480 v1 scaffold)
+  // CPUID_LEAF_ID.word1 chip_flags (implementation-defined for Z480 v1)
   localparam int unsigned Z480_CHIP_HAS_PRIV_U_BIT      = 0;
   localparam int unsigned Z480_CHIP_HAS_PRIV_S_BIT      = 1;
   localparam int unsigned Z480_CHIP_HAS_PRIV_H_BIT      = 2;
-  localparam int unsigned Z480_CHIP_HAS_OOO_SKELETON_BIT = 3;
+  localparam int unsigned Z480_CHIP_HAS_INORDER_CORE_BIT = 3;
   localparam int unsigned Z480_CHIP_HAS_MMU_SCAFFOLD_BIT = 4;
 
   localparam logic [31:0] Z480_CHIP_FLAGS =
       (32'h1 << Z480_CHIP_HAS_PRIV_U_BIT) |
       (32'h1 << Z480_CHIP_HAS_PRIV_S_BIT) |
       (32'h1 << Z480_CHIP_HAS_PRIV_H_BIT) |
-      (32'h1 << Z480_CHIP_HAS_OOO_SKELETON_BIT) |
+      (32'h1 << Z480_CHIP_HAS_INORDER_CORE_BIT) |
       (32'h1 << Z480_CHIP_HAS_MMU_SCAFFOLD_BIT);
 
   always_comb begin
@@ -69,10 +69,11 @@ module cpuid_block #(
         w1[31:24] = 8'h00;
       end
       CARBON_CPUID_LEAF_FEATURES0: begin
-        w0 = CARBON_FEAT_CSR_NAMESPACE_MASK |
+        w0 = CARBON_FEAT_MODE_SWITCH_MASK |
+            CARBON_FEAT_CSR_NAMESPACE_MASK |
             CARBON_FEAT_FABRIC_MASK |
             CARBON_FEAT_CPUID_MASK |
-            CARBON_FEAT_IOMMU_HOOKS_MASK |
+            CARBON_FEAT_CAPS_MASK |
             CARBON_Z480_NATIVE_64_MASK;
       end
       CARBON_CPUID_LEAF_TOPOLOGY: begin
