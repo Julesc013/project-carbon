@@ -1,0 +1,16 @@
+bsp:
+  name: RomWBW_v1
+  version: 1
+  bdt_base: 0xF800
+  bdt_size: 1024
+  console:
+    kind: SIO
+    io_base: 0x0080
+  block:
+    kind: IDE
+    io_base: 0x0010
+    sector_bytes: 512
+  timer:
+    kind: CARBONIO_TICK
+    io_base: 0xF140
+  fpu_present: false
