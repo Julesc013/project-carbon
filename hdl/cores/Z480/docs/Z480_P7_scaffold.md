@@ -1,12 +1,14 @@
 # Z480 P7 Scaffold (v1)
 
-This directory contains the **Z480 P7 (native tier)** core scaffold: a modular, OoO-ready RTL skeleton intended to be stable for long-term evolution. The v1 scaffold focuses on clean module boundaries and a working simulation-elaboratable top-level, not on finishing the ISA or microarchitecture.
+This directory contains the **Z480 P7 (native tier)** core scaffold: a modular, OoO-ready RTL skeleton intended to be stable for long-term evolution. The repository now also includes an in-order Z480 core with a minimal ISA v1 subset; see `hdl/cores/Z480/docs/Z480.md` for the current implementation summary.
+
+> Note: The scaffold modules described below remain in-tree for future expansion but are not wired into the current in-order core.
 
 ## Top-Level
 
 - `hdl/cores/Z480/rtl/z480_core.sv`: Z480 core top module.
   - Ports:
-    - `fabric_if.master mem_if` (unified instruction+data for now; idle in v1)
+    - `fabric_if.master mem_if` (unified instruction+data for now)
     - `csr_if.slave csr` (CSR read/write window)
     - `irq_if.sink irq` (external interrupt delivery; scaffold only)
     - `dbg_if.core dbg` (halt/run/step; scaffold only)
@@ -91,6 +93,8 @@ Because the ISA is not finalized in v1, CPUID is exposed via a CSR window:
 - bit4: MMU scaffold present
 
 ## What’s Implemented vs Deferred
+
+The lists below describe the legacy scaffold modules (not the current in-order core).
 
 Implemented in v1:
 
