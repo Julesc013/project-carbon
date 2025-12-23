@@ -21,7 +21,7 @@ module am9513_accel #(
 
   localparam logic [31:0] AM9513_ID_DEVICE = 32'h0000_9513;
   localparam logic [7:0]  AM9513_PRESENTED_TIER = AM9513_P2_AM9513;
-  localparam logic [7:0]  AM9513_MAX_TIER = AM9513_P2_AM9513;
+  localparam logic [7:0]  AM9513_MAX_TIER = AM9513_P3_AM9514;
 
   // --------------------------------------------------------------------------
   // Global CSRs / config
@@ -49,6 +49,7 @@ module am9513_accel #(
   logic [1:0]  rm_rdata;
   logic [4:0]  flags_rdata;
   logic [63:0] rf_rdata;
+  logic [127:0] vec_rdata;
 
   logic [63:0] stack_top;
   logic        stack_empty;
@@ -66,6 +67,8 @@ module am9513_accel #(
   logic [4:0] flags_clr_mask_mux;
   logic rf_we_mux;
   logic [63:0] rf_wdata_mux;
+  logic vec_we_mux;
+  logic [127:0] vec_wdata_mux;
   logic stack_push_we_mux;
   logic [63:0] stack_push_data_mux;
   logic stack_pop_we_mux;
@@ -81,6 +84,7 @@ module am9513_accel #(
       .rm_rdata(rm_rdata),
       .flags_rdata(flags_rdata),
       .rf_rdata(rf_rdata),
+      .vec_rdata(vec_rdata),
       .stack_top_rdata(stack_top),
       .stack_empty(stack_empty),
       .stack_full(stack_full),
@@ -93,6 +97,8 @@ module am9513_accel #(
       .flags_clr_mask(flags_clr_mask_mux),
       .rf_we(rf_we_mux),
       .rf_wdata(rf_wdata_mux),
+      .vec_we(vec_we_mux),
+      .vec_wdata(vec_wdata_mux),
       .stack_push_we(stack_push_we_mux),
       .stack_push_data(stack_push_data_mux),
       .stack_pop_we(stack_pop_we_mux),
@@ -147,6 +153,8 @@ module am9513_accel #(
   logic [4:0] cai_flags_or_mask;
   logic cai_rf_we;
   logic [63:0] cai_rf_wdata;
+  logic cai_vec_we;
+  logic [127:0] cai_vec_wdata;
 
   am9513_cai_engine #(
       .NUM_CONTEXTS(NUM_CONTEXTS),
@@ -166,10 +174,13 @@ module am9513_accel #(
       .rf_index(cai_rf_index),
       .rm_rdata(rm_rdata),
       .rf_rdata(rf_rdata),
+      .vec_rdata(vec_rdata),
       .flags_or_we(cai_flags_or_we),
       .flags_or_mask(cai_flags_or_mask),
       .rf_we(cai_rf_we),
       .rf_wdata(cai_rf_wdata),
+      .vec_we(cai_vec_we),
+      .vec_wdata(cai_vec_wdata),
       .busy(cai_busy)
   );
 
@@ -192,6 +203,8 @@ module am9513_accel #(
 
     rf_we_mux = csr_rf_we_pulse_q;
     rf_wdata_mux = csr_rf_wdata_q;
+    vec_we_mux = 1'b0;
+    vec_wdata_mux = '0;
 
     stack_push_we_mux = csr_stack_push_pulse_q;
     stack_push_data_mux = csr_stack_push_data_q;
@@ -210,6 +223,8 @@ module am9513_accel #(
       flags_or_mask_mux = cai_flags_or_mask;
       rf_we_mux = cai_rf_we;
       rf_wdata_mux = cai_rf_wdata;
+      vec_we_mux = cai_vec_we;
+      vec_wdata_mux = cai_vec_wdata;
       stack_push_we_mux = 1'b0;
       stack_pop_we_mux = 1'b0;
       flags_clr_we_mux = 1'b0;

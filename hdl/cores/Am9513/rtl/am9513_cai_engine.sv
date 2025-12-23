@@ -27,11 +27,14 @@ module am9513_cai_engine #(
     output logic [3:0]  rf_index,
     input  logic [1:0]  rm_rdata,
     input  logic [63:0] rf_rdata,
+    input  logic [127:0] vec_rdata,
 
     output logic        flags_or_we,
     output logic [4:0]  flags_or_mask,
     output logic        rf_we,
     output logic [63:0] rf_wdata,
+    output logic        vec_we,
+    output logic [127:0] vec_wdata,
 
     output logic        busy
 );
@@ -50,6 +53,7 @@ module am9513_cai_engine #(
 
   localparam logic [FAB_ATTR_W-1:0] DMA_ATTR =
       FAB_ATTR_W'(CARBON_FABRIC_ATTR_CACHEABLE_MASK | CARBON_FABRIC_ATTR_ORDERED_MASK);
+  localparam int unsigned VEC_BYTES = 16;
 
   // --------------------------------------------------------------------------
   // Internal CAI rings
@@ -100,9 +104,28 @@ module am9513_cai_engine #(
   logic [31:0] op_stride_q [MAX_OPERANDS];
   logic [63:0] op_val_q   [MAX_OPERANDS];
 
+  // Vector operand buffers (128-bit vector element)
+  logic [127:0] op_vec_q [MAX_OPERANDS];
+  logic [127:0] vec_result_q;
+  logic [15:0]  vec_mask_q;
+  logic [15:0]  vec_count_q;
+  logic [15:0]  vec_index_q;
+  logic [1:0]   vec_word_q;
+  logic [$clog2(MAX_OPERANDS)-1:0] vec_op_idx_q;
+  logic [2:0]   vec_operand_count_q;
+  logic [31:0]  vec_step_bytes_q [MAX_OPERANDS];
+  logic [31:0]  vec_result_step_q;
+  logic         vec_exec_valid_q;
+  logic [4:0]   vec_exc_flags_q;
+  logic         vec_writeback_q;
+
   // Execution result
   am9513_exec_result_t exec_q;
   logic exec_valid_q;
+
+  logic [127:0] vec_exec_result;
+  logic [4:0]   vec_exec_flags;
+  logic [15:0]  vec_exec_status;
 
   // Completion status cache
   logic [15:0] comp_status_q;
@@ -134,6 +157,13 @@ module am9513_cai_engine #(
     ST_OPVAL_RD,
     ST_OPVAL_CAP,
     ST_EXEC,
+    ST_VEC_INIT,
+    ST_VEC_REG,
+    ST_VEC_OP_RD,
+    ST_VEC_OP_CAP,
+    ST_VEC_EXEC,
+    ST_VEC_RES_WR,
+    ST_VEC_RES_ADV,
     ST_RESULT_WR,
     ST_RESULT_WR2,
     ST_RESULT_ADV,
@@ -179,9 +209,14 @@ module am9513_cai_engine #(
     flags_or_mask = 5'h0;
     rf_we = 1'b0;
     rf_wdata = '0;
+    vec_we = 1'b0;
+    vec_wdata = '0;
 
     if (st_q == ST_OPVAL_REG) begin
       rf_index = op_flags_q[opval_idx_q][AM9513_OPERAND_FLAG_REG_LSB +: AM9513_OPERAND_FLAG_REG_WIDTH];
+    end
+    if (st_q == ST_VEC_REG) begin
+      rf_index = op_flags_q[vec_op_idx_q][AM9513_OPERAND_FLAG_REG_LSB +: AM9513_OPERAND_FLAG_REG_WIDTH];
     end
 
     if (exec_valid_q && ((st_q == ST_RESULT_WR) || (st_q == ST_COMP_WR))) begin
@@ -192,6 +227,16 @@ module am9513_cai_engine #(
         rf_we = 1'b1;
         rf_index = result_reg_q;
         rf_wdata = exec_q.res0;
+      end
+    end
+
+    if (vec_exec_valid_q && (st_q == ST_COMP_WR)) begin
+      flags_or_we = 1'b1;
+      flags_or_mask = vec_exc_flags_q;
+      if (vec_writeback_q && (vec_exec_status == 16'(CARBON_CAI_STATUS_OK))) begin
+        vec_we = 1'b1;
+        rf_index = result_reg_q;
+        vec_wdata = vec_result_q;
       end
     end
   end
@@ -284,6 +329,24 @@ module am9513_cai_engine #(
   endfunction
 
   // --------------------------------------------------------------------------
+  // Vector execution helper (one 128-bit vector element)
+  // --------------------------------------------------------------------------
+  am9514_vector u_vec (
+      .func(op_func_q),
+      .fmt(op_fmt_q),
+      .fmt_aux(op_fmt_aux_q),
+      .fmt_flags(op_fmt_flags_q),
+      .op0(op_vec_q[0]),
+      .op1(op_vec_q[1]),
+      .op2(op_vec_q[2]),
+      .mask_bits(vec_mask_q),
+      .rm(rm_rdata),
+      .result(vec_exec_result),
+      .exc_flags(vec_exec_flags),
+      .status(vec_exec_status)
+  );
+
+  // --------------------------------------------------------------------------
   // Main state machine
   // --------------------------------------------------------------------------
   always_ff @(posedge clk or negedge rst_n) begin
@@ -334,10 +397,23 @@ module am9513_cai_engine #(
         op_len_q[i] <= '0;
         op_stride_q[i] <= '0;
         op_val_q[i] <= '0;
+        op_vec_q[i] <= '0;
+        vec_step_bytes_q[i] <= '0;
       end
 
       exec_q <= '0;
       exec_valid_q <= 1'b0;
+      vec_result_q <= '0;
+      vec_mask_q <= 16'hFFFF;
+      vec_count_q <= '0;
+      vec_index_q <= '0;
+      vec_word_q <= '0;
+      vec_op_idx_q <= '0;
+      vec_operand_count_q <= '0;
+      vec_result_step_q <= '0;
+      vec_exec_valid_q <= 1'b0;
+      vec_exc_flags_q <= '0;
+      vec_writeback_q <= 1'b0;
       comp_status_q <= 16'(CARBON_CAI_STATUS_OK);
       comp_bytes_q <= '0;
 
@@ -412,6 +488,9 @@ module am9513_cai_engine #(
               logic [31:0] ring_idx;
               ring_idx = submit_head_q & cai.submit_ring_mask;
               exec_valid_q <= 1'b0;
+              vec_exec_valid_q <= 1'b0;
+              vec_writeback_q <= 1'b0;
+              vec_exc_flags_q <= '0;
               desc_addr_q <= cai.submit_desc_base + (64'(ring_idx) << 6);
               desc_word_q <= 5'd0;
               st_q <= ST_DESC_RD;
@@ -651,42 +730,270 @@ module am9513_cai_engine #(
               comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
               comp_bytes_q <= '0;
               st_q <= ST_COMP_WR;
-            end else if (result_to_reg_q && (eff_mode_q != AM9513_P2_AM9513)) begin
+            end else begin
+              if (op_group_q == 8'(CARBON_CAI_OPGROUP_SCALAR)) begin
+                if (result_to_reg_q && (eff_mode_q != AM9513_P2_AM9513)) begin
+                  comp_status_q <= 16'(CARBON_CAI_STATUS_UNSUPPORTED);
+                  comp_bytes_q <= '0;
+                  st_q <= ST_COMP_WR;
+                end else begin
+                  am9513_exec_result_t ex;
+                  int unsigned elem_bytes;
+                  ex = am9513_execute(op_func_q, op_fmt_q, desc_flags_q,
+                                      op_val_q[0], op_val_q[1], op_val_q[2], rm_rdata);
+                  exec_q <= ex;
+                  exec_valid_q <= 1'b1;
+                  comp_status_q <= ex.cai_status;
+                  comp_bytes_q <= ex.bytes_written;
+
+                  // If result goes to register, skip memory write.
+                  if (result_to_reg_q && (eff_mode_q == AM9513_P2_AM9513) &&
+                      (ex.cai_status == 16'(CARBON_CAI_STATUS_OK))) begin
+                    comp_bytes_q <= 32'h0;
+                    st_q <= ST_COMP_WR;
+                  end else if (ex.cai_status != 16'(CARBON_CAI_STATUS_OK)) begin
+                    comp_bytes_q <= 32'h0;
+                    st_q <= ST_COMP_WR;
+                  end else if ((desc_result_len_q != 0) && (desc_result_len_q < ex.bytes_written)) begin
+                    comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+                    comp_bytes_q <= 32'h0;
+                    st_q <= ST_COMP_WR;
+                  end else begin
+                    // Result element sizing: scalar results use bytes_written, multi-result uses fmt size.
+                    elem_bytes = fmt_bytes(op_fmt_q);
+                    if (!ex.res1_valid) elem_bytes = ex.bytes_written;
+
+                    result_sel_q <= 1'b0;
+                    result_base_q <= desc_result_ptr_q;
+                    result_elem_bytes_q <= 32'(elem_bytes);
+                    result_step_q <= (desc_result_stride_q != 0) ? desc_result_stride_q : 32'(elem_bytes);
+                    st_q <= ST_RESULT_WR;
+                  end
+                end
+              end else if (op_group_q == 8'(CARBON_CAI_OPGROUP_VECTOR)) begin
+                exec_valid_q <= 1'b0;
+                vec_exec_valid_q <= 1'b0;
+                vec_writeback_q <= 1'b0;
+                st_q <= ST_VEC_INIT;
+              end else begin
+                comp_status_q <= 16'(CARBON_CAI_STATUS_INVALID_OP);
+                comp_bytes_q <= '0;
+                st_q <= ST_COMP_WR;
+              end
+            end
+          end
+
+          ST_VEC_INIT: begin
+            int unsigned need_ops;
+            int unsigned vec_count;
+            int unsigned vec_bytes;
+            int unsigned idx;
+            logic unsupported;
+            unsupported = 1'b0;
+            vec_bytes = VEC_BYTES;
+            vec_count = 0;
+
+            // Require P3 or above for vector ops.
+            if (eff_mode_q < AM9513_P3_AM9514) begin
               comp_status_q <= 16'(CARBON_CAI_STATUS_UNSUPPORTED);
               comp_bytes_q <= '0;
               st_q <= ST_COMP_WR;
             end else begin
-              am9513_exec_result_t ex;
-              int unsigned elem_bytes;
-              ex = am9513_execute(op_func_q, op_fmt_q, desc_flags_q,
-                                  op_val_q[0], op_val_q[1], op_val_q[2], rm_rdata);
-              exec_q <= ex;
-              exec_valid_q <= 1'b1;
-              comp_status_q <= ex.cai_status;
-              comp_bytes_q <= ex.bytes_written;
+              unique case (op_func_q)
+                AM9514_VEC_FMA: need_ops = 3;
+                AM9514_VEC_CONV: need_ops = 1;
+                AM9514_VEC_SHUF_SWAP: need_ops = 1;
+                AM9514_VEC_SHUF_BCAST: need_ops = 1;
+                default: need_ops = 2;
+              endcase
 
-              // If result goes to register, skip memory write.
-              if (result_to_reg_q && (eff_mode_q == AM9513_P2_AM9513) &&
-                  (ex.cai_status == 16'(CARBON_CAI_STATUS_OK))) begin
-                comp_bytes_q <= 32'h0;
-                st_q <= ST_COMP_WR;
-              end else if (ex.cai_status != 16'(CARBON_CAI_STATUS_OK)) begin
-                comp_bytes_q <= 32'h0;
-                st_q <= ST_COMP_WR;
-              end else if ((desc_result_len_q != 0) && (desc_result_len_q < ex.bytes_written)) begin
-                comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
-                comp_bytes_q <= 32'h0;
+              if ((need_ops == 0) || (desc_operand_count_q != need_ops)) begin
+                comp_status_q <= 16'(CARBON_CAI_STATUS_INVALID_OP);
+                comp_bytes_q <= '0;
                 st_q <= ST_COMP_WR;
               end else begin
-                // Result element sizing: scalar results use bytes_written, multi-result uses fmt size.
-                elem_bytes = fmt_bytes(op_fmt_q);
-                if (!ex.res1_valid) elem_bytes = ex.bytes_written;
+                if (result_to_reg_q) vec_count = 1;
+                else if (desc_result_len_q != 0) vec_count = desc_result_len_q / vec_bytes;
+                else if (op_len_q[0] != 0) vec_count = op_len_q[0] / vec_bytes;
+                else vec_count = 1;
 
-                result_sel_q <= 1'b0;
-                result_base_q <= desc_result_ptr_q;
-                result_elem_bytes_q <= 32'(elem_bytes);
-                result_step_q <= (desc_result_stride_q != 0) ? desc_result_stride_q : 32'(elem_bytes);
-                st_q <= ST_RESULT_WR;
+                if ((vec_count == 0) ||
+                    ((desc_result_len_q != 0) && (desc_result_len_q < (vec_count * vec_bytes)))) begin
+                  comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+                  comp_bytes_q <= '0;
+                  st_q <= ST_COMP_WR;
+                end else begin
+                  vec_operand_count_q <= 3'(need_ops);
+                  vec_count_q <= 16'(vec_count);
+                  vec_index_q <= '0;
+                  vec_op_idx_q <= '0;
+                  vec_word_q <= '0;
+                  vec_exec_valid_q <= 1'b0;
+                  vec_writeback_q <= 1'b0;
+                  vec_exc_flags_q <= '0;
+                  vec_result_step_q <= (desc_result_stride_q != 0) ? desc_result_stride_q : 32'(vec_bytes);
+
+                  if (desc_fmt_flags_q[AM9514_FMTFLAG_MASKED_BIT]) begin
+                    vec_mask_q <= desc_flags_q[31:16];
+                  end else begin
+                    vec_mask_q <= 16'hFFFF;
+                  end
+
+                  // Validate operand lengths/strides for memory operands.
+                  for (idx = 0; idx < MAX_OPERANDS; idx++) begin
+                    if (idx < need_ops) begin
+                      if (op_flags_q[idx][AM9513_OPERAND_FLAG_IS_REG_BIT]) begin
+                        if (vec_count != 1) unsupported = 1'b1;
+                        vec_step_bytes_q[idx] <= 32'h0;
+                      end else begin
+                        vec_step_bytes_q[idx] <= (op_stride_q[idx] != 0) ? op_stride_q[idx] : 32'(vec_bytes);
+                        if ((op_len_q[idx] != 0) && (op_len_q[idx] < (vec_count * vec_bytes))) begin
+                          unsupported = 1'b1;
+                        end
+                      end
+                    end else begin
+                      vec_step_bytes_q[idx] <= 32'h0;
+                    end
+                  end
+
+                  if (unsupported) begin
+                    comp_status_q <= 16'(CARBON_CAI_STATUS_UNSUPPORTED);
+                    comp_bytes_q <= '0;
+                    st_q <= ST_COMP_WR;
+                  end else if (!result_to_reg_q && !addr64_ok(desc_result_ptr_q)) begin
+                    comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+                    comp_bytes_q <= '0;
+                    st_q <= ST_COMP_WR;
+                  end else begin
+                    st_q <= ST_VEC_OP_RD;
+                  end
+                end
+              end
+            end
+          end
+
+          ST_VEC_OP_RD: begin
+            if (vec_op_idx_q == vec_operand_count_q[$clog2(MAX_OPERANDS)-1:0]) begin
+              st_q <= ST_VEC_EXEC;
+            end else if (op_flags_q[vec_op_idx_q][AM9513_OPERAND_FLAG_IS_REG_BIT]) begin
+              st_q <= ST_VEC_REG;
+            end else begin
+              logic [63:0] addr;
+              addr = op_ptr_q[vec_op_idx_q] +
+                     64'(vec_index_q) * 64'(vec_step_bytes_q[vec_op_idx_q]) +
+                     64'(vec_word_q * 4);
+              if (!addr64_ok(addr)) begin
+                comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+                comp_bytes_q <= '0;
+                st_q <= ST_COMP_WR;
+              end else begin
+                bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
+                bus_addr_q <= addr64_to_fab(addr);
+                bus_wdata_q <= '0;
+                bus_wstrb_q <= '0;
+                bus_size_q <= '0;
+                bus_attr_q <= DMA_ATTR;
+                bus_id_q <= '0;
+                st_after_bus_q <= ST_VEC_OP_CAP;
+                bus_state_q <= BUS_REQ;
+              end
+            end
+          end
+
+          ST_VEC_REG: begin
+            op_vec_q[vec_op_idx_q] <= vec_rdata;
+            vec_op_idx_q <= vec_op_idx_q + 1'b1;
+            st_q <= ST_VEC_OP_RD;
+          end
+
+          ST_VEC_OP_CAP: begin
+            if (bus_rsp_code_q != FAB_CODE_W'(CARBON_FABRIC_RESP_OK)) begin
+              comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+              comp_bytes_q <= '0;
+              st_q <= ST_COMP_WR;
+            end else begin
+              unique case (vec_word_q)
+                2'd0: op_vec_q[vec_op_idx_q][31:0] <= bus_rdata_q;
+                2'd1: op_vec_q[vec_op_idx_q][63:32] <= bus_rdata_q;
+                2'd2: op_vec_q[vec_op_idx_q][95:64] <= bus_rdata_q;
+                default: op_vec_q[vec_op_idx_q][127:96] <= bus_rdata_q;
+              endcase
+
+              if (vec_word_q == 2'd3) begin
+                vec_word_q <= 2'd0;
+                vec_op_idx_q <= vec_op_idx_q + 1'b1;
+              end else begin
+                vec_word_q <= vec_word_q + 1'b1;
+              end
+              st_q <= ST_VEC_OP_RD;
+            end
+          end
+
+          ST_VEC_EXEC: begin
+            vec_result_q <= vec_exec_result;
+            vec_exc_flags_q <= vec_exec_flags;
+            vec_exec_valid_q <= 1'b1;
+            comp_status_q <= vec_exec_status;
+
+            if (vec_exec_status != 16'(CARBON_CAI_STATUS_OK)) begin
+              comp_bytes_q <= 32'h0;
+              st_q <= ST_COMP_WR;
+            end else if (result_to_reg_q) begin
+              comp_bytes_q <= 32'h0;
+              vec_writeback_q <= 1'b1;
+              st_q <= ST_COMP_WR;
+            end else begin
+              comp_bytes_q <= 32'(vec_count_q) * 32'(VEC_BYTES);
+              vec_word_q <= 2'd0;
+              st_q <= ST_VEC_RES_WR;
+            end
+          end
+
+          ST_VEC_RES_WR: begin
+            logic [63:0] addr;
+            logic [31:0] wdata;
+            addr = desc_result_ptr_q +
+                   64'(vec_index_q) * 64'(vec_result_step_q) +
+                   64'(vec_word_q * 4);
+            if (!addr64_ok(addr)) begin
+              comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+              comp_bytes_q <= 32'h0;
+              st_q <= ST_COMP_WR;
+            end else begin
+              unique case (vec_word_q)
+                2'd0: wdata = vec_result_q[31:0];
+                2'd1: wdata = vec_result_q[63:32];
+                2'd2: wdata = vec_result_q[95:64];
+                default: wdata = vec_result_q[127:96];
+              endcase
+              bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_WRITE);
+              bus_addr_q <= addr64_to_fab(addr);
+              bus_wdata_q <= wdata;
+              bus_wstrb_q <= FAB_STRB_W'({(FAB_STRB_W){1'b1}});
+              bus_size_q <= '0;
+              bus_attr_q <= DMA_ATTR;
+              bus_id_q <= '0;
+              st_after_bus_q <= ST_VEC_RES_ADV;
+              bus_state_q <= BUS_REQ;
+            end
+          end
+
+          ST_VEC_RES_ADV: begin
+            if (bus_rsp_code_q != FAB_CODE_W'(CARBON_FABRIC_RESP_OK)) begin
+              comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+              comp_bytes_q <= 32'h0;
+              st_q <= ST_COMP_WR;
+            end else if (vec_word_q != 2'd3) begin
+              vec_word_q <= vec_word_q + 1'b1;
+              st_q <= ST_VEC_RES_WR;
+            end else begin
+              vec_word_q <= 2'd0;
+              if (vec_index_q + 1'b1 < vec_count_q) begin
+                vec_index_q <= vec_index_q + 1'b1;
+                vec_op_idx_q <= '0;
+                st_q <= ST_VEC_OP_RD;
+              end else begin
+                st_q <= ST_COMP_WR;
               end
             end
           end
@@ -822,6 +1129,8 @@ module am9513_cai_engine #(
             cai.comp_doorbell <= 1'b1;
             cai.comp_irq <= cfg_comp_irq_en;
             exec_valid_q <= 1'b0;
+            vec_exec_valid_q <= 1'b0;
+            vec_writeback_q <= 1'b0;
             st_q <= ST_IDLE;
           end
 

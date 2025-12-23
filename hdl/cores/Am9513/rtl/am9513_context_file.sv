@@ -14,6 +14,7 @@ module am9513_context_file #(
     output logic [1:0]  rm_rdata,
     output logic [4:0]  flags_rdata,
     output logic [63:0] rf_rdata,
+    output logic [127:0] vec_rdata,
 
     output logic [63:0] stack_top_rdata,
     output logic        stack_empty,
@@ -31,6 +32,9 @@ module am9513_context_file #(
     input logic        rf_we,
     input logic [63:0] rf_wdata,
 
+    input logic        vec_we,
+    input logic [127:0] vec_wdata,
+
     input logic        stack_push_we,
     input logic [63:0] stack_push_data,
     input logic        stack_pop_we,
@@ -47,6 +51,7 @@ module am9513_context_file #(
   logic [1:0] rm_q    [NUM_CONTEXTS];
   logic [4:0] flags_q [NUM_CONTEXTS];
   logic [63:0] rf_q   [NUM_CONTEXTS][16];
+  logic [127:0] vec_q [NUM_CONTEXTS][16];
 
   logic [SP_W-1:0] sp_q [NUM_CONTEXTS];
   logic [63:0] stack_q [NUM_CONTEXTS][LEGACY_STACK_DEPTH];
@@ -65,6 +70,7 @@ module am9513_context_file #(
     rm_rdata    = 2'(CARBON_RND_RN);
     flags_rdata = '0;
     rf_rdata    = '0;
+    vec_rdata   = '0;
     stack_top_rdata = '0;
     stack_empty = 1'b1;
     stack_full  = 1'b0;
@@ -74,6 +80,7 @@ module am9513_context_file #(
       rm_rdata    = rm_q[ctx_idx];
       flags_rdata = flags_q[ctx_idx];
       rf_rdata    = rf_q[ctx_idx][rf_index];
+      vec_rdata   = vec_q[ctx_idx][rf_index];
       stack_depth = sp_q[ctx_idx];
       stack_empty = (sp_q[ctx_idx] == '0);
       stack_full  = (sp_q[ctx_idx] == SP_W'(LEGACY_STACK_DEPTH));
@@ -98,6 +105,7 @@ module am9513_context_file #(
         sp_q[c] <= '0;
         for (i = 0; i < 16; i++) begin
           rf_q[c][i] <= '0;
+          vec_q[c][i] <= '0;
         end
         for (i = 0; i < LEGACY_STACK_DEPTH; i++) begin
           stack_q[c][i] <= '0;
@@ -114,6 +122,7 @@ module am9513_context_file #(
         if (flags_clr_we) flags_q[ctx_idx] <= flags_q[ctx_idx] & ~flags_clr_mask;
 
         if (rf_we) rf_q[ctx_idx][rf_index] <= rf_wdata;
+        if (vec_we) vec_q[ctx_idx][rf_index] <= vec_wdata;
 
         unique case ({stack_push_we, stack_pop_we})
           2'b01: begin
@@ -156,4 +165,3 @@ module am9513_context_file #(
   end
 
 endmodule : am9513_context_file
-

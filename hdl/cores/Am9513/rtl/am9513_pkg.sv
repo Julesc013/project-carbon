@@ -16,7 +16,8 @@ package am9513_pkg;
   // Feature mask snapshot (feature word 0 bits).
   localparam logic [31:0] AM9513_FEATURES_BASE =
       CARBON_AM9512_IEEE_MASK |
-      CARBON_AM9513_ASYNC_MASK;
+      CARBON_AM9513_ASYNC_MASK |
+      CARBON_AM9514_VECTOR_MASK;
 
   // --------------------------------------------------------------------------
   // IEEE exception flags (sticky, per-context)
@@ -127,6 +128,9 @@ package am9513_pkg;
   // - flags[7:0] is src format
   localparam int unsigned AM9513_SUBMIT_FLAG_CONV_SRC_FMT_LSB = 0;
   localparam int unsigned AM9513_SUBMIT_FLAG_CONV_SRC_FMT_WIDTH = 8;
+
+  // Vector formatting flags (format_flags field)
+  localparam int unsigned AM9514_FMTFLAG_MASKED_BIT = 0;
 
   // Operand descriptor flags (am9513-specific; v1)
   localparam int unsigned AM9513_OPERAND_FLAG_IS_REG_BIT = 0;
