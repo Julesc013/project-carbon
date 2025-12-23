@@ -1,8 +1,8 @@
 # CarbonZ90 — Memory Map (v1)
 
 This system instantiates:
-- `z90_core` (Z80-derived successor, turbo-gated opcode pages)
-- `am9513_accel` (P7 default mode enabled in this system)
+- `z90_core` (Z180-class core, presents P3)
+- `am9513_accel` (P2 default mode enabled in this system)
 - `carbonio` (UART/PIO/Timers/IRQ router)
 - `carbondma` (4-channel DMA engine)
 - Common ROM/RAM/MMIO devices on the fabric
@@ -36,7 +36,8 @@ Base: `0xF200` (see `hdl/cores/CarbonDMA/docs/CarbonDMA_v1.md` for register offs
 
 ## CAI rings (v1 integration choices)
 
-This v1 system configures a minimal CAI setup to keep firmware tiny:
+The CAI router is present for future use; the boot stub does not submit CAI work.
+Static configuration:
 
 - **Submit descriptor base (host→device)**: forced to `0x0400` (RAM) by `carbon_cai_router`
 - **Submit ring mask**: `0x0000_0000` (single-entry ring)
@@ -44,14 +45,10 @@ This v1 system configures a minimal CAI setup to keep firmware tiny:
 - **Completion ring mask (device CSR)**: `0x0000_0000` (single-entry ring)
 
 The Z90 boot stub performs:
-- `MODEUP` to tier P7
-- `CAI_SUBMIT` (doorbell pulse)
 - MMIO signature write + poweroff
-
-It does **not** poll for completion in v1 (no CAI status/MMIO bridge yet).
 
 ## Notes
 
-- Z90 `MODEFLAGS.STRICT` is cleared by a small CSR init sequencer in the top so turbo ops are permitted.
+- Z90 `MODEFLAGS` are initialized by a small CSR sequencer before releasing the core.
 - CarbonIO IRQ outputs are not wired to the CPU in this v1 integration (polling only).
 - Compatibility windows must be accessed as ordered I/O (Z90 `io_if` asserts ordered attributes).
