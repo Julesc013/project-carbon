@@ -21,6 +21,7 @@ core_tests:
   - tb_carbonio
   - tb_carbondma
   - tb_z480_scaffold
+  - tb_z480_core_basic
   - tb_8096
   - tb_8097
 
@@ -29,6 +30,7 @@ system_tests:
   - tb_carbonz90
   - tb_carbonz380_smoke
   - tb_carbonz480
+  - tb_carbonz480_smoke
   - tb_carbonx86
   - tb_carbonx96
 
