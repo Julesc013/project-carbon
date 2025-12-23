@@ -11,6 +11,7 @@ module carbonz80_top #(
 );
   import carbon_arch_pkg::*;
   import carbon_memmap_pkg::*;
+  import am9513_pkg::*;
 
   localparam int unsigned ADDR_W = 32;
   localparam int unsigned DATA_W = 32;
@@ -113,13 +114,12 @@ module carbonz80_top #(
   );
 
   // --------------------------------------------------------------------------
-  // Am9513 (configured by default to P0/9511; left disabled in this system stub)
+  // Am9513 (configured for P0/9511 with CAI enabled)
   // --------------------------------------------------------------------------
   csr_if csr_fpu (
       .clk(clk),
       .rst_n(rst_n)
   );
-  csr_master_tieoff u_csr_fpu_tie (.csr(csr_fpu));
 
   cai_if cai_link (
       .clk(clk),
@@ -134,6 +134,94 @@ module carbonz80_top #(
       .mem_if(m_if[2]),
       .cai(cai_link)
   );
+
+  typedef enum logic [2:0] {
+    FPU_INIT_CTRL,
+    FPU_INIT_MODE,
+    FPU_INIT_COMP_LO,
+    FPU_INIT_COMP_HI,
+    FPU_INIT_COMP_MASK,
+    FPU_INIT_IRQ,
+    FPU_INIT_DONE
+  } fpu_init_e;
+
+  fpu_init_e fpu_init_q;
+  logic fpu_csr_start;
+  logic fpu_csr_busy, fpu_csr_done, fpu_csr_fault;
+  logic [31:0] fpu_csr_rdata;
+  logic [31:0] fpu_csr_addr;
+  logic [31:0] fpu_csr_wdata;
+  logic fpu_csr_issued_q;
+
+  carbon_csr_master_simple u_fpu_csr_init (
+      .clk(clk),
+      .rst_n(rst_n),
+      .start(fpu_csr_start),
+      .write(1'b1),
+      .addr(fpu_csr_addr),
+      .wdata(fpu_csr_wdata),
+      .wstrb(4'hF),
+      .priv(2'(1)),
+      .busy(fpu_csr_busy),
+      .done_pulse(fpu_csr_done),
+      .fault(fpu_csr_fault),
+      .rdata(fpu_csr_rdata),
+      .csr(csr_fpu)
+  );
+
+  always_comb begin
+    fpu_csr_addr  = 32'h0;
+    fpu_csr_wdata = 32'h0;
+    unique case (fpu_init_q)
+      FPU_INIT_CTRL: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CTRL);
+        fpu_csr_wdata = 32'h0000_0001; // enable
+      end
+      FPU_INIT_MODE: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_MODE);
+        fpu_csr_wdata = {24'h000000, 8'(AM9513_P0_AM9511)};
+      end
+      FPU_INIT_COMP_LO: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_COMP_BASE_LO);
+        fpu_csr_wdata = 32'h0000_0500;
+      end
+      FPU_INIT_COMP_HI: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_COMP_BASE_HI);
+        fpu_csr_wdata = 32'h0000_0000;
+      end
+      FPU_INIT_COMP_MASK: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_COMP_RING_MASK);
+        fpu_csr_wdata = 32'h0000_0000;
+      end
+      FPU_INIT_IRQ: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_IRQ_ENABLE);
+        fpu_csr_wdata = 32'h0000_0000;
+      end
+      default: begin
+      end
+    endcase
+  end
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      fpu_init_q <= FPU_INIT_CTRL;
+      fpu_csr_start <= 1'b0;
+      fpu_csr_issued_q <= 1'b0;
+    end else begin
+      fpu_csr_start <= 1'b0;
+      if (fpu_init_q != FPU_INIT_DONE) begin
+        if (!fpu_csr_busy && !fpu_csr_issued_q) begin
+          fpu_csr_start <= 1'b1;
+          fpu_csr_issued_q <= 1'b1;
+        end
+        if (fpu_csr_done) begin
+          fpu_csr_issued_q <= 1'b0;
+          if (fpu_init_q == FPU_INIT_IRQ) fpu_init_q <= FPU_INIT_DONE;
+          else fpu_init_q <= fpu_init_e'(fpu_init_q + 1'b1);
+        end
+      end
+    end
+  end
 
   // --------------------------------------------------------------------------
   // CarbonIO (UART/PIO/Timers)
@@ -336,7 +424,8 @@ module carbonz80_top #(
       .uart_tx_byte()
   );
 
-  wire _unused = ^{carbonio_uart_rx_ready, carbonio_uart_tx_valid, carbonio_uart_tx_data,
+  wire _unused = ^{fpu_csr_fault, fpu_csr_rdata[0], carbonio_uart_rx_ready,
+                   carbonio_uart_tx_valid, carbonio_uart_tx_data,
                    carbonio_pio_out, carbonio_pio_dir, irq_carbonio.irq_valid,
                    irq_carbonio.irq_vector, irq_carbonio.irq_prio, irq_carbonio.irq_pending};
 
