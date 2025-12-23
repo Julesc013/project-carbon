@@ -80,3 +80,85 @@ v1 expects a RomWBW build that uses:
 - No ROM/RAM banking and no CTC/PIO emulation beyond CarbonIO compat stubs.
 - SIO register programming is minimally modeled (sufficient for polled console).
 - ATA emulation is minimal and correctness-first (PIO only).
+
+## CarbonZ80 (`--platform carbonz80`)
+
+### Memory map (SYS16)
+
+- Boot ROM at `0x0000..0x00FF` (256 B, read-only)
+- MMIO (system regs) at `0xF000..0xF0FF`
+- CarbonIO compat window at `0xF100..0xF1FF`
+- CarbonDMA compat window at `0xF200..0xF2FF`
+- BDT ROM at `0xF800..0xF9FF` (read-only)
+- RAM covers `0x0000..0xFFFF` excluding ROM/MMIO windows
+
+### I/O map
+
+- IDE/ATA PIO (`IdeDiskDevice`) base `0x10` (optional, 512-byte sectors)
+
+### Notes
+
+- If `--rom` is omitted, a built-in stub writes the signature and powers off.
+- The simulator uses the Z80 execution model for the CarbonZ* platforms.
+- The IDE device is a sim-only convenience and is not advertised in the BDT yet.
+
+## CarbonZ90 (`--platform carbonz90`)
+
+### Memory map (SYS16)
+
+- Boot ROM at `0x0000..0x00FF` (256 B, read-only)
+- MMIO (system regs) at `0xF000..0xF0FF`
+- CarbonIO compat window at `0xF100..0xF1FF`
+- CarbonDMA compat window at `0xF200..0xF2FF`
+- BDT ROM at `0xF800..0xF9FF` (read-only)
+- RAM covers `0x0000..0xFFFF` excluding ROM/MMIO windows
+
+### I/O map
+
+- IDE/ATA PIO (`IdeDiskDevice`) base `0x10` (optional, 512-byte sectors)
+
+### Notes
+
+- If `--rom` is omitted, a built-in stub writes the signature and powers off.
+- The simulator uses the Z80 execution model for the CarbonZ* platforms.
+
+## CarbonZ380 (`--platform carbonz380`)
+
+### Memory map (SYS16)
+
+- Boot ROM at `0x0000..0x00FF` (256 B, read-only)
+- MMIO (system regs) at `0xF000..0xF0FF`
+- CarbonIO compat window at `0xF100..0xF1FF`
+- CarbonDMA compat window at `0xF200..0xF2FF`
+- BDT ROM at `0xF800..0xF9FF` (read-only)
+- RAM covers `0x0000..0xFFFF` excluding ROM/MMIO windows
+
+### I/O map
+
+- IDE/ATA PIO (`IdeDiskDevice`) base `0x10` (optional, 512-byte sectors)
+
+### Notes
+
+- If `--rom` is omitted, a built-in stub writes the signature and powers off.
+- The simulator uses the Z80 execution model for the CarbonZ* platforms.
+
+## CarbonZ480 (`--platform carbonz480`)
+
+### Memory map (SYS16 compatibility)
+
+- Boot ROM at `0x0000..0x00FF` (256 B, read-only)
+- MMIO (system regs) at `0xF000..0xF0FF`
+- CarbonIO compat window at `0xF100..0xF1FF`
+- CarbonDMA compat window at `0xF200..0xF2FF`
+- Tier host window at `0xF300..0xF3FF`
+- BDT ROM at `0xF800..0xF9FF` (read-only)
+- RAM covers `0x0000..0xFFFF` excluding ROM/MMIO windows
+
+### I/O map
+
+- IDE/ATA PIO (`IdeDiskDevice`) base `0x10` (optional, 512-byte sectors)
+
+### Notes
+
+- If `--rom` is omitted, a built-in stub writes the signature and powers off.
+- The tier host window is modeled as a minimal MMIO stub.

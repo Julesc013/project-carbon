@@ -10,14 +10,17 @@ add_library(carbon_sim_core
   src/bdt_builder.cpp
   src/block_disk.cpp
   src/boot_rom.cpp
+  src/carbon_mmio.cpp
   src/caps.cpp
   src/carbondma.cpp
   src/carbonio.cpp
   src/cpm_disk.cpp
   src/ide_disk.cpp
   src/interrupt_controller.cpp
+  src/platform_carbonz.cpp
   src/platform_cpm22.cpp
   src/platform_romwbw.cpp
+  src/tier_host_stub.cpp
   src/timer_tick.cpp
   src/uart_console.cpp
   src/verilator_backend.cpp

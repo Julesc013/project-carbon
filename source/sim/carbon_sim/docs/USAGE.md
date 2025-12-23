@@ -37,12 +37,32 @@ Notes:
 - This v1 simulator supports only ROM images that fit in a 32 KiB window (no ROM banking yet).
 - `--disk1` is supported as an IDE slave; `--disk2`/`--disk3` are ignored in v1.
 
+## Run CarbonZ systems (CarbonZ80/90/380/480)
+
+These platforms provide SYS16-compatible memory maps and a built-in ROM stub that
+writes a signature to MMIO and powers off. You can override the stub with `--rom`
+(ROM size must be <= 256 bytes).
+
+```sh
+carbon-sim --platform carbonz80
+carbon-sim --platform carbonz90
+carbon-sim --platform carbonz380
+carbon-sim --platform carbonz480
+```
+
+Attach an optional 512-byte block device (IDE/ATA PIO at `0x10`) with `--disk0`:
+
+```sh
+carbon-sim --platform carbonz80 --disk0 path/to/disk.img
+```
+
 ## Disk images
 
 All disks are raw files.
 
 - `cpm22` uses a 128-byte sector device abstraction (the ROM/BIOS decides layout).
 - `romwbw` uses 512-byte ATA PIO sectors (IDE register model).
+- `carbonz*` platforms use 512-byte ATA PIO sectors (IDE register model).
 
 Create a blank image:
 

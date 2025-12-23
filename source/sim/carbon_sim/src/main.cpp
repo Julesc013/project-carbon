@@ -6,6 +6,7 @@
 #include <string_view>
 #include <vector>
 
+#include "carbon_sim/platforms/carbonz.h"
 #include "carbon_sim/platforms/cpm22.h"
 #include "carbon_sim/platforms/romwbw.h"
 #include "carbon_sim/platforms/machine.h"
@@ -17,7 +18,7 @@ static void print_usage(std::string_view exe) {
             << "Options:\n"
             << "  --help              Show this help\n"
             << "  --version           Show version\n"
-            << "  --platform P        cpm22|romwbw\n"
+            << "  --platform P        cpm22|romwbw|carbonz80|carbonz90|carbonz380|carbonz480\n"
             << "  --rom PATH          ROM image path\n"
             << "  --disk0 PATH        Disk image path (raw .dsk)\n"
             << "  --disk1 PATH        Optional disk1 path\n"
@@ -243,6 +244,14 @@ int main(int argc, char** argv) {
       machine = carbon_sim::create_platform_cpm22(cfg, std::cout);
     } else if (cfg.platform == "romwbw") {
       machine = carbon_sim::create_platform_romwbw(cfg, std::cout);
+    } else if (cfg.platform == "carbonz80") {
+      machine = carbon_sim::create_platform_carbonz80(cfg, std::cout);
+    } else if (cfg.platform == "carbonz90") {
+      machine = carbon_sim::create_platform_carbonz90(cfg, std::cout);
+    } else if (cfg.platform == "carbonz380") {
+      machine = carbon_sim::create_platform_carbonz380(cfg, std::cout);
+    } else if (cfg.platform == "carbonz480") {
+      machine = carbon_sim::create_platform_carbonz480(cfg, std::cout);
     } else {
       throw std::runtime_error("unknown platform: " + cfg.platform);
     }

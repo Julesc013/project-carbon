@@ -1,3 +1,4 @@
+#include <array>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
@@ -6,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "carbon_sim/platforms/carbonz.h"
 #include "carbon_sim/platforms/cpm22.h"
 #include "carbon_sim/platforms/machine.h"
 #include "carbon_sim/platforms/romwbw.h"
@@ -30,27 +32,26 @@ static void touch_file(const std::filesystem::path& path) {
   }
 }
 
-static std::string run_to_halt(std::unique_ptr<Machine> machine, std::uint64_t max_cycles) {
-  machine->bus.reset();
-  machine->cpu->reset();
+static void run_to_halt(Machine& machine, std::uint64_t max_cycles) {
+  machine.bus.reset();
+  machine.cpu->reset();
 
   std::uint64_t cycles = 0;
-  while (!machine->cpu->trapped() && cycles < max_cycles) {
-    const auto step = machine->cpu->step();
+  while (!machine.cpu->trapped() && cycles < max_cycles) {
+    const auto step = machine.cpu->step();
     if (step == 0) {
       break;
     }
-    machine->bus.tick(step);
+    machine.bus.tick(step);
     cycles += step;
-    if (machine->cpu->halted()) {
+    if (machine.cpu->halted()) {
       break;
     }
   }
 
-  if (machine->cpu->trapped()) {
-    throw std::runtime_error(std::string("CPU trap: ") + std::string(machine->cpu->trap_reason()));
+  if (machine.cpu->trapped()) {
+    throw std::runtime_error(std::string("CPU trap: ") + std::string(machine.cpu->trap_reason()));
   }
-  return {};
 }
 
 static bool contains(const std::string& haystack, const std::string& needle) {
@@ -70,6 +71,15 @@ static u32 read_u32(Bus& bus, u16 addr) {
   const u32 b2 = bus.mem_read(static_cast<u16>(addr + 2));
   const u32 b3 = bus.mem_read(static_cast<u16>(addr + 3));
   return b0 | (b1 << 8) | (b2 << 16) | (b3 << 24);
+}
+
+static bool check_signature(Bus& bus, u16 base, const std::array<u8, 4>& sig) {
+  for (std::size_t i = 0; i < sig.size(); ++i) {
+    if (bus.mem_read(static_cast<u16>(base + i)) != sig[i]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 static int smoke_cpm22(const std::filesystem::path& temp_dir) {
@@ -96,7 +106,7 @@ static int smoke_cpm22(const std::filesystem::path& temp_dir) {
 
   std::ostringstream out;
   auto machine = create_platform_cpm22(cfg, out);
-  run_to_halt(std::move(machine), cfg.max_cycles);
+  run_to_halt(*machine, cfg.max_cycles);
 
   if (!contains(out.str(), "CPM22 STUB OK")) {
     std::cerr << "cpm22 smoke: missing banner\n";
@@ -171,10 +181,103 @@ static int smoke_romwbw(const std::filesystem::path& temp_dir) {
 
   std::ostringstream out;
   auto machine = create_platform_romwbw(cfg, out);
-  run_to_halt(std::move(machine), cfg.max_cycles);
+  run_to_halt(*machine, cfg.max_cycles);
 
   if (!contains(out.str(), "RomWBW STUB OK")) {
     std::cerr << "romwbw smoke: missing banner\n";
+    return 1;
+  }
+  return 0;
+}
+
+static int smoke_carbonz80() {
+  SimConfig cfg;
+  cfg.platform = "carbonz80";
+  cfg.max_cycles = 100000;
+
+  std::ostringstream out;
+  auto machine = create_platform_carbonz80(cfg, out);
+  run_to_halt(*machine, cfg.max_cycles);
+
+  if (!check_signature(machine->bus, 0xF000, {{'Z', '8', '0', '!'}})) {
+    std::cerr << "carbonz80 smoke: signature mismatch\n";
+    return 1;
+  }
+  if (machine->mmio != nullptr && !machine->mmio->poweroff()) {
+    std::cerr << "carbonz80 smoke: poweroff not latched\n";
+    return 1;
+  }
+
+  const u16 carbonio_base = 0xF100;
+  const u32 tick_lo_before = read_u32(machine->bus, carbonio_base + 0x40);
+  const u32 tick_hi_before = read_u32(machine->bus, carbonio_base + 0x44);
+  machine->bus.tick(1000);
+  const u32 tick_lo_after = read_u32(machine->bus, carbonio_base + 0x40);
+  const u32 tick_hi_after = read_u32(machine->bus, carbonio_base + 0x44);
+  const std::uint64_t tick_before = (static_cast<std::uint64_t>(tick_hi_before) << 32) | tick_lo_before;
+  const std::uint64_t tick_after = (static_cast<std::uint64_t>(tick_hi_after) << 32) | tick_lo_after;
+  if (tick_after <= tick_before) {
+    std::cerr << "carbonz80 smoke: CarbonIO tick did not advance\n";
+    return 1;
+  }
+  return 0;
+}
+
+static int smoke_carbonz90() {
+  SimConfig cfg;
+  cfg.platform = "carbonz90";
+  cfg.max_cycles = 100000;
+
+  std::ostringstream out;
+  auto machine = create_platform_carbonz90(cfg, out);
+  run_to_halt(*machine, cfg.max_cycles);
+
+  if (!check_signature(machine->bus, 0xF000, {{'Z', '9', '0', '!'}})) {
+    std::cerr << "carbonz90 smoke: signature mismatch\n";
+    return 1;
+  }
+  if (machine->mmio != nullptr && !machine->mmio->poweroff()) {
+    std::cerr << "carbonz90 smoke: poweroff not latched\n";
+    return 1;
+  }
+  return 0;
+}
+
+static int smoke_carbonz380() {
+  SimConfig cfg;
+  cfg.platform = "carbonz380";
+  cfg.max_cycles = 100000;
+
+  std::ostringstream out;
+  auto machine = create_platform_carbonz380(cfg, out);
+  run_to_halt(*machine, cfg.max_cycles);
+
+  if (!check_signature(machine->bus, 0xF000, {{'Z', '3', '8', '0'}})) {
+    std::cerr << "carbonz380 smoke: signature mismatch\n";
+    return 1;
+  }
+  if (machine->mmio != nullptr && !machine->mmio->poweroff()) {
+    std::cerr << "carbonz380 smoke: poweroff not latched\n";
+    return 1;
+  }
+  return 0;
+}
+
+static int smoke_carbonz480() {
+  SimConfig cfg;
+  cfg.platform = "carbonz480";
+  cfg.max_cycles = 100000;
+
+  std::ostringstream out;
+  auto machine = create_platform_carbonz480(cfg, out);
+  run_to_halt(*machine, cfg.max_cycles);
+
+  if (!check_signature(machine->bus, 0xF000, {{'Z', '4', '8', '0'}})) {
+    std::cerr << "carbonz480 smoke: signature mismatch\n";
+    return 1;
+  }
+  if (machine->mmio != nullptr && !machine->mmio->poweroff()) {
+    std::cerr << "carbonz480 smoke: poweroff not latched\n";
     return 1;
   }
   return 0;
@@ -190,6 +293,10 @@ int main() {
     int rc = 0;
     rc |= carbon_sim::smoke_cpm22(temp_dir);
     rc |= carbon_sim::smoke_romwbw(temp_dir);
+    rc |= carbon_sim::smoke_carbonz80();
+    rc |= carbon_sim::smoke_carbonz90();
+    rc |= carbon_sim::smoke_carbonz380();
+    rc |= carbon_sim::smoke_carbonz480();
     return rc;
   } catch (const std::exception& e) {
     std::cerr << "smoke test error: " << e.what() << "\n";

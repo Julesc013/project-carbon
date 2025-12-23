@@ -9,3 +9,5 @@ Suggested layout for local usage:
 - `source/sim/carbon_sim/roms/cpm22_boot.rom`
 - `source/sim/carbon_sim/roms/romwbw.bin`
 
+CarbonZ platforms ship with a built-in ROM stub; pass `--rom` only if you want
+to override the default (ROM size must be <= 256 bytes).
