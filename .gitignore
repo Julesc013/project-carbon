@@ -2,3 +2,30 @@
 build/
 a.out
 py_out.txt
+
+# Simulation outputs
+*.vcd
+*.fst
+*.lxt
+*.lxt2
+*.lxt3
+*.vpd
+*.wlf
+*.vvp
+*.log
+*.coverage
+*.dmp
+obj_dir/
+
+# CMake outputs
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+
+# Firmware/ROM images (local use)
+*.bin
+*.hex
+*.rom
+*.img
+*.dsk
+*.elf
