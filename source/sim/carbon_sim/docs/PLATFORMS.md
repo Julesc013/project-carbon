@@ -36,6 +36,11 @@
 
 - CP/M requires a ROM/BIOS built for this I/O map; no CP/M binaries are included.
 
+## CarbonCPM1 (`--platform cpm1`)
+
+CarbonCPM1 reuses the CarbonCPM22 hardware map and devices, but is intended for
+8080/8085-tier software (P0/P1). Provide a ROM/BIOS built for the same I/O map.
+
 ## CarbonRomWBW (`--platform romwbw`)
 
 ### Memory map

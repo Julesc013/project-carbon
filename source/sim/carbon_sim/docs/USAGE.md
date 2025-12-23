@@ -9,6 +9,14 @@ cmake -S source/sim/carbon_sim -B build/sim
 cmake --build build/sim
 ```
 
+## Run CP/M 1.x (CarbonCPM1)
+
+You must supply your own CP/M 1.x boot ROM and disk image (no copyrighted ROMs are included).
+
+```sh
+carbon-sim --platform cpm1 --rom path/to/cpm1_boot.rom --disk0 path/to/cpm1.dsk --bsp path/to/BSP.bsp --load path/to/mem.bin
+```
+
 ## Run CP/M 2.2 (CarbonCPM22)
 
 You must supply your own CP/M 2.2 boot ROM and disk image (no copyrighted ROMs are included).
@@ -23,6 +31,7 @@ Useful flags:
 carbon-sim --platform cpm22 --rom ... --disk0 ... --trace
 carbon-sim --platform cpm22 --rom ... --disk0 ... --max-cycles 5000000
 ```
+
 
 ## Run RomWBW (CarbonRomWBW)
 
@@ -62,6 +71,7 @@ carbon-sim --platform carbonz80 --disk0 path/to/disk.img --bsp path/to/BSP.bsp
 All disks are raw files.
 
 - `cpm22` uses a 128-byte sector device abstraction (the ROM/BIOS decides layout).
+- `cpm1` uses the same platform model as `cpm22` in v1.
 - `romwbw` uses 512-byte ATA PIO sectors (IDE register model).
 - `carbonz*` platforms use the `CpmDiskDevice` 512-byte sector model.
 

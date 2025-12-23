@@ -7,7 +7,7 @@
 namespace carbon_sim {
 
 struct SimConfig {
-  std::string platform; // "cpm22" | "romwbw" | "carbonz80" | "carbonz90" | "carbonz380" | "carbonz480"
+  std::string platform; // "cpm1" | "cpm22" | "romwbw" | "carbonz80" | "carbonz90" | "carbonz380" | "carbonz480"
   std::string rom_path;
   std::string bsp_path;
   std::string mem_path;

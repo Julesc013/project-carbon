@@ -156,7 +156,10 @@ static int smoke_cpm22(const std::filesystem::path& temp_dir) {
   return 0;
 }
 
-static int smoke_cpm22_memload(const std::filesystem::path& temp_dir) {
+static int smoke_cpm_memload(const std::filesystem::path& temp_dir,
+                             const std::string& platform,
+                             const std::string& banner,
+                             const std::string& tag) {
   // ROM stub: disable overlay and jump to 0x0100.
   const std::vector<u8> rom = {
       0x3E, 0x00, // MVI A,0
@@ -192,8 +195,7 @@ static int smoke_cpm22_memload(const std::filesystem::path& temp_dir) {
   const u16 done_addr = static_cast<u16>(pc);
   emit(0x76); // HALT
   const u16 msg_addr = static_cast<u16>(pc);
-  const char* msg = "CPM22 MEM OK\r\n";
-  for (const char* p = msg; *p; ++p) {
+  for (const char* p = banner.c_str(); *p; ++p) {
     emit(static_cast<u8>(*p));
   }
   emit(0x00);
@@ -202,16 +204,16 @@ static int smoke_cpm22_memload(const std::filesystem::path& temp_dir) {
   mem[done_addr_pos + 0] = static_cast<u8>(done_addr & 0xFFu);
   mem[done_addr_pos + 1] = static_cast<u8>((done_addr >> 8) & 0xFFu);
 
-  const auto rom_path = temp_dir / "cpm22_mem.rom";
-  const auto disk_path = temp_dir / "cpm22_mem.dsk";
-  const auto mem_path = temp_dir / "cpm22_mem.bin";
+  const auto rom_path = temp_dir / (tag + "_mem.rom");
+  const auto disk_path = temp_dir / (tag + "_mem.dsk");
+  const auto mem_path = temp_dir / (tag + "_mem.bin");
 
   write_file(rom_path, rom);
   touch_file(disk_path);
   write_file(mem_path, mem);
 
   SimConfig cfg;
-  cfg.platform = "cpm22";
+  cfg.platform = platform;
   cfg.rom_path = rom_path.string();
   cfg.mem_path = mem_path.string();
   cfg.disk_paths[0] = disk_path.string();
@@ -221,8 +223,8 @@ static int smoke_cpm22_memload(const std::filesystem::path& temp_dir) {
   auto machine = create_platform_cpm22(cfg, out);
   run_to_halt(*machine, cfg.max_cycles);
 
-  if (!contains(out.str(), "CPM22 MEM OK")) {
-    std::cerr << "cpm22 memload smoke: missing banner\n";
+  if (!contains(out.str(), banner)) {
+    std::cerr << tag << " memload smoke: missing banner\n";
     return 1;
   }
   return 0;
@@ -364,7 +366,8 @@ int main() {
 
     int rc = 0;
     rc |= carbon_sim::smoke_cpm22(temp_dir);
-    rc |= carbon_sim::smoke_cpm22_memload(temp_dir);
+    rc |= carbon_sim::smoke_cpm_memload(temp_dir, "cpm22", "CPM22 MEM OK\r\n", "cpm22");
+    rc |= carbon_sim::smoke_cpm_memload(temp_dir, "cpm1", "CPM1 MEM OK\r\n", "cpm1");
     rc |= carbon_sim::smoke_romwbw(temp_dir);
     rc |= carbon_sim::smoke_carbonz80();
     rc |= carbon_sim::smoke_carbonz90();

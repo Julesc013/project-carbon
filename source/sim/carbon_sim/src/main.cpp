@@ -18,7 +18,7 @@ static void print_usage(std::string_view exe) {
             << "Options:\n"
             << "  --help              Show this help\n"
             << "  --version           Show version\n"
-            << "  --platform P        cpm22|romwbw|carbonz80|carbonz90|carbonz380|carbonz480\n"
+            << "  --platform P        cpm1|cpm22|romwbw|carbonz80|carbonz90|carbonz380|carbonz480\n"
             << "  --rom PATH          ROM image path\n"
             << "  --bsp PATH          BSP blob path (loaded into RAM before reset)\n"
             << "  --bsp-addr N        BSP load address (default 0xFF00)\n"
@@ -300,7 +300,7 @@ int main(int argc, char** argv) {
     }
 
     std::unique_ptr<carbon_sim::Machine> machine;
-    if (cfg.platform == "cpm22") {
+    if (cfg.platform == "cpm22" || cfg.platform == "cpm1") {
       machine = carbon_sim::create_platform_cpm22(cfg, std::cout);
     } else if (cfg.platform == "romwbw") {
       machine = carbon_sim::create_platform_romwbw(cfg, std::cout);
