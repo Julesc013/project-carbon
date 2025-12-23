@@ -1,9 +1,9 @@
-// Project Carbon - Z90 core (turbo successor, ISA-agnostic infrastructure user)
+// Project Carbon - Z90 core (Z180-class integration helpers)
 // z90_alu_pkg: Simple 16-bit ALU helpers and Z90 flag definitions.
 
 package z90_alu_pkg;
 
-  // Z90 FLAGS (v1.0 encoding for the Z90 fast-path ISA)
+  // Z90 FLAGS (legacy fast-path encoding; unused by the Z180-class core)
   // - Bits not listed are reserved and read as 0.
   localparam logic [7:0] Z90_F_Z = 8'h01; // Zero
   localparam logic [7:0] Z90_F_S = 8'h02; // Sign (MSB of result)

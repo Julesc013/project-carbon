@@ -1,4 +1,4 @@
-// Project Carbon - Z90 core (turbo successor, ISA-agnostic infrastructure user)
+// Project Carbon - Z90 core (Z180-class integration helpers)
 // z90_decode_pkg: Helpers for decoding Z90 opcode pages.
 
 package z90_decode_pkg;

@@ -116,8 +116,7 @@ module carbonz90_top (
       .cai(cai_cpu)
   );
 
-  // Hold the core halted until system CSR init is complete (ensures turbo gating is configured
-  // before the boot ROM reaches the CAI_SUBMIT instruction).
+  // Hold the core halted until system CSR init is complete (keeps boot ROM deterministic).
   logic dbg_halt_req_q;
   logic dbg_run_pulse_q;
   logic dbg_released_q;
@@ -133,7 +132,7 @@ module carbonz90_top (
   assign dbg_cpu.bp_enable = 1'b0;
   assign dbg_cpu.trace_ready = 1'b1;
 
-  // Clear STRICT so Z90 turbo ops (including CAI_SUBMIT) are allowed post-MODEUP.
+  // Clear STRICT so the boot ROM observes the configured mode flags.
   logic cpu_csr_start;
   logic cpu_csr_busy, cpu_csr_done, cpu_csr_fault;
   logic [31:0] cpu_csr_rdata;
@@ -175,7 +174,7 @@ module carbonz90_top (
   end
 
   // --------------------------------------------------------------------------
-  // Am9513 accelerator (enabled; default mode P7/9513)
+  // Am9513 accelerator (enabled; default mode P2/9513)
   // --------------------------------------------------------------------------
   csr_if csr_fpu (
       .clk(clk),
@@ -234,7 +233,7 @@ module carbonz90_top (
       end
       FPU_INIT_MODE: begin
         fpu_csr_addr  = 32'(CARBON_CSR_AM9513_MODE);
-        fpu_csr_wdata = {24'h000000, 8'(AM9513_P7_NATIVE)};
+        fpu_csr_wdata = {24'h000000, 8'(AM9513_P2_AM9513)};
       end
       FPU_INIT_COMP_LO: begin
         fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_COMP_BASE_LO);
@@ -372,11 +371,9 @@ module carbonz90_top (
   // ROM/RAM/MMIO
   // --------------------------------------------------------------------------
   localparam int unsigned ROM_BYTES = CARBON_SYS16_ROM_BYTES;
-  localparam int unsigned ROM_USED  = 46;
+  localparam int unsigned ROM_USED  = 26;
 
   // Z90 boot stub:
-  // - MODEUP to P7 @0x0010
-  // - CAI_SUBMIT (doorbell) at 0x0010 (host config overridden by router)
   // - write "Z90!" signature to MMIO and power off
   localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE = {
       {(ROM_BYTES-ROM_USED){8'h00}},
@@ -384,10 +381,7 @@ module carbonz90_top (
       8'hF0, 8'h03, 8'h32, 8'h21, 8'h3E,
       8'hF0, 8'h02, 8'h32, 8'h30, 8'h3E,
       8'hF0, 8'h01, 8'h32, 8'h39, 8'h3E,
-      8'hF0, 8'h00, 8'h32, 8'h5A, 8'h3E,
-      8'h90, 8'hF0, 8'hF0, 8'hED,
-      8'h00, 8'h00, 8'h00, 8'h00, 8'h00, 8'h00, 8'h00, 8'h00, 8'h00,
-      8'h00, 8'h10, 8'(CARBON_Z80_DERIVED_TIER_P7_Z480), 8'h00, 8'hF0, 8'hF0, 8'hED
+      8'hF0, 8'h00, 8'h32, 8'h5A, 8'h3E
   };
 
   carbon_bootrom #(
