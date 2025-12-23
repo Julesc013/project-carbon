@@ -45,6 +45,24 @@ module z380_core #(
       FAB_ATTR_W'(CARBON_FABRIC_ATTR_ORDERED_MASK | CARBON_FABRIC_ATTR_IO_SPACE_MASK);
   localparam int unsigned MD_SP_W =
       (MODESTACK_DEPTH < 2) ? 1 : $clog2(MODESTACK_DEPTH + 1);
+  localparam int unsigned Z380_MODE_NATIVE_BIT = 2;
+  localparam int unsigned Z380_MODE_EXTENDED_BIT = 3;
+  localparam int unsigned Z380_MODE_LONGWORD_BIT = 4;
+  localparam int unsigned Z380_MODE_VEC16_BIT = 5;
+  localparam logic [7:0] Z380_MODE_NATIVE_MASK = 8'h04;
+  localparam logic [7:0] Z380_MODE_EXTENDED_MASK = 8'h08;
+  localparam logic [7:0] Z380_MODE_LONGWORD_MASK = 8'h10;
+  localparam logic [7:0] Z380_MODE_VEC16_MASK = 8'h20;
+  localparam logic [7:0] Z380_MODE_MASK =
+      Z380_MODE_NATIVE_MASK | Z380_MODE_EXTENDED_MASK |
+      Z380_MODE_LONGWORD_MASK | Z380_MODE_VEC16_MASK;
+
+  localparam logic [31:0] Z380_CSR_BANK_SEL = 32'h00a20000;
+  localparam logic [31:0] Z380_CSR_BANK_INDEX = 32'h00a20004;
+  localparam logic [31:0] Z380_CSR_BANK_DATA_LO = 32'h00a20008;
+  localparam logic [31:0] Z380_CSR_BANK_DATA_HI = 32'h00a2000c;
+  localparam logic [31:0] Z380_CSR_ADDR_HI = 32'h00a20010;
+  localparam logic [31:0] Z380_CSR_VEC_BASE = 32'h00a20014;
 
   // --------------------------------------------------------------------------
   // Core-local trap causes (implementation-defined)
@@ -73,6 +91,11 @@ module z380_core #(
   logic [7:0]  csr_tier_q;
   logic [31:0] csr_cpuid_leaf_q;
   logic [31:0] csr_cpuid_subleaf_q;
+  logic [15:0] z380_addr_hi_q;
+  logic [15:0] z380_vec_base_q;
+  logic [1:0]  z380_bank_sel_q;
+  logic [1:0]  z380_bank_index_q;
+  logic [31:0] z380_bank_regs [0:1][0:3];
 
   // Mode stack (tier/modeflags/return PC)
   logic [MD_SP_W-1:0] md_sp_q;
@@ -106,7 +129,8 @@ module z380_core #(
   wire csr_modeflags_wr = csr_req_fire && csr.req_write &&
       (csr.req_addr == CARBON_CSR_MODEFLAGS);
   wire [7:0] csr_modeflags_wdata =
-      csr.req_wdata[7:0] & (CARBON_MODEFLAG_STRICT_MASK | CARBON_MODEFLAG_INTMASK_MASK);
+      csr.req_wdata[7:0] &
+      (CARBON_MODEFLAG_STRICT_MASK | CARBON_MODEFLAG_INTMASK_MASK | Z380_MODE_MASK);
 
   localparam logic [31:0] Z380_FEAT_WORD0 =
       CARBON_FEAT_MODE_SWITCH_MASK |
@@ -175,6 +199,8 @@ module z380_core #(
 
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
+      int i;
+      int j;
       csr_rsp_valid_q <= 1'b0;
       csr_rsp_rdata_q <= '0;
       csr_rsp_fault_q <= 1'b0;
@@ -188,6 +214,15 @@ module z380_core #(
       csr_halt_pulse_q <= 1'b0;
       csr_run_pulse_q  <= 1'b0;
       csr_step_pulse_q <= 1'b0;
+      z380_addr_hi_q <= 16'h0000;
+      z380_vec_base_q <= 16'h0000;
+      z380_bank_sel_q <= 2'd0;
+      z380_bank_index_q <= 2'd0;
+      for (i = 0; i < 2; i++) begin
+        for (j = 0; j < 4; j++) begin
+          z380_bank_regs[i][j] <= 32'h0;
+        end
+      end
     end else begin
       cycle_q <= cycle_q + 64'd1;
       csr_halt_pulse_q <= 1'b0;
@@ -333,6 +368,53 @@ module z380_core #(
               csr_rsp_fault_q <= 1'b1;
             end
           end
+          Z380_CSR_BANK_SEL: begin
+            if (!csr.req_write) begin
+              csr_rsp_rdata_q[1:0] <= z380_bank_sel_q;
+            end else begin
+              z380_bank_sel_q <= csr.req_wdata[1:0];
+              csr_rsp_side_q <= 1'b1;
+            end
+          end
+          Z380_CSR_BANK_INDEX: begin
+            if (!csr.req_write) begin
+              csr_rsp_rdata_q[1:0] <= z380_bank_index_q;
+            end else begin
+              z380_bank_index_q <= csr.req_wdata[1:0];
+              csr_rsp_side_q <= 1'b1;
+            end
+          end
+          Z380_CSR_BANK_DATA_LO: begin
+            if (!csr.req_write) begin
+              csr_rsp_rdata_q <= z380_bank_regs[z380_bank_sel_q][z380_bank_index_q];
+            end else begin
+              z380_bank_regs[z380_bank_sel_q][z380_bank_index_q] <= csr.req_wdata;
+              csr_rsp_side_q <= 1'b1;
+            end
+          end
+          Z380_CSR_BANK_DATA_HI: begin
+            if (!csr.req_write) begin
+              csr_rsp_rdata_q <= 32'h0;
+            end else begin
+              csr_rsp_fault_q <= 1'b1;
+            end
+          end
+          Z380_CSR_ADDR_HI: begin
+            if (!csr.req_write) begin
+              csr_rsp_rdata_q[15:0] <= z380_addr_hi_q;
+            end else begin
+              z380_addr_hi_q <= csr.req_wdata[15:0];
+              csr_rsp_side_q <= 1'b1;
+            end
+          end
+          Z380_CSR_VEC_BASE: begin
+            if (!csr.req_write) begin
+              csr_rsp_rdata_q[15:0] <= z380_vec_base_q;
+            end else begin
+              z380_vec_base_q <= csr.req_wdata[15:0];
+              csr_rsp_side_q <= 1'b1;
+            end
+          end
           default: begin
             csr_rsp_fault_q <= 1'b1;
           end
@@ -340,6 +422,12 @@ module z380_core #(
       end
     end
   end
+
+  wire z380_is_p6 = (csr_tier_q == 8'(CARBON_Z80_DERIVED_TIER_P6_Z380));
+  wire z380_native_en = z380_is_p6 && csr_modeflags_q[Z380_MODE_NATIVE_BIT];
+  wire z380_ext_addr_en = z380_is_p6 && csr_modeflags_q[Z380_MODE_EXTENDED_BIT];
+  wire z380_longword_en = z380_is_p6 && csr_modeflags_q[Z380_MODE_LONGWORD_BIT];
+  wire z380_vec16_en = z380_is_p6 && csr_modeflags_q[Z380_MODE_VEC16_BIT];
 
   // --------------------------------------------------------------------------
   // Core implementation follows.
@@ -440,6 +528,21 @@ module z380_core #(
   assign io_if.req_id    = '0;
   assign io_if.rsp_ready = (state_q == ST_BUS_RSP) && sel_io;
 
+  function automatic logic [FAB_ADDR_W-1:0] z380_addr(
+      input logic is_io,
+      input logic [15:0] addr
+  );
+    logic [FAB_ADDR_W-1:0] full;
+    begin
+      if (!is_io && z380_ext_addr_en) begin
+        full = FAB_ADDR_W'({z380_addr_hi_q, addr});
+      end else begin
+        full = FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, addr});
+      end
+      z380_addr = full;
+    end
+  endfunction
+
   task automatic start_bus_read(
       input logic is_io,
       input logic [15:0] addr,
@@ -449,7 +552,7 @@ module z380_core #(
     begin
       bus_is_io_q <= is_io;
       bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-      bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, addr});
+      bus_addr_q <= z380_addr(is_io, addr);
       bus_wdata_q <= '0;
       bus_wstrb_q <= '0;
       bus_size_q <= '0;
@@ -469,7 +572,7 @@ module z380_core #(
     begin
       bus_is_io_q <= is_io;
       bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_WRITE);
-      bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, addr});
+      bus_addr_q <= z380_addr(is_io, addr);
       bus_wdata_q <= FAB_DATA_W'({{(FAB_DATA_W-8){1'b0}}, data});
       bus_wstrb_q <= FAB_STRB_W'({{(FAB_STRB_W-1){1'b0}}, 1'b1});
       bus_size_q <= '0;
@@ -497,6 +600,7 @@ module z380_core #(
   // Interrupt context
   logic int_is_nmi_q;
   logic [7:0] int_vec_q;
+  logic [15:0] int_vec_addr_q;
 
   // Control
   logic trapped_q;
@@ -517,7 +621,11 @@ module z380_core #(
     IMM8_MODE_TIER,
     IMM8_IN0,
     IMM8_OUT0,
-    IMM8_TST_N
+    IMM8_TST_N,
+    IMM8_Z380_SPREL_LD,
+    IMM8_Z380_SPREL_ST,
+    IMM8_Z380_HLREL_LD,
+    IMM8_Z380_HLREL_ST
   } imm8_ctx_e;
   imm8_ctx_e imm8_ctx_q;
   logic [2:0] imm8_r_q;
@@ -651,6 +759,7 @@ module z380_core #(
 
       int_is_nmi_q <= 1'b0;
       int_vec_q <= 8'h00;
+      int_vec_addr_q <= 16'h0000;
 
       trapped_q <= 1'b0;
       ei_delay_q <= 1'b0;
@@ -795,7 +904,7 @@ module z380_core #(
 
               bus_is_io_q <= 1'b0;
               bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-              bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, s_q.PC});
+              bus_addr_q <= z380_addr(1'b0, s_q.PC);
               bus_wdata_q <= '0;
               bus_wstrb_q <= '0;
               bus_size_q <= '0;
@@ -863,7 +972,7 @@ module z380_core #(
             idx_q <= Z85_IDX_IX;
             bus_is_io_q <= 1'b0;
             bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-            bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, s_q.PC});
+            bus_addr_q <= z380_addr(1'b0, s_q.PC);
             bus_attr_q <= MEM_ATTR;
             bus_wdata_q <= '0;
             bus_wstrb_q <= '0;
@@ -875,7 +984,7 @@ module z380_core #(
             idx_q <= Z85_IDX_IY;
             bus_is_io_q <= 1'b0;
             bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-            bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, s_q.PC});
+            bus_addr_q <= z380_addr(1'b0, s_q.PC);
             bus_attr_q <= MEM_ATTR;
             bus_wdata_q <= '0;
             bus_wstrb_q <= '0;
@@ -888,7 +997,7 @@ module z380_core #(
             idx_q <= Z85_IDX_NONE;
             bus_is_io_q <= 1'b0;
             bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-            bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, s_q.PC});
+            bus_addr_q <= z380_addr(1'b0, s_q.PC);
             bus_attr_q <= MEM_ATTR;
             bus_wdata_q <= '0;
             bus_wstrb_q <= '0;
@@ -901,7 +1010,7 @@ module z380_core #(
               grp_q <= Z85_GRP_CB;
               bus_is_io_q <= 1'b0;
               bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-              bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, s_q.PC});
+              bus_addr_q <= z380_addr(1'b0, s_q.PC);
               bus_attr_q <= MEM_ATTR;
               bus_wdata_q <= '0;
               bus_wstrb_q <= '0;
@@ -913,7 +1022,7 @@ module z380_core #(
               grp_q <= Z85_GRP_DDCB;
               bus_is_io_q <= 1'b0;
               bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-              bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, s_q.PC});
+              bus_addr_q <= z380_addr(1'b0, s_q.PC);
               bus_attr_q <= MEM_ATTR;
               bus_wdata_q <= '0;
               bus_wstrb_q <= '0;
@@ -927,7 +1036,7 @@ module z380_core #(
             if ((idx_q != Z85_IDX_NONE) && base_uses_hl_indirect(opcode_q)) begin
               bus_is_io_q <= 1'b0;
               bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-              bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, s_q.PC});
+              bus_addr_q <= z380_addr(1'b0, s_q.PC);
               bus_attr_q <= MEM_ATTR;
               bus_wdata_q <= '0;
               bus_wstrb_q <= '0;
@@ -946,7 +1055,7 @@ module z380_core #(
           // fetch CB opcode byte after displacement
           bus_is_io_q <= 1'b0;
           bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-          bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, s_q.PC});
+          bus_addr_q <= z380_addr(1'b0, s_q.PC);
           bus_attr_q <= MEM_ATTR;
           bus_wdata_q <= '0;
           bus_wstrb_q <= '0;
@@ -1416,6 +1525,103 @@ module z380_core #(
             if (opcode_q == CARBON_Z90_OPPAGE_P0_PREFIX1) begin
               imm8_ctx_q <= IMM8_MODE_OP0;
               start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
+            end else if (tier_is_p6 && z380_native_en && opcode_q == 8'hF8) begin
+              imm8_ctx_q <= IMM8_Z380_SPREL_LD;
+              start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
+            end else if (tier_is_p6 && z380_native_en && opcode_q == 8'hF9) begin
+              imm8_ctx_q <= IMM8_Z380_SPREL_ST;
+              start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
+            end else if (tier_is_p6 && z380_native_en && opcode_q == 8'hFA) begin
+              imm8_ctx_q <= IMM8_Z380_HLREL_LD;
+              start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
+            end else if (tier_is_p6 && z380_native_en && opcode_q == 8'hFB) begin
+              imm8_ctx_q <= IMM8_Z380_HLREL_ST;
+              start_bus_read(1'b0, s_q.PC, DEST_IMM8, ST_IMM8_DONE);
+            end else if (tier_is_p6 && z380_native_en && opcode_q == 8'hFC) begin
+              logic [31:0] res32;
+              logic [47:0] res48;
+              logic [15:0] lhs16;
+              logic [15:0] rhs16;
+              logic [31:0] lhs32;
+              logic [7:0] f;
+              logic overflow;
+              if (z380_longword_en) begin
+                lhs32 = {s_q.D, s_q.E, s_q.H, s_q.L};
+                rhs16 = {s_q.B, s_q.C};
+                res48 = 48'(lhs32) * 48'(rhs16);
+                res32 = res48[31:0];
+                overflow = |res48[47:32];
+              end else begin
+                lhs16 = {s_q.H, s_q.L};
+                rhs16 = {s_q.D, s_q.E};
+                res32 = lhs16 * rhs16;
+                overflow = |res32[31:16];
+              end
+              s_q.D <= res32[31:24];
+              s_q.E <= res32[23:16];
+              s_q.H <= res32[15:8];
+              s_q.L <= res32[7:0];
+              f = flags_szp_xy(res32[7:0]);
+              if (overflow) f |= Z85_F_C;
+              s_q.F <= f;
+              state_q <= ST_BOUNDARY;
+            end else if (tier_is_p6 && z380_native_en && opcode_q == 8'hFD) begin
+              logic [31:0] dividend;
+              logic [31:0] quotient;
+              logic [15:0] divisor;
+              logic [15:0] remainder;
+              logic [7:0] f;
+              if (z380_longword_en) begin
+                dividend = {s_q.D, s_q.E, s_q.H, s_q.L};
+                divisor = {s_q.B, s_q.C};
+                if (divisor == 16'h0000) begin
+                  trapped_q <= 1'b1;
+                  core_trap_pulse_q <= 1'b1;
+                  core_trap_cause_q <= Z380_CAUSE_ILLEGAL_INSN;
+                  core_trap_epc_q <= {16'h0000, insn_pc_q};
+                  state_q <= ST_TRAP;
+                end else begin
+                  quotient = dividend / divisor;
+                  remainder = dividend % divisor;
+                  s_q.D <= quotient[31:24];
+                  s_q.E <= quotient[23:16];
+                  s_q.H <= quotient[15:8];
+                  s_q.L <= quotient[7:0];
+                  s_q.B <= remainder[15:8];
+                  s_q.C <= remainder[7:0];
+                  f = flags_szp_xy(quotient[7:0]);
+                  if (remainder != 16'h0000) f |= Z85_F_C;
+                  s_q.F <= f;
+                  state_q <= ST_BOUNDARY;
+                end
+              end else begin
+                dividend = {16'h0000, s_q.H, s_q.L};
+                divisor = {s_q.D, s_q.E};
+                if (divisor == 16'h0000) begin
+                  trapped_q <= 1'b1;
+                  core_trap_pulse_q <= 1'b1;
+                  core_trap_cause_q <= Z380_CAUSE_ILLEGAL_INSN;
+                  core_trap_epc_q <= {16'h0000, insn_pc_q};
+                  state_q <= ST_TRAP;
+                end else begin
+                  quotient = dividend / divisor;
+                  remainder = dividend % divisor;
+                  s_q.H <= quotient[15:8];
+                  s_q.L <= quotient[7:0];
+                  s_q.D <= remainder[15:8];
+                  s_q.E <= remainder[7:0];
+                  f = flags_szp_xy(quotient[7:0]);
+                  if (remainder != 16'h0000) f |= Z85_F_C;
+                  s_q.F <= f;
+                  state_q <= ST_BOUNDARY;
+                end
+              end
+            end else if (tier_is_p6 && (opcode_q >= 8'hF8)) begin
+              trapped_q <= 1'b1;
+              core_trap_pulse_q <= 1'b1;
+              core_trap_cause_q <= Z380_CAUSE_ILLEGAL_INSN;
+              core_trap_epc_q <= {16'h0000, insn_pc_q};
+              state_q <= ST_TRAP;
             end else if (tier_is_z180_plus && ((opcode_q & 8'hC7) == 8'h00)) begin
               imm8_ctx_q <= IMM8_IN0;
               imm8_r_q <= opcode_q[5:3];
@@ -1688,6 +1894,42 @@ module z380_core #(
               s_q.F <= o.f;
               state_q <= ST_BOUNDARY;
             end
+            IMM8_Z380_SPREL_LD: begin
+              logic signed [15:0] off;
+              logic [15:0] addr;
+              off = $signed({{8{imm8_q[7]}}, imm8_q});
+              addr = s_q.SP + off;
+              mem_rd_ctx_q <= MEMRD_LD_R;
+              mem_rd_r_q <= 3'd7;
+              mem_rd_is_io_q <= 1'b0;
+              mem_addr_q <= addr;
+              start_bus_read(1'b0, addr, DEST_TMP8, ST_MEM_RD_DONE);
+            end
+            IMM8_Z380_SPREL_ST: begin
+              logic signed [15:0] off;
+              logic [15:0] addr;
+              off = $signed({{8{imm8_q[7]}}, imm8_q});
+              addr = s_q.SP + off;
+              start_bus_write(1'b0, addr, s_q.A, ST_BOUNDARY);
+            end
+            IMM8_Z380_HLREL_LD: begin
+              logic signed [15:0] off;
+              logic [15:0] addr;
+              off = $signed({{8{imm8_q[7]}}, imm8_q});
+              addr = get_HL(s_q) + off;
+              mem_rd_ctx_q <= MEMRD_LD_R;
+              mem_rd_r_q <= 3'd7;
+              mem_rd_is_io_q <= 1'b0;
+              mem_addr_q <= addr;
+              start_bus_read(1'b0, addr, DEST_TMP8, ST_MEM_RD_DONE);
+            end
+            IMM8_Z380_HLREL_ST: begin
+              logic signed [15:0] off;
+              logic [15:0] addr;
+              off = $signed({{8{imm8_q[7]}}, imm8_q});
+              addr = get_HL(s_q) + off;
+              start_bus_write(1'b0, addr, s_q.A, ST_BOUNDARY);
+            end
             IMM8_MODE_OP0: begin
               mode_op0_q <= imm8_q;
               imm8_ctx_q <= IMM8_MODE_OP1;
@@ -1752,7 +1994,7 @@ module z380_core #(
         ST_IMM16_HI: begin
           bus_is_io_q <= 1'b0;
           bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-          bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, s_q.PC});
+          bus_addr_q <= z380_addr(1'b0, s_q.PC);
           bus_attr_q <= MEM_ATTR;
           bus_wdata_q <= '0;
           bus_wstrb_q <= '0;
@@ -2084,7 +2326,7 @@ module z380_core #(
           s_q.SP <= s_q.SP - 16'd1;
           bus_is_io_q <= 1'b0;
           bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_WRITE);
-          bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, (s_q.SP - 16'd1)});
+          bus_addr_q <= z380_addr(1'b0, s_q.SP - 16'd1);
           bus_wdata_q <= FAB_DATA_W'({{(FAB_DATA_W-8){1'b0}}, stack_push_val_q[15:8]});
           bus_wstrb_q <= FAB_STRB_W'({{(FAB_STRB_W-1){1'b0}}, 1'b1});
           bus_size_q <= '0;
@@ -2098,7 +2340,7 @@ module z380_core #(
           s_q.SP <= s_q.SP - 16'd1;
           bus_is_io_q <= 1'b0;
           bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_WRITE);
-          bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, (s_q.SP - 16'd1)});
+          bus_addr_q <= z380_addr(1'b0, s_q.SP - 16'd1);
           bus_wdata_q <= FAB_DATA_W'({{(FAB_DATA_W-8){1'b0}}, stack_push_val_q[7:0]});
           bus_wstrb_q <= FAB_STRB_W'({{(FAB_STRB_W-1){1'b0}}, 1'b1});
           bus_size_q <= '0;
@@ -2119,9 +2361,16 @@ module z380_core #(
                 state_q <= ST_BOUNDARY;
               end
               2'd2: begin
+                logic [15:0] vec_addr;
+                if (z380_vec16_en) begin
+                  vec_addr = z380_vec_base_q + {7'b0, int_vec_q, 1'b0};
+                end else begin
+                  vec_addr = {s_q.I, int_vec_q};
+                end
+                int_vec_addr_q <= vec_addr;
                 bus_is_io_q <= 1'b0;
                 bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-                bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, {s_q.I, int_vec_q}});
+                bus_addr_q <= z380_addr(1'b0, vec_addr);
                 bus_attr_q <= MEM_ATTR;
                 bus_wdata_q <= '0;
                 bus_wstrb_q <= '0;
@@ -2147,7 +2396,7 @@ module z380_core #(
         ST_INT_IM2_HI: begin
           bus_is_io_q <= 1'b0;
           bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
-          bus_addr_q <= FAB_ADDR_W'({{(FAB_ADDR_W-16){1'b0}}, ({s_q.I, int_vec_q} + 16'd1)});
+          bus_addr_q <= z380_addr(1'b0, int_vec_addr_q + 16'd1);
           bus_attr_q <= MEM_ATTR;
           bus_wdata_q <= '0;
           bus_wstrb_q <= '0;
