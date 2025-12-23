@@ -41,6 +41,11 @@
 CarbonCPM1 reuses the CarbonCPM22 hardware map and devices, but is intended for
 8080/8085-tier software (P0/P1). Provide a ROM/BIOS built for the same I/O map.
 
+## CarbonCPM3 (`--platform cpm3`)
+
+CarbonCPM3 currently reuses the CarbonCPM22 hardware map and devices. Banked
+memory support is a TODO; use this platform with a flat memory image for now.
+
 ## CarbonRomWBW (`--platform romwbw`)
 
 ### Memory map

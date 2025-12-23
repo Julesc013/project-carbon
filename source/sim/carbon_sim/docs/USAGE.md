@@ -32,6 +32,15 @@ carbon-sim --platform cpm22 --rom ... --disk0 ... --trace
 carbon-sim --platform cpm22 --rom ... --disk0 ... --max-cycles 5000000
 ```
 
+## Run CP/M 3+ (CarbonCPM3)
+
+You must supply your own CP/M 3 boot ROM and disk image. v1 uses the same
+hardware model as `cpm22`; banked memory support is a TODO.
+
+```sh
+carbon-sim --platform cpm3 --rom path/to/cpm3_boot.rom --disk0 path/to/cpm3.dsk --bsp path/to/BSP.bsp --load path/to/mem.bin
+```
+
 
 ## Run RomWBW (CarbonRomWBW)
 
@@ -71,7 +80,7 @@ carbon-sim --platform carbonz80 --disk0 path/to/disk.img --bsp path/to/BSP.bsp
 All disks are raw files.
 
 - `cpm22` uses a 128-byte sector device abstraction (the ROM/BIOS decides layout).
-- `cpm1` uses the same platform model as `cpm22` in v1.
+- `cpm1` and `cpm3` use the same platform model as `cpm22` in v1.
 - `romwbw` uses 512-byte ATA PIO sectors (IDE register model).
 - `carbonz*` platforms use the `CpmDiskDevice` 512-byte sector model.
 

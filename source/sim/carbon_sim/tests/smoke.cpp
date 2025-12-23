@@ -368,6 +368,7 @@ int main() {
     rc |= carbon_sim::smoke_cpm22(temp_dir);
     rc |= carbon_sim::smoke_cpm_memload(temp_dir, "cpm22", "CPM22 MEM OK\r\n", "cpm22");
     rc |= carbon_sim::smoke_cpm_memload(temp_dir, "cpm1", "CPM1 MEM OK\r\n", "cpm1");
+    rc |= carbon_sim::smoke_cpm_memload(temp_dir, "cpm3", "CPM3 MEM OK\r\n", "cpm3");
     rc |= carbon_sim::smoke_romwbw(temp_dir);
     rc |= carbon_sim::smoke_carbonz80();
     rc |= carbon_sim::smoke_carbonz90();
