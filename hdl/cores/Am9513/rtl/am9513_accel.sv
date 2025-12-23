@@ -19,6 +19,10 @@ module am9513_accel #(
   localparam int unsigned CSR_DATA_W = $bits(csr.req_wdata);
   localparam int unsigned CSR_PRIV_W = $bits(csr.req_priv);
 
+  localparam logic [31:0] AM9513_ID_DEVICE = 32'h0000_9513;
+  localparam logic [7:0]  AM9513_PRESENTED_TIER = AM9513_P2_AM9513;
+  localparam logic [7:0]  AM9513_MAX_TIER = AM9513_P2_AM9513;
+
   // --------------------------------------------------------------------------
   // Global CSRs / config
   // --------------------------------------------------------------------------
@@ -313,8 +317,8 @@ module am9513_accel #(
 
         unique case (csr.req_addr)
           CSR_ADDR_W'(CARBON_CSR_AM9513_ID): begin
-            // [31:16] version, [15:0] feature bitmap (v1=0x0001)
-            csr_rsp_rdata_q <= 32'h0001_9513;
+            // [15:0] device id (0x9513), upper bits carry feature flags.
+            csr_rsp_rdata_q <= AM9513_ID_DEVICE | AM9513_FEATURES_BASE;
           end
 
           CSR_ADDR_W'(CARBON_CSR_AM9513_CTRL): begin
@@ -330,7 +334,8 @@ module am9513_accel #(
             csr_rsp_rdata_q[1] <= cai_busy;
             csr_rsp_rdata_q[2] <= legacy_busy;
             csr_rsp_rdata_q[15:8] <= cai.status[15:8];
-            csr_rsp_rdata_q[31:16] <= 16'h0000;
+            csr_rsp_rdata_q[23:16] <= AM9513_PRESENTED_TIER;
+            csr_rsp_rdata_q[31:24] <= AM9513_MAX_TIER;
           end
 
           CSR_ADDR_W'(CARBON_CSR_AM9513_MODE): begin

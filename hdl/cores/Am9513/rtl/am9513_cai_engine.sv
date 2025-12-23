@@ -68,15 +68,26 @@ module am9513_cai_engine #(
   logic [15:0] desc_ctx_id_q;
   logic [15:0] desc_operand_count_q;
   logic [31:0] desc_tag_q;
+  logic [7:0]  desc_opcode_group_q;
+  logic [7:0]  desc_fmt_primary_q;
+  logic [7:0]  desc_fmt_aux_q;
+  logic [7:0]  desc_fmt_flags_q;
   logic [63:0] desc_operands_ptr_q;
   logic [63:0] desc_result_ptr_q;
   logic [31:0] desc_result_len_q;
   logic [31:0] desc_result_stride_q;
+  logic [63:0] desc_tensor_ptr_q;
+  logic [15:0] desc_tensor_len_q;
+  logic [7:0]  desc_tensor_rank_q;
+  logic [7:0]  desc_tensor_flags_q;
 
   logic [15:0] eff_ctx_q;
   logic [7:0]  eff_mode_q;
+  logic [7:0]  op_group_q;
   logic [7:0]  op_func_q;
   logic [7:0]  op_fmt_q;
+  logic [7:0]  op_fmt_aux_q;
+  logic [7:0]  op_fmt_flags_q;
   logic [7:0]  conv_src_fmt_q;
 
   logic        result_to_reg_q;
@@ -86,6 +97,7 @@ module am9513_cai_engine #(
   logic [63:0] op_ptr_q   [MAX_OPERANDS];
   logic [31:0] op_flags_q [MAX_OPERANDS];
   logic [31:0] op_len_q   [MAX_OPERANDS];
+  logic [31:0] op_stride_q [MAX_OPERANDS];
   logic [63:0] op_val_q   [MAX_OPERANDS];
 
   // Execution result
@@ -134,8 +146,8 @@ module am9513_cai_engine #(
   st_e st_q;
   st_e st_after_bus_q;
 
-  logic [3:0] desc_word_q;
-  logic [1:0] opdesc_word_q;
+  logic [4:0] desc_word_q;
+  logic [2:0] opdesc_word_q;
   logic [$clog2(MAX_OPERANDS)-1:0] opdesc_idx_q;
   logic [$clog2(MAX_OPERANDS)-1:0] opval_idx_q;
   logic opval_hi_q;
@@ -212,7 +224,7 @@ module am9513_cai_engine #(
     return FAB_ADDR_W'(a[FAB_ADDR_W-1:0]);
   endfunction
 
-  function automatic logic [63:0] desc_word_addr(input logic [63:0] base, input logic [3:0] idx);
+  function automatic logic [63:0] desc_word_addr(input logic [63:0] base, input logic [4:0] idx);
     logic [31:0] off;
     begin
       unique case (idx)
@@ -221,12 +233,17 @@ module am9513_cai_engine #(
         4'd2: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_FLAGS);
         4'd3: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_CONTEXT_ID);
         4'd4: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_TAG);
-        4'd5: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_OPERANDS_PTR);
-        4'd6: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_OPERANDS_PTR) + 32'd4;
-        4'd7: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_RESULT_PTR);
-        4'd8: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_RESULT_PTR) + 32'd4;
-        4'd9: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_RESULT_LEN);
-        default: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_RESULT_STRIDE);
+        4'd5: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_OPCODE_GROUP);
+        4'd6: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_OPERANDS_PTR);
+        4'd7: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_OPERANDS_PTR) + 32'd4;
+        4'd8: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_RESULT_PTR);
+        4'd9: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_RESULT_PTR) + 32'd4;
+        4'd10: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_RESULT_LEN);
+        4'd11: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_RESULT_STRIDE);
+        4'd12: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_TENSOR_DESC_PTR);
+        4'd13: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_TENSOR_DESC_PTR) + 32'd4;
+        4'd14: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_TENSOR_DESC_LEN);
+        default: off = 32'(CARBON_CAI_SUBMIT_DESC_V1_OFF_RESERVED2);
       endcase
       desc_word_addr = base + 64'(off);
     end
@@ -245,6 +262,7 @@ module am9513_cai_engine #(
         0: off = 32'(CARBON_CAI_OPERAND_DESC_V1_OFF_PTR);
         1: off = 32'(CARBON_CAI_OPERAND_DESC_V1_OFF_PTR) + 32'd4;
         2: off = 32'(CARBON_CAI_OPERAND_DESC_V1_OFF_LEN);
+        3: off = 32'(CARBON_CAI_OPERAND_DESC_V1_OFF_STRIDE);
         default: off = 32'(CARBON_CAI_OPERAND_DESC_V1_OFF_FLAGS);
       endcase
       opdesc_word_addr = a + 64'(off);
@@ -286,15 +304,26 @@ module am9513_cai_engine #(
       desc_ctx_id_q <= '0;
       desc_operand_count_q <= '0;
       desc_tag_q <= '0;
+      desc_opcode_group_q <= 8'(CARBON_CAI_OPGROUP_SCALAR);
+      desc_fmt_primary_q <= 8'h0;
+      desc_fmt_aux_q <= 8'h0;
+      desc_fmt_flags_q <= 8'h0;
       desc_operands_ptr_q <= '0;
       desc_result_ptr_q <= '0;
       desc_result_len_q <= '0;
       desc_result_stride_q <= '0;
+      desc_tensor_ptr_q <= '0;
+      desc_tensor_len_q <= '0;
+      desc_tensor_rank_q <= '0;
+      desc_tensor_flags_q <= '0;
 
       eff_ctx_q <= '0;
       eff_mode_q <= AM9513_P0_AM9511;
+      op_group_q <= 8'(CARBON_CAI_OPGROUP_SCALAR);
       op_func_q <= '0;
       op_fmt_q <= '0;
+      op_fmt_aux_q <= '0;
+      op_fmt_flags_q <= '0;
       conv_src_fmt_q <= 8'(CARBON_FMT_BINARY32);
       result_to_reg_q <= 1'b0;
       result_reg_q <= '0;
@@ -303,6 +332,7 @@ module am9513_cai_engine #(
         op_ptr_q[i] <= '0;
         op_flags_q[i] <= '0;
         op_len_q[i] <= '0;
+        op_stride_q[i] <= '0;
         op_val_q[i] <= '0;
       end
 
@@ -383,7 +413,7 @@ module am9513_cai_engine #(
               ring_idx = submit_head_q & cai.submit_ring_mask;
               exec_valid_q <= 1'b0;
               desc_addr_q <= cai.submit_desc_base + (64'(ring_idx) << 6);
-              desc_word_q <= 4'd0;
+              desc_word_q <= 5'd0;
               st_q <= ST_DESC_RD;
             end
           end
@@ -415,26 +445,41 @@ module am9513_cai_engine #(
               st_q <= ST_COMP_WR;
             end else begin
               unique case (desc_word_q)
-                4'd0: begin
+                5'd0: begin
                   desc_version_q <= bus_rdata_q[15:0];
                   desc_size_dw_q <= bus_rdata_q[31:16];
                 end
-                4'd1: desc_opcode_q <= bus_rdata_q;
-                4'd2: desc_flags_q <= bus_rdata_q;
-                4'd3: begin
+                5'd1: desc_opcode_q <= bus_rdata_q;
+                5'd2: desc_flags_q <= bus_rdata_q;
+                5'd3: begin
                   desc_ctx_id_q <= bus_rdata_q[15:0];
                   desc_operand_count_q <= bus_rdata_q[31:16];
                 end
-                4'd4: desc_tag_q <= bus_rdata_q;
-                4'd5: desc_operands_ptr_q[31:0] <= bus_rdata_q;
-                4'd6: desc_operands_ptr_q[63:32] <= bus_rdata_q;
-                4'd7: desc_result_ptr_q[31:0] <= bus_rdata_q;
-                4'd8: desc_result_ptr_q[63:32] <= bus_rdata_q;
-                4'd9: desc_result_len_q <= bus_rdata_q;
-                default: desc_result_stride_q <= bus_rdata_q;
+                5'd4: desc_tag_q <= bus_rdata_q;
+                5'd5: begin
+                  desc_opcode_group_q <= bus_rdata_q[7:0];
+                  desc_fmt_primary_q <= bus_rdata_q[15:8];
+                  desc_fmt_aux_q <= bus_rdata_q[23:16];
+                  desc_fmt_flags_q <= bus_rdata_q[31:24];
+                end
+                5'd6: desc_operands_ptr_q[31:0] <= bus_rdata_q;
+                5'd7: desc_operands_ptr_q[63:32] <= bus_rdata_q;
+                5'd8: desc_result_ptr_q[31:0] <= bus_rdata_q;
+                5'd9: desc_result_ptr_q[63:32] <= bus_rdata_q;
+                5'd10: desc_result_len_q <= bus_rdata_q;
+                5'd11: desc_result_stride_q <= bus_rdata_q;
+                5'd12: desc_tensor_ptr_q[31:0] <= bus_rdata_q;
+                5'd13: desc_tensor_ptr_q[63:32] <= bus_rdata_q;
+                5'd14: begin
+                  desc_tensor_len_q <= bus_rdata_q[15:0];
+                  desc_tensor_rank_q <= bus_rdata_q[23:16];
+                  desc_tensor_flags_q <= bus_rdata_q[31:24];
+                end
+                default: begin
+                end
               endcase
 
-              if (desc_word_q == 4'd10) begin
+              if (desc_word_q == 5'd15) begin
                 // Validate and advance.
                 if ((desc_version_q != 16'(CARBON_CAI_SUBMIT_DESC_V1_VERSION)) ||
                     (desc_size_dw_q != 16'(CARBON_CAI_SUBMIT_DESC_V1_SIZE_BYTES / 4))) begin
@@ -454,8 +499,11 @@ module am9513_cai_engine #(
                     eff_mode_q <= desc_flags_q[AM9513_SUBMIT_FLAG_MODE_LSB +: AM9513_SUBMIT_FLAG_MODE_WIDTH];
                   end
 
+                  op_group_q <= desc_opcode_group_q;
                   op_func_q <= desc_opcode_q[7:0];
-                  op_fmt_q  <= desc_opcode_q[15:8];
+                  op_fmt_q  <= desc_fmt_primary_q;
+                  op_fmt_aux_q <= desc_fmt_aux_q;
+                  op_fmt_flags_q <= desc_fmt_flags_q;
                   conv_src_fmt_q <= desc_flags_q[7:0];
 
                   result_to_reg_q <= desc_flags_q[AM9513_SUBMIT_FLAG_RESULT_REG_BIT];
@@ -500,13 +548,14 @@ module am9513_cai_engine #(
               st_q <= ST_COMP_WR;
             end else begin
               unique case (opdesc_word_q)
-                2'd0: op_ptr_q[opdesc_idx_q][31:0] <= bus_rdata_q;
-                2'd1: op_ptr_q[opdesc_idx_q][63:32] <= bus_rdata_q;
-                2'd2: op_len_q[opdesc_idx_q] <= bus_rdata_q;
+                3'd0: op_ptr_q[opdesc_idx_q][31:0] <= bus_rdata_q;
+                3'd1: op_ptr_q[opdesc_idx_q][63:32] <= bus_rdata_q;
+                3'd2: op_len_q[opdesc_idx_q] <= bus_rdata_q;
+                3'd3: op_stride_q[opdesc_idx_q] <= bus_rdata_q;
                 default: op_flags_q[opdesc_idx_q] <= bus_rdata_q;
               endcase
 
-              if (opdesc_word_q == 2'd3) begin
+              if (opdesc_word_q == 3'd4) begin
                 opdesc_word_q <= '0;
                 if (opdesc_idx_q == (desc_operand_count_q - 1'b1)) begin
                   opval_idx_q <= '0;

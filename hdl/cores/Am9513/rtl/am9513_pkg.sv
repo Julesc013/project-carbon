@@ -10,6 +10,13 @@ package am9513_pkg;
   localparam logic [7:0] AM9513_P0_AM9511 = 8'(CARBON_AMD_FPU_TIER_P0_AM9511);
   localparam logic [7:0] AM9513_P1_AM9512 = 8'(CARBON_AMD_FPU_TIER_P1_AM9512);
   localparam logic [7:0] AM9513_P2_AM9513 = 8'(CARBON_AMD_FPU_TIER_P2_AM9513);
+  localparam logic [7:0] AM9513_P3_AM9514 = 8'(CARBON_AMD_FPU_TIER_P3_AM9514);
+  localparam logic [7:0] AM9513_P4_AM9515 = 8'(CARBON_AMD_FPU_TIER_P4_AM9515);
+
+  // Feature mask snapshot (feature word 0 bits).
+  localparam logic [31:0] AM9513_FEATURES_BASE =
+      CARBON_AM9512_IEEE_MASK |
+      CARBON_AM9513_ASYNC_MASK;
 
   // --------------------------------------------------------------------------
   // IEEE exception flags (sticky, per-context)
