@@ -11,6 +11,7 @@
 #include "carbon_sim/devices/zilog_sio.h"
 #include "carbon_sim/platforms/machine.h"
 #include "carbon_sim/util/bdt_builder.h"
+#include "carbon_sim/util/bsp_loader.h"
 #include "carbon_sim/util/carbon_constants.h"
 #include "carbon_sim/util/file.h"
 
@@ -24,6 +25,7 @@ static constexpr u16 kCarbonIoBasePort = 0xF100;
 static constexpr u16 kCarbonDmaBasePort = 0xF200;
 static constexpr u16 kBdtBaseAddr = 0xF800;
 static constexpr u16 kBdtDisablePort = 0xFFFE;
+static constexpr std::size_t kBdtRegionBytes = 1024;
 
 std::unique_ptr<Machine> create_platform_romwbw(const SimConfig& config, std::ostream& console_out) {
   if (config.rom_path.empty()) {
@@ -46,6 +48,7 @@ std::unique_ptr<Machine> create_platform_romwbw(const SimConfig& config, std::os
   // Base memory: 64 KiB RAM; ROM overlays reads at 0x0000.. for the provided image.
   m->bus.map_ram(0x0000, 65536);
   m->bus.add_device<BootRomOverlay>(0x0000, std::move(rom), kRomDisablePort);
+  inject_bsp_blob(m->bus, config.bsp_addr, load_bsp_blob(config.bsp_path));
 
   m->irq = &m->bus.add_device<InterruptController>();
   m->timer = nullptr;
@@ -122,7 +125,9 @@ std::unique_ptr<Machine> create_platform_romwbw(const SimConfig& config, std::os
   devices.push_back(ide_desc);
 
   const auto bdt = build_bdt(devices);
-  m->bus.add_device<BootRomOverlay>(kBdtBaseAddr, bdt.bytes, kBdtDisablePort);
+  auto bdt_image = bdt.bytes;
+  bdt_image.resize(kBdtRegionBytes, 0x00);
+  m->bus.add_device<BootRomOverlay>(kBdtBaseAddr, std::move(bdt_image), kBdtDisablePort);
 
   BdtCapsInfo caps_info;
   caps_info.base_lo = kBdtBaseAddr;

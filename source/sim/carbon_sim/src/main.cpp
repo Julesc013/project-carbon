@@ -20,6 +20,8 @@ static void print_usage(std::string_view exe) {
             << "  --version           Show version\n"
             << "  --platform P        cpm22|romwbw|carbonz80|carbonz90|carbonz380|carbonz480\n"
             << "  --rom PATH          ROM image path\n"
+            << "  --bsp PATH          BSP blob path (loaded into RAM before reset)\n"
+            << "  --bsp-addr N        BSP load address (default 0xFF00)\n"
             << "  --disk0 PATH        Disk image path (raw .dsk)\n"
             << "  --disk1 PATH        Optional disk1 path\n"
             << "  --disk2 PATH        Optional disk2 path\n"
@@ -66,6 +68,14 @@ static std::uint64_t parse_u64(const std::string& s) {
     v = v * 10 + digit;
   }
   return v;
+}
+
+static std::uint16_t parse_u16(const std::string& s) {
+  const auto v = parse_u64(s);
+  if (v > 0xFFFFu) {
+    throw std::runtime_error("value out of range: " + s);
+  }
+  return static_cast<std::uint16_t>(v);
 }
 
 static int run_machine(carbon_sim::Machine& machine, const carbon_sim::SimConfig& cfg) {
@@ -190,6 +200,30 @@ int main(int argc, char** argv) {
           throw std::runtime_error("--rom requires a value");
         }
         cfg.rom_path = args[++i];
+        continue;
+      }
+
+      if (auto v = get_opt_value(arg, "--bsp"); v.has_value()) {
+        cfg.bsp_path = *v;
+        continue;
+      }
+      if (arg == "--bsp") {
+        if (i + 1 >= args.size()) {
+          throw std::runtime_error("--bsp requires a value");
+        }
+        cfg.bsp_path = args[++i];
+        continue;
+      }
+
+      if (auto v = get_opt_value(arg, "--bsp-addr"); v.has_value()) {
+        cfg.bsp_addr = parse_u16(*v);
+        continue;
+      }
+      if (arg == "--bsp-addr") {
+        if (i + 1 >= args.size()) {
+          throw std::runtime_error("--bsp-addr requires a value");
+        }
+        cfg.bsp_addr = parse_u16(args[++i]);
         continue;
       }
 

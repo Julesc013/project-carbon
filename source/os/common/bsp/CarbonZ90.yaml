@@ -1,0 +1,16 @@
+bsp:
+  name: CarbonZ90
+  version: 1
+  bdt_base: 0xF800
+  bdt_size: 512
+  console:
+    kind: CARBONIO_UART
+    io_base: 0xF100
+  block:
+    kind: IDE
+    io_base: 0x0010
+    sector_bytes: 512
+  timer:
+    kind: CARBONIO_TICK
+    io_base: 0xF140
+  fpu_present: true

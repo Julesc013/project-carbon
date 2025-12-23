@@ -15,7 +15,7 @@ Address decode is **priority-based** (MMIO and ROM override the RAM default mapp
 - **MMIO (system regs)**: `0xF000`–`0xF0FF` (256 B)
 - **CarbonIO compat**: `0xF100`–`0xF1FF` (256 B)
 - **CarbonDMA compat**: `0xF200`–`0xF2FF` (256 B)
-- **BDT ROM**: `0xF800`–`0xF9FF` (512 B, read-only)
+- **BDT ROM**: `0xF800`–`0xFBFF` (1 KiB, read-only)
 - **RAM (default)**: all other `0x0000`–`0xFFFF` addresses not claimed by ROM/MMIO
 
 ### RAM conventions (BIOS/DOS placeholders)

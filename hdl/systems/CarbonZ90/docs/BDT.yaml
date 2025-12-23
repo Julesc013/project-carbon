@@ -1,7 +1,7 @@
 bdt:
   name: CarbonZ90
   base_addr: 0xF800
-  region_bytes: 512
+  region_bytes: 1024
   devices:
     - name: z90_cpu
       class: DEVCLASS_CPU
@@ -41,3 +41,10 @@ bdt:
         DEVFEAT_FIELD_QUEUE_COUNT: 1
       compat_io_base: 0xF200
       queue_count: 1
+    - name: blockdev
+      class: DEVCLASS_BLOCK_STORAGE
+      vendor_id: 0
+      device_id: 0x0001
+      revision_id: 1
+      compat_flags: [DEVFEAT_COMPAT_POLLING, DEVFEAT_COMPAT_PORT_IO]
+      compat_io_base: 0x0010

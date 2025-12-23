@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(carbon_sim_core
+  src/bsp_loader.cpp
   src/bdt_builder.cpp
   src/block_disk.cpp
   src/boot_rom.cpp

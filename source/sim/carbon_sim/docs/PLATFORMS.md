@@ -9,7 +9,8 @@
 - ROM overlay enable latch at I/O port `0x3F`:
   - write `0` to disable ROM overlay (reads fall through to RAM)
   - write `1` to enable ROM overlay
-- BDT overlay (read-only) at `0xF800` (device table for discovery)
+- BDT overlay (read-only) at `0xF800` (1 KiB, device table for discovery)
+- Optional BSP blob loaded into RAM at `0xFF00` via `--bsp`
 
 ### I/O map
 
@@ -42,7 +43,8 @@
 - 64 KiB RAM at `0x0000..0xFFFF`
 - ROM overlays *reads* at `0x0000..0x0000+ROM_SIZE-1` on reset (max 32 KiB in v1)
 - ROM overlay enable latch at I/O port `0x3F` (same behavior as `cpm22`)
-- BDT overlay (read-only) at `0xF800` (device table for discovery)
+- BDT overlay (read-only) at `0xF800` (1 KiB, device table for discovery)
+- Optional BSP blob loaded into RAM at `0xFF00` via `--bsp`
 
 ### I/O map
 
@@ -89,8 +91,9 @@ v1 expects a RomWBW build that uses:
 - MMIO (system regs) at `0xF000..0xF0FF`
 - CarbonIO compat window at `0xF100..0xF1FF`
 - CarbonDMA compat window at `0xF200..0xF2FF`
-- BDT ROM at `0xF800..0xF9FF` (read-only)
+- BDT ROM at `0xF800..0xFBFF` (read-only)
 - RAM covers `0x0000..0xFFFF` excluding ROM/MMIO windows
+- Optional BSP blob loaded into RAM at `0xFF00` via `--bsp`
 
 ### I/O map
 
@@ -110,8 +113,9 @@ v1 expects a RomWBW build that uses:
 - MMIO (system regs) at `0xF000..0xF0FF`
 - CarbonIO compat window at `0xF100..0xF1FF`
 - CarbonDMA compat window at `0xF200..0xF2FF`
-- BDT ROM at `0xF800..0xF9FF` (read-only)
+- BDT ROM at `0xF800..0xFBFF` (read-only)
 - RAM covers `0x0000..0xFFFF` excluding ROM/MMIO windows
+- Optional BSP blob loaded into RAM at `0xFF00` via `--bsp`
 
 ### I/O map
 
@@ -130,8 +134,9 @@ v1 expects a RomWBW build that uses:
 - MMIO (system regs) at `0xF000..0xF0FF`
 - CarbonIO compat window at `0xF100..0xF1FF`
 - CarbonDMA compat window at `0xF200..0xF2FF`
-- BDT ROM at `0xF800..0xF9FF` (read-only)
+- BDT ROM at `0xF800..0xFBFF` (read-only)
 - RAM covers `0x0000..0xFFFF` excluding ROM/MMIO windows
+- Optional BSP blob loaded into RAM at `0xFF00` via `--bsp`
 
 ### I/O map
 
@@ -151,8 +156,9 @@ v1 expects a RomWBW build that uses:
 - CarbonIO compat window at `0xF100..0xF1FF`
 - CarbonDMA compat window at `0xF200..0xF2FF`
 - Tier host window at `0xF300..0xF3FF`
-- BDT ROM at `0xF800..0xF9FF` (read-only)
+- BDT ROM at `0xF800..0xFBFF` (read-only)
 - RAM covers `0x0000..0xFFFF` excluding ROM/MMIO windows
+- Optional BSP blob loaded into RAM at `0xFF00` via `--bsp`
 
 ### I/O map
 

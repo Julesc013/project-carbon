@@ -14,6 +14,7 @@
 #include "carbon_sim/devices/tier_host_stub.h"
 #include "carbon_sim/platforms/machine.h"
 #include "carbon_sim/util/bdt_builder.h"
+#include "carbon_sim/util/bsp_loader.h"
 #include "carbon_sim/util/carbon_constants.h"
 #include "carbon_sim/util/file.h"
 
@@ -28,7 +29,7 @@ static constexpr u16 kCarbonIoBase = 0xF100;
 static constexpr u16 kCarbonDmaBase = 0xF200;
 static constexpr u16 kTierHostBase = 0xF300;
 static constexpr u16 kBdtBase = 0xF800;
-static constexpr std::size_t kBdtRegionBytes = 512;
+static constexpr std::size_t kBdtRegionBytes = 1024;
 static constexpr u16 kIdeBase = 0x0010;
 
 std::vector<u8> build_signature_rom(const std::array<u8, 4>& sig) {
@@ -133,6 +134,17 @@ void add_carbondma_desc(std::vector<DeviceDescriptor>& devices) {
   devices.push_back(carbondma_desc);
 }
 
+void add_block_desc(std::vector<DeviceDescriptor>& devices) {
+  DeviceDescriptor block_desc;
+  block_desc.class_id = kDevClassBlockStorage;
+  block_desc.vendor_id = 0;
+  block_desc.device_id = 1;
+  block_desc.revision_id = 1;
+  block_desc.compat_flags = kCompatPolling | kCompatPortIo;
+  block_desc.compat_io_base = kIdeBase;
+  devices.push_back(block_desc);
+}
+
 std::vector<u8> build_bdt_image(const std::vector<DeviceDescriptor>& devices) {
   const auto bdt = build_bdt(devices);
   if (bdt.bytes.size() > kBdtRegionBytes) {
@@ -153,6 +165,7 @@ std::unique_ptr<Machine> create_carbonz_platform(const SimConfig& config,
   m->bus.map_rom(kSys16RomBase, rom_image);
   m->bus.map_rom(kBdtBase, build_bdt_image(devices));
   m->bus.map_ram(0x0000, 65536);
+  inject_bsp_blob(m->bus, config.bsp_addr, load_bsp_blob(config.bsp_path));
 
   m->mmio = &m->bus.add_device<CarbonMmioRegs>(kMmioBase, 0u, &console_out);
   m->carbonio = &m->bus.add_device<CarbonIO>(kCarbonIoBase, console_out);
@@ -193,6 +206,7 @@ std::unique_ptr<Machine> create_platform_carbonz80(const SimConfig& config, std:
   add_fpu_desc(devices);
   add_carbonio_desc(devices);
   add_carbondma_desc(devices);
+  add_block_desc(devices);
 
   const auto default_rom = build_signature_rom({{'Z', '8', '0', '!'}});
   const auto rom = load_or_default_rom(config, default_rom, "CarbonZ80");
@@ -211,6 +225,7 @@ std::unique_ptr<Machine> create_platform_carbonz90(const SimConfig& config, std:
   add_fpu_desc(devices);
   add_carbonio_desc(devices);
   add_carbondma_desc(devices);
+  add_block_desc(devices);
 
   const auto default_rom = build_signature_rom({{'Z', '9', '0', '!'}});
   const auto rom = load_or_default_rom(config, default_rom, "CarbonZ90");
@@ -229,6 +244,7 @@ std::unique_ptr<Machine> create_platform_carbonz380(const SimConfig& config, std
   add_fpu_desc(devices);
   add_carbonio_desc(devices);
   add_carbondma_desc(devices);
+  add_block_desc(devices);
 
   const auto default_rom = build_signature_rom({{'Z', '3', '8', '0'}});
   const auto rom = load_or_default_rom(config, default_rom, "CarbonZ380");
@@ -263,6 +279,7 @@ std::unique_ptr<Machine> create_platform_carbonz480(const SimConfig& config, std
   add_fpu_desc(devices);
   add_carbonio_desc(devices);
   add_carbondma_desc(devices);
+  add_block_desc(devices);
 
   const auto default_rom = build_signature_rom({{'Z', '4', '8', '0'}});
   const auto rom = load_or_default_rom(config, default_rom, "CarbonZ480");
