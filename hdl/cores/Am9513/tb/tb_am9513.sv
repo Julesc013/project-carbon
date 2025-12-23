@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module tb_am9513;
+module tb_am9513_scalar;
   import carbon_arch_pkg::*;
   import am9513_pkg::*;
   import cai_bfm_pkg::*;
@@ -196,6 +196,14 @@ module tb_am9513;
       input logic [63:0] result_ptr,
       input logic [31:0] result_len,
       input logic [31:0] result_stride,
+      input logic [7:0] opcode_group = 8'(CARBON_CAI_OPGROUP_SCALAR),
+      input logic [7:0] format_primary = 8'h00,
+      input logic [7:0] format_aux = 8'h00,
+      input logic [7:0] format_flags = 8'h00,
+      input logic [63:0] tensor_desc_ptr = 64'h0,
+      input logic [15:0] tensor_desc_len = 16'h0,
+      input logic [7:0] tensor_rank = 8'h0,
+      input logic [7:0] tensor_desc_flags = 8'h0,
       output logic [15:0] status,
       output logic [15:0] ext_status,
       output logic [31:0] bytes_written
@@ -203,11 +211,16 @@ module tb_am9513;
     logic [SUBMIT_BITS-1:0] desc;
     logic [31:0] tag_exp;
     logic [31:0] tag_got;
+    logic [7:0] fmt_primary;
     begin
       tag_exp = tag_ctr;
       tag_ctr++;
+      fmt_primary = format_primary;
+      if (fmt_primary == 8'h00) fmt_primary = opcode[AM9513_OPC_FMT_LSB +: 8];
       build_submit_desc_v1(desc, opcode, flags, context_id, operand_count, tag_exp,
-                           operands_ptr, result_ptr, result_len, result_stride);
+                           operands_ptr, result_ptr, result_len, result_stride,
+                           opcode_group, fmt_primary, format_aux, format_flags,
+                           tensor_desc_ptr, tensor_desc_len, tensor_rank, tensor_desc_flags);
       cai_write_submit_desc(submit_idx, desc);
 
       cai.submit_doorbell <= 1'b1;
@@ -367,7 +380,7 @@ module tb_am9513;
     if (fault) $fatal(1, "comp_mask fault");
     bfm.csr_write(CARBON_CSR_AM9513_CAI_IRQ_ENABLE, 32'h0, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "irq_en fault");
-    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P7_NATIVE}, 4'hF, 2'b01, fault);
+    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P2_AM9513}, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "mode fault");
     bfm.csr_write(CARBON_CSR_AM9513_CTRL, 32'h1, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "ctrl fault");
@@ -662,10 +675,10 @@ module tb_am9513;
                         status, ext, bytes);
     if (status != 16'(CARBON_CAI_STATUS_UNSUPPORTED)) $fatal(1, "expected unsupported result-to-reg");
 
-    // Now override to P7 and retry.
+    // Now override to P2 and retry.
     cai_submit_and_wait(am9513_opcode(AM9513_FUNC_ADD, 8'(CARBON_FMT_BINARY32)),
                         (32'(1) << AM9513_SUBMIT_FLAG_MODE_VALID_BIT) |
-                        (32'(AM9513_P7_NATIVE) << AM9513_SUBMIT_FLAG_MODE_LSB) |
+                        (32'(AM9513_P2_AM9513) << AM9513_SUBMIT_FLAG_MODE_LSB) |
                         (32'(1) << AM9513_SUBMIT_FLAG_RESULT_REG_BIT) |
                         (32'(2) << AM9513_SUBMIT_FLAG_RESULT_REG_LSB),
                         16'h0000, 16'd2, 64'(opdesc_base), 64'h0, 32'h0, 32'h0,
@@ -673,8 +686,8 @@ module tb_am9513;
     if (status != 16'(CARBON_CAI_STATUS_OK)) $fatal(1, "result-to-reg status=%0d", status);
     if (csr_rf_read64(16'h0000, 4'd2)[31:0] != 32'h4040_0000) $fatal(1, "rf fastpath wrong");
 
-    // Restore default mode to P7 for remaining tests.
-    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P7_NATIVE}, 4'hF, 2'b01, fault);
+    // Restore default mode to P2 for remaining tests.
+    bfm.csr_write(CARBON_CSR_AM9513_MODE, {24'h0, AM9513_P2_AM9513}, 4'hF, 2'b01, fault);
     if (fault) $fatal(1, "mode(P7) fault");
 
     // ----------------------------------------------------------------------
@@ -769,7 +782,7 @@ module tb_am9513;
     legacy_issue(AM9513_LEG_OP_DIV);
     if (legacy_pop64() != 64'h4010_0000_0000_0000) $fatal(1, "legacy 9512 fp64 div wrong");
 
-    $display("tb_am9513: PASS");
+    $display("tb_am9513_scalar: PASS");
     $finish;
   end
 

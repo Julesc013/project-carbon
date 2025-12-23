@@ -17,7 +17,9 @@ core_tests:
   - tb_z85
   - tb_z90
   - tb_z380_core
-  - tb_am9513
+  - tb_am9513_scalar
+  - tb_am9514_vector
+  - tb_am9515_tensor
   - tb_carbonio
   - tb_carbondma
   - tb_z480_scaffold
@@ -37,8 +39,6 @@ system_tests:
 placeholder_tests:
   - tb_z380
   - tb_z480
-  - tb_am9514
-  - tb_am9515
   - tb_carbonz380
 
 optional_local_tests:
