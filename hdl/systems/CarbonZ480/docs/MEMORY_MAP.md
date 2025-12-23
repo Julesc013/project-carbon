@@ -27,7 +27,7 @@ still resolve to the SYS16 compatibility windows.
 ## Boot ROM contents
 
 - `0x0000`: Z85 stub writes `MODEUP` request (P7) to the tier host window, then halts.
-- `0x0040`: Z480 monitor stub writes the signature and powers off the system.
+- `0x0040`: Z480 monitor stub writes the signature, polls UART status, then powers off.
 
 ## MMIO registers (`carbon_mmio_regs`)
 
