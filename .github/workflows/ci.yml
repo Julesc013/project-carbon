@@ -25,8 +25,8 @@ jobs:
       - name: Verify generated outputs are committed
         run: git diff --exit-code
 
-      - name: Run contract regression
-        run: bash scripts/run_sim.sh --all --suite contract --no-gen
+      - name: Run smoke regression
+        run: bash scripts/run_sim.sh --suite smoke --no-gen
 
       - name: Upload sim logs (on failure)
         if: failure()

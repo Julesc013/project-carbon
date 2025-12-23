@@ -3,14 +3,16 @@ param(
   [switch]$List,
   [string]$Test,
   [string]$Manifest,
-  [ValidateSet("all","contract","core","system","optional")]
-  [string]$Suite = "all",
+  [ValidateSet("all","smoke","contract","core","system","optional")]
+  [string]$Suite = "smoke",
   [switch]$NoGen
 )
 
 $ErrorActionPreference = "Stop"
 
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$suiteSet = $PSBoundParameters.ContainsKey("Suite")
+$allSet = $PSBoundParameters.ContainsKey("All")
 if (-not $Manifest -or $Manifest -eq "") {
   $Manifest = (Join-Path $RepoRoot "hdl/sim/tests/regress.yaml")
 }
@@ -78,6 +80,7 @@ foreach ($line in Get-Content $Manifest) {
 
 $alias = @{
   all = @("contract_tests","core_tests","system_tests")
+  smoke = @("contract_tests","system_tests")
   contract = @("contract_tests")
   core = @("core_tests")
   system = @("system_tests")
@@ -96,6 +99,10 @@ if ($List) {
 
 if (-not $All -and (-not $Test -or $Test -eq "")) {
   $All = $true
+}
+
+if ($allSet -and (-not $suiteSet)) {
+  $Suite = "all"
 }
 
 if ($Test -and $Test -ne "") {

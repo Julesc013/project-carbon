@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+repo_root=$(CDPATH= cd "$(dirname "$0")/.." && pwd)
+
 if ! command -v rg >/dev/null 2>&1; then
   echo "error: ripgrep (rg) is required for consistency checks." >&2
   exit 2
@@ -17,16 +19,16 @@ else
 fi
 
 echo "Running spec generator..."
-"$python_cmd" hdl/tools/gen_specs.py
+"$python_cmd" "$repo_root/hdl/tools/gen_specs.py" --repo-root "$repo_root"
 
 echo "Checking for TURBO_UNLIMITED..."
-if rg -n "TURBO_UNLIMITED" .; then
+if rg -n "TURBO_UNLIMITED" "$repo_root"; then
   echo "error: TURBO_UNLIMITED must not appear in the repository." >&2
   exit 1
 fi
 
 echo "Checking tier ladder tables..."
-tiers_file="hdl/spec/tiers.yaml"
+tiers_file="$repo_root/hdl/spec/tiers.yaml"
 if [[ ! -f "$tiers_file" ]]; then
   echo "error: missing $tiers_file" >&2
   exit 1

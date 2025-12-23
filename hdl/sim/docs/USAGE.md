@@ -11,9 +11,12 @@
 - Generate architecture constants:
   - `scripts/gen_arch.sh` (Linux/macOS)
   - `scripts/gen_arch.ps1` (Windows)
+- Run the default smoke suite (contract + system):
+  - `scripts/run_sim.sh`
+  - `scripts/run_sim.ps1`
 - Run all contract tests:
-  - `scripts/run_sim.sh --all --suite contract`
-  - `scripts/run_sim.ps1 -All -Suite contract`
+  - `scripts/run_sim.sh --suite contract`
+  - `scripts/run_sim.ps1 -Suite contract`
 - Run all tests in the manifest:
   - `scripts/run_sim.sh --all`
   - `scripts/run_sim.ps1 -All`
@@ -21,8 +24,8 @@
   - `scripts/run_sim.sh --test tb_fabric_contract`
   - `scripts/run_sim.ps1 -Test tb_fabric_contract`
 - List available tests:
-  - `scripts/run_sim.sh --list --suite contract`
-  - `scripts/run_sim.ps1 -List -Suite contract`
+  - `scripts/run_sim.sh --list --suite smoke`
+  - `scripts/run_sim.ps1 -List -Suite smoke`
 - List optional local tests:
   - `scripts/run_sim.sh --list --suite optional`
   - `scripts/run_sim.ps1 -List -Suite optional`

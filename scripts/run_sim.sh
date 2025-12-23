@@ -5,27 +5,30 @@ repo_root=$(CDPATH= cd "$(dirname "$0")/.." && pwd)
 manifest="$repo_root/hdl/sim/tests/regress.yaml"
 no_gen=0
 do_all=0
+all_set=0
 do_list=0
 test_name=""
-suite="all"
+suite="smoke"
+suite_set=0
 
 usage() {
   cat <<EOF
 Usage:
   scripts/run_sim.sh --all [--no-gen] [--manifest <path>]
   scripts/run_sim.sh --test <tb_target> [--no-gen]
-  scripts/run_sim.sh --list [--manifest <path>] [--suite <contract|core|system|optional|all>]
-  scripts/run_sim.sh --all --suite <contract|core|system|optional>
+  scripts/run_sim.sh --list [--manifest <path>] [--suite <smoke|contract|core|system|optional|all>]
+  scripts/run_sim.sh --all --suite <smoke|contract|core|system|optional|all>
 
 Notes:
   - Test names are Make targets under hdl/sim (e.g. tb_carbonz80).
   - Logs are written to hdl/sim/build/logs/.
+  - Default run (no args) uses the minimal smoke suite; use --all for full.
 EOF
 }
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    --all) do_all=1 ;;
+    --all) do_all=1; all_set=1 ;;
     --list) do_list=1 ;;
     --test)
       shift
@@ -34,6 +37,7 @@ while [ $# -gt 0 ]; do
     --suite)
       shift
       suite="${1:-}"
+      suite_set=1
       ;;
     --manifest)
       shift
@@ -54,13 +58,17 @@ if [ "$do_all" -eq 0 ] && [ "$do_list" -eq 0 ] && [ -z "$test_name" ]; then
   do_all=1
 fi
 
+if [ "$all_set" -eq 1 ] && [ "$suite_set" -eq 0 ]; then
+  suite="all"
+fi
+
 if [ ! -f "$manifest" ]; then
   echo "ERROR: regression manifest not found: $manifest" >&2
   exit 2
 fi
 
 case "$suite" in
-  all|contract|core|system|optional) ;;
+  all|smoke|contract|core|system|optional) ;;
   *)
     echo "ERROR: unknown suite: $suite" >&2
     exit 2
@@ -128,6 +136,7 @@ for raw in open(path, "r", encoding="utf-8"):
         sections[current].append(name)
 alias = {
     "all": ["contract_tests", "core_tests", "system_tests"],
+    "smoke": ["contract_tests", "system_tests"],
     "contract": ["contract_tests"],
     "core": ["core_tests"],
     "system": ["system_tests"],
@@ -175,6 +184,7 @@ for raw in open(path, "r", encoding="utf-8"):
         sections[current].append(name)
 alias = {
     "all": ["contract_tests", "core_tests", "system_tests"],
+    "smoke": ["contract_tests", "system_tests"],
     "contract": ["contract_tests"],
     "core": ["core_tests"],
     "system": ["system_tests"],
