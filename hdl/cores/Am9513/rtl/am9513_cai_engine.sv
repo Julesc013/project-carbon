@@ -264,7 +264,7 @@ module am9513_cai_engine #(
     if (exec_valid_q && ((st_q == ST_RESULT_WR) || (st_q == ST_COMP_WR))) begin
       flags_or_we = 1'b1;
       flags_or_mask = exec_q.exc_flags;
-      if (result_to_reg_q && (eff_mode_q == AM9513_P2_AM9513) &&
+      if (result_to_reg_q && (eff_mode_q >= AM9513_P2_AM9513) &&
           (exec_q.cai_status == 16'(CARBON_CAI_STATUS_OK))) begin
         rf_we = 1'b1;
         rf_index = result_reg_q;
@@ -428,6 +428,43 @@ module am9513_cai_engine #(
       .result(tensor_exec_result),
       .exc_flags(tensor_exec_flags),
       .status(tensor_exec_status)
+  );
+
+  am9513_exec_result_t exec_p0;
+  am9513_exec_result_t exec_p1;
+  am9513_exec_result_t exec_p2;
+
+  am9511_compat u_p0 (
+      .func(op_func_q),
+      .fmt(op_fmt_q),
+      .flags(desc_flags_q),
+      .op0(op_val_q[0]),
+      .op1(op_val_q[1]),
+      .op2(op_val_q[2]),
+      .rm(rm_rdata),
+      .result(exec_p0)
+  );
+
+  am9512_compat u_p1 (
+      .func(op_func_q),
+      .fmt(op_fmt_q),
+      .flags(desc_flags_q),
+      .op0(op_val_q[0]),
+      .op1(op_val_q[1]),
+      .op2(op_val_q[2]),
+      .rm(rm_rdata),
+      .result(exec_p1)
+  );
+
+  am9513_scalar u_p2 (
+      .func(op_func_q),
+      .fmt(op_fmt_q),
+      .flags(desc_flags_q),
+      .op0(op_val_q[0]),
+      .op1(op_val_q[1]),
+      .op2(op_val_q[2]),
+      .rm(rm_rdata),
+      .result(exec_p2)
   );
 
   // --------------------------------------------------------------------------
@@ -767,7 +804,7 @@ module am9513_cai_engine #(
             // Decide per operand whether to read from regfile or memory.
             if (opval_idx_q == desc_operand_count_q) begin
               st_q <= ST_EXEC;
-            end else if ((eff_mode_q != AM9513_P2_AM9513) &&
+            end else if ((eff_mode_q < AM9513_P2_AM9513) &&
                          op_flags_q[opval_idx_q][AM9513_OPERAND_FLAG_IS_REG_BIT]) begin
               comp_status_q <= 16'(CARBON_CAI_STATUS_UNSUPPORTED);
               comp_bytes_q <= '0;
@@ -844,22 +881,25 @@ module am9513_cai_engine #(
               st_q <= ST_COMP_WR;
             end else begin
               if (op_group_q == 8'(CARBON_CAI_OPGROUP_SCALAR)) begin
-                if (result_to_reg_q && (eff_mode_q != AM9513_P2_AM9513)) begin
+                if (result_to_reg_q && (eff_mode_q < AM9513_P2_AM9513)) begin
                   comp_status_q <= 16'(CARBON_CAI_STATUS_UNSUPPORTED);
                   comp_bytes_q <= '0;
                   st_q <= ST_COMP_WR;
                 end else begin
                   am9513_exec_result_t ex;
                   int unsigned elem_bytes;
-                  ex = am9513_execute(op_func_q, op_fmt_q, desc_flags_q,
-                                      op_val_q[0], op_val_q[1], op_val_q[2], rm_rdata);
+                  unique case (eff_mode_q)
+                    AM9513_P0_AM9511: ex = exec_p0;
+                    AM9513_P1_AM9512: ex = exec_p1;
+                    default: ex = exec_p2;
+                  endcase
                   exec_q <= ex;
                   exec_valid_q <= 1'b1;
                   comp_status_q <= ex.cai_status;
                   comp_bytes_q <= ex.bytes_written;
 
                   // If result goes to register, skip memory write.
-                  if (result_to_reg_q && (eff_mode_q == AM9513_P2_AM9513) &&
+                  if (result_to_reg_q && (eff_mode_q >= AM9513_P2_AM9513) &&
                       (ex.cai_status == 16'(CARBON_CAI_STATUS_OK))) begin
                     comp_bytes_q <= 32'h0;
                     st_q <= ST_COMP_WR;
