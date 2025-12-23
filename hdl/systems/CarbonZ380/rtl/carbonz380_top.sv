@@ -9,12 +9,13 @@ module carbonz380_top (
 );
   import carbon_arch_pkg::*;
   import carbon_memmap_pkg::*;
+  import am9513_pkg::*;
 
   localparam int unsigned ADDR_W = 32;
   localparam int unsigned DATA_W = 32;
   localparam int unsigned ID_W   = 4;
 
-  localparam int unsigned M = 3; // z380 mem, z380 io, carbondma
+  localparam int unsigned M = 4; // z380 mem, z380 io, am9513 dma, carbondma
   localparam int unsigned N = 5; // mmio, carbonio, carbondma, rom, ram(default)
 
   localparam logic [7:0] Z380_MODE_NATIVE_MASK = 8'h04;
@@ -152,6 +153,138 @@ module carbonz380_top (
     end
   end
 
+  // --------------------------------------------------------------------------
+  // Am9513 accelerator (enabled; default mode P2/9513)
+  // --------------------------------------------------------------------------
+  csr_if csr_fpu (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+
+  cai_if cai_cpu (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+  cai_if cai_dev (
+      .clk(clk),
+      .rst_n(rst_n)
+  );
+
+  carbon_cai_router #(
+      .OVERRIDE_HOST_CFG(1'b1),
+      .OVERRIDE_SUBMIT_DESC_BASE(64'h0000_0000_0000_0400),
+      .OVERRIDE_SUBMIT_RING_MASK(32'h0000_0000),
+      .OVERRIDE_CONTEXT_SEL(16'h0000)
+  ) u_cai (
+      .cpu(cai_cpu),
+      .dev(cai_dev)
+  );
+
+  always_comb begin
+    cai_cpu.submit_desc_base = 64'h0;
+    cai_cpu.submit_ring_mask = 32'h0;
+    cai_cpu.submit_doorbell = 1'b0;
+    cai_cpu.context_sel = 16'h0;
+  end
+
+  am9513_accel u_am9513 (
+      .clk(clk),
+      .rst_n(rst_n),
+      .csr(csr_fpu),
+      .mem_if(m_if[2]),
+      .cai(cai_dev)
+  );
+
+  typedef enum logic [2:0] {
+    FPU_INIT_CTRL,
+    FPU_INIT_MODE,
+    FPU_INIT_COMP_LO,
+    FPU_INIT_COMP_HI,
+    FPU_INIT_COMP_MASK,
+    FPU_INIT_IRQ,
+    FPU_INIT_DONE
+  } fpu_init_e;
+
+  fpu_init_e fpu_init_q;
+  logic fpu_csr_start;
+  logic fpu_csr_busy, fpu_csr_done, fpu_csr_fault;
+  logic [31:0] fpu_csr_rdata;
+  logic [31:0] fpu_csr_addr;
+  logic [31:0] fpu_csr_wdata;
+  logic fpu_csr_issued_q;
+
+  carbon_csr_master_simple u_fpu_csr_init (
+      .clk(clk),
+      .rst_n(rst_n),
+      .start(fpu_csr_start),
+      .write(1'b1),
+      .addr(fpu_csr_addr),
+      .wdata(fpu_csr_wdata),
+      .wstrb(4'hF),
+      .priv(2'(1)),
+      .busy(fpu_csr_busy),
+      .done_pulse(fpu_csr_done),
+      .fault(fpu_csr_fault),
+      .rdata(fpu_csr_rdata),
+      .csr(csr_fpu)
+  );
+
+  always_comb begin
+    fpu_csr_addr  = 32'h0;
+    fpu_csr_wdata = 32'h0;
+    unique case (fpu_init_q)
+      FPU_INIT_CTRL: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CTRL);
+        fpu_csr_wdata = 32'h0000_0001; // enable
+      end
+      FPU_INIT_MODE: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_MODE);
+        fpu_csr_wdata = {24'h000000, 8'(AM9513_P2_AM9513)};
+      end
+      FPU_INIT_COMP_LO: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_COMP_BASE_LO);
+        fpu_csr_wdata = 32'h0000_0500;
+      end
+      FPU_INIT_COMP_HI: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_COMP_BASE_HI);
+        fpu_csr_wdata = 32'h0000_0000;
+      end
+      FPU_INIT_COMP_MASK: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_COMP_RING_MASK);
+        fpu_csr_wdata = 32'h0000_0000;
+      end
+      FPU_INIT_IRQ: begin
+        fpu_csr_addr  = 32'(CARBON_CSR_AM9513_CAI_IRQ_ENABLE);
+        fpu_csr_wdata = 32'h0000_0000;
+      end
+      default: begin
+      end
+    endcase
+  end
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      fpu_init_q <= FPU_INIT_CTRL;
+      fpu_csr_start <= 1'b0;
+      fpu_csr_issued_q <= 1'b0;
+    end else begin
+      fpu_csr_start <= 1'b0;
+      if (fpu_init_q != FPU_INIT_DONE) begin
+        if (!fpu_csr_busy && !fpu_csr_issued_q) begin
+          fpu_csr_start <= 1'b1;
+          fpu_csr_issued_q <= 1'b1;
+        end
+        if (fpu_csr_done) begin
+          fpu_csr_issued_q <= 1'b0;
+          if (fpu_init_q == FPU_INIT_IRQ) fpu_init_q <= FPU_INIT_DONE;
+          else fpu_init_q <= fpu_init_e'(fpu_init_q + 1'b1);
+        end
+      end
+    end
+  end
+
+  wire sys_init_done = cpu_csr_init_done_q && (fpu_init_q == FPU_INIT_DONE);
+
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       dbg_halt_req_q  <= 1'b1;
@@ -159,7 +292,7 @@ module carbonz380_top (
       dbg_released_q  <= 1'b0;
     end else begin
       dbg_run_pulse_q <= 1'b0;
-      if (cpu_csr_init_done_q && !dbg_released_q) begin
+      if (sys_init_done && !dbg_released_q) begin
         dbg_halt_req_q  <= 1'b0;
         dbg_run_pulse_q <= 1'b1;
         dbg_released_q  <= 1'b1;
@@ -300,7 +433,7 @@ module carbonz380_top (
       .clk(clk),
       .rst_n(rst_n),
       .compat_if(s_if[2]),
-      .mem_if(m_if[2]),
+      .mem_if(m_if[3]),
       .csr(csr_carbondma),
       .dbg(dbg_carbondma)
   );
@@ -362,8 +495,8 @@ module carbonz380_top (
       .uart_tx_byte()
   );
 
-  wire _unused = ^{cpu_csr_fault, cpu_csr_rdata[0], wait_active, wait_done,
-                   refresh_tick, refresh_active, cs_match, cs_index,
+  wire _unused = ^{cpu_csr_fault, cpu_csr_rdata[0], fpu_csr_fault, fpu_csr_rdata[0],
+                   wait_active, wait_done, refresh_tick, refresh_active, cs_match, cs_index,
                    carbonio_uart_rx_ready, carbonio_uart_tx_valid, carbonio_uart_tx_data,
                    carbonio_pio_out, carbonio_pio_dir, irq_carbonio.irq_valid,
                    irq_carbonio.irq_vector, irq_carbonio.irq_prio, irq_carbonio.irq_pending};
