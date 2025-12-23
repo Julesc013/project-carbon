@@ -29,10 +29,14 @@ core_tests:
 
 system_tests:
   - tb_carbonz80
+  - tb_carbonz80_tiers
   - tb_carbonz90
+  - tb_carbonz90_tiers
   - tb_carbonz380_smoke
+  - tb_carbonz380_tiers
   - tb_carbonz480
   - tb_carbonz480_smoke
+  - tb_tier_host_ctrl
   - tb_carbonx86
   - tb_carbonx96
 

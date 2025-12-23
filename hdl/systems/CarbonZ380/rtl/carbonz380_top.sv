@@ -1,7 +1,9 @@
 // Project Carbon - Systems
 // carbonz380_top: CarbonZ380 system (Z380 + platform glue).
 
-module carbonz380_top (
+module carbonz380_top #(
+    parameter bit ROM_TIER_TEST = 1'b0
+) (
     input logic clk,
     input logic rst_n,
     output logic [31:0] signature,
@@ -460,7 +462,7 @@ module carbonz380_top (
   // - MODEUP to P6
   // - execute P6 mul
   // - write "Z380" signature, power off, then trap on illegal opcode
-  localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE = {
+  localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE_BOOT = {
       {(ROM_BYTES-ROM_USED){8'h00}},
       8'hFE, 8'hED, 8'hF0, 8'h04, 8'h32, 8'h01, 8'h3E,
       8'hF0, 8'h03, 8'h32, 8'h30, 8'h3E, 8'hF0, 8'h02,
@@ -471,6 +473,119 @@ module carbonz380_top (
       8'h00, 8'h76, 8'h00, 8'h10, 8'h06, 8'h00, 8'hF0,
       8'hF0, 8'hED
   };
+
+  function automatic logic [ROM_BYTES*8-1:0] build_tier_rom;
+    logic [ROM_BYTES*8-1:0] tmp;
+    begin
+      tmp = '0;
+      // P0: MODEUP -> P1..P6 (return), then invalid P7
+      tmp[(0*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(1*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(2*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(3*8)+:8] = {4'(CARBON_Z90_P0_SUB_MODEUP), 4'h0};
+      tmp[(4*8)+:8] = 8'(CARBON_Z80_DERIVED_TIER_P1_I8085);
+      tmp[(5*8)+:8] = 8'h40;
+      tmp[(6*8)+:8] = 8'h00;
+
+      tmp[(7*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(8*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(9*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(10*8)+:8] = {4'(CARBON_Z90_P0_SUB_MODEUP), 4'h0};
+      tmp[(11*8)+:8] = 8'(CARBON_Z80_DERIVED_TIER_P2_Z80);
+      tmp[(12*8)+:8] = 8'h60;
+      tmp[(13*8)+:8] = 8'h00;
+
+      tmp[(14*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(15*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(17*8)+:8] = {4'(CARBON_Z90_P0_SUB_MODEUP), 4'h0};
+      tmp[(18*8)+:8] = 8'(CARBON_Z80_DERIVED_TIER_P3_Z180);
+      tmp[(19*8)+:8] = 8'h80;
+      tmp[(20*8)+:8] = 8'h00;
+
+      tmp[(21*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(22*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(23*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(24*8)+:8] = {4'(CARBON_Z90_P0_SUB_MODEUP), 4'h0};
+      tmp[(25*8)+:8] = 8'(CARBON_Z80_DERIVED_TIER_P4_EZ80);
+      tmp[(26*8)+:8] = 8'hA0;
+      tmp[(27*8)+:8] = 8'h00;
+
+      tmp[(28*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(29*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(30*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(31*8)+:8] = {4'(CARBON_Z90_P0_SUB_MODEUP), 4'h0};
+      tmp[(32*8)+:8] = 8'(CARBON_Z80_DERIVED_TIER_P5_Z280);
+      tmp[(33*8)+:8] = 8'hC0;
+      tmp[(34*8)+:8] = 8'h00;
+
+      tmp[(35*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(36*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(37*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(38*8)+:8] = {4'(CARBON_Z90_P0_SUB_MODEUP), 4'h0};
+      tmp[(39*8)+:8] = 8'(CARBON_Z80_DERIVED_TIER_P6_Z380);
+      tmp[(40*8)+:8] = 8'hE0;
+      tmp[(41*8)+:8] = 8'h00;
+
+      tmp[(42*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(43*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(44*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(45*8)+:8] = {4'(CARBON_Z90_P0_SUB_MODEUP), 4'h0};
+      tmp[(46*8)+:8] = 8'(CARBON_Z80_DERIVED_TIER_P7_Z480);
+      tmp[(47*8)+:8] = 8'hF0;
+      tmp[(48*8)+:8] = 8'h00;
+      tmp[(49*8)+:8] = 8'h76; // HALT
+
+      // Tier entries: RETMD at each entry point.
+      tmp[(16'h0040*8)+:8] = 8'h00;
+      tmp[(16'h0041*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(16'h0042*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16'h0043*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(16'h0044*8)+:8] = {4'(CARBON_Z90_P0_SUB_RETMD), 4'h0};
+
+      tmp[(16'h0060*8)+:8] = 8'h00;
+      tmp[(16'h0061*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(16'h0062*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16'h0063*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(16'h0064*8)+:8] = {4'(CARBON_Z90_P0_SUB_RETMD), 4'h0};
+
+      tmp[(16'h0080*8)+:8] = 8'h00;
+      tmp[(16'h0081*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(16'h0082*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16'h0083*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(16'h0084*8)+:8] = {4'(CARBON_Z90_P0_SUB_RETMD), 4'h0};
+
+      tmp[(16'h00A0*8)+:8] = 8'h00;
+      tmp[(16'h00A1*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(16'h00A2*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16'h00A3*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(16'h00A4*8)+:8] = {4'(CARBON_Z90_P0_SUB_RETMD), 4'h0};
+
+      tmp[(16'h00C0*8)+:8] = 8'h00;
+      tmp[(16'h00C1*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(16'h00C2*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16'h00C3*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(16'h00C4*8)+:8] = {4'(CARBON_Z90_P0_SUB_RETMD), 4'h0};
+
+      tmp[(16'h00E0*8)+:8] = 8'h00;
+      tmp[(16'h00E1*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(16'h00E2*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16'h00E3*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(16'h00E4*8)+:8] = {4'(CARBON_Z90_P0_SUB_RETMD), 4'h0};
+
+      tmp[(16'h00F0*8)+:8] = 8'h00;
+      tmp[(16'h00F1*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(16'h00F2*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16'h00F3*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(16'h00F4*8)+:8] = {4'(CARBON_Z90_P0_SUB_RETMD), 4'h0};
+
+      build_tier_rom = tmp;
+    end
+  endfunction
+
+  localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE_TIER = build_tier_rom();
+  localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE =
+      ROM_TIER_TEST ? ROM_IMAGE_TIER : ROM_IMAGE_BOOT;
 
   carbon_bootrom #(
       .BASE_ADDR(CARBON_SYS16_ROM_BASE),

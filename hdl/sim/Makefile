@@ -163,6 +163,15 @@ Z90_SV := \
   $(Z90_RTL_SV) \
   ../cores/Z90/tb/tb_z90.sv
 
+Z380_RTL_SV := \
+  $(Z85_RTL_SV) \
+  ../cores/Z380/rtl/z380_core.sv
+
+Z380_PLATFORM_SV := \
+  ../uncore/Z380_platform/rtl/z380_chipselect.sv \
+  ../uncore/Z380_platform/rtl/z380_waitgen.sv \
+  ../uncore/Z380_platform/rtl/z380_dram_refresh.sv
+
 X96_8096_RTL_SV := \
   ../cores/8096/rtl/cpu_8096_pkg.sv \
   ../cores/8096/rtl/cpu_8096_core.sv \
@@ -185,31 +194,72 @@ SYSTEMS_COMMON_SV := \
   ../systems/common/rtl/carbon_fabric_bootmaster.sv \
   ../systems/common/rtl/z80_bus_adapter_stub.sv \
   ../systems/common/rtl/x86_bus_adapter_stub.sv \
+  ../systems/common/rtl/tier_host_ctrl.sv \
   ../systems/common/rtl/csr_master_tieoff.sv \
   ../systems/common/rtl/dbg_hub_tieoff.sv \
   ../systems/common/rtl/irq_src_tieoff.sv \
   ../systems/common/rtl/cai_host_tieoff.sv
 
-CARBONZ80_SV := \
+CARBONZ80_RTL_SV := \
   $(SYSTEMS_COMMON_SV) \
   $(Z85_RTL_SV) \
   $(AM9513_RTL_SV) \
-  ../systems/CarbonZ80/rtl/carbonz80_top.sv \
+  ../systems/CarbonZ80/rtl/carbonz80_top.sv
+
+CARBONZ80_SV := \
+  $(CARBONZ80_RTL_SV) \
   ../systems/CarbonZ80/tb/tb_carbonz80.sv
 
-CARBONZ90_SV := \
+CARBONZ80_TIERS_SV := \
+  $(CARBONZ80_RTL_SV) \
+  ../systems/CarbonZ80/tb/tb_carbonz80_tiers.sv
+
+CARBONZ90_RTL_SV := \
   $(SYSTEMS_COMMON_SV) \
   $(Z90_RTL_SV) \
   $(AM9513_RTL_SV) \
-  ../systems/CarbonZ90/rtl/carbonz90_top.sv \
+  ../systems/CarbonZ90/rtl/carbonz90_top.sv
+
+CARBONZ90_SV := \
+  $(CARBONZ90_RTL_SV) \
   ../systems/CarbonZ90/tb/tb_carbonz90.sv
 
-CARBONZ480_SV := \
+CARBONZ90_TIERS_SV := \
+  $(CARBONZ90_RTL_SV) \
+  ../systems/CarbonZ90/tb/tb_carbonz90_tiers.sv
+
+CARBONZ380_RTL_SV := \
+  $(SYSTEMS_COMMON_SV) \
+  $(Z380_RTL_SV) \
+  $(Z380_PLATFORM_SV) \
+  $(AM9513_RTL_SV) \
+  ../systems/CarbonZ380/rtl/carbonz380_top.sv
+
+CARBONZ380_SMOKE_SV := \
+  $(CARBONZ380_RTL_SV) \
+  ../systems/CarbonZ380/tb/tb_carbonz380_smoke.sv
+
+CARBONZ380_TIERS_SV := \
+  $(CARBONZ380_RTL_SV) \
+  ../systems/CarbonZ380/tb/tb_carbonz380_tiers.sv
+
+CARBONZ480_RTL_SV := \
   $(SYSTEMS_COMMON_SV) \
   $(Z480_RTL_SV) \
   $(AM9513_RTL_SV) \
-  ../systems/CarbonZ480/rtl/carbonz480_top.sv \
+  ../systems/CarbonZ480/rtl/carbonz480_top.sv
+
+CARBONZ480_SV := \
+  $(CARBONZ480_RTL_SV) \
   ../systems/CarbonZ480/tb/tb_carbonz480.sv
+
+CARBONZ480_SMOKE_SV := \
+  $(CARBONZ480_RTL_SV) \
+  ../systems/CarbonZ480/tb/tb_carbonz480_smoke.sv
+
+TIER_HOST_SV := \
+  $(SYSTEMS_COMMON_SV) \
+  ../systems/common/tb/tb_tier_host_ctrl.sv
 
 CARBONX86_SV := \
   $(SYSTEMS_COMMON_SV) \
@@ -253,8 +303,8 @@ define run_tb
 endef
 endif
 
-.PHONY: all clean tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z85_zex tb_z90 tb_am9513 tb_carbonio tb_carbondma tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
-all: tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz90 tb_carbonz480 tb_carbonx86 tb_carbonx96
+.PHONY: all clean tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z85_zex tb_z90 tb_am9513 tb_carbonio tb_carbondma tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz80_tiers tb_carbonz90 tb_carbonz90_tiers tb_carbonz380_smoke tb_carbonz380_tiers tb_carbonz480 tb_carbonz480_smoke tb_tier_host_ctrl tb_carbonx86 tb_carbonx96
+all: tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513 tb_z480_scaffold tb_8096 tb_8097 tb_carbonz80 tb_carbonz80_tiers tb_carbonz90 tb_carbonz90_tiers tb_carbonz380_smoke tb_carbonz380_tiers tb_carbonz480 tb_carbonz480_smoke tb_tier_host_ctrl tb_carbonx86 tb_carbonx96
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -313,11 +363,29 @@ tb_8097: $(BUILD_DIR)
 tb_carbonz80: $(BUILD_DIR)
 	$(call run_tb,tb_carbonz80,$(COMMON_SV) $(CARBONZ80_SV))
 
+tb_carbonz80_tiers: $(BUILD_DIR)
+	$(call run_tb,tb_carbonz80_tiers,$(COMMON_SV) $(CARBONZ80_TIERS_SV))
+
 tb_carbonz90: $(BUILD_DIR)
 	$(call run_tb,tb_carbonz90,$(COMMON_SV) $(CARBONZ90_SV))
 
+tb_carbonz90_tiers: $(BUILD_DIR)
+	$(call run_tb,tb_carbonz90_tiers,$(COMMON_SV) $(CARBONZ90_TIERS_SV))
+
+tb_carbonz380_smoke: $(BUILD_DIR)
+	$(call run_tb,tb_carbonz380_smoke,$(COMMON_SV) $(CARBONZ380_SMOKE_SV))
+
+tb_carbonz380_tiers: $(BUILD_DIR)
+	$(call run_tb,tb_carbonz380_tiers,$(COMMON_SV) $(CARBONZ380_TIERS_SV))
+
 tb_carbonz480: $(BUILD_DIR)
 	$(call run_tb,tb_carbonz480,$(COMMON_SV) $(CARBONZ480_SV))
+
+tb_carbonz480_smoke: $(BUILD_DIR)
+	$(call run_tb,tb_carbonz480_smoke,$(COMMON_SV) $(CARBONZ480_SMOKE_SV))
+
+tb_tier_host_ctrl: $(BUILD_DIR)
+	$(call run_tb,tb_tier_host_ctrl,$(COMMON_SV) $(TIER_HOST_SV))
 
 tb_carbonx86: $(BUILD_DIR)
 	$(call run_tb,tb_carbonx86,$(COMMON_SV) $(CARBONX86_SV))

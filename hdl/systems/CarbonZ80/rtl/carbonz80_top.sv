@@ -1,7 +1,9 @@
 // Project Carbon - Systems
 // carbonz80_top: CarbonZ80 system (Z85 + Am9513 in 9511 mode).
 
-module carbonz80_top (
+module carbonz80_top #(
+    parameter bit ROM_TIER_TEST = 1'b0
+) (
     input logic clk,
     input logic rst_n,
     output logic [31:0] signature,
@@ -219,7 +221,7 @@ module carbonz80_top (
   // Z85 boot stub:
   // - write "Z80!" signature to MMIO signature register
   // - write 1 to poweroff register
-  localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE = {
+  localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE_BOOT = {
       {(ROM_BYTES-ROM_USED){8'h00}},
       8'h76, 8'hF0, 8'h04, 8'h32, 8'h01, 8'h3E,
       8'hF0, 8'h03, 8'h32, 8'h21, 8'h3E,
@@ -227,6 +229,66 @@ module carbonz80_top (
       8'hF0, 8'h01, 8'h32, 8'h38, 8'h3E,
       8'hF0, 8'h00, 8'h32, 8'h5A, 8'h3E
   };
+
+  function automatic logic [ROM_BYTES*8-1:0] build_tier_rom;
+    logic [ROM_BYTES*8-1:0] tmp;
+    begin
+      tmp = '0;
+      // P0: MODEUP -> P1 (0x0040), MODEUP -> P2 (0x0060), MODEUP -> P3 (invalid)
+      tmp[(0*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(1*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(2*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(3*8)+:8] = {4'(CARBON_Z90_P0_SUB_MODEUP), 4'h0};
+      tmp[(4*8)+:8] = 8'(CARBON_Z80_DERIVED_TIER_P1_I8085);
+      tmp[(5*8)+:8] = 8'h40;
+      tmp[(6*8)+:8] = 8'h00;
+
+      tmp[(7*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(8*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(9*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(10*8)+:8] = {4'(CARBON_Z90_P0_SUB_MODEUP), 4'h0};
+      tmp[(11*8)+:8] = 8'(CARBON_Z80_DERIVED_TIER_P2_Z80);
+      tmp[(12*8)+:8] = 8'h60;
+      tmp[(13*8)+:8] = 8'h00;
+
+      tmp[(14*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(15*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(17*8)+:8] = {4'(CARBON_Z90_P0_SUB_MODEUP), 4'h0};
+      tmp[(18*8)+:8] = 8'(CARBON_Z80_DERIVED_TIER_P3_Z180);
+      tmp[(19*8)+:8] = 8'h80;
+      tmp[(20*8)+:8] = 8'h00;
+      tmp[(21*8)+:8] = 8'h76; // HALT
+
+      // P1 entry @ 0x0040: RETMD
+      tmp[(16'h0040*8)+:8] = 8'h00; // NOP
+      tmp[(16'h0041*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(16'h0042*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16'h0043*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(16'h0044*8)+:8] = {4'(CARBON_Z90_P0_SUB_RETMD), 4'h0};
+
+      // P2 entry @ 0x0060: SLL B; RETMD
+      tmp[(16'h0060*8)+:8] = 8'hCB;
+      tmp[(16'h0061*8)+:8] = 8'h30;
+      tmp[(16'h0062*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(16'h0063*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16'h0064*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(16'h0065*8)+:8] = {4'(CARBON_Z90_P0_SUB_RETMD), 4'h0};
+
+      // P3 entry @ 0x0080: RETMD (should not be reached on invalid MODEUP)
+      tmp[(16'h0080*8)+:8] = 8'h00;
+      tmp[(16'h0081*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX0;
+      tmp[(16'h0082*8)+:8] = CARBON_Z90_OPPAGE_P0_PREFIX1;
+      tmp[(16'h0083*8)+:8] = {4'(CARBON_Z90_P0_MAJOR_SYS), 4'h0};
+      tmp[(16'h0084*8)+:8] = {4'(CARBON_Z90_P0_SUB_RETMD), 4'h0};
+
+      build_tier_rom = tmp;
+    end
+  endfunction
+
+  localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE_TIER = build_tier_rom();
+  localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE =
+      ROM_TIER_TEST ? ROM_IMAGE_TIER : ROM_IMAGE_BOOT;
 
   carbon_bootrom #(
       .BASE_ADDR(CARBON_SYS16_ROM_BASE),
