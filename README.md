@@ -109,6 +109,18 @@ Not a fit if you need:
 
 - Architecture contracts overview: `docs/ARCHITECTURE_OVERVIEW.md`
 - Frozen contract reference (generated): `docs/ARCH_CONTRACTS.md`
+- Compatibility ladders (CPU/FPU tiers): `docs/COMPAT_LADDERS.md`
+- System memory map index: `docs/platform/SYSTEM_MEMORY_MAPS.md`
+- CPU core docs:
+  - `hdl/cores/Z85/docs/Z85_v1.md`
+  - `hdl/cores/Z90/docs/Z90_v1.md`
+  - `hdl/cores/Z380/docs/Z380.md`
+  - `hdl/cores/Z480/docs/Z480.md`
+- FPU tier docs:
+  - `docs/fpu/Am9513.md`
+  - `docs/fpu/Am9514.md`
+  - `docs/fpu/Am9515.md`
+- Verification flow and regression philosophy: `docs/VERIFICATION.md`
 - HDL contract layer README: `hdl/README.md`
 - v1.0 release contents: `docs/RELEASE_v1.md`
 - Deferred/non-goals list (v1.0): `docs/DEFERRED.md`
