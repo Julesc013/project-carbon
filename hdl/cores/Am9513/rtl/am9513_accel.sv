@@ -21,7 +21,7 @@ module am9513_accel #(
 
   localparam logic [31:0] AM9513_ID_DEVICE = 32'h0000_9513;
   localparam logic [7:0]  AM9513_PRESENTED_TIER = AM9513_P2_AM9513;
-  localparam logic [7:0]  AM9513_MAX_TIER = AM9513_P3_AM9514;
+  localparam logic [7:0]  AM9513_MAX_TIER = AM9513_P4_AM9515;
 
   // --------------------------------------------------------------------------
   // Global CSRs / config

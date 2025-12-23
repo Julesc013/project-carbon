@@ -17,7 +17,8 @@ package am9513_pkg;
   localparam logic [31:0] AM9513_FEATURES_BASE =
       CARBON_AM9512_IEEE_MASK |
       CARBON_AM9513_ASYNC_MASK |
-      CARBON_AM9514_VECTOR_MASK;
+      CARBON_AM9514_VECTOR_MASK |
+      CARBON_AM9515_TENSOR_MASK;
 
   // --------------------------------------------------------------------------
   // IEEE exception flags (sticky, per-context)

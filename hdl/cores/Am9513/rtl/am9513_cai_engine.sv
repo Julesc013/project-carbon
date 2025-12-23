@@ -54,6 +54,9 @@ module am9513_cai_engine #(
   localparam logic [FAB_ATTR_W-1:0] DMA_ATTR =
       FAB_ATTR_W'(CARBON_FABRIC_ATTR_CACHEABLE_MASK | CARBON_FABRIC_ATTR_ORDERED_MASK);
   localparam int unsigned VEC_BYTES = 16;
+  localparam logic [1:0] TENSOR_READ_A = 2'd0;
+  localparam logic [1:0] TENSOR_READ_B = 2'd1;
+  localparam logic [1:0] TENSOR_READ_C = 2'd2;
 
   // --------------------------------------------------------------------------
   // Internal CAI rings
@@ -119,6 +122,33 @@ module am9513_cai_engine #(
   logic [4:0]   vec_exc_flags_q;
   logic         vec_writeback_q;
 
+  // Tensor descriptor + loop state
+  logic [15:0] tensor_desc_version_q;
+  logic [15:0] tensor_desc_size_dw_q;
+  logic [7:0]  tensor_rank_q;
+  logic [7:0]  tensor_elem_fmt_q;
+  logic [31:0] tensor_shape_q [4];
+  logic [31:0] tensor_stride_q [4];
+  logic [3:0]  tensor_word_q;
+  logic [31:0] tensor_m_q;
+  logic [31:0] tensor_n_q;
+  logic [31:0] tensor_k_q;
+  logic [31:0] tensor_i_q;
+  logic [31:0] tensor_j_q;
+  logic [31:0] tensor_k_idx_q;
+  logic [31:0] tensor_len_q;
+  logic [31:0] tensor_stride_a_q;
+  logic [31:0] tensor_stride_b_q;
+  logic [31:0] tensor_stride_c_q;
+  logic [31:0] tensor_result_stride_q;
+  logic [31:0] tensor_elem_bytes_q;
+  logic [63:0] tensor_acc_q;
+  logic [63:0] tensor_a_q;
+  logic [63:0] tensor_b_q;
+  logic [63:0] tensor_c_q;
+  logic [4:0]  tensor_exc_flags_q;
+  logic [1:0]  tensor_read_kind_q;
+
   // Execution result
   am9513_exec_result_t exec_q;
   logic exec_valid_q;
@@ -126,6 +156,10 @@ module am9513_cai_engine #(
   logic [127:0] vec_exec_result;
   logic [4:0]   vec_exec_flags;
   logic [15:0]  vec_exec_status;
+
+  logic [63:0]  tensor_exec_result;
+  logic [4:0]   tensor_exec_flags;
+  logic [15:0]  tensor_exec_status;
 
   // Completion status cache
   logic [15:0] comp_status_q;
@@ -164,6 +198,14 @@ module am9513_cai_engine #(
     ST_VEC_EXEC,
     ST_VEC_RES_WR,
     ST_VEC_RES_ADV,
+    ST_TENSOR_DESC_RD,
+    ST_TENSOR_DESC_CAP,
+    ST_TENSOR_INIT,
+    ST_TENSOR_RD,
+    ST_TENSOR_CAP,
+    ST_TENSOR_EXEC,
+    ST_TENSOR_STORE,
+    ST_TENSOR_STORE_ADV,
     ST_RESULT_WR,
     ST_RESULT_WR2,
     ST_RESULT_ADV,
@@ -238,6 +280,11 @@ module am9513_cai_engine #(
         rf_index = result_reg_q;
         vec_wdata = vec_result_q;
       end
+    end
+
+    if ((tensor_exc_flags_q != 5'h0) && (st_q == ST_COMP_WR)) begin
+      flags_or_we = 1'b1;
+      flags_or_mask = tensor_exc_flags_q;
     end
   end
 
@@ -314,6 +361,31 @@ module am9513_cai_engine #(
     end
   endfunction
 
+  function automatic logic [63:0] tensor_word_addr(input logic [63:0] base, input logic [3:0] idx);
+    logic [31:0] off;
+    begin
+      unique case (idx)
+        4'd0: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_DESC_VERSION);
+        4'd1: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_RANK);
+        4'd2: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_FLAGS);
+        4'd3: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_SHAPE0);
+        4'd4: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_SHAPE1);
+        4'd5: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_SHAPE2);
+        4'd6: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_SHAPE3);
+        4'd7: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_STRIDE0);
+        4'd8: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_STRIDE1);
+        4'd9: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_STRIDE2);
+        4'd10: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_STRIDE3);
+        4'd11: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_RESERVED1);
+        4'd12: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_RESERVED2);
+        4'd13: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_RESERVED2) + 32'd4;
+        4'd14: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_RESERVED3);
+        default: off = 32'(CARBON_CAI_TENSOR_DESC_V1_OFF_RESERVED3) + 32'd4;
+      endcase
+      tensor_word_addr = base + 64'(off);
+    end
+  endfunction
+
   function automatic int unsigned operand_bytes(
       input logic [7:0] func,
       input logic [7:0] fmt,
@@ -344,6 +416,18 @@ module am9513_cai_engine #(
       .result(vec_exec_result),
       .exc_flags(vec_exec_flags),
       .status(vec_exec_status)
+  );
+
+  am9515_tensor u_tensor (
+      .func(op_func_q),
+      .fmt(tensor_elem_fmt_q),
+      .a(tensor_a_q),
+      .b(tensor_b_q),
+      .acc(tensor_acc_q),
+      .rm(rm_rdata),
+      .result(tensor_exec_result),
+      .exc_flags(tensor_exec_flags),
+      .status(tensor_exec_status)
   );
 
   // --------------------------------------------------------------------------
@@ -400,6 +484,10 @@ module am9513_cai_engine #(
         op_vec_q[i] <= '0;
         vec_step_bytes_q[i] <= '0;
       end
+      for (i = 0; i < 4; i++) begin
+        tensor_shape_q[i] <= '0;
+        tensor_stride_q[i] <= '0;
+      end
 
       exec_q <= '0;
       exec_valid_q <= 1'b0;
@@ -414,6 +502,29 @@ module am9513_cai_engine #(
       vec_exec_valid_q <= 1'b0;
       vec_exc_flags_q <= '0;
       vec_writeback_q <= 1'b0;
+      tensor_desc_version_q <= '0;
+      tensor_desc_size_dw_q <= '0;
+      tensor_rank_q <= '0;
+      tensor_elem_fmt_q <= 8'(CARBON_FMT_BINARY32);
+      tensor_word_q <= '0;
+      tensor_m_q <= '0;
+      tensor_n_q <= '0;
+      tensor_k_q <= '0;
+      tensor_i_q <= '0;
+      tensor_j_q <= '0;
+      tensor_k_idx_q <= '0;
+      tensor_len_q <= '0;
+      tensor_stride_a_q <= '0;
+      tensor_stride_b_q <= '0;
+      tensor_stride_c_q <= '0;
+      tensor_result_stride_q <= '0;
+      tensor_elem_bytes_q <= '0;
+      tensor_acc_q <= '0;
+      tensor_a_q <= '0;
+      tensor_b_q <= '0;
+      tensor_c_q <= '0;
+      tensor_exc_flags_q <= '0;
+      tensor_read_kind_q <= TENSOR_READ_A;
       comp_status_q <= 16'(CARBON_CAI_STATUS_OK);
       comp_bytes_q <= '0;
 
@@ -491,6 +602,7 @@ module am9513_cai_engine #(
               vec_exec_valid_q <= 1'b0;
               vec_writeback_q <= 1'b0;
               vec_exc_flags_q <= '0;
+              tensor_exc_flags_q <= '0;
               desc_addr_q <= cai.submit_desc_base + (64'(ring_idx) << 6);
               desc_word_q <= 5'd0;
               st_q <= ST_DESC_RD;
@@ -775,6 +887,13 @@ module am9513_cai_engine #(
                 vec_exec_valid_q <= 1'b0;
                 vec_writeback_q <= 1'b0;
                 st_q <= ST_VEC_INIT;
+              end else if (op_group_q == 8'(CARBON_CAI_OPGROUP_TENSOR)) begin
+                exec_valid_q <= 1'b0;
+                vec_exec_valid_q <= 1'b0;
+                vec_writeback_q <= 1'b0;
+                tensor_word_q <= 4'd0;
+                tensor_exc_flags_q <= '0;
+                st_q <= ST_TENSOR_DESC_RD;
               end else begin
                 comp_status_q <= 16'(CARBON_CAI_STATUS_INVALID_OP);
                 comp_bytes_q <= '0;
@@ -998,6 +1117,412 @@ module am9513_cai_engine #(
             end
           end
 
+          ST_TENSOR_DESC_RD: begin
+            if ((desc_tensor_ptr_q == 0) || (!addr64_ok(desc_tensor_ptr_q))) begin
+              comp_status_q <= 16'(CARBON_CAI_STATUS_INVALID_OP);
+              comp_bytes_q <= '0;
+              st_q <= ST_COMP_WR;
+            end else begin
+              bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
+              bus_addr_q <= addr64_to_fab(tensor_word_addr(desc_tensor_ptr_q, tensor_word_q));
+              bus_wdata_q <= '0;
+              bus_wstrb_q <= '0;
+              bus_size_q <= '0;
+              bus_attr_q <= DMA_ATTR;
+              bus_id_q <= '0;
+              st_after_bus_q <= ST_TENSOR_DESC_CAP;
+              bus_state_q <= BUS_REQ;
+            end
+          end
+
+          ST_TENSOR_DESC_CAP: begin
+            if (bus_rsp_code_q != FAB_CODE_W'(CARBON_FABRIC_RESP_OK)) begin
+              comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+              comp_bytes_q <= '0;
+              st_q <= ST_COMP_WR;
+            end else begin
+              unique case (tensor_word_q)
+                4'd0: begin
+                  tensor_desc_version_q <= bus_rdata_q[15:0];
+                  tensor_desc_size_dw_q <= bus_rdata_q[31:16];
+                end
+                4'd1: begin
+                  tensor_rank_q <= bus_rdata_q[7:0];
+                  tensor_elem_fmt_q <= bus_rdata_q[15:8];
+                end
+                4'd3: tensor_shape_q[0] <= bus_rdata_q;
+                4'd4: tensor_shape_q[1] <= bus_rdata_q;
+                4'd5: tensor_shape_q[2] <= bus_rdata_q;
+                4'd6: tensor_shape_q[3] <= bus_rdata_q;
+                4'd7: tensor_stride_q[0] <= bus_rdata_q;
+                4'd8: tensor_stride_q[1] <= bus_rdata_q;
+                4'd9: tensor_stride_q[2] <= bus_rdata_q;
+                4'd10: tensor_stride_q[3] <= bus_rdata_q;
+                default: begin
+                end
+              endcase
+
+              if (tensor_word_q == 4'd15) begin
+                if ((tensor_desc_version_q != 16'(CARBON_CAI_TENSOR_DESC_V1_VERSION)) ||
+                    (tensor_desc_size_dw_q != 16'(CARBON_CAI_TENSOR_DESC_V1_SIZE_BYTES / 4))) begin
+                  comp_status_q <= 16'(CARBON_CAI_STATUS_INVALID_OP);
+                  comp_bytes_q <= '0;
+                  st_q <= ST_COMP_WR;
+                end else begin
+                  st_q <= ST_TENSOR_INIT;
+                end
+              end else begin
+                tensor_word_q <= tensor_word_q + 1'b1;
+                st_q <= ST_TENSOR_DESC_RD;
+              end
+            end
+          end
+
+          ST_TENSOR_INIT: begin
+            int unsigned elem_bytes;
+            int unsigned m;
+            int unsigned n;
+            int unsigned k;
+            int unsigned len;
+            int unsigned stride_a;
+            int unsigned stride_b;
+            int unsigned stride_c;
+            logic invalid;
+            invalid = 1'b0;
+            elem_bytes = 0;
+
+            if (eff_mode_q < AM9513_P4_AM9515) begin
+              comp_status_q <= 16'(CARBON_CAI_STATUS_UNSUPPORTED);
+              comp_bytes_q <= '0;
+              st_q <= ST_COMP_WR;
+            end else if (result_to_reg_q) begin
+              comp_status_q <= 16'(CARBON_CAI_STATUS_UNSUPPORTED);
+              comp_bytes_q <= '0;
+              st_q <= ST_COMP_WR;
+            end else begin
+              if (desc_tensor_len_q != 0 &&
+                  (desc_tensor_len_q < 16'(CARBON_CAI_TENSOR_DESC_V1_SIZE_BYTES))) begin
+                invalid = 1'b1;
+              end
+
+              unique case (tensor_elem_fmt_q)
+                8'(CARBON_FMT_BINARY16): elem_bytes = 2;
+                8'(CARBON_FMT_BFLOAT16): elem_bytes = 2;
+                8'(CARBON_FMT_BINARY32): elem_bytes = 4;
+                default: elem_bytes = 0;
+              endcase
+
+              if (elem_bytes == 0) invalid = 1'b1;
+
+              if (invalid) begin
+                comp_status_q <= 16'(CARBON_CAI_STATUS_INVALID_OP);
+                comp_bytes_q <= '0;
+                st_q <= ST_COMP_WR;
+              end else begin
+                tensor_elem_bytes_q <= 32'(elem_bytes);
+                tensor_exc_flags_q <= '0;
+                comp_bytes_q <= 32'h0;
+                comp_status_q <= 16'(CARBON_CAI_STATUS_OK);
+
+                unique case (op_func_q)
+                  AM9515_TENSOR_GEMM: begin
+                    if (desc_operand_count_q != 3) begin
+                      invalid = 1'b1;
+                    end else begin
+                      m = tensor_shape_q[0];
+                      n = tensor_shape_q[1];
+                      k = tensor_shape_q[2];
+                      if ((m == 0) || (n == 0) || (k == 0)) invalid = 1'b1;
+
+                      stride_a = (tensor_stride_q[0] != 0) ? tensor_stride_q[0] : k;
+                      stride_b = (tensor_stride_q[1] != 0) ? tensor_stride_q[1] : n;
+                      stride_c = (tensor_stride_q[2] != 0) ? tensor_stride_q[2] : n;
+
+                      tensor_m_q <= m;
+                      tensor_n_q <= n;
+                      tensor_k_q <= k;
+                      tensor_len_q <= k;
+                      tensor_stride_a_q <= stride_a;
+                      tensor_stride_b_q <= stride_b;
+                      tensor_stride_c_q <= stride_c;
+                      tensor_result_stride_q <= (desc_result_stride_q != 0) ?
+                          desc_result_stride_q : 32'(stride_c * elem_bytes);
+
+                      tensor_i_q <= '0;
+                      tensor_j_q <= '0;
+                      tensor_k_idx_q <= '0;
+                      tensor_acc_q <= '0;
+                      tensor_read_kind_q <= (op_ptr_q[2] != 0) ? TENSOR_READ_C : TENSOR_READ_A;
+                    end
+                  end
+
+                  AM9515_TENSOR_DOT: begin
+                    if (desc_operand_count_q != 2) begin
+                      invalid = 1'b1;
+                    end else begin
+                      len = tensor_shape_q[0];
+                      if (len == 0) len = (op_len_q[0] != 0) ? (op_len_q[0] / elem_bytes) : 0;
+                      if (len == 0) invalid = 1'b1;
+                      stride_a = (tensor_stride_q[0] != 0) ? tensor_stride_q[0] : 1;
+                      stride_b = (tensor_stride_q[1] != 0) ? tensor_stride_q[1] : 1;
+
+                      tensor_len_q <= len;
+                      tensor_stride_a_q <= stride_a;
+                      tensor_stride_b_q <= stride_b;
+                      tensor_k_idx_q <= '0;
+                      tensor_acc_q <= '0;
+                      tensor_read_kind_q <= TENSOR_READ_A;
+                    end
+                  end
+
+                  AM9515_TENSOR_SUM: begin
+                    if (desc_operand_count_q != 1) begin
+                      invalid = 1'b1;
+                    end else begin
+                      len = tensor_shape_q[0];
+                      if (len == 0) len = (op_len_q[0] != 0) ? (op_len_q[0] / elem_bytes) : 0;
+                      if (len == 0) invalid = 1'b1;
+                      stride_a = (tensor_stride_q[0] != 0) ? tensor_stride_q[0] : 1;
+
+                      tensor_len_q <= len;
+                      tensor_stride_a_q <= stride_a;
+                      tensor_k_idx_q <= '0;
+                      tensor_acc_q <= '0;
+                      tensor_read_kind_q <= TENSOR_READ_A;
+                    end
+                  end
+
+                  default: invalid = 1'b1;
+                endcase
+
+                if (invalid) begin
+                  comp_status_q <= 16'(CARBON_CAI_STATUS_INVALID_OP);
+                  comp_bytes_q <= '0;
+                  st_q <= ST_COMP_WR;
+                end else begin
+                  logic addr_fault;
+                  logic len_fault;
+                  addr_fault = 1'b0;
+                  len_fault = 1'b0;
+
+                  if (op_func_q == AM9515_TENSOR_GEMM) begin
+                    addr_fault = (!addr64_ok(op_ptr_q[0]) || !addr64_ok(op_ptr_q[1]) || !addr64_ok(op_ptr_q[2]));
+                    if ((desc_result_len_q != 0) &&
+                        (desc_result_len_q < 32'(m * n * elem_bytes))) begin
+                      len_fault = 1'b1;
+                    end
+                  end else if (op_func_q == AM9515_TENSOR_DOT) begin
+                    addr_fault = (!addr64_ok(op_ptr_q[0]) || !addr64_ok(op_ptr_q[1]));
+                    if ((desc_result_len_q != 0) && (desc_result_len_q < elem_bytes)) len_fault = 1'b1;
+                  end else begin
+                    addr_fault = (!addr64_ok(op_ptr_q[0]));
+                    if ((desc_result_len_q != 0) && (desc_result_len_q < elem_bytes)) len_fault = 1'b1;
+                  end
+
+                  if (addr_fault || len_fault) begin
+                    comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+                    comp_bytes_q <= '0;
+                    st_q <= ST_COMP_WR;
+                  end else if (!addr64_ok(desc_result_ptr_q)) begin
+                    comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+                    comp_bytes_q <= '0;
+                    st_q <= ST_COMP_WR;
+                  end else begin
+                    st_q <= ST_TENSOR_RD;
+                  end
+              end
+            end
+          end
+
+          ST_TENSOR_RD: begin
+            logic [63:0] addr;
+            int unsigned idx;
+            addr = 64'h0;
+            idx = 0;
+            if (op_func_q == AM9515_TENSOR_GEMM) begin
+              if (tensor_read_kind_q == TENSOR_READ_A) begin
+                idx = int'(tensor_i_q) * int'(tensor_stride_a_q) + int'(tensor_k_idx_q);
+                addr = op_ptr_q[0] + 64'(idx) * 64'(tensor_elem_bytes_q);
+              end else if (tensor_read_kind_q == TENSOR_READ_B) begin
+                idx = int'(tensor_k_idx_q) * int'(tensor_stride_b_q) + int'(tensor_j_q);
+                addr = op_ptr_q[1] + 64'(idx) * 64'(tensor_elem_bytes_q);
+              end else begin
+                idx = int'(tensor_i_q) * int'(tensor_stride_c_q) + int'(tensor_j_q);
+                addr = op_ptr_q[2] + 64'(idx) * 64'(tensor_elem_bytes_q);
+              end
+            end else if (op_func_q == AM9515_TENSOR_DOT) begin
+              if (tensor_read_kind_q == TENSOR_READ_A) begin
+                idx = int'(tensor_k_idx_q) * int'(tensor_stride_a_q);
+                addr = op_ptr_q[0] + 64'(idx) * 64'(tensor_elem_bytes_q);
+              end else begin
+                idx = int'(tensor_k_idx_q) * int'(tensor_stride_b_q);
+                addr = op_ptr_q[1] + 64'(idx) * 64'(tensor_elem_bytes_q);
+              end
+            end else begin
+              idx = int'(tensor_k_idx_q) * int'(tensor_stride_a_q);
+              addr = op_ptr_q[0] + 64'(idx) * 64'(tensor_elem_bytes_q);
+            end
+
+            if (!addr64_ok(addr)) begin
+              comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+              comp_bytes_q <= 32'h0;
+              st_q <= ST_COMP_WR;
+            end else begin
+              bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_READ);
+              bus_addr_q <= addr64_to_fab(addr);
+              bus_wdata_q <= '0;
+              bus_wstrb_q <= '0;
+              bus_size_q <= '0;
+              bus_attr_q <= DMA_ATTR;
+              bus_id_q <= '0;
+              st_after_bus_q <= ST_TENSOR_CAP;
+              bus_state_q <= BUS_REQ;
+            end
+          end
+
+          ST_TENSOR_CAP: begin
+            am9513_fp32_t tmp32;
+            if (bus_rsp_code_q != FAB_CODE_W'(CARBON_FABRIC_RESP_OK)) begin
+              comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+              comp_bytes_q <= 32'h0;
+              st_q <= ST_COMP_WR;
+            end else begin
+              logic [63:0] v;
+              v = (tensor_elem_bytes_q == 2) ? {48'h0, bus_rdata_q[15:0]} : {32'h0, bus_rdata_q};
+
+              if (tensor_read_kind_q == TENSOR_READ_A) begin
+                tensor_a_q <= v;
+                if (op_func_q == AM9515_TENSOR_SUM) begin
+                  st_q <= ST_TENSOR_EXEC;
+                end else begin
+                  tensor_read_kind_q <= TENSOR_READ_B;
+                  st_q <= ST_TENSOR_RD;
+                end
+              end else if (tensor_read_kind_q == TENSOR_READ_B) begin
+                tensor_b_q <= v;
+                st_q <= ST_TENSOR_EXEC;
+              end else begin
+                tensor_c_q <= v;
+                if (tensor_elem_fmt_q == 8'(CARBON_FMT_BINARY16)) begin
+                  tmp32 = fp16_to_fp32(v[15:0]);
+                end else if (tensor_elem_fmt_q == 8'(CARBON_FMT_BFLOAT16)) begin
+                  tmp32 = bf16_to_fp32(v[15:0]);
+                end else begin
+                  tmp32.v = v[31:0];
+                  tmp32.flags = '0;
+                end
+                tensor_acc_q <= {32'h0, tmp32.v};
+                tensor_exc_flags_q <= tensor_exc_flags_q | tmp32.flags;
+                tensor_read_kind_q <= TENSOR_READ_A;
+                st_q <= ST_TENSOR_RD;
+              end
+            end
+          end
+
+          ST_TENSOR_EXEC: begin
+            tensor_acc_q <= tensor_exec_result;
+            tensor_exc_flags_q <= tensor_exc_flags_q | tensor_exec_flags;
+
+            if (tensor_exec_status != 16'(CARBON_CAI_STATUS_OK)) begin
+              comp_status_q <= tensor_exec_status;
+              comp_bytes_q <= 32'h0;
+              st_q <= ST_COMP_WR;
+            end else begin
+              tensor_k_idx_q <= tensor_k_idx_q + 1'b1;
+              if ((op_func_q == AM9515_TENSOR_GEMM) && (tensor_k_idx_q + 1'b1 < tensor_k_q)) begin
+                tensor_read_kind_q <= TENSOR_READ_A;
+                st_q <= ST_TENSOR_RD;
+              end else if ((op_func_q != AM9515_TENSOR_GEMM) && (tensor_k_idx_q + 1'b1 < tensor_len_q)) begin
+                tensor_read_kind_q <= TENSOR_READ_A;
+                st_q <= ST_TENSOR_RD;
+              end else begin
+                st_q <= ST_TENSOR_STORE;
+              end
+            end
+          end
+
+          ST_TENSOR_STORE: begin
+            am9513_fp32_t tmp32;
+            logic [63:0] addr;
+            logic [31:0] wdata;
+            logic [3:0] wstrb;
+            addr = desc_result_ptr_q;
+
+            if (op_func_q == AM9515_TENSOR_GEMM) begin
+              addr = desc_result_ptr_q +
+                     64'(tensor_i_q) * 64'(tensor_result_stride_q) +
+                     64'(tensor_j_q) * 64'(tensor_elem_bytes_q);
+            end
+
+            if (tensor_elem_fmt_q == 8'(CARBON_FMT_BINARY16)) begin
+              tmp32 = fp32_to_fp16(tensor_acc_q[31:0], rm_rdata);
+              wdata = {16'h0, tmp32.v[15:0]};
+              wstrb = 4'b0011;
+              tensor_exc_flags_q <= tensor_exc_flags_q | tmp32.flags;
+            end else if (tensor_elem_fmt_q == 8'(CARBON_FMT_BFLOAT16)) begin
+              tmp32 = fp32_to_bf16(tensor_acc_q[31:0], rm_rdata);
+              wdata = {16'h0, tmp32.v[15:0]};
+              wstrb = 4'b0011;
+              tensor_exc_flags_q <= tensor_exc_flags_q | tmp32.flags;
+            end else begin
+              wdata = tensor_acc_q[31:0];
+              wstrb = 4'b1111;
+            end
+
+            if (!addr64_ok(addr)) begin
+              comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+              comp_bytes_q <= 32'h0;
+              st_q <= ST_COMP_WR;
+            end else begin
+              bus_op_q <= FAB_OP_W'(CARBON_FABRIC_XACT_WRITE);
+              bus_addr_q <= addr64_to_fab(addr);
+              bus_wdata_q <= wdata;
+              bus_wstrb_q <= FAB_STRB_W'(wstrb);
+              bus_size_q <= '0;
+              bus_attr_q <= DMA_ATTR;
+              bus_id_q <= '0;
+              st_after_bus_q <= ST_TENSOR_STORE_ADV;
+              bus_state_q <= BUS_REQ;
+            end
+          end
+
+          ST_TENSOR_STORE_ADV: begin
+            if (bus_rsp_code_q != FAB_CODE_W'(CARBON_FABRIC_RESP_OK)) begin
+              comp_status_q <= 16'(CARBON_CAI_STATUS_FAULT);
+              comp_bytes_q <= 32'h0;
+              st_q <= ST_COMP_WR;
+            end else begin
+              comp_bytes_q <= comp_bytes_q + 32'(tensor_elem_bytes_q);
+              if (op_func_q == AM9515_TENSOR_GEMM) begin
+                int unsigned next_i;
+                int unsigned next_j;
+                next_i = tensor_i_q;
+                next_j = tensor_j_q;
+                if (tensor_j_q + 1'b1 < tensor_n_q) begin
+                  next_j = tensor_j_q + 1'b1;
+                end else begin
+                  next_j = 0;
+                  next_i = tensor_i_q + 1'b1;
+                end
+
+                tensor_k_idx_q <= '0;
+                if (next_i >= tensor_m_q) begin
+                  comp_status_q <= 16'(CARBON_CAI_STATUS_OK);
+                  st_q <= ST_COMP_WR;
+                end else begin
+                  tensor_i_q <= 32'(next_i);
+                  tensor_j_q <= 32'(next_j);
+                  tensor_acc_q <= '0;
+                  tensor_read_kind_q <= (op_ptr_q[2] != 0) ? TENSOR_READ_C : TENSOR_READ_A;
+                  st_q <= ST_TENSOR_RD;
+                end
+              end else begin
+                comp_status_q <= 16'(CARBON_CAI_STATUS_OK);
+                st_q <= ST_COMP_WR;
+              end
+            end
+          end
+
           ST_RESULT_WR: begin
             int unsigned bytes;
             logic [63:0] v;
@@ -1086,14 +1611,17 @@ module am9513_cai_engine #(
           ST_COMP_WR_NEXT: begin
             logic [31:0] wdata;
             logic [63:0] addr;
+            logic [4:0] ext_flags;
             addr = comp_addr_q + 64'(comp_word_q * 4);
             if (!addr64_ok(addr)) begin
               // Can't write completion -> drop.
               st_q <= ST_FINISH;
             end else begin
+              ext_flags = exec_valid_q ? exec_q.exc_flags :
+                          (vec_exec_valid_q ? vec_exc_flags_q : tensor_exc_flags_q);
               unique case (comp_word_q)
                 2'd0: wdata = desc_tag_q;
-                2'd1: wdata = {11'h0, (exec_valid_q ? exec_q.exc_flags : 5'h0), comp_status_q};
+                2'd1: wdata = {11'h0, ext_flags, comp_status_q};
                 2'd2: wdata = comp_bytes_q;
                 default: wdata = 32'h0000_0000;
               endcase
@@ -1131,6 +1659,7 @@ module am9513_cai_engine #(
             exec_valid_q <= 1'b0;
             vec_exec_valid_q <= 1'b0;
             vec_writeback_q <= 1'b0;
+            tensor_exc_flags_q <= '0;
             st_q <= ST_IDLE;
           end
 
