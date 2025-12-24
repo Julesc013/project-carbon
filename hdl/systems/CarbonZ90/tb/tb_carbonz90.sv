@@ -150,11 +150,11 @@ module tb_carbonz90;
     int unsigned wait_cycles;
     begin
       wait_cycles = 0;
-      while (!dut.cai_dev.comp_doorbell && (wait_cycles < CAI_TIMEOUT)) begin
+      while (!dut.cai_dev.comp_msg && (wait_cycles < CAI_TIMEOUT)) begin
         @(posedge clk);
         wait_cycles++;
       end
-      if (!dut.cai_dev.comp_doorbell) $fatal(1, "tb_carbonz90: CAI completion timeout");
+      if (!dut.cai_dev.comp_msg) $fatal(1, "tb_carbonz90: CAI completion timeout");
 
       addr = int'(COMP_BASE) + ((comp_idx & COMP_MASK) * CARBON_CAI_COMP_REC_V1_SIZE_BYTES);
       rec = '0;
@@ -268,7 +268,7 @@ module tb_carbonz90;
     cai_submit_and_wait(am9513_opcode(AM9513_FUNC_ADD, 8'(CARBON_FMT_BINARY32)), 32'h0,
                         16'h0000, 16'd2, 64'(opdesc_base),
                         64'(res_ptr), 32'd4, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_SCALAR), 8'(CARBON_FMT_BINARY32), 8'h0, 8'h0,
+                        8'(CARBON_AM95_SCALAR), 8'(CARBON_FMT_BINARY32), 8'h0, 8'h0,
                         64'h0, 16'h0, 8'h0,
                         status, ext, bytes);
     if (status != 16'(CARBON_CAI_STATUS_OK)) $fatal(1, "tb_carbonz90: scalar add status=%0d", status);
@@ -295,7 +295,7 @@ module tb_carbonz90;
     cai_submit_and_wait(am9514_opcode(AM9514_VEC_ADD), mode_p3_flags,
                         16'h0000, 16'd2, 64'(opdesc_base),
                         64'(res_ptr), 32'd16, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_VECTOR), 8'(CARBON_FMT_BINARY32), 8'h0, 8'h0,
+                        8'(CARBON_AM95_VECTOR), 8'(CARBON_FMT_BINARY32), 8'h0, 8'h0,
                         64'h0, 16'h0, 8'h0,
                         status, ext, bytes);
     if (status == 16'(CARBON_CAI_STATUS_UNSUPPORTED)) begin
@@ -340,7 +340,7 @@ module tb_carbonz90;
     cai_submit_and_wait(am9515_opcode(AM9515_TENSOR_GEMM), mode_p4_flags,
                         16'h0000, 16'd3, 64'(opdesc_base),
                         64'(res_ptr), 32'd16, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_TENSOR), 8'(CARBON_FMT_BINARY32), 8'h0, 8'h0,
+                        8'(CARBON_AM95_TENSOR), 8'(CARBON_FMT_BINARY32), 8'h0, 8'h0,
                         64'(tensor_desc_ptr), 16'(CARBON_CAI_TENSOR_DESC_V1_SIZE_BYTES), 8'd3,
                         status, ext, bytes);
     if (status == 16'(CARBON_CAI_STATUS_UNSUPPORTED)) begin

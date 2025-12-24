@@ -1,0 +1,72 @@
+spec_version: 1.0
+name: profiles
+description: SoC composition profiles (not tiers).
+revision: v1.0.0
+created: 2025-12-24
+stable: true
+
+profiles:
+  - id: PROFILE_CPU_ONLY
+    value: 0
+    name: cpu_only
+    description: CPU-only target with minimal uncore blocks.
+    required_blocks: [CPU, CSR, IRQ, DBG]
+    required_discovery_tables: [DISCOVERY_TABLE]
+    required_min_devices: []
+    legacy_z80_bus_adapter: false
+    safe_mode:
+      description: Safe-mode strap requirements for CPU-only systems.
+      requirements:
+        - Presented tier forced to P0 on reset.
+        - MODEFLAGS reset to architecturally defined defaults.
+
+  - id: PROFILE_MCU
+    value: 1
+    name: mcu
+    description: Microcontroller profile with basic I/O and timers.
+    required_blocks: [CPU, KIO, TIMER, IRQ, CSR, DBG]
+    required_discovery_tables: [DISCOVERY_TABLE, BDT]
+    required_min_devices: [UART, TIMER]
+    legacy_z80_bus_adapter: false
+    safe_mode:
+      description: Safe-mode strap requirements for MCU-class systems.
+      requirements:
+        - UART console enabled for recovery.
+        - Caches disabled or bypassed if present.
+        - Presented tier forced to P0 on reset.
+
+  - id: PROFILE_SOC_RETRO
+    value: 2
+    name: soc_retro
+    description: Retro SoC profile with legacy Z80 bus adapter.
+    required_blocks: [CPU, KIO, TIMER, IRQ, DMA, STORAGE, CSR, DBG]
+    required_discovery_tables: [DISCOVERY_TABLE, TOPOLOGY_TABLE, BDT]
+    required_min_devices: [UART, TIMER]
+    legacy_z80_bus_adapter: true
+    safe_mode:
+      description: Safe-mode strap requirements for retro SoCs.
+      requirements:
+        - UART console enabled for recovery.
+        - Caches disabled or bypassed if present.
+        - Presented tier forced to P0 on reset.
+
+  - id: PROFILE_SOC_WORKSTATION
+    value: 3
+    name: soc_workstation
+    description: Workstation SoC profile with storage, DMA, and CAI accelerators.
+    required_blocks: [CPU, KIO, TIMER, IRQ, DMA, STORAGE, CAI, CSR, DBG]
+    required_discovery_tables: [DISCOVERY_TABLE, TOPOLOGY_TABLE, BDT, LIMITS_TABLE]
+    required_min_devices: [UART, TIMER]
+    legacy_z80_bus_adapter: false
+    safe_mode:
+      description: Safe-mode strap requirements for workstation SoCs.
+      requirements:
+        - UART console enabled for recovery.
+        - Caches disabled or bypassed if present.
+        - Presented tier forced to P0 on reset.
+
+reserved_profile_values:
+  - range: [4, 127]
+    description: Reserved for future standard profiles.
+  - range: [128, 255]
+    description: Reserved for vendor-specific profiles.

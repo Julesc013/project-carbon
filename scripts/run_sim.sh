@@ -8,21 +8,24 @@ do_all=0
 all_set=0
 do_list=0
 test_name=""
-suite="smoke"
+suite="contract"
 suite_set=0
+seed="1"
+seed_set=0
 
 usage() {
   cat <<EOF
 Usage:
-  scripts/run_sim.sh --all [--no-gen] [--manifest <path>]
-  scripts/run_sim.sh --test <tb_target> [--no-gen]
+  scripts/run_sim.sh --all [--no-gen] [--manifest <path>] [--seed <n>]
+  scripts/run_sim.sh --test <tb_target> [--no-gen] [--seed <n>]
   scripts/run_sim.sh --list [--manifest <path>] [--suite <smoke|contract|core|system|optional|all>]
-  scripts/run_sim.sh --all --suite <smoke|contract|core|system|optional|all>
+  scripts/run_sim.sh --all --suite <smoke|contract|core|system|optional|all> [--seed <n>]
 
 Notes:
   - Test names are Make targets under hdl/sim (e.g. tb_carbonz80).
   - Logs are written to hdl/sim/build/logs/.
-  - Default run (no args) uses the minimal smoke suite; use --all for full.
+  - Default run (no args) uses the contract suite; use --all for full.
+  - Seed defaults to 1; override with --seed or CARBON_SEED.
 EOF
 }
 
@@ -43,6 +46,11 @@ while [ $# -gt 0 ]; do
       shift
       manifest="${1:-}"
       ;;
+    --seed)
+      shift
+      seed="${1:-}"
+      seed_set=1
+      ;;
     --no-gen) no_gen=1 ;;
     -h|--help) usage; exit 0 ;;
     *)
@@ -60,6 +68,15 @@ fi
 
 if [ "$all_set" -eq 1 ] && [ "$suite_set" -eq 0 ]; then
   suite="all"
+fi
+
+if [ "$seed_set" -eq 0 ] && [ -n "${CARBON_SEED:-}" ]; then
+  seed="$CARBON_SEED"
+fi
+
+if [ -z "$seed" ]; then
+  echo "ERROR: seed must be a non-empty value." >&2
+  exit 2
 fi
 
 if [ ! -f "$manifest" ]; then
@@ -135,7 +152,7 @@ for raw in open(path, "r", encoding="utf-8"):
     if current in sections and name:
         sections[current].append(name)
 alias = {
-    "all": ["contract_tests", "core_tests", "system_tests"],
+    "all": ["contract_tests", "core_tests", "system_tests", "optional_local_tests"],
     "smoke": ["contract_tests", "system_smoke_tests"],
     "contract": ["contract_tests"],
     "core": ["core_tests"],
@@ -183,7 +200,7 @@ for raw in open(path, "r", encoding="utf-8"):
     if current in sections and name:
         sections[current].append(name)
 alias = {
-    "all": ["contract_tests", "core_tests", "system_tests"],
+    "all": ["contract_tests", "core_tests", "system_tests", "optional_local_tests"],
     "smoke": ["contract_tests", "system_smoke_tests"],
     "contract": ["contract_tests"],
     "core": ["core_tests"],
@@ -227,7 +244,7 @@ if [ "$sim" = "verilator" ]; then
   sim_arg="SIM=verilator"
 fi
 
-echo "Using simulator: $sim"
+echo "Using simulator: $sim (seed=$seed)"
 
 pass=0
 fail=0
@@ -236,7 +253,7 @@ failed=""
 for t in $tests; do
   echo "=== RUN: $t ==="
   log="$logdir/$t.log"
-  if make -C "$repo_root/hdl/sim" $sim_arg "$t" >"$log" 2>&1; then
+  if make -C "$repo_root/hdl/sim" $sim_arg "SEED=$seed" "$t" >"$log" 2>&1; then
     echo "=== PASS: $t ==="
     pass=$((pass + 1))
   else

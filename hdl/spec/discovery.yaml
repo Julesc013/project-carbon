@@ -1,8 +1,8 @@
 spec_version: 1.0
 name: discovery
-description: Unified feature discovery contract (CPUID leaf model and CAPS mirror).
-revision: v1.0.0
-created: 2025-12-15
+description: Unified discovery table and CPUID/CAPS pointer model.
+revision: v1.1.0
+created: 2025-12-24
 stable: true
 
 packing:
@@ -22,7 +22,7 @@ transports:
   - name: CPUID
     applies_to: Z480
     required_tier: P7
-    description: CPUID instruction provides the canonical leaf model.
+    description: CPUID instruction provides pointers to the canonical discovery table.
   - name: CAPS
     applies_to: Z85/Z90
     required_tier: P0
@@ -35,6 +35,148 @@ transports:
         - Implementations may expose CAPS_* as IO ports, CSRs, or both.
       reserved:
         - CAPS transport-specific addressing is platform-defined; only leaf IDs and packing are architectural.
+
+discovery_table:
+  name: CARBON_DISCOVERY_TABLE_V1
+  version: 1
+  size_bytes: 64
+  description: Canonical discovery record; CPUID/CAPS point here for all tier, profile, and pointer data.
+  pointer_model:
+    pointer_width_bits: 64
+    description: Pointers are physical addresses; 0 means absent.
+  fields:
+    - name: signature
+      offset: 0
+      width_bytes: 4
+      type: u32
+      description: ASCII "CDSC" in little-endian (0x43534443).
+    - name: table_version
+      offset: 4
+      width_bytes: 2
+      type: u16
+      description: Discovery table format version (must be 1).
+    - name: table_size
+      offset: 6
+      width_bytes: 2
+      type: u16
+      description: Size of the discovery table in bytes (64 for v1).
+    - name: cpu_ladder_id
+      offset: 8
+      width_bytes: 1
+      type: u8
+      description: CPU ladder ID (TIER_LADDER_Z80).
+    - name: fpu_ladder_id
+      offset: 9
+      width_bytes: 1
+      type: u8
+      description: FPU ladder ID (TIER_LADDER_AM95).
+    - name: presented_cpu_tier
+      offset: 10
+      width_bytes: 1
+      type: u8
+      description: Presented CPU tier (P0..P15).
+    - name: presented_fpu_tier
+      offset: 11
+      width_bytes: 1
+      type: u8
+      description: Presented FPU tier (P0..P15).
+    - name: profile_id
+      offset: 12
+      width_bytes: 1
+      type: u8
+      description: Profile ID (PROFILE_*).
+    - name: reserved0
+      offset: 13
+      width_bytes: 3
+      type: u24
+      description: Reserved; must be 0.
+    - name: topology_table_ptr
+      offset: 16
+      width_bytes: 8
+      type: u64
+      description: Pointer to topology table (0 if not present).
+    - name: bdt_ptr
+      offset: 24
+      width_bytes: 8
+      type: u64
+      description: Pointer to BIOS Device Table (BDT) base (0 if not present).
+    - name: limits_table_ptr
+      offset: 32
+      width_bytes: 8
+      type: u64
+      description: Pointer to limits table (queue depths, contexts, vector widths).
+    - name: cpu_feature_bitmap_ptr
+      offset: 40
+      width_bytes: 8
+      type: u64
+      description: Pointer to CPU feature bitmap.
+    - name: fpu_feature_bitmap_ptr
+      offset: 48
+      width_bytes: 8
+      type: u64
+      description: Pointer to FPU feature bitmap.
+    - name: peripheral_feature_bitmap_ptr
+      offset: 56
+      width_bytes: 8
+      type: u64
+      description: Pointer to peripheral/device feature bitmap.
+
+feature_bitmaps:
+  word_bits: 32
+  words: 4
+  description: Feature bitmaps are 128-bit (4x32-bit words).
+
+limits_table:
+  name: CARBON_LIMITS_TABLE_V1
+  version: 1
+  size_bytes: 32
+  description: Variable limits for queues, contexts, and vector/tensor widths.
+  fields:
+    - name: queue_submit_depth
+      offset: 0
+      width_bytes: 4
+      type: u32
+      description: Max CAI submit ring depth in entries.
+    - name: queue_complete_depth
+      offset: 4
+      width_bytes: 4
+      type: u32
+      description: Max CAI completion ring depth in entries.
+    - name: contexts
+      offset: 8
+      width_bytes: 2
+      type: u16
+      description: Max CAI context count.
+    - name: vector_lanes
+      offset: 10
+      width_bytes: 2
+      type: u16
+      description: Max vector lanes (0 if not applicable).
+    - name: tensor_rank
+      offset: 12
+      width_bytes: 2
+      type: u16
+      description: Max tensor rank (0 if not applicable).
+    - name: reserved0
+      offset: 14
+      width_bytes: 2
+      type: u16
+      description: Reserved; must be 0.
+    - name: max_cores
+      offset: 16
+      width_bytes: 2
+      type: u16
+      description: Max core count for topology (0 if unknown).
+    - name: max_threads
+      offset: 18
+      width_bytes: 2
+      type: u16
+      description: Max threads per core (SMT; 0 if unsupported).
+    - name: reserved1
+      offset: 20
+      width_bytes: 12
+      type: u96
+      description: Reserved; must be 0.
 
 leafs:
   - id: 0x00000000
@@ -76,45 +218,30 @@ leafs:
         name: chip_flags
         bits: [31, 0]
   - id: 0x00000002
-    name: CPUID_LEAF_TIERS
-    description: Presented tier and limits for CPU and FPU lineages.
+    name: CPUID_LEAF_DISCOVERY
+    description: Pointer to the canonical discovery table.
     fields:
       - word: 0
-        name: cpu_ladder_id
-        bits: [7, 0]
+        name: discovery_version
+        bits: [15, 0]
       - word: 0
-        name: cpu_presented_tier
-        bits: [15, 8]
-      - word: 0
-        name: cpu_max_tier
-        bits: [23, 16]
-      - word: 0
-        name: cpu_policy_flags
-        bits: [31, 24]
+        name: discovery_size_bytes
+        bits: [31, 16]
       - word: 1
-        name: fpu_ladder_id
-        bits: [7, 0]
-      - word: 1
-        name: fpu_presented_tier
-        bits: [15, 8]
-      - word: 1
-        name: fpu_max_tier
-        bits: [23, 16]
-      - word: 1
-        name: fpu_policy_flags
-        bits: [31, 24]
+        name: discovery_ptr_lo
+        bits: [31, 0]
       - word: 2
-        name: aux_lineage0
+        name: discovery_ptr_hi
         bits: [31, 0]
       - word: 3
-        name: aux_lineage1
+        name: discovery_flags
         bits: [31, 0]
   - id: 0x00000003
     name: CPUID_LEAF_FEATURES0
-    description: Base feature bitmap (bits 0..127 across words 0..3).
+    description: CPU feature bitmap word0..3 (legacy mirror of discovery table).
   - id: 0x00000004
     name: CPUID_LEAF_DEVICE_TABLE
-    description: Device table (BDT) base and format descriptor.
+    description: Legacy BDT mirror (base pointer; discovery table is canonical).
     fields:
       - word: 0
         name: bdt_format_version
@@ -134,15 +261,21 @@ leafs:
       - word: 3
         name: bdt_base_addr_hi
         bits: [31, 0]
+  - id: 0x00000005
+    name: CPUID_LEAF_FEATURES1
+    description: FPU feature bitmap word0..3 (legacy mirror of discovery table).
+  - id: 0x00000006
+    name: CPUID_LEAF_FEATURES2
+    description: Peripheral/device feature bitmap word0..3 (legacy mirror of discovery table).
   - id: 0x00000010
     name: CPUID_LEAF_CACHE0
-    description: Cache descriptor 0 (if present).
+    description: Cache descriptor 0 (if present; see topology table for canonical cache IDs).
   - id: 0x00000011
     name: CPUID_LEAF_TOPOLOGY
-    description: Core/thread topology descriptor.
+    description: Legacy topology leaf (discovery table is canonical).
   - id: 0x00000020
     name: CPUID_LEAF_ACCEL0
-    description: Accelerator presence descriptor 0.
+    description: Accelerator presence descriptor 0 (legacy; discovery table is canonical).
   - id: 0x00000030
     name: CPUID_LEAF_ERRATA0
     description: Errata bitmap 0 (bits 0..127 across words 0..3).
@@ -152,7 +285,7 @@ leaf_rules:
   description: Requests for undefined/reserved leaf IDs return all zeros; software must consult max_standard_leaf.
 
 reserved_leaf_ranges:
-  - range: [0x00000005, 0x0000000F]
+  - range: [0x00000007, 0x0000000F]
     description: Reserved for future standard leaves.
   - range: [0x00000012, 0x0000001F]
     description: Reserved for future cache/topology leaves.
@@ -166,9 +299,9 @@ reserved_leaf_ranges:
     description: Reserved.
 
 feature_sets:
-  - id: FEATURESET_0
+  - id: FEATURESET_CPU
     leaf: CPUID_LEAF_FEATURES0
-    description: Base feature bitmap.
+    description: CPU feature bitmap.
     bits:
       - name: FEAT_MODE_SWITCH
         bit: 0
@@ -179,62 +312,80 @@ feature_sets:
       - name: FEAT_FABRIC
         bit: 2
         description: Carbon internal fabric transaction contract implemented.
-      - name: FEAT_CAI
-        bit: 3
-        description: Carbon Accelerator Interface (CAI) implemented.
       - name: FEAT_CPUID
-        bit: 4
+        bit: 3
         description: CPUID instruction transport implemented (Z480 P7).
       - name: FEAT_CAPS
-        bit: 5
+        bit: 4
         description: CAPS transport implemented (Z85/Z90).
-      - name: FEAT_AM9513
-        bit: 6
-        description: Am9513-class accelerator present.
-      - name: FEAT_IOMMU_HOOKS
-        bit: 7
-        description: IOMMU integration hooks for accelerators/fabric present.
-      - name: FEAT_DEVICE_MODEL
-        bit: 8
-        description: Dual-personality device model and capability descriptor schema implemented.
-      - name: FEAT_BDT
-        bit: 9
-        description: Board Device Table (BDT) provided for device discovery.
-      - name: FEAT_TURBO_QUEUE
-        bit: 10
-        description: Turbo queue descriptor ring schema implemented.
-      - name: FEAT_POLLING_COMPLETE
-        bit: 11
-        description: Polling-complete semantics required across devices.
       - name: Z85_UNDOC_Z80
-        bit: 12
+        bit: 5
         description: Z85 exposes undocumented Z80 opcodes/flags while presenting as P2.
       - name: Z90_Z180_CLASS
-        bit: 13
+        bit: 6
         description: Z90 is Z180-class while presenting as P3.
       - name: Z380_32BIT_EXTENDED
-        bit: 14
+        bit: 7
         description: Z380 provides 32-bit extended mode while presenting as P6.
       - name: Z480_NATIVE_64
-        bit: 15
+        bit: 8
         description: Z480 provides native 64-bit mode while presenting as P7.
-      - name: AM9512_IEEE
-        bit: 16
-        description: Am9512 adds IEEE ports for missing 9511 functions.
-      - name: AM9513_ASYNC
-        bit: 17
-        description: Am9513 provides async scalar IEEE execution.
-      - name: AM9514_VECTOR
-        bit: 18
-        description: Am9514 provides vector/SIMD math support.
-      - name: AM9515_TENSOR
-        bit: 19
-        description: Am9515 provides matrix/tensor math support.
     reserved_bit_ranges:
-      - range: [20, 63]
+      - range: [9, 63]
         description: Reserved for base feature growth.
       - range: [64, 127]
         description: Reserved for future feature sets.
+  - id: FEATURESET_FPU
+    leaf: CPUID_LEAF_FEATURES1
+    description: FPU feature bitmap.
+    bits:
+      - name: AM9512_IEEE_PLUS
+        bit: 0
+        description: Am9512-plus adds IEEE ports and restored Am9511 functions.
+      - name: AM9513_ASYNC_SCALAR
+        bit: 1
+        description: Am9513 provides async scalar IEEE execution.
+      - name: AM9514_VECTOR
+        bit: 2
+        description: Am9514 provides vector/SIMD math support.
+      - name: AM9515_TENSOR
+        bit: 3
+        description: Am9515 provides matrix/tensor math support.
+    reserved_bit_ranges:
+      - range: [4, 63]
+        description: Reserved for future FPU features.
+      - range: [64, 127]
+        description: Reserved for future feature sets.
+  - id: FEATURESET_PERIPH
+    leaf: CPUID_LEAF_FEATURES2
+    description: Peripheral/device feature bitmap.
+    bits:
+      - name: FEAT_CAI
+        bit: 0
+        description: Carbon Accelerator Interface (CAI) implemented.
+      - name: FEAT_BDT
+        bit: 1
+        description: Board Device Table (BDT) provided for device discovery.
+      - name: FEAT_DEVICE_MODEL
+        bit: 2
+        description: Device capability schema implemented for BDT entries.
+      - name: NON_COHERENT_DMA_BASELINE
+        bit: 3
+        description: DMA is non-coherent by default; software must manage cache maintenance.
+      - name: COHERENT_DMA_OPTIONAL
+        bit: 4
+        description: Reserved for future coherent DMA capability (optional).
+    reserved_bit_ranges:
+      - range: [5, 63]
+        description: Reserved for peripheral feature growth.
+      - range: [64, 79]
+        description: Reserved for CarbonNet feature namespace.
+      - range: [80, 95]
+        description: Reserved for CarbonVideo feature namespace.
+      - range: [96, 111]
+        description: Reserved for CarbonAudio feature namespace.
+      - range: [112, 127]
+        description: Reserved for CarbonSecure feature namespace.
 
 examples:
   - name: example_cpuid_leaf_table
@@ -245,6 +396,6 @@ examples:
       - leaf: 0x00000001
         name: CPUID_LEAF_ID
       - leaf: 0x00000002
-        name: CPUID_LEAF_TIERS
+        name: CPUID_LEAF_DISCOVERY
       - leaf: 0x00000003
         name: CPUID_LEAF_FEATURES0

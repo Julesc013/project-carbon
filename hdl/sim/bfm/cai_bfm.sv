@@ -7,6 +7,9 @@ package cai_bfm_pkg;
   localparam int unsigned SUBMIT_BITS = CARBON_CAI_SUBMIT_DESC_V1_SIZE_BYTES * 8;
   localparam int unsigned COMP_BITS   = CARBON_CAI_COMP_REC_V1_SIZE_BYTES * 8;
   localparam int unsigned TENSOR_BITS = CARBON_CAI_TENSOR_DESC_V1_SIZE_BYTES * 8;
+  localparam int unsigned SUBMIT_BYTES = CARBON_CAI_SUBMIT_DESC_V1_SIZE_BYTES;
+  localparam int unsigned COMP_BYTES   = CARBON_CAI_COMP_REC_V1_SIZE_BYTES;
+  localparam int unsigned TENSOR_BYTES = CARBON_CAI_TENSOR_DESC_V1_SIZE_BYTES;
 
   task automatic build_submit_desc_v1(
       output logic [SUBMIT_BITS-1:0] desc,
@@ -19,7 +22,7 @@ package cai_bfm_pkg;
       input  logic [63:0] result_ptr,
       input  logic [31:0] result_len,
       input  logic [31:0] result_stride,
-      input  logic [7:0] opcode_group = 8'(CARBON_CAI_OPGROUP_SCALAR),
+      input  logic [7:0] opcode_group = 8'(CARBON_AM95_SCALAR),
       input  logic [7:0] format_primary = 8'h00,
       input  logic [7:0] format_aux = 8'h00,
       input  logic [7:0] format_flags = 8'h00,
@@ -88,11 +91,17 @@ package cai_bfm_pkg;
   );
     logic [15:0] v;
     logic [15:0] size_dw;
+    logic [7:0] fmt_flags;
+    logic [31:0] reserved2;
     begin
       v = desc[(CARBON_CAI_SUBMIT_DESC_V1_OFF_DESC_VERSION*8) +: 16];
       size_dw = desc[(CARBON_CAI_SUBMIT_DESC_V1_OFF_DESC_SIZE_DW*8) +: 16];
+      fmt_flags = desc[(CARBON_CAI_SUBMIT_DESC_V1_OFF_FORMAT_FLAGS*8) +: 8];
+      reserved2 = desc[(CARBON_CAI_SUBMIT_DESC_V1_OFF_RESERVED2*8) +: 32];
       ok = (v == 16'(CARBON_CAI_SUBMIT_DESC_V1_VERSION)) &&
-           (size_dw == 16'(CARBON_CAI_SUBMIT_DESC_V1_SIZE_BYTES / 4));
+           (size_dw == 16'(CARBON_CAI_SUBMIT_DESC_V1_SIZE_BYTES / 4)) &&
+           (fmt_flags == 8'h00) &&
+           (reserved2 == 32'h0);
     end
   endtask
 
@@ -109,6 +118,86 @@ package cai_bfm_pkg;
       ext_status   = rec[(CARBON_CAI_COMP_REC_V1_OFF_EXT_STATUS*8) +: 16];
       bytes_written = rec[(CARBON_CAI_COMP_REC_V1_OFF_BYTES_WRITTEN*8) +: 32];
     end
+  endtask
+
+  task automatic check_comp_rec_v1(
+      input  logic [COMP_BITS-1:0] rec,
+      output logic ok
+  );
+    logic [31:0] reserved0;
+    begin
+      reserved0 = rec[(CARBON_CAI_COMP_REC_V1_OFF_RESERVED0*8) +: 32];
+      ok = (reserved0 == 32'h0);
+    end
+  endtask
+
+  task automatic write_submit_desc_v1(
+      ref logic [7:0] mem[],
+      input longint unsigned base,
+      input int unsigned index,
+      input logic [SUBMIT_BITS-1:0] desc
+  );
+    int unsigned i;
+    int unsigned addr;
+    begin
+      addr = int'(base) + (index * SUBMIT_BYTES);
+      for (i = 0; i < SUBMIT_BYTES; i++) begin
+        if ((addr + i) < mem.size()) begin
+          mem[addr + i] = desc[(i*8) +: 8];
+        end
+      end
+    end
+  endtask
+
+  task automatic write_tensor_desc_v1(
+      ref logic [7:0] mem[],
+      input longint unsigned addr,
+      input logic [TENSOR_BITS-1:0] desc
+  );
+    int unsigned i;
+    int unsigned base;
+    begin
+      base = int'(addr);
+      for (i = 0; i < TENSOR_BYTES; i++) begin
+        if ((base + i) < mem.size()) begin
+          mem[base + i] = desc[(i*8) +: 8];
+        end
+      end
+    end
+  endtask
+
+  task automatic read_comp_rec_v1(
+      ref logic [7:0] mem[],
+      input longint unsigned base,
+      input int unsigned index,
+      output logic [COMP_BITS-1:0] rec
+  );
+    int unsigned i;
+    int unsigned addr;
+    begin
+      rec = '0;
+      addr = int'(base) + (index * COMP_BYTES);
+      for (i = 0; i < COMP_BYTES; i++) begin
+        if ((addr + i) < mem.size()) begin
+          rec[(i*8) +: 8] = mem[addr + i];
+        end
+      end
+    end
+  endtask
+
+  task automatic cai_fence(virtual cai_if cai);
+    @(posedge cai.clk);
+  endtask
+
+  task automatic cai_ring_submit(virtual cai_if cai);
+    cai.submit_doorbell <= 1'b1;
+    @(posedge cai.clk);
+    cai.submit_doorbell <= 1'b0;
+  endtask
+
+  task automatic cai_wait_comp_msg(virtual cai_if cai);
+    while (!cai.comp_msg) @(posedge cai.clk);
+    @(posedge cai.clk);
   endtask
 
 endpackage : cai_bfm_pkg

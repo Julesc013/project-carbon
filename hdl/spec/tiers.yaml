@@ -1,8 +1,8 @@
 spec_version: 1.0
 name: tiers
 description: Compatibility tier ladders for Project Carbon.
-revision: v1.0.0
-created: 2025-12-15
+revision: v1.1.0
+created: 2025-12-24
 stable: true
 
 presentation_model:
@@ -12,12 +12,13 @@ presentation_model:
     - Presented tier is reported by discovery, even if internal implementation is a superset.
     - Optional or undocumented behaviors are reported via feature bits, not by elevating the tier.
     - Reset always starts in P0 for every ladder.
+    - Tier changes only via MODEUP(target_tier, entry_vector) and RETMD().
 
 ladders:
   - id: TIER_LADDER_Z80
     value: 0
     name: z80_derived
-    description: Z80-derived compatibility ladder.
+    description: Unified 8080-derived compatibility ladder.
     reset_default: P0
     upgrade_rule: target_tier > current_tier
     downgrade_rule: only via RETMD
@@ -85,64 +86,10 @@ ladders:
       - range: [16, 255]
         description: Reserved for future tier extensions.
 
-  - id: TIER_LADDER_X86
+  - id: TIER_LADDER_AM95
     value: 1
-    name: x86_derived
-    description: x86-derived compatibility ladder.
-    reset_default: P0
-    upgrade_rule: target_tier > current_tier
-    downgrade_rule: only via RETMD
-    tiers:
-      - id: P0
-        value: 0
-        mnemonic: I8086_8087
-        label: 8086/8087
-        strict: true
-      - id: P1
-        value: 1
-        mnemonic: I80186_80187
-        label: 80186/80187
-        strict: true
-      - id: P2
-        value: 2
-        mnemonic: I80286_80287
-        label: 80286/80287
-        strict: true
-      - id: P3
-        value: 3
-        mnemonic: I80386_80387
-        label: 80386/80387
-        strict: true
-      - id: P4
-        value: 4
-        mnemonic: I80486_80487
-        label: 80486/80487
-        strict: true
-      - id: P5
-        value: 5
-        mnemonic: PENTIUM_IA32
-        label: pentium_ia32
-        strict: true
-      - id: P6
-        value: 6
-        mnemonic: P6_IA32
-        label: p6_ia32
-        strict: true
-      - id: P7
-        value: 7
-        mnemonic: X86_64
-        label: x86_64
-        strict: true
-    reserved_tier_values:
-      - range: [8, 15]
-        description: Reserved (P8-P15).
-      - range: [16, 255]
-        description: Reserved for future tier extensions.
-
-  - id: TIER_LADDER_AMD_FPU
-    value: 2
-    name: amd_fpu
-    description: AMD-derived FPU compatibility ladder (Am9511 lineage).
+    name: am95xx_fpu
+    description: Am95xx FPU compatibility ladder (Am9511 lineage).
     reset_default: P0
     upgrade_rule: target_tier > current_tier
     downgrade_rule: only via RETMD
@@ -154,15 +101,15 @@ ladders:
         strict: true
       - id: P1
         value: 1
-        mnemonic: AM9512
-        label: am9512
-        notes: IEEE ports for missing am9511 functions.
+        mnemonic: AM9512_PLUS
+        label: am9512-plus
+        notes: IEEE FP32/FP64 and restored Am9511 functions.
         strict: true
       - id: P2
         value: 2
         mnemonic: AM9513
         label: am9513
-        notes: Native async scalar IEEE engine.
+        notes: Native async scalar IEEE engine; CAI-native.
         strict: true
       - id: P3
         value: 3
@@ -177,13 +124,13 @@ ladders:
         notes: Matrix/tensor math tier.
         strict: true
     presentation_overrides:
-      - part: AM9512
+      - part: AM9512_PLUS
         presents_as: P1
-        feature_bits: [AM9512_IEEE]
-        description: Am9512 presents as P1 and advertises IEEE additions via feature bits.
+        feature_bits: [AM9512_IEEE_PLUS]
+        description: Am9512-plus presents as P1 and advertises IEEE additions via feature bits.
       - part: AM9513
         presents_as: P2
-        feature_bits: [AM9513_ASYNC]
+        feature_bits: [AM9513_ASYNC_SCALAR]
         description: Am9513 presents as P2 and advertises async scalar capability via feature bits.
       - part: AM9514
         presents_as: P3

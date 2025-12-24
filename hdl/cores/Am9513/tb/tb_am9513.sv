@@ -174,7 +174,7 @@ module tb_am9513_scalar;
     begin
       while (1) begin
         @(posedge clk);
-        if (cai.comp_doorbell) break;
+        if (cai.comp_msg) break;
       end
 
       addr = int'(COMP_BASE) + ((comp_idx & COMP_MASK) * CARBON_CAI_COMP_REC_V1_SIZE_BYTES);
@@ -196,7 +196,7 @@ module tb_am9513_scalar;
       input logic [63:0] result_ptr,
       input logic [31:0] result_len,
       input logic [31:0] result_stride,
-      input logic [7:0] opcode_group = 8'(CARBON_CAI_OPGROUP_SCALAR),
+      input logic [7:0] opcode_group = 8'(CARBON_AM95_SCALAR),
       input logic [7:0] format_primary = 8'h00,
       input logic [7:0] format_aux = 8'h00,
       input logic [7:0] format_flags = 8'h00,
@@ -361,10 +361,10 @@ module tb_am9513_scalar;
     wait (rst_n);
 
     // Host-side init for CAI link.
-    cai.submit_desc_base = SUBMIT_BASE;
-    cai.submit_ring_mask = 32'(SUBMIT_MASK);
-    cai.submit_doorbell  = 1'b0;
-    cai.context_sel      = 16'h0;
+    cai.submit_base = SUBMIT_BASE;
+    cai.submit_size = 32'(SUBMIT_ENTRIES);
+    cai.submit_doorbell = 1'b0;
+    cai.context_sel = 16'h0;
 
     // Clear backing memory.
     for (i = 0; i < MEM_BYTES; i++) begin

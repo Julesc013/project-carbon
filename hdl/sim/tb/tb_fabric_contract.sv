@@ -194,9 +194,15 @@ module tb_fabric_contract;
     wait(rst_n);
     for (i = 0; i < M; i++) master_init(i);
 
+    int unsigned seed_base;
+    if (!$value$plusargs("SEED=%d", seed_base)) begin
+      seed_base = 32'hACE1_1234;
+    end
+    mem.set_stall_seed(seed_base ^ 32'hFEED_BEEF);
+
     fork
-      master_thread(0, 32'hACE1_1234);
-      master_thread(1, 32'hBEEF_0420);
+      master_thread(0, seed_base);
+      master_thread(1, seed_base ^ 32'hBEEF_0420);
     join
 
     $display("tb_fabric_contract: PASS");

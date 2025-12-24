@@ -1,8 +1,8 @@
 spec_version: 1.0
 name: mode_switch
 description: Canonical tier mode switching contract (MODEUP / RETMD).
-revision: v1.0.0
-created: 2025-12-15
+revision: v1.1.0
+created: 2025-12-24
 stable: true
 
 contract:
@@ -91,6 +91,23 @@ modestack:
   rules:
     - MODEUP must trap on overflow at the architectural minimum depth.
     - RETMD must trap on underflow.
+
+modeframe:
+  description: Minimal architectural mode frame pushed by MODEUP and popped by RETMD.
+  format_version: 1
+  fields:
+    - name: previous_tier
+      type: u8
+      description: Prior presented tier for the active ladder.
+    - name: previous_modeflags
+      type: u8
+      description: Prior MODEFLAGS value.
+    - name: return_pc
+      type: u64
+      description: Return program counter to resume after RETMD.
+    - name: reserved0
+      type: u16
+      description: Reserved for future use; must be 0.
 
 reserved_numeric_ranges:
   - name: modeframe_format_version

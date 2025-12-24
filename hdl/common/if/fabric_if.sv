@@ -23,11 +23,11 @@ interface fabric_if #(
 
   // Common attribute presets (ordered + uncacheable semantics).
   localparam logic [ATTR_W-1:0] FABRIC_ATTR_IO_UNCACHED =
-      logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_IO_SPACE_MASK | CARBON_FABRIC_ATTR_ORDERED_MASK);
+      logic [ATTR_W-1:0]'(CARBON_MEM_ATTR_IO_SPACE_MASK | CARBON_MEM_ATTR_ORDERED_MASK);
   localparam logic [ATTR_W-1:0] FABRIC_ATTR_CAI_UNCACHED =
-      logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_ORDERED_MASK);
+      logic [ATTR_W-1:0]'(CARBON_MEM_ATTR_ORDERED_MASK);
   localparam logic [ATTR_W-1:0] FABRIC_ATTR_MEM_CACHEABLE =
-      logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_CACHEABLE_MASK);
+      logic [ATTR_W-1:0]'(CARBON_MEM_ATTR_CACHEABLE_MASK);
 
   function automatic logic [ATTR_W-1:0] fabric_attr_pack(
       input logic cacheable,
@@ -41,11 +41,11 @@ interface fabric_if #(
     logic [ATTR_W-1:0] v;
     begin
       v = '0;
-      if (cacheable) v |= logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_CACHEABLE_MASK);
-      if (ordered)   v |= logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_ORDERED_MASK);
-      if (io_space)  v |= logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_IO_SPACE_MASK);
-      if (acquire)   v |= logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_ACQUIRE_MASK);
-      if (release)   v |= logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_RELEASE_MASK);
+      if (cacheable) v |= logic [ATTR_W-1:0]'(CARBON_MEM_ATTR_CACHEABLE_MASK);
+      if (ordered)   v |= logic [ATTR_W-1:0]'(CARBON_MEM_ATTR_ORDERED_MASK);
+      if (io_space)  v |= logic [ATTR_W-1:0]'(CARBON_MEM_ATTR_IO_SPACE_MASK);
+      if (acquire)   v |= logic [ATTR_W-1:0]'(CARBON_MEM_ATTR_ACQUIRE_MASK);
+      if (release)   v |= logic [ATTR_W-1:0]'(CARBON_MEM_ATTR_RELEASE_MASK);
       v |= (logic [ATTR_W-1:0]'(burst_hint) << CARBON_FABRIC_ATTR_BURST_HINT_LSB) &
            logic [ATTR_W-1:0]'(CARBON_FABRIC_ATTR_BURST_HINT_MASK);
       v |= (logic [ATTR_W-1:0]'(qos) << CARBON_FABRIC_ATTR_QOS_LSB) &

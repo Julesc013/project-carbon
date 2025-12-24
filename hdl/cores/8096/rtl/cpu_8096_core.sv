@@ -49,7 +49,7 @@ module cpu_8096_core #(
 `endif
 
   localparam logic [FAB_ATTR_W-1:0] MEM_ATTR =
-      FAB_ATTR_W'(CARBON_FABRIC_ATTR_CACHEABLE_MASK);
+      FAB_ATTR_W'(CARBON_MEM_ATTR_CACHEABLE_MASK);
 
   // IO bus is unused by the v1 subset; keep it idle.
   assign io_if.req_valid = 1'b0;
@@ -58,7 +58,7 @@ module cpu_8096_core #(
   assign io_if.req_wdata = '0;
   assign io_if.req_wstrb = '0;
   assign io_if.req_size  = '0;
-  assign io_if.req_attr  = FAB_ATTR_W'(CARBON_FABRIC_ATTR_ORDERED_MASK | CARBON_FABRIC_ATTR_IO_SPACE_MASK);
+  assign io_if.req_attr  = FAB_ATTR_W'(CARBON_MEM_ATTR_ORDERED_MASK | CARBON_MEM_ATTR_IO_SPACE_MASK);
   assign io_if.req_id    = '0;
   assign io_if.rsp_ready = 1'b0;
 

@@ -31,7 +31,7 @@ module fpu_8097 (
   localparam int unsigned CSR_PRIV_W = $bits(csr.req_priv);
 
   localparam logic [FAB_ATTR_W-1:0] MEM_ATTR =
-      FAB_ATTR_W'(CARBON_FABRIC_ATTR_CACHEABLE_MASK);
+      FAB_ATTR_W'(CARBON_MEM_ATTR_CACHEABLE_MASK);
 
   // --------------------------------------------------------------------------
   // CSR interface response registers

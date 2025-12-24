@@ -36,7 +36,7 @@ module carbon_fabric_bootmaster #(
 
   // Default: ordered, cacheable is fine for a simple bring-up master.
   localparam logic [FAB_ATTR_W-1:0] ATTR =
-      FAB_ATTR_W'(CARBON_FABRIC_ATTR_ORDERED_MASK | CARBON_FABRIC_ATTR_CACHEABLE_MASK);
+      FAB_ATTR_W'(CARBON_MEM_ATTR_ORDERED_MASK | CARBON_MEM_ATTR_CACHEABLE_MASK);
 
   // Drive outputs.
   assign fab.rsp_ready = 1'b1;

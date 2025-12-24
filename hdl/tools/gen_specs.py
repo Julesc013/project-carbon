@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
@@ -186,10 +188,43 @@ def _write_text_unix(path: Path, text: str) -> None:
     path.write_bytes(text.encode("utf-8"))
 
 
+def _generation_timestamp() -> str:
+    env = os.getenv("SOURCE_DATE_EPOCH")
+    if env is not None:
+        try:
+            ts = datetime.fromtimestamp(int(env), tz=timezone.utc)
+        except (ValueError, OverflowError):
+            ts = datetime.now(timezone.utc)
+    else:
+        ts = datetime.now(timezone.utc)
+    return ts.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _spec_revision_summary(specs: Dict[str, Dict[str, Any]]) -> str:
+    parts = []
+    for name in sorted(specs.keys()):
+        rev = specs[name].get("revision", "unknown")
+        parts.append(f"{name}:{rev}")
+    return ", ".join(parts)
+
+
+def _build_gen_info(specs: Dict[str, Dict[str, Any]]) -> Dict[str, str]:
+    return {
+        "timestamp": _generation_timestamp(),
+        "spec_summary": _spec_revision_summary(specs),
+    }
+
+
 def _load_specs(spec_dir: Path) -> Dict[str, Dict[str, Any]]:
     required = [
         "tiers.yaml",
         "mode_switch.yaml",
+        "profiles.yaml",
+        "topology.yaml",
+        "bdt.yaml",
+        "memory_attrs.yaml",
+        "external_if.yaml",
+        "interfaces.yaml",
         "discovery.yaml",
         "csr_map.yaml",
         "device_model.yaml",
@@ -221,9 +256,10 @@ def _validate_tiers(spec: Dict[str, Any]) -> None:
     where = "tiers.yaml"
     ladders = spec.get("ladders")
     _expect_type(ladders, list, where=f"{where}:ladders")
-    if len(ladders) != 3:
-        raise SpecError(f"{where}: expected exactly 3 ladders, got {len(ladders)}")
+    if len(ladders) != 2:
+        raise SpecError(f"{where}: expected exactly 2 ladders, got {len(ladders)}")
     ladder_values = set()
+    ladder_ids = set()
     for ladder in ladders:
         _expect_type(ladder, dict, where=f"{where}:ladder")
         _require_keys(
@@ -231,6 +267,7 @@ def _validate_tiers(spec: Dict[str, Any]) -> None:
             ["id", "value", "name", "tiers", "reset_default", "upgrade_rule", "downgrade_rule"],
             where=f"{where}:{ladder.get('id','<ladder>')}",
         )
+        ladder_ids.add(ladder["id"])
         value = ladder["value"]
         if not isinstance(value, int) or value < 0 or value > 255:
             raise SpecError(f"{where}:{ladder['id']}: ladder value must be 0..255")
@@ -259,9 +296,14 @@ def _validate_tiers(spec: Dict[str, Any]) -> None:
             raise SpecError(f"{where}:{ladder['id']}: reset_default must be P0")
         if "P0" not in seen_ids:
             raise SpecError(f"{where}:{ladder['id']}: must define P0")
-        requires_p7 = ladder["id"] in ("TIER_LADDER_Z80", "TIER_LADDER_X86")
+        requires_p7 = ladder["id"] in ("TIER_LADDER_Z80",)
         if requires_p7 and "P7" not in seen_ids:
             raise SpecError(f"{where}:{ladder['id']}: must define P7")
+
+    required_ladders = {"TIER_LADDER_Z80", "TIER_LADDER_AM95"}
+    missing = sorted(required_ladders - ladder_ids)
+    if missing:
+        raise SpecError(f"{where}: missing required ladders: {', '.join(missing)}")
 
 
 def _validate_mode_switch(spec: Dict[str, Any]) -> None:
@@ -301,6 +343,20 @@ def _validate_mode_switch(spec: Dict[str, Any]) -> None:
 
 def _validate_discovery(spec: Dict[str, Any]) -> None:
     where = "discovery.yaml"
+    table = spec.get("discovery_table")
+    _expect_type(table, dict, where=f"{where}:discovery_table")
+    _require_keys(table, ["name", "version", "size_bytes", "fields"], where=f"{where}:discovery_table")
+    _expect_type(table["fields"], list, where=f"{where}:discovery_table.fields")
+
+    bitmaps = spec.get("feature_bitmaps")
+    _expect_type(bitmaps, dict, where=f"{where}:feature_bitmaps")
+    _require_keys(bitmaps, ["word_bits", "words"], where=f"{where}:feature_bitmaps")
+
+    limits = spec.get("limits_table")
+    _expect_type(limits, dict, where=f"{where}:limits_table")
+    _require_keys(limits, ["name", "version", "size_bytes", "fields"], where=f"{where}:limits_table")
+    _expect_type(limits["fields"], list, where=f"{where}:limits_table.fields")
+
     leafs = spec.get("leafs")
     _expect_type(leafs, list, where=f"{where}:leafs")
     leaf_ids = set()
@@ -464,6 +520,183 @@ def _validate_cai(spec: Dict[str, Any]) -> None:
     _expect_type(spec["completion_status_codes"], list, where=f"{where}:completion_status_codes")
 
 
+def _validate_profiles(spec: Dict[str, Any]) -> None:
+    where = "profiles.yaml"
+    profiles = spec.get("profiles")
+    _expect_type(profiles, list, where=f"{where}:profiles")
+    required_ids = {
+        "PROFILE_CPU_ONLY",
+        "PROFILE_MCU",
+        "PROFILE_SOC_RETRO",
+        "PROFILE_SOC_WORKSTATION",
+    }
+    seen_ids = set()
+    seen_values = set()
+    for prof in profiles:
+        _expect_type(prof, dict, where=f"{where}:profile")
+        _require_keys(
+            prof,
+            [
+                "id",
+                "value",
+                "name",
+                "description",
+                "required_blocks",
+                "required_discovery_tables",
+                "required_min_devices",
+                "legacy_z80_bus_adapter",
+                "safe_mode",
+            ],
+            where=f"{where}:{prof.get('id','<profile>')}",
+        )
+        pid = prof["id"]
+        seen_ids.add(pid)
+        value = prof["value"]
+        if not isinstance(value, int) or value < 0 or value > 255:
+            raise SpecError(f"{where}:{pid}: profile value must be 0..255")
+        if value in seen_values:
+            raise SpecError(f"{where}:{pid}: duplicate profile value {value}")
+        seen_values.add(value)
+        _expect_type(prof["required_blocks"], list, where=f"{where}:{pid}:required_blocks")
+        _expect_type(
+            prof["required_discovery_tables"],
+            list,
+            where=f"{where}:{pid}:required_discovery_tables",
+        )
+        _expect_type(prof["required_min_devices"], list, where=f"{where}:{pid}:required_min_devices")
+        if not isinstance(prof["legacy_z80_bus_adapter"], bool):
+            raise SpecError(f"{where}:{pid}: legacy_z80_bus_adapter must be bool")
+        safe_mode = prof["safe_mode"]
+        _expect_type(safe_mode, dict, where=f"{where}:{pid}:safe_mode")
+        _require_keys(safe_mode, ["requirements"], where=f"{where}:{pid}:safe_mode")
+        _expect_type(safe_mode["requirements"], list, where=f"{where}:{pid}:safe_mode.requirements")
+    missing = sorted(required_ids - seen_ids)
+    if missing:
+        raise SpecError(f"{where}: missing required profiles: {', '.join(missing)}")
+
+
+def _validate_topology(spec: Dict[str, Any]) -> None:
+    where = "topology.yaml"
+    topo = spec.get("topology_table")
+    _expect_type(topo, dict, where=f"{where}:topology_table")
+    _require_keys(topo, ["header", "entry"], where=f"{where}:topology_table")
+    for key in ("header", "entry"):
+        section = topo[key]
+        _expect_type(section, dict, where=f"{where}:topology_table.{key}")
+        _require_keys(section, ["name", "version", "size_bytes", "fields"], where=f"{where}:{key}")
+        _expect_type(section["fields"], list, where=f"{where}:{key}.fields")
+
+
+def _validate_bdt(spec: Dict[str, Any]) -> None:
+    where = "bdt.yaml"
+    for key in ("bdt_header", "bdt_entry", "irq_routing_table", "device_classes"):
+        if key not in spec:
+            raise SpecError(f"{where}: missing {key}")
+
+    for key in ("bdt_header", "bdt_entry"):
+        section = spec[key]
+        _expect_type(section, dict, where=f"{where}:{key}")
+        _require_keys(section, ["name", "version", "size_bytes", "fields"], where=f"{where}:{key}")
+        _expect_type(section["fields"], list, where=f"{where}:{key}.fields")
+
+    irq = spec["irq_routing_table"]
+    _expect_type(irq, dict, where=f"{where}:irq_routing_table")
+    _require_keys(irq, ["entry_size_bytes", "fields"], where=f"{where}:irq_routing_table")
+    _expect_type(irq["fields"], list, where=f"{where}:irq_routing_table.fields")
+
+    classes = spec["device_classes"]
+    _expect_type(classes, dict, where=f"{where}:device_classes")
+    _require_keys(classes, ["classes"], where=f"{where}:device_classes")
+    _expect_type(classes["classes"], list, where=f"{where}:device_classes.classes")
+    seen_class_vals = set()
+    seen_class_names = set()
+    for c in classes["classes"]:
+        _expect_type(c, dict, where=f"{where}:device_classes.classes[]")
+        _require_keys(c, ["name", "value", "description"], where=f"{where}:device_classes.classes[]")
+        name = c["name"]
+        seen_class_names.add(name)
+        v = c["value"]
+        if not isinstance(v, int) or v < 0 or v > 0xFFFF:
+            raise SpecError(f"{where}:{name}: class value must be u16")
+        if v in seen_class_vals:
+            raise SpecError(f"{where}:{name}: duplicate class value {v}")
+        seen_class_vals.add(v)
+    required_classes = {
+        "DEVCLASS_UART",
+        "DEVCLASS_TIMER",
+        "DEVCLASS_PIO",
+        "DEVCLASS_PIC",
+        "DEVCLASS_DMA",
+        "DEVCLASS_STORAGE",
+        "DEVCLASS_ACCEL",
+    }
+    missing = sorted(required_classes - seen_class_names)
+    if missing:
+        raise SpecError(f"{where}: missing required device classes: {', '.join(missing)}")
+
+
+def _validate_memory_attrs(spec: Dict[str, Any]) -> None:
+    where = "memory_attrs.yaml"
+    attrs = spec.get("attributes")
+    _expect_type(attrs, dict, where=f"{where}:attributes")
+    _require_keys(attrs, ["width_bits", "fields"], where=f"{where}:attributes")
+    width = attrs["width_bits"]
+    if not isinstance(width, int) or width <= 0:
+        raise SpecError(f"{where}:attributes.width_bits must be positive")
+    fields = attrs["fields"]
+    _expect_type(fields, list, where=f"{where}:attributes.fields")
+    seen_bits = set()
+    for f in fields:
+        _expect_type(f, dict, where=f"{where}:attributes.fields[]")
+        _require_keys(f, ["name", "bit", "description"], where=f"{where}:attributes.fields[]")
+        bit = f["bit"]
+        if not isinstance(bit, int) or bit < 0 or bit >= width:
+            raise SpecError(f"{where}:{f['name']}: bit out of range")
+        if bit in seen_bits:
+            raise SpecError(f"{where}:{f['name']}: duplicate bit {bit}")
+        seen_bits.add(bit)
+
+
+def _validate_external_if(spec: Dict[str, Any]) -> None:
+    where = "external_if.yaml"
+    legacy = spec.get("legacy_z80_bus_adapter")
+    _expect_type(legacy, dict, where=f"{where}:legacy_z80_bus_adapter")
+    _require_keys(legacy, ["profiles"], where=f"{where}:legacy_z80_bus_adapter")
+    _expect_type(legacy["profiles"], list, where=f"{where}:legacy_z80_bus_adapter.profiles")
+
+    modern = spec.get("modern_soc_external")
+    _expect_type(modern, dict, where=f"{where}:modern_soc_external")
+    _require_keys(modern, ["profiles"], where=f"{where}:modern_soc_external")
+    _expect_type(modern["profiles"], list, where=f"{where}:modern_soc_external.profiles")
+
+    dbg = spec.get("debug_transport")
+    _expect_type(dbg, dict, where=f"{where}:debug_transport")
+    _require_keys(dbg, ["minimum"], where=f"{where}:debug_transport")
+
+
+def _validate_interfaces(spec: Dict[str, Any]) -> None:
+    where = "interfaces.yaml"
+    interfaces = spec.get("interfaces")
+    _expect_type(interfaces, list, where=f"{where}:interfaces")
+    required_names = {"fabric_if", "csr_if", "irq_if", "dbg_if", "cai_if"}
+    seen_names = set()
+    seen_values = set()
+    for iface in interfaces:
+        _expect_type(iface, dict, where=f"{where}:interfaces[]")
+        _require_keys(iface, ["name", "value", "description"], where=f"{where}:interfaces[]")
+        name = iface["name"]
+        seen_names.add(name)
+        value = iface["value"]
+        if not isinstance(value, int) or value < 0 or value > 255:
+            raise SpecError(f"{where}:{name}: interface value must be 0..255")
+        if value in seen_values:
+            raise SpecError(f"{where}:{name}: duplicate interface value {value}")
+        seen_values.add(value)
+    missing = sorted(required_names - seen_names)
+    if missing:
+        raise SpecError(f"{where}: missing required interfaces: {', '.join(missing)}")
+
+
 def _validate_device_model(spec: Dict[str, Any]) -> None:
     where = "device_model.yaml"
 
@@ -592,6 +825,12 @@ def _validate_isa_z90(spec: Dict[str, Any]) -> None:
 def _validate_specs(specs: Dict[str, Dict[str, Any]]) -> None:
     _validate_tiers(specs["tiers.yaml"])
     _validate_mode_switch(specs["mode_switch.yaml"])
+    _validate_profiles(specs["profiles.yaml"])
+    _validate_topology(specs["topology.yaml"])
+    _validate_bdt(specs["bdt.yaml"])
+    _validate_memory_attrs(specs["memory_attrs.yaml"])
+    _validate_external_if(specs["external_if.yaml"])
+    _validate_interfaces(specs["interfaces.yaml"])
     _validate_discovery(specs["discovery.yaml"])
     _validate_csr_map(specs["csr_map.yaml"])
     _validate_device_model(specs["device_model.yaml"])
@@ -601,9 +840,15 @@ def _validate_specs(specs: Dict[str, Dict[str, Any]]) -> None:
     _validate_isa_z90(specs["isa_z90.yaml"])
 
 
-def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
+def _emit_sv(specs: Dict[str, Dict[str, Any]], gen_info: Dict[str, str]) -> str:
     tiers = specs["tiers.yaml"]
     mode = specs["mode_switch.yaml"]
+    profiles = specs["profiles.yaml"]
+    topology = specs["topology.yaml"]
+    bdt_spec = specs["bdt.yaml"]
+    mem_attrs = specs["memory_attrs.yaml"]
+    external_if = specs["external_if.yaml"]
+    interfaces = specs["interfaces.yaml"]
     disc = specs["discovery.yaml"]
     csr = specs["csr_map.yaml"]
     dev = specs["device_model.yaml"]
@@ -613,8 +858,10 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
     isa_z90 = specs["isa_z90.yaml"]
 
     out: List[str] = []
-    out.append("// AUTO-GENERATED FILE - DO NOT EDIT.")
-    out.append("// Generated by hdl/tools/gen_specs.py from hdl/spec/*.yaml.")
+    out.append("// GENERATED FILE — DO NOT EDIT.")
+    out.append(f"// Specs: {gen_info['spec_summary']}")
+    out.append(f"// Generated: {gen_info['timestamp']}")
+    out.append("// Source: hdl/tools/gen_specs.py")
     out.append("")
     out.append("package carbon_arch_pkg;")
     out.append("")
@@ -630,13 +877,24 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
         enum_name = f"carbon_{ladder['name']}_tier_e"
         out.append("  typedef enum logic [7:0] {")
         entries: List[str] = []
-        for tier in ladder["tiers"]:
-            entries.append(
-                f"    CARBON_{ladder_name}_TIER_{tier['id']}_{tier['mnemonic']} = 8'd{tier['value']}"
-            )
+        tier_by_value = {int(t["value"]): t for t in ladder["tiers"]}
+        for value in range(16):
+            tier = tier_by_value.get(value)
+            if tier is None:
+                tid = f"P{value}"
+                mnemonic = "RESERVED"
+            else:
+                tid = tier["id"]
+                mnemonic = tier["mnemonic"]
+            entries.append(f"    CARBON_{ladder_name}_TIER_{tid}_{mnemonic} = 8'd{value}")
         out.append(",\n".join(entries))
         out.append(f"  }} {enum_name};")
         out.append("")
+
+    out.append("  // Profile identifiers")
+    for prof in profiles["profiles"]:
+        out.append(f"  localparam int unsigned CARBON_{prof['id']} = {int(prof['value'])};")
+    out.append("")
 
     out.append("  // MODEFLAGS")
     modeflags = mode["modeflags"]
@@ -656,6 +914,37 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
     out.append(
         f"  localparam int unsigned CARBON_MODESTACK_RECOMMENDED_DEPTH = {mode['modestack']['recommended_depth']};"
     )
+    out.append("")
+
+    out.append("  // Memory attribute bits")
+    mem = mem_attrs["attributes"]
+    mem_width = int(mem["width_bits"])
+    out.append(f"  localparam int unsigned CARBON_MEM_ATTR_WIDTH_BITS = {mem_width};")
+    for field in mem["fields"]:
+        name = field["name"]
+        bit = int(field["bit"])
+        mask = 1 << bit
+        out.append(f"  localparam int unsigned CARBON_{name}_BIT = {bit};")
+        out.append(
+            f"  localparam logic [{mem_width-1}:0] CARBON_{name}_BIT_MASK = {_sv_hex(mask, mem_width)};"
+        )
+    out.append("")
+
+    out.append("  // Interface identifiers")
+    for iface in interfaces["interfaces"]:
+        name = str(iface["name"]).upper()
+        out.append(f"  localparam int unsigned CARBON_{name} = {int(iface['value'])};")
+    out.append("")
+
+    out.append("  // External interface profiles")
+    for profile in external_if["legacy_z80_bus_adapter"]["profiles"]:
+        out.append(
+            f"  localparam int unsigned CARBON_EXTIF_{profile['name']} = {int(profile['value'])};"
+        )
+    for profile in external_if["modern_soc_external"]["profiles"]:
+        out.append(
+            f"  localparam int unsigned CARBON_EXTIF_{profile['name']} = {int(profile['value'])};"
+        )
     out.append("")
 
     out.append("  // Numeric format identifiers")
@@ -678,6 +967,36 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"  localparam int unsigned CARBON_{leaf['name']} = {_sv_hex(leaf['id'], 32)};")
     out.append("")
 
+    out.append("  // Discovery table")
+    disc_table = disc["discovery_table"]
+    out.append(f"  localparam int unsigned CARBON_{disc_table['name']}_VERSION = {int(disc_table['version'])};")
+    out.append(f"  localparam int unsigned CARBON_{disc_table['name']}_SIZE_BYTES = {int(disc_table['size_bytes'])};")
+    if "pointer_model" in disc_table and isinstance(disc_table["pointer_model"], dict):
+        ptr_bits = disc_table["pointer_model"].get("pointer_width_bits")
+        if isinstance(ptr_bits, int):
+            out.append(f"  localparam int unsigned CARBON_{disc_table['name']}_POINTER_BITS = {ptr_bits};")
+    for f in disc_table["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{disc_table['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
+    out.append("  // Feature bitmap format")
+    bitmaps = disc["feature_bitmaps"]
+    out.append(f"  localparam int unsigned CARBON_FEATURE_BITMAP_WORD_BITS = {int(bitmaps['word_bits'])};")
+    out.append(f"  localparam int unsigned CARBON_FEATURE_BITMAP_WORDS = {int(bitmaps['words'])};")
+    out.append("")
+
+    out.append("  // Limits table")
+    limits = disc["limits_table"]
+    out.append(f"  localparam int unsigned CARBON_{limits['name']}_VERSION = {int(limits['version'])};")
+    out.append(f"  localparam int unsigned CARBON_{limits['name']}_SIZE_BYTES = {int(limits['size_bytes'])};")
+    for f in limits["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{limits['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
     out.append("  // Feature bit identifiers")
     for fs in disc["feature_sets"]:
         out.append(f"  // {fs['id']}")
@@ -690,6 +1009,24 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
             out.append(f"  localparam int unsigned CARBON_{name}_WORD = {word};")
             out.append(f"  localparam logic [31:0] CARBON_{name}_MASK = (32'h1 << {bit_in_word});")
         out.append("")
+
+    out.append("  // Topology table")
+    topo = topology["topology_table"]
+    topo_hdr = topo["header"]
+    topo_ent = topo["entry"]
+    out.append(f"  localparam int unsigned CARBON_{topo_hdr['name']}_VERSION = {int(topo_hdr['version'])};")
+    out.append(f"  localparam int unsigned CARBON_{topo_hdr['name']}_SIZE_BYTES = {int(topo_hdr['size_bytes'])};")
+    for f in topo_hdr["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{topo_hdr['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append(f"  localparam int unsigned CARBON_{topo_ent['name']}_VERSION = {int(topo_ent['version'])};")
+    out.append(f"  localparam int unsigned CARBON_{topo_ent['name']}_SIZE_BYTES = {int(topo_ent['size_bytes'])};")
+    for f in topo_ent["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{topo_ent['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
 
     out.append("  // CSR addresses")
     for reg in csr["csrs"]:
@@ -770,17 +1107,36 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
     out.append("")
 
     out.append("  // Device class identifiers")
-    for c in dev["device_classes"]["classes"]:
+    for c in bdt_spec["device_classes"]["classes"]:
         out.append(f"  localparam int unsigned CARBON_{c['name']} = {int(c['value'])};")
     out.append("")
 
     out.append("  // Board Device Table (BDT) header")
-    bdt = dev["bdt_header"]
+    bdt = bdt_spec["bdt_header"]
     out.append(f"  localparam int unsigned CARBON_{bdt['name']}_VERSION = {bdt['version']};")
     out.append(f"  localparam int unsigned CARBON_{bdt['name']}_SIZE_BYTES = {bdt['size_bytes']};")
     for f in bdt["fields"]:
         out.append(
             f"  localparam int unsigned CARBON_{bdt['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
+    out.append("  // Board Device Table (BDT) entry")
+    bdt_entry = bdt_spec["bdt_entry"]
+    out.append(f"  localparam int unsigned CARBON_{bdt_entry['name']}_VERSION = {bdt_entry['version']};")
+    out.append(f"  localparam int unsigned CARBON_{bdt_entry['name']}_SIZE_BYTES = {bdt_entry['size_bytes']};")
+    for f in bdt_entry["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{bdt_entry['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
+        )
+    out.append("")
+
+    out.append("  // BDT IRQ routing entries")
+    irq = bdt_spec["irq_routing_table"]
+    out.append(f"  localparam int unsigned CARBON_{irq['name']}_ENTRY_SIZE_BYTES = {int(irq['entry_size_bytes'])};")
+    for f in irq["fields"]:
+        out.append(
+            f"  localparam int unsigned CARBON_{irq['name']}_OFF_{str(f['name']).upper()} = {f['offset']};"
         )
     out.append("")
 
@@ -880,9 +1236,15 @@ def _emit_sv(specs: Dict[str, Dict[str, Any]]) -> str:
     return "\n".join(out)
 
 
-def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
+def _emit_c_header(specs: Dict[str, Dict[str, Any]], gen_info: Dict[str, str]) -> str:
     tiers = specs["tiers.yaml"]
     mode = specs["mode_switch.yaml"]
+    profiles = specs["profiles.yaml"]
+    topology = specs["topology.yaml"]
+    bdt_spec = specs["bdt.yaml"]
+    mem_attrs = specs["memory_attrs.yaml"]
+    external_if = specs["external_if.yaml"]
+    interfaces = specs["interfaces.yaml"]
     disc = specs["discovery.yaml"]
     csr = specs["csr_map.yaml"]
     dev = specs["device_model.yaml"]
@@ -892,8 +1254,10 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
     isa_z90 = specs["isa_z90.yaml"]
 
     out: List[str] = []
-    out.append("/* AUTO-GENERATED FILE - DO NOT EDIT. */")
-    out.append("/* Generated by hdl/tools/gen_specs.py from hdl/spec/*.yaml. */")
+    out.append("/* GENERATED FILE — DO NOT EDIT. */")
+    out.append(f"/* Specs: {gen_info['spec_summary']} */")
+    out.append(f"/* Generated: {gen_info['timestamp']} */")
+    out.append("/* Source: hdl/tools/gen_specs.py */")
     out.append("#pragma once")
     out.append("")
     out.append("#include <stdint.h>")
@@ -907,8 +1271,21 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
     out.append("/* Tier values */")
     for ladder in tiers["ladders"]:
         lname = str(ladder["name"]).upper()
-        for tier in ladder["tiers"]:
-            out.append(f"#define CARBON_{lname}_TIER_{tier['id']}_{tier['mnemonic']} ({tier['value']}u)")
+        tier_by_value = {int(t["value"]): t for t in ladder["tiers"]}
+        for value in range(16):
+            tier = tier_by_value.get(value)
+            if tier is None:
+                tid = f"P{value}"
+                mnemonic = "RESERVED"
+            else:
+                tid = tier["id"]
+                mnemonic = tier["mnemonic"]
+            out.append(f"#define CARBON_{lname}_TIER_{tid}_{mnemonic} ({value}u)")
+    out.append("")
+
+    out.append("/* Profile identifiers */")
+    for prof in profiles["profiles"]:
+        out.append(f"#define CARBON_{prof['id']} ({int(prof['value'])}u)")
     out.append("")
 
     out.append("/* MODEFLAGS */")
@@ -922,6 +1299,30 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"#define CARBON_{bit_name}_MASK (UINT32_C(1) << {b})")
     out.append(f"#define CARBON_MODESTACK_MIN_DEPTH ({mode['modestack']['min_depth']}u)")
     out.append(f"#define CARBON_MODESTACK_RECOMMENDED_DEPTH ({mode['modestack']['recommended_depth']}u)")
+    out.append("")
+
+    out.append("/* Memory attribute bits */")
+    mem = mem_attrs["attributes"]
+    mem_width = int(mem["width_bits"])
+    out.append(f"#define CARBON_MEM_ATTR_WIDTH_BITS ({mem_width}u)")
+    for field in mem["fields"]:
+        name = field["name"]
+        bit = int(field["bit"])
+        out.append(f"#define CARBON_{name}_BIT ({bit}u)")
+        out.append(f"#define CARBON_{name}_BIT_MASK (UINT32_C(1) << {bit})")
+    out.append("")
+
+    out.append("/* Interface identifiers */")
+    for iface in interfaces["interfaces"]:
+        name = str(iface["name"]).upper()
+        out.append(f"#define CARBON_{name} ({int(iface['value'])}u)")
+    out.append("")
+
+    out.append("/* External interface profiles */")
+    for profile in external_if["legacy_z80_bus_adapter"]["profiles"]:
+        out.append(f"#define CARBON_EXTIF_{profile['name']} ({int(profile['value'])}u)")
+    for profile in external_if["modern_soc_external"]["profiles"]:
+        out.append(f"#define CARBON_EXTIF_{profile['name']} ({int(profile['value'])}u)")
     out.append("")
 
     out.append("/* Numeric format identifiers */")
@@ -944,6 +1345,32 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"#define CARBON_{leaf['name']} ({_c_hex_u32(int(leaf['id']))})")
     out.append("")
 
+    out.append("/* Discovery table */")
+    disc_table = disc["discovery_table"]
+    out.append(f"#define CARBON_{disc_table['name']}_VERSION ({int(disc_table['version'])}u)")
+    out.append(f"#define CARBON_{disc_table['name']}_SIZE_BYTES ({int(disc_table['size_bytes'])}u)")
+    if "pointer_model" in disc_table and isinstance(disc_table["pointer_model"], dict):
+        ptr_bits = disc_table["pointer_model"].get("pointer_width_bits")
+        if isinstance(ptr_bits, int):
+            out.append(f"#define CARBON_{disc_table['name']}_POINTER_BITS ({ptr_bits}u)")
+    for f in disc_table["fields"]:
+        out.append(f"#define CARBON_{disc_table['name']}_OFF_{str(f['name']).upper()} ({int(f['offset'])}u)")
+    out.append("")
+
+    out.append("/* Feature bitmap format */")
+    bitmaps = disc["feature_bitmaps"]
+    out.append(f"#define CARBON_FEATURE_BITMAP_WORD_BITS ({int(bitmaps['word_bits'])}u)")
+    out.append(f"#define CARBON_FEATURE_BITMAP_WORDS ({int(bitmaps['words'])}u)")
+    out.append("")
+
+    out.append("/* Limits table */")
+    limits = disc["limits_table"]
+    out.append(f"#define CARBON_{limits['name']}_VERSION ({int(limits['version'])}u)")
+    out.append(f"#define CARBON_{limits['name']}_SIZE_BYTES ({int(limits['size_bytes'])}u)")
+    for f in limits["fields"]:
+        out.append(f"#define CARBON_{limits['name']}_OFF_{str(f['name']).upper()} ({int(f['offset'])}u)")
+    out.append("")
+
     out.append("/* Feature bit identifiers */")
     for fs in disc["feature_sets"]:
         out.append(f"/* {fs['id']} */")
@@ -956,6 +1383,20 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
             out.append(f"#define CARBON_{name}_WORD ({word}u)")
             out.append(f"#define CARBON_{name}_MASK (UINT32_C(1) << {bit_in_word})")
         out.append("")
+
+    out.append("/* Topology table */")
+    topo = topology["topology_table"]
+    topo_hdr = topo["header"]
+    topo_ent = topo["entry"]
+    out.append(f"#define CARBON_{topo_hdr['name']}_VERSION ({int(topo_hdr['version'])}u)")
+    out.append(f"#define CARBON_{topo_hdr['name']}_SIZE_BYTES ({int(topo_hdr['size_bytes'])}u)")
+    for f in topo_hdr["fields"]:
+        out.append(f"#define CARBON_{topo_hdr['name']}_OFF_{str(f['name']).upper()} ({int(f['offset'])}u)")
+    out.append(f"#define CARBON_{topo_ent['name']}_VERSION ({int(topo_ent['version'])}u)")
+    out.append(f"#define CARBON_{topo_ent['name']}_SIZE_BYTES ({int(topo_ent['size_bytes'])}u)")
+    for f in topo_ent["fields"]:
+        out.append(f"#define CARBON_{topo_ent['name']}_OFF_{str(f['name']).upper()} ({int(f['offset'])}u)")
+    out.append("")
 
     out.append("/* CSR addresses */")
     for reg in csr["csrs"]:
@@ -1026,16 +1467,31 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
     out.append("")
 
     out.append("/* Device class identifiers */")
-    for c in dev["device_classes"]["classes"]:
+    for c in bdt_spec["device_classes"]["classes"]:
         out.append(f"#define CARBON_{c['name']} ({int(c['value'])}u)")
     out.append("")
 
     out.append("/* Board Device Table (BDT) header */")
-    bdt = dev["bdt_header"]
+    bdt = bdt_spec["bdt_header"]
     out.append(f"#define CARBON_{bdt['name']}_VERSION ({int(bdt['version'])}u)")
     out.append(f"#define CARBON_{bdt['name']}_SIZE_BYTES ({int(bdt['size_bytes'])}u)")
     for f in bdt["fields"]:
         out.append(f"#define CARBON_{bdt['name']}_OFF_{str(f['name']).upper()} ({int(f['offset'])}u)")
+    out.append("")
+
+    out.append("/* Board Device Table (BDT) entry */")
+    bdt_entry = bdt_spec["bdt_entry"]
+    out.append(f"#define CARBON_{bdt_entry['name']}_VERSION ({int(bdt_entry['version'])}u)")
+    out.append(f"#define CARBON_{bdt_entry['name']}_SIZE_BYTES ({int(bdt_entry['size_bytes'])}u)")
+    for f in bdt_entry["fields"]:
+        out.append(f"#define CARBON_{bdt_entry['name']}_OFF_{str(f['name']).upper()} ({int(f['offset'])}u)")
+    out.append("")
+
+    out.append("/* BDT IRQ routing entries */")
+    irq = bdt_spec["irq_routing_table"]
+    out.append(f"#define CARBON_{irq['name']}_ENTRY_SIZE_BYTES ({int(irq['entry_size_bytes'])}u)")
+    for f in irq["fields"]:
+        out.append(f"#define CARBON_{irq['name']}_OFF_{str(f['name']).upper()} ({int(f['offset'])}u)")
     out.append("")
 
     out.append("/* Device capability descriptor */")
@@ -1123,9 +1579,15 @@ def _emit_c_header(specs: Dict[str, Dict[str, Any]]) -> str:
     return "\n".join(out)
 
 
-def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
+def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]], gen_info: Dict[str, str]) -> str:
     tiers = specs["tiers.yaml"]
     mode = specs["mode_switch.yaml"]
+    profiles = specs["profiles.yaml"]
+    topology = specs["topology.yaml"]
+    bdt_spec = specs["bdt.yaml"]
+    mem_attrs = specs["memory_attrs.yaml"]
+    external_if = specs["external_if.yaml"]
+    interfaces = specs["interfaces.yaml"]
     disc = specs["discovery.yaml"]
     csr = specs["csr_map.yaml"]
     dev = specs["device_model.yaml"]
@@ -1137,7 +1599,10 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
     out: List[str] = []
     out.append("# Project Carbon — Frozen Architecture Contracts (v1.0)")
     out.append("")
-    out.append("_AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._")
+    out.append("_GENERATED FILE — DO NOT EDIT._")
+    out.append(f"_Specs: {gen_info['spec_summary']}._")
+    out.append(f"_Generated: {gen_info['timestamp']}._")
+    out.append("_Source: `hdl/tools/gen_specs.py`._")
     out.append("")
 
     out.append("## A) Compatibility Tier Ladders")
@@ -1188,7 +1653,36 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
                     )
             out.append("")
 
-    out.append("## B) Mode Switching Contract")
+    out.append("## B) Profiles")
+    out.append("")
+    out.append("| Profile | ID | Description |")
+    out.append("|---|---:|---|")
+    for prof in profiles["profiles"]:
+        out.append(
+            f"| `{prof['id']}` | `{prof['value']}` | {_md_escape(prof['description'])} |"
+        )
+    out.append("")
+    out.append("### Profile Requirements")
+    out.append("")
+    out.append("| Profile | Blocks | Discovery Tables | Min Devices | Legacy Z80 Bus |")
+    out.append("|---|---|---|---|:---:|")
+    for prof in profiles["profiles"]:
+        blocks = ", ".join([f"`{b}`" for b in prof["required_blocks"]]) if prof["required_blocks"] else ""
+        tables = (
+            ", ".join([f"`{t}`" for t in prof["required_discovery_tables"]])
+            if prof["required_discovery_tables"]
+            else ""
+        )
+        devices = (
+            ", ".join([f"`{d}`" for d in prof["required_min_devices"]])
+            if prof["required_min_devices"]
+            else ""
+        )
+        legacy = "true" if prof["legacy_z80_bus_adapter"] else ""
+        out.append(f"| `{prof['id']}` | {blocks} | {tables} | {devices} | {legacy} |")
+    out.append("")
+
+    out.append("## C) Mode Switching Contract")
     out.append("")
     out.append("### Instructions")
     out.append("")
@@ -1213,11 +1707,43 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
     out.append(f"- Recommended depth: `{mode['modestack']['recommended_depth']}`")
     out.append("")
 
-    out.append("## C) Discovery / CPUID / CAPS")
+    out.append("## D) Discovery / CPUID / CAPS")
     out.append("")
     out.append(f"- Endianness: `{disc['packing']['endianness']}`")
     out.append(f"- Leaf return words: `{disc['packing']['leaf_return_words']}` x `{disc['packing']['word_bits']}`-bit")
     out.append(f"- Unknown leaf behavior: `{disc['leaf_rules']['unknown_leaf_behavior']}`")
+    out.append("")
+    out.append("### Discovery Table (V1)")
+    out.append("")
+    disc_table = disc["discovery_table"]
+    out.append(
+        f"- Format: `{disc_table['name']}`, version `{disc_table['version']}`, size `{disc_table['size_bytes']}` bytes"
+    )
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in disc_table["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+    out.append("### Feature Bitmap Format")
+    out.append("")
+    out.append(f"- Words: `{disc['feature_bitmaps']['words']}` x `{disc['feature_bitmaps']['word_bits']}`-bit")
+    out.append("")
+    out.append("### Limits Table (V1)")
+    out.append("")
+    limits = disc["limits_table"]
+    out.append(
+        f"- Format: `{limits['name']}`, version `{limits['version']}`, size `{limits['size_bytes']}` bytes"
+    )
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in limits["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
     out.append("")
     out.append("### CPUID Leaf IDs")
     out.append("")
@@ -1244,7 +1770,31 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
                 out.append(f"| `{_fmt_hex(int(row['leaf']), 32)}` | `{row['name']}` |")
     out.append("")
 
-    out.append("## D) CSR Namespace + Register Model")
+    out.append("## E) Topology Table")
+    out.append("")
+    topo = topology["topology_table"]
+    topo_hdr = topo["header"]
+    topo_ent = topo["entry"]
+    out.append(f"- Header: `{topo_hdr['name']}`, version `{topo_hdr['version']}`, size `{topo_hdr['size_bytes']}` bytes")
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in topo_hdr["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+    out.append(f"- Entry: `{topo_ent['name']}`, version `{topo_ent['version']}`, size `{topo_ent['size_bytes']}` bytes")
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in topo_ent["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("## F) CSR Namespace + Register Model")
     out.append("")
     out.append(f"- Unknown CSR behavior: `{csr['access_control']['unknown_csr_behavior']}`")
     out.append("")
@@ -1256,7 +1806,30 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
         )
     out.append("")
 
-    out.append("## E) Fabric Transaction Contract")
+    out.append("## G) Memory Attributes")
+    out.append("")
+    out.append(f"- Width: `{mem_attrs['attributes']['width_bits']}` bits")
+    out.append("")
+    out.append("| Name | Bit | Description |")
+    out.append("|---|---:|---|")
+    for f in mem_attrs["attributes"]["fields"]:
+        out.append(f"| `{f['name']}` | `{f['bit']}` | {_md_escape(f['description'])} |")
+    out.append("")
+    out.append("### DMA Coherence Baseline")
+    out.append("")
+    dma = mem_attrs.get("dma_coherence", {})
+    if isinstance(dma, dict):
+        out.append(f"- Baseline: `{dma.get('baseline','')}`")
+        for req in dma.get("requirements", []):
+            out.append(f"- {_md_escape(req)}")
+    out.append("")
+    out.append("### P7 Cache Maintenance Hooks")
+    out.append("")
+    for op in mem_attrs.get("p7_requirements", {}).get("cache_maintenance_ops", []):
+        out.append(f"- `{op['name']}`: {_md_escape(op['description'])}")
+    out.append("")
+
+    out.append("## H) Fabric Transaction Contract")
     out.append("")
     out.append("### Transaction Types")
     out.append("")
@@ -1280,7 +1853,7 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"| `{r['name']}` | `{r['value']}` | {_md_escape(r['description'])} |")
     out.append("")
 
-    out.append("## F) Carbon Accelerator Interface (CAI)")
+    out.append("## I) Carbon Accelerator Interface (CAI)")
     out.append("")
     out.append("### Opcode Groups")
     out.append("")
@@ -1386,7 +1959,7 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
             out.append("```")
             out.append("")
 
-    out.append("## G) Device Model, BDT, and Turbo Queues")
+    out.append("## J) Device Model and BDT Schema")
     out.append("")
     dpm = dev["dual_personality_device_model"]
     out.append("### Dual Personality Device Model")
@@ -1413,18 +1986,46 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
     out.append("")
     out.append("| Class | Value | Description |")
     out.append("|---|---:|---|")
-    for c in dev["device_classes"]["classes"]:
+    for c in bdt_spec["device_classes"]["classes"]:
         out.append(f"| `{c['name']}` | `{_fmt_hex(int(c['value']), 16)}` | {_md_escape(c['description'])} |")
     out.append("")
 
     out.append("### BDT Header (V1)")
     out.append("")
-    bdt = dev["bdt_header"]
+    bdt = bdt_spec["bdt_header"]
     out.append(f"- Format: `{bdt['name']}`, version `{bdt['version']}`, size `{bdt['size_bytes']}` bytes")
     out.append("")
     out.append("| Field | Offset | Width (bytes) | Type | Description |")
     out.append("|---|---:|---:|---|---|")
     for f in bdt["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### BDT Entry (V1)")
+    out.append("")
+    bdt_entry = bdt_spec["bdt_entry"]
+    out.append(
+        f"- Format: `{bdt_entry['name']}`, version `{bdt_entry['version']}`, size `{bdt_entry['size_bytes']}` bytes"
+    )
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in bdt_entry["fields"]:
+        out.append(
+            f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
+        )
+    out.append("")
+
+    out.append("### BDT IRQ Routing Entry (V1)")
+    out.append("")
+    irq = bdt_spec["irq_routing_table"]
+    out.append(f"- Entry size: `{irq['entry_size_bytes']}` bytes")
+    out.append("")
+    out.append("| Field | Offset | Width (bytes) | Type | Description |")
+    out.append("|---|---:|---:|---|---|")
+    for f in irq["fields"]:
         out.append(
             f"| `{f['name']}` | `{f['offset']}` | `{f['width_bytes']}` | `{f['type']}` | {_md_escape(f['description'])} |"
         )
@@ -1513,7 +2114,42 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"| `{s['name']}` | `{s['value']}` | {_md_escape(s['description'])} |")
     out.append("")
 
-    out.append("## H) Z90 Fast-Path ISA (Opcode Pages)")
+    out.append("## K) External Interfaces")
+    out.append("")
+    out.append("### Legacy Z80 Bus Adapter Profiles")
+    out.append("")
+    out.append("| Profile | Value | Description |")
+    out.append("|---|---:|---|")
+    for profile in external_if["legacy_z80_bus_adapter"]["profiles"]:
+        out.append(
+            f"| `{profile['name']}` | `{profile['value']}` | {_md_escape(profile['description'])} |"
+        )
+    out.append("")
+    out.append("### Modern SoC External Profiles")
+    out.append("")
+    out.append("| Profile | Value | Description |")
+    out.append("|---|---:|---|")
+    for profile in external_if["modern_soc_external"]["profiles"]:
+        out.append(
+            f"| `{profile['name']}` | `{profile['value']}` | {_md_escape(profile['description'])} |"
+        )
+    out.append("")
+    out.append("### Debug Transport")
+    out.append("")
+    out.append(f"- Minimum: `{external_if['debug_transport']['minimum']}`")
+    out.append("")
+
+    out.append("## L) Common Interfaces")
+    out.append("")
+    out.append("| Interface | Value | Description |")
+    out.append("|---|---:|---|")
+    for iface in interfaces["interfaces"]:
+        out.append(
+            f"| `{iface['name']}` | `{iface['value']}` | {_md_escape(iface['description'])} |"
+        )
+    out.append("")
+
+    out.append("## M) Z90 Fast-Path ISA (Opcode Pages)")
     out.append("")
     out.append("### Opcode Pages")
     out.append("")
@@ -1550,7 +2186,7 @@ def _emit_arch_contracts_md(specs: Dict[str, Dict[str, Any]]) -> str:
         out.append(f"| `{o['name']}` | `{o['value']}` | {_md_escape(o['description'])} |")
     out.append("")
 
-    out.append("## I) Numeric Formats")
+    out.append("## N) Numeric Formats")
     out.append("")
     out.append("| Name | Value | Width | Exp | Frac | Bias | Description |")
     out.append("|---|---:|---:|---:|---:|---:|---|")
@@ -1588,13 +2224,14 @@ def main(argv: Sequence[str]) -> int:
     try:
         specs = _load_specs(spec_dir)
         _validate_specs(specs)
+        gen_info = _build_gen_info(specs)
 
         out_gen.mkdir(parents=True, exist_ok=True)
         out_docs.mkdir(parents=True, exist_ok=True)
 
-        _write_text_unix(out_gen / "carbon_arch_pkg.sv", _emit_sv(specs) + "\n")
-        _write_text_unix(out_gen / "carbon_arch.h", _emit_c_header(specs) + "\n")
-        _write_text_unix(out_docs / "ARCH_CONTRACTS.md", _emit_arch_contracts_md(specs) + "\n")
+        _write_text_unix(out_gen / "carbon_arch_pkg.sv", _emit_sv(specs, gen_info) + "\n")
+        _write_text_unix(out_gen / "carbon_arch.h", _emit_c_header(specs, gen_info) + "\n")
+        _write_text_unix(out_docs / "ARCH_CONTRACTS.md", _emit_arch_contracts_md(specs, gen_info) + "\n")
         return 0
     except SpecError as e:
         print(f"gen_specs.py: ERROR: {e}", file=sys.stderr)

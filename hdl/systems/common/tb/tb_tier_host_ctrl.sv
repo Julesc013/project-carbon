@@ -14,7 +14,7 @@ module tb_tier_host_ctrl;
 
   localparam logic [CARBON_FABRIC_ATTR_WIDTH_BITS-1:0] ATTR_IO =
       logic [CARBON_FABRIC_ATTR_WIDTH_BITS-1:0]'(
-          CARBON_FABRIC_ATTR_IO_SPACE_MASK | CARBON_FABRIC_ATTR_ORDERED_MASK
+          CARBON_MEM_ATTR_IO_SPACE_MASK | CARBON_MEM_ATTR_ORDERED_MASK
       );
 
   tier_host_ctrl #(

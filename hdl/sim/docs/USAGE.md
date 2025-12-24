@@ -11,7 +11,7 @@
 - Generate architecture constants:
   - `scripts/gen_arch.sh` (Linux/macOS)
   - `scripts/gen_arch.ps1` (Windows)
-- Run the default smoke suite (contract + system):
+- Run the default contract suite:
   - `scripts/run_sim.sh`
   - `scripts/run_sim.ps1`
 - Run all contract tests:
@@ -20,12 +20,15 @@
 - Run all tests in the manifest:
   - `scripts/run_sim.sh --all`
   - `scripts/run_sim.ps1 -All`
+- Override deterministic seed:
+  - `scripts/run_sim.sh --seed 123`
+  - `scripts/run_sim.ps1 -Seed 123`
 - Run a single test target:
   - `scripts/run_sim.sh --test tb_fabric_contract`
   - `scripts/run_sim.ps1 -Test tb_fabric_contract`
 - List available tests:
-  - `scripts/run_sim.sh --list --suite smoke`
-  - `scripts/run_sim.ps1 -List -Suite smoke`
+  - `scripts/run_sim.sh --list --suite contract`
+  - `scripts/run_sim.ps1 -List -Suite contract`
 - List optional local tests:
   - `scripts/run_sim.sh --list --suite optional`
   - `scripts/run_sim.ps1 -List -Suite optional`
@@ -53,9 +56,10 @@ To add a new TB:
 ## Deterministic Seeding
 
 Contract tests must be deterministic. Use fixed seeds in testbenches (for
-example, a localparam or LFSR seed), and avoid unseeded `$urandom` calls. If a
-test needs configurable variability, add an explicit plusarg (for example,
-`+seed=<n>`) with a fixed default.
+example, a localparam or LFSR seed), and avoid unseeded `$urandom` calls. The
+runner passes `+SEED=<n>` (default `1`); override via `--seed` or `CARBON_SEED`.
+If a test needs configurable variability, use the `SEED` plusarg and provide a
+fixed fallback.
 
 ## Simulator Selection
 

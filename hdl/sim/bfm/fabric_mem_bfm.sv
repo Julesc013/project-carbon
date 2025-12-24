@@ -98,12 +98,27 @@ module fabric_mem_bfm #(
   endtask
 
 `ifndef SYNTHESIS
+  task automatic mem_write8(input int unsigned addr, input logic [7:0] data);
+    if (addr < MEM_BYTES) begin
+      mem[addr] = data;
+    end
+  endtask
+
+  function automatic logic [7:0] mem_read8(input int unsigned addr);
+    if (addr < MEM_BYTES) mem_read8 = mem[addr];
+    else mem_read8 = 8'h00;
+  endfunction
+
   task automatic mem_load_hex(input string path);
     $readmemh(path, mem);
   endtask
 
   task automatic mem_load_bin(input string path);
     $readmemb(path, mem);
+  endtask
+
+  task automatic set_stall_seed(input logic [31:0] seed);
+    lfsr_q = seed;
   endtask
 
   task automatic set_stall_mask(input logic [31:0] mask);

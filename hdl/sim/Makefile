@@ -9,9 +9,11 @@
 #   make tb_z85
 #   make tb_z85_zex
 #   make tb_z90
-#   make tb_am9513_scalar
-#   make tb_am9514_vector
-#   make tb_am9515_tensor
+#   make tb_am95xx_p0
+#   make tb_am95xx_p1
+#   make tb_am95xx_p2_scalar
+#   make tb_am95xx_p3_vector
+#   make tb_am95xx_p4_tensor
 #   make tb_z480_scaffold
 #   make tb_z480_core_basic
 #   make tb_8096
@@ -29,6 +31,9 @@ IVERILOG ?= iverilog
 VVP      ?= vvp
 VERILATOR ?= verilator
 VERILATOR_FLAGS ?= -Wall --binary --timing -sv
+
+SEED ?= 1
+SIM_ARGS ?= +SEED=$(SEED)
 
 BUILD_DIR := build
 
@@ -87,6 +92,26 @@ AM9514_VECTOR_SV := \
 AM9515_TENSOR_SV := \
   $(AM9513_RTL_SV) \
   ../cores/Am9513/tb/tb_am9515_tensor.sv
+
+AM95XX_P0_SV := \
+  $(AM9513_SCALAR_SV) \
+  ../cores/Am9513/tb/tb_am95xx_p0.sv
+
+AM95XX_P1_SV := \
+  $(AM9513_SCALAR_SV) \
+  ../cores/Am9513/tb/tb_am95xx_p1.sv
+
+AM95XX_P2_SCALAR_SV := \
+  $(AM9513_SCALAR_SV) \
+  ../cores/Am9513/tb/tb_am95xx_p2_scalar.sv
+
+AM95XX_P3_VECTOR_SV := \
+  $(AM9514_VECTOR_SV) \
+  ../cores/Am9513/tb/tb_am95xx_p3_vector.sv
+
+AM95XX_P4_TENSOR_SV := \
+  $(AM9515_TENSOR_SV) \
+  ../cores/Am9513/tb/tb_am95xx_p4_tensor.sv
 
 Z480_SV := \
   ../cores/Z480/rtl/z480_pkg.sv \
@@ -186,6 +211,10 @@ Z380_PLATFORM_SV := \
   ../uncore/Z380_platform/rtl/z380_chipselect.sv \
   ../uncore/Z380_platform/rtl/z380_waitgen.sv \
   ../uncore/Z380_platform/rtl/z380_dram_refresh.sv
+
+Z380_DIRECTED_SV := \
+  $(Z380_RTL_SV) \
+  ../cores/Z380/tb/tb_z380_core.sv
 
 X96_8096_RTL_SV := \
   ../cores/8096/rtl/cpu_8096_pkg.sv \
@@ -309,17 +338,17 @@ ifeq ($(SIM),verilator)
 define run_tb
         mkdir -p $(BUILD_DIR)/verilator/$1
         $(VERILATOR) $(VERILATOR_FLAGS) --top-module $1 -Mdir $(BUILD_DIR)/verilator/$1 -o $(BUILD_DIR)/verilator/$1/$1 $2
-        $(BUILD_DIR)/verilator/$1/$1
+        $(BUILD_DIR)/verilator/$1/$1 $(SIM_ARGS)
 endef
 else
 define run_tb
-	$(IVERILOG) $(IVERILOG_FLAGS) -o $(BUILD_DIR)/$1.vvp $2
-	$(VVP) $(BUILD_DIR)/$1.vvp
+	$(IVERILOG) $(IVERILOG_FLAGS) -s $1 -o $(BUILD_DIR)/$1.vvp $2
+	$(VVP) $(BUILD_DIR)/$1.vvp $(SIM_ARGS)
 endef
 endif
 
-.PHONY: all clean tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z85_zex tb_z90 tb_am9513 tb_am9513_scalar tb_am9514_vector tb_am9515_tensor tb_carbonio tb_carbondma tb_z480_scaffold tb_z480_core_basic tb_8096 tb_8097 tb_carbonz80 tb_carbonz80_tiers tb_carbonz90 tb_carbonz90_tiers tb_carbonz380_smoke tb_carbonz380_tiers tb_carbonz480 tb_carbonz480_smoke tb_tier_host_ctrl tb_carbonx86 tb_carbonx96
-all: tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_z85 tb_z90 tb_am9513_scalar tb_am9514_vector tb_am9515_tensor tb_z480_scaffold tb_z480_core_basic tb_8096 tb_8097 tb_carbonz80 tb_carbonz80_tiers tb_carbonz90 tb_carbonz90_tiers tb_carbonz380_smoke tb_carbonz380_tiers tb_carbonz480 tb_carbonz480_smoke tb_tier_host_ctrl tb_carbonx86 tb_carbonx96
+.PHONY: all clean tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_discovery_contract tb_z85 tb_z85_directed tb_z85_zex tb_z90 tb_z90_directed tb_z380_directed tb_am9513 tb_am9513_scalar tb_am9514_vector tb_am9515_tensor tb_am95xx_p0 tb_am95xx_p1 tb_am95xx_p2_scalar tb_am95xx_p3_vector tb_am95xx_p4_tensor tb_carbonio tb_carbondma tb_z480_scaffold tb_z480_core_basic tb_8096 tb_8097 tb_carbonz80 tb_carbonz80_tiers tb_carbonz90 tb_carbonz90_tiers tb_carbonz380_smoke tb_carbonz380_tiers tb_carbonz480 tb_carbonz480_smoke tb_tier_host_ctrl tb_carbonx86 tb_carbonx96
+all: tb_fabric_contract tb_csr_contract tb_irq_contract tb_fabric_arbiter tb_irq_ctrl tb_ipi_mailbox tb_trace_ring tb_cai_contract tb_discovery_contract tb_z85_directed tb_z90_directed tb_z380_directed tb_am95xx_p0 tb_am95xx_p1 tb_am95xx_p2_scalar tb_am95xx_p3_vector tb_am95xx_p4_tensor tb_z480_scaffold tb_z480_core_basic tb_8096 tb_8097 tb_carbonz80 tb_carbonz80_tiers tb_carbonz90 tb_carbonz90_tiers tb_carbonz380_smoke tb_carbonz380_tiers tb_carbonz480 tb_carbonz480_smoke tb_tier_host_ctrl tb_carbonx86 tb_carbonx96
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -346,16 +375,28 @@ tb_trace_ring: $(BUILD_DIR)
 	$(call run_tb,tb_trace_ring,$(COMMON_SV) tb/tb_trace_ring.sv)
 
 tb_cai_contract: $(BUILD_DIR)
-	$(call run_tb,tb_cai_contract,$(COMMON_SV) $(AM9513_RTL_SV) tb/tb_cai_contract.sv)
+	$(call run_tb,tb_cai_contract,$(COMMON_SV) tb/tb_cai_contract.sv)
+
+tb_discovery_contract: $(BUILD_DIR)
+	$(call run_tb,tb_discovery_contract,$(COMMON_SV) tb/tb_discovery_contract.sv)
 
 tb_z85: $(BUILD_DIR)
 	$(call run_tb,tb_z85,$(COMMON_SV) $(Z85_SV))
+
+tb_z85_directed: $(BUILD_DIR)
+	$(call run_tb,tb_z85_directed,$(COMMON_SV) $(Z85_SV) ../cores/Z85/tb/tb_z85_directed.sv)
 
 tb_z85_zex: $(BUILD_DIR)
 	$(call run_tb,tb_z85_zex,$(COMMON_SV) $(Z85_ZEX_SV))
 
 tb_z90: $(BUILD_DIR)
 	$(call run_tb,tb_z90,$(COMMON_SV) $(Z90_SV))
+
+tb_z90_directed: $(BUILD_DIR)
+	$(call run_tb,tb_z90_directed,$(COMMON_SV) $(Z90_SV) ../cores/Z90/tb/tb_z90_directed.sv)
+
+tb_z380_directed: $(BUILD_DIR)
+	$(call run_tb,tb_z380_directed,$(COMMON_SV) $(Z380_DIRECTED_SV))
 
 tb_am9513_scalar: $(BUILD_DIR)
 	$(call run_tb,tb_am9513_scalar,$(COMMON_SV) $(AM9513_SCALAR_SV))
@@ -365,6 +406,21 @@ tb_am9514_vector: $(BUILD_DIR)
 
 tb_am9515_tensor: $(BUILD_DIR)
 	$(call run_tb,tb_am9515_tensor,$(COMMON_SV) $(AM9515_TENSOR_SV))
+
+tb_am95xx_p0: $(BUILD_DIR)
+	$(call run_tb,tb_am95xx_p0,$(COMMON_SV) $(AM95XX_P0_SV))
+
+tb_am95xx_p1: $(BUILD_DIR)
+	$(call run_tb,tb_am95xx_p1,$(COMMON_SV) $(AM95XX_P1_SV))
+
+tb_am95xx_p2_scalar: $(BUILD_DIR)
+	$(call run_tb,tb_am95xx_p2_scalar,$(COMMON_SV) $(AM95XX_P2_SCALAR_SV))
+
+tb_am95xx_p3_vector: $(BUILD_DIR)
+	$(call run_tb,tb_am95xx_p3_vector,$(COMMON_SV) $(AM95XX_P3_VECTOR_SV))
+
+tb_am95xx_p4_tensor: $(BUILD_DIR)
+	$(call run_tb,tb_am95xx_p4_tensor,$(COMMON_SV) $(AM95XX_P4_TENSOR_SV))
 
 tb_am9513: tb_am9513_scalar
 

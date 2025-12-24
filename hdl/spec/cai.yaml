@@ -1,8 +1,8 @@
 spec_version: 1.0
 name: cai
 description: Carbon Accelerator Interface (CAI) contract (queues, descriptors, completions).
-revision: v1.0.0
-created: 2025-12-15
+revision: v1.1.0
+created: 2025-12-24
 stable: true
 
 queue_model:
@@ -16,6 +16,7 @@ queue_model:
   ordering:
     - Software must ensure descriptor writes are globally visible before ringing the doorbell.
     - A fence is required between descriptor stores and doorbell writes on weakly-ordered systems.
+    - Software must issue a fence after reading a completion record before consuming result data.
   security_hooks:
     - IOMMU integration is optional; descriptors must be considered untrusted inputs by the device.
 
@@ -28,24 +29,70 @@ context_model:
 opcode_model:
   description: Opcode space partitioning for scalar, vector, and tensor operations.
   opcode_groups:
-    - name: CAI_OPGROUP_SCALAR
+    - name: AM95_SCALAR
       value: 0
-      description: Scalar/legacy math operations (Am9511/Am9512/Am9513 class).
-    - name: CAI_OPGROUP_VECTOR
+      description: Am95xx scalar math operations (Am9512+/Am9513 class).
+    - name: AM95_VECTOR
       value: 1
-      description: Vector/SIMD math operations (Am9514 class).
-    - name: CAI_OPGROUP_TENSOR
+      description: Am95xx vector/SIMD math operations (Am9514 class).
+    - name: AM95_TENSOR
       value: 2
-      description: Matrix/tensor math operations (Am9515 class).
+      description: Am95xx matrix/tensor operations (Am9515 class).
+    - name: DMA_COPY
+      value: 3
+      description: Future DMA copy operations.
+    - name: DMA_FILL
+      value: 4
+      description: Future DMA fill operations.
+    - name: UART_STREAM
+      value: 5
+      description: Future UART stream operations.
   reserved_group_values:
-    - range: [3, 255]
+    - range: [6, 255]
       description: Reserved for future opcode groups.
+
+descriptor_header:
+  name: CAI_DESC_HDR_V1
+  version: 1
+  size_bytes: 24
+  description: Common descriptor header fields shared across CAI submissions.
+  fields:
+    - name: desc_version
+      offset: 0
+      width_bytes: 2
+      type: u16
+      description: Descriptor format version (must be 1 for v1.0).
+    - name: opcode_group
+      offset: 20
+      width_bytes: 1
+      type: u8
+      description: Opcode group selector (see opcode_model.opcode_groups).
+    - name: opcode
+      offset: 4
+      width_bytes: 4
+      type: u32
+      description: Operation code within the opcode_group namespace.
+    - name: context_id
+      offset: 12
+      width_bytes: 2
+      type: u16
+      description: Context identifier.
+    - name: tag
+      offset: 16
+      width_bytes: 4
+      type: u32
+      description: Opaque tag returned in the completion record.
+    - name: flags
+      offset: 8
+      width_bytes: 4
+      type: u32
+      description: Operation flags (reserved bits must be 0).
 
 submission_descriptor:
   name: CAI_SUBMIT_DESC_V1
   version: 1
   size_bytes: 64
-  description: Fixed-size submission descriptor with opcode grouping and reserved tensor fields.
+  description: Fixed-size submission descriptor; includes the common descriptor header fields.
   fields:
     - name: desc_version
       offset: 0
@@ -339,6 +386,13 @@ reserved_numeric_ranges:
   - name: cai_status_values
     range: [5, 65535]
     description: Reserved for future completion status codes.
+
+bdt_integration:
+  description: CAI accelerators appear in the BDT with doorbell and ring metadata.
+  requirements:
+    - Each CAI-capable device has a BDT entry with CSR base and queue doorbell metadata.
+    - Submission and completion rings reside in memory and are described by CSR or BDT fields.
+    - Legacy MMIO personalities may exist, but CAI-native is required for Am9513+ tiers.
 
 examples:
   - name: example_descriptor

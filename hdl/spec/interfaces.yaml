@@ -1,0 +1,41 @@
+spec_version: 1.0
+name: interfaces
+description: Common internal interface definitions for Project Carbon.
+revision: v1.0.0
+created: 2025-12-24
+stable: true
+
+interfaces:
+  - name: fabric_if
+    value: 0
+    description: Fabric request/response channel carrying transactions and attributes.
+    contract:
+      - Uses fabric.transaction_types and fabric.fabric_attributes.
+      - Ready/valid handshake with stable signals under backpressure.
+  - name: csr_if
+    value: 1
+    description: CSR access interface for control/status registers.
+    contract:
+      - Requests are explicit read/write operations.
+      - Responses return data or error status.
+  - name: irq_if
+    value: 2
+    description: Interrupt delivery interface for INT/NMI and routed IRQs.
+    contract:
+      - Provides source/target handshake for interrupt delivery.
+  - name: dbg_if
+    value: 3
+    description: Debug control interface (halt/run/step/trace).
+    contract:
+      - Supports halt/run/step control and optional trace backpressure.
+  - name: cai_if
+    value: 4
+    description: Accelerator/peripheral queue interface for CAI devices.
+    contract:
+      - Doorbell + ring buffer semantics per cai.queue_model.
+
+reserved_interface_values:
+  - range: [5, 63]
+    description: Reserved for future standard interfaces.
+  - range: [64, 255]
+    description: Reserved for vendor-specific interfaces.

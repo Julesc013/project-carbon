@@ -4,7 +4,20 @@
 module z480_core #(
     parameter logic [31:0] IO_BASE = 32'h000F_0000,
     parameter logic [31:0] IO_MASK = 32'hFFFF_0000,
-    parameter logic [63:0] RESET_PC = 64'h0
+    parameter logic [63:0] RESET_PC = 64'h0,
+    parameter logic [63:0] DISCOVERY_PTR = 64'h0,
+    parameter logic [63:0] BDT_PTR = 64'h0,
+    parameter int unsigned BDT_ENTRY_COUNT = 0,
+    parameter logic [63:0] TOPOLOGY_PTR = 64'h0,
+    parameter logic [31:0] CPU_FEAT_WORD0 =
+        carbon_arch_pkg::CARBON_FEAT_CSR_NAMESPACE_MASK |
+        carbon_arch_pkg::CARBON_FEAT_FABRIC_MASK |
+        carbon_arch_pkg::CARBON_FEAT_CPUID_MASK |
+        carbon_arch_pkg::CARBON_Z480_NATIVE_64_MASK,
+    parameter logic [31:0] FPU_FEAT_WORD0 = 32'h0,
+    parameter logic [31:0] PERIPH_FEAT_WORD0 = 32'h0,
+    parameter int unsigned CORE_COUNT = 1,
+    parameter int unsigned VECTOR_BITS = 0
 ) (
     input logic clk,
     input logic rst_n,
@@ -29,9 +42,9 @@ module z480_core #(
   localparam int unsigned IRQ_VEC_W = $bits(irq.irq_vector);
 
   localparam logic [FAB_ATTR_W-1:0] MEM_ATTR =
-      FAB_ATTR_W'(CARBON_FABRIC_ATTR_CACHEABLE_MASK);
+      FAB_ATTR_W'(CARBON_MEM_ATTR_CACHEABLE_MASK);
   localparam logic [FAB_ATTR_W-1:0] IO_ATTR =
-      FAB_ATTR_W'(CARBON_FABRIC_ATTR_ORDERED_MASK | CARBON_FABRIC_ATTR_IO_SPACE_MASK);
+      FAB_ATTR_W'(CARBON_MEM_ATTR_ORDERED_MASK | CARBON_MEM_ATTR_IO_SPACE_MASK);
 
   // --------------------------------------------------------------------------
   // Z480-specific CSR addresses (implementation-defined).
@@ -50,6 +63,11 @@ module z480_core #(
   localparam logic [31:0] Z480_CSR_MMU_ROOT_HI = 32'h00a40038;
   localparam logic [31:0] Z480_CSR_MMU_ASID    = 32'h00a4003c;
   localparam logic [31:0] Z480_CSR_MMU_VMID    = 32'h00a40040;
+  localparam logic [31:0] Z480_CSR_CACHE_OP       = 32'h00a40044;
+  localparam logic [31:0] Z480_CSR_CACHE_ADDR_LO  = 32'h00a40048;
+  localparam logic [31:0] Z480_CSR_CACHE_ADDR_HI  = 32'h00a4004c;
+  localparam logic [31:0] Z480_CSR_CACHE_LEN      = 32'h00a40050;
+  localparam logic [31:0] Z480_CSR_CACHE_STATUS   = 32'h00a40054;
 
   // --------------------------------------------------------------------------
   // Trap causes (implementation-defined).
@@ -87,6 +105,10 @@ module z480_core #(
   logic [63:0] mmu_root_q;
   logic [31:0] mmu_asid_q;
   logic [31:0] mmu_vmid_q;
+  logic [31:0] cache_op_q;
+  logic [63:0] cache_addr_q;
+  logic [31:0] cache_len_q;
+  logic [31:0] cache_status_q;
   z480_priv_e priv_q;
   z480_priv_e prev_priv_q;
 
@@ -131,8 +153,15 @@ module z480_core #(
   logic [63:0] cpuid_data3;
 
   cpuid_block #(
-      .CORE_COUNT(1),
-      .VECTOR_BITS(128)
+      .CORE_COUNT(CORE_COUNT),
+      .VECTOR_BITS(VECTOR_BITS),
+      .DISCOVERY_PTR(DISCOVERY_PTR),
+      .BDT_PTR(BDT_PTR),
+      .BDT_ENTRY_COUNT(BDT_ENTRY_COUNT),
+      .TOPOLOGY_PTR(TOPOLOGY_PTR),
+      .CPU_FEAT_WORD0(CPU_FEAT_WORD0),
+      .FPU_FEAT_WORD0(FPU_FEAT_WORD0),
+      .PERIPH_FEAT_WORD0(PERIPH_FEAT_WORD0)
   ) u_cpuid (
       .leaf(csr_cpuid_leaf_q),
       .subleaf(csr_cpuid_subleaf_q),
@@ -185,6 +214,11 @@ module z480_core #(
         Z480_CSR_MMU_ROOT_HI: v = mmu_root_q[63:32];
         Z480_CSR_MMU_ASID: v = mmu_asid_q;
         Z480_CSR_MMU_VMID: v = mmu_vmid_q;
+        Z480_CSR_CACHE_OP: v = cache_op_q;
+        Z480_CSR_CACHE_ADDR_LO: v = cache_addr_q[31:0];
+        Z480_CSR_CACHE_ADDR_HI: v = cache_addr_q[63:32];
+        Z480_CSR_CACHE_LEN: v = cache_len_q;
+        Z480_CSR_CACHE_STATUS: v = cache_status_q;
         default: begin
           fault = 1'b1;
           v = 32'h0;
@@ -218,7 +252,11 @@ module z480_core #(
         Z480_CSR_MMU_ROOT_LO,
         Z480_CSR_MMU_ROOT_HI,
         Z480_CSR_MMU_ASID,
-        Z480_CSR_MMU_VMID: csr_write_ok = (priv == Z480_PRIV_H);
+        Z480_CSR_MMU_VMID,
+        Z480_CSR_CACHE_OP,
+        Z480_CSR_CACHE_ADDR_LO,
+        Z480_CSR_CACHE_ADDR_HI,
+        Z480_CSR_CACHE_LEN: csr_write_ok = (priv == Z480_PRIV_H);
         default: csr_write_ok = 1'b0;
       endcase
     end
@@ -246,6 +284,10 @@ module z480_core #(
       mmu_root_q <= 64'h0;
       mmu_asid_q <= 32'h0;
       mmu_vmid_q <= 32'h0;
+      cache_op_q <= 32'h0;
+      cache_addr_q <= 64'h0;
+      cache_len_q <= 32'h0;
+      cache_status_q <= 32'h0;
       csr_modeflags_q <= CARBON_MODEFLAG_STRICT_MASK;
       csr_tier_q <= 8'(CARBON_Z80_DERIVED_TIER_P7_Z480);
       csr_halt_pulse_q <= 1'b0;
@@ -472,6 +514,39 @@ module z480_core #(
               csr_rsp_side_q <= 1'b1;
             end else csr_rsp_fault_q <= 1'b1;
           end
+          Z480_CSR_CACHE_OP: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= cache_op_q;
+            else if (priv_q == Z480_PRIV_H) begin
+              cache_op_q <= csr.req_wdata;
+              cache_status_q <= 32'h0;
+              csr_rsp_side_q <= 1'b1;
+            end else csr_rsp_fault_q <= 1'b1;
+          end
+          Z480_CSR_CACHE_ADDR_LO: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= cache_addr_q[31:0];
+            else if (priv_q == Z480_PRIV_H) begin
+              cache_addr_q[31:0] <= csr.req_wdata;
+              csr_rsp_side_q <= 1'b1;
+            end else csr_rsp_fault_q <= 1'b1;
+          end
+          Z480_CSR_CACHE_ADDR_HI: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= cache_addr_q[63:32];
+            else if (priv_q == Z480_PRIV_H) begin
+              cache_addr_q[63:32] <= csr.req_wdata;
+              csr_rsp_side_q <= 1'b1;
+            end else csr_rsp_fault_q <= 1'b1;
+          end
+          Z480_CSR_CACHE_LEN: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= cache_len_q;
+            else if (priv_q == Z480_PRIV_H) begin
+              cache_len_q <= csr.req_wdata;
+              csr_rsp_side_q <= 1'b1;
+            end else csr_rsp_fault_q <= 1'b1;
+          end
+          Z480_CSR_CACHE_STATUS: begin
+            if (!csr.req_write) csr_rsp_rdata_q <= cache_status_q;
+            else csr_rsp_fault_q <= 1'b1;
+          end
           CARBON_CSR_DBG_CTRL: begin
             if (csr.req_write) begin
               if (csr.req_wdata[0]) csr_halt_pulse_q <= 1'b1;
@@ -525,6 +600,13 @@ module z480_core #(
           Z480_CSR_MMU_ROOT_HI: mmu_root_q[63:32] <= core_csr_write_data_q;
           Z480_CSR_MMU_ASID: mmu_asid_q <= core_csr_write_data_q;
           Z480_CSR_MMU_VMID: mmu_vmid_q <= core_csr_write_data_q;
+          Z480_CSR_CACHE_OP: begin
+            cache_op_q <= core_csr_write_data_q;
+            cache_status_q <= 32'h0;
+          end
+          Z480_CSR_CACHE_ADDR_LO: cache_addr_q[31:0] <= core_csr_write_data_q;
+          Z480_CSR_CACHE_ADDR_HI: cache_addr_q[63:32] <= core_csr_write_data_q;
+          Z480_CSR_CACHE_LEN: cache_len_q <= core_csr_write_data_q;
           default: begin end
         endcase
       end

@@ -12,14 +12,17 @@ contract_tests:
   - tb_ipi_mailbox
   - tb_trace_ring
   - tb_cai_contract
+  - tb_discovery_contract
 
 core_tests:
-  - tb_z85
-  - tb_z90
-  - tb_z380_core
-  - tb_am9513_scalar
-  - tb_am9514_vector
-  - tb_am9515_tensor
+  - tb_z85_directed
+  - tb_z90_directed
+  - tb_z380_directed
+  - tb_am95xx_p0
+  - tb_am95xx_p1
+  - tb_am95xx_p2_scalar
+  - tb_am95xx_p3_vector
+  - tb_am95xx_p4_tensor
   - tb_carbonio
   - tb_carbondma
   - tb_z480_scaffold
@@ -47,6 +50,17 @@ system_tests:
   - tb_tier_host_ctrl
 
 placeholder_tests:
+  - tb_z85_pending # pending
+  - tb_z90_pending # pending
+  - tb_z380_pending # pending
+  - tb_z480_pending # pending
+  - tb_am9513_pending # pending
+  - tb_am9514_pending # pending
+  - tb_am9515_pending # pending
+  - tb_carbon_cpu_only_smoke_pending # pending
+  - tb_carbon_mcu_smoke_pending # pending
+  - tb_carbon_soc_retro_smoke_pending # pending
+  - tb_carbon_soc_workstation_smoke_pending # pending
   - tb_z380
   - tb_z480
   - tb_carbonz380

@@ -108,8 +108,8 @@ module carbonz90_top #(
   // For v1 firmware simplicity: override host config, but pass doorbell from the CPU.
   carbon_cai_router #(
       .OVERRIDE_HOST_CFG(1'b1),
-      .OVERRIDE_SUBMIT_DESC_BASE(64'h0000_0000_0000_0400),
-      .OVERRIDE_SUBMIT_RING_MASK(32'h0000_0000),
+      .OVERRIDE_SUBMIT_BASE(64'h0000_0000_0000_0400),
+      .OVERRIDE_SUBMIT_SIZE(32'h0000_0001),
       .OVERRIDE_CONTEXT_SEL(16'h0000)
   ) u_cai (
       .cpu(cai_cpu),

@@ -16,7 +16,7 @@ module carbonz480_top (
   localparam int unsigned ID_W   = 4;
 
   localparam int unsigned M = 9; // z85 mem/io, z90 mem/io, z380 mem/io, z480 mem, am9513 dma, carbondma
-  localparam int unsigned N = 7; // mmio, carbonio, carbondma, tier host, bdt, rom, ram(default)
+  localparam int unsigned N = 8; // mmio, carbonio, carbondma, tier host, discovery, bdt, rom, ram(default)
 
   localparam int unsigned M_Z85_MEM   = 0;
   localparam int unsigned M_Z85_IO    = 1;
@@ -32,9 +32,10 @@ module carbonz480_top (
   localparam int unsigned S_CARBONIO  = 1;
   localparam int unsigned S_CARBONDMA = 2;
   localparam int unsigned S_TIER_HOST = 3;
-  localparam int unsigned S_BDT       = 4;
-  localparam int unsigned S_ROM       = 5;
-  localparam int unsigned S_RAM       = 6;
+  localparam int unsigned S_DISCOVERY = 4;
+  localparam int unsigned S_BDT       = 5;
+  localparam int unsigned S_ROM       = 6;
+  localparam int unsigned S_RAM       = 7;
 
   localparam logic [1:0] CORE_Z85  = 2'd0;
   localparam logic [1:0] CORE_Z90  = 2'd1;
@@ -42,6 +43,49 @@ module carbonz480_top (
   localparam logic [1:0] CORE_Z480 = 2'd3;
 
   localparam logic [63:0] Z480_RESET_PC = 64'h0000_0040;
+  localparam int unsigned DISCOVERY_ROM_BYTES = CARBON_SYS16_DISCOVERY_BYTES;
+  localparam int unsigned DISCOVERY_TABLE_BYTES = CARBON_CARBON_DISCOVERY_TABLE_V1_SIZE_BYTES;
+
+  localparam int unsigned DISCOVERY_OFF_TABLE = 0;
+  localparam int unsigned DISCOVERY_OFF_LIMITS = 64;
+  localparam int unsigned DISCOVERY_OFF_CPU_FEAT = 96;
+  localparam int unsigned DISCOVERY_OFF_FPU_FEAT = 112;
+  localparam int unsigned DISCOVERY_OFF_PERIPH_FEAT = 128;
+  localparam int unsigned DISCOVERY_OFF_TOPOLOGY = 160;
+
+  localparam logic [63:0] DISCOVERY_TABLE_PTR =
+      64'(CARBON_SYS16_DISCOVERY_BASE + DISCOVERY_OFF_TABLE);
+  localparam logic [63:0] LIMITS_TABLE_PTR =
+      64'(CARBON_SYS16_DISCOVERY_BASE + DISCOVERY_OFF_LIMITS);
+  localparam logic [63:0] CPU_FEAT_PTR =
+      64'(CARBON_SYS16_DISCOVERY_BASE + DISCOVERY_OFF_CPU_FEAT);
+  localparam logic [63:0] FPU_FEAT_PTR =
+      64'(CARBON_SYS16_DISCOVERY_BASE + DISCOVERY_OFF_FPU_FEAT);
+  localparam logic [63:0] PERIPH_FEAT_PTR =
+      64'(CARBON_SYS16_DISCOVERY_BASE + DISCOVERY_OFF_PERIPH_FEAT);
+  localparam logic [63:0] TOPOLOGY_TABLE_PTR =
+      64'(CARBON_SYS16_DISCOVERY_BASE + DISCOVERY_OFF_TOPOLOGY);
+
+  localparam int unsigned TOPOLOGY_ENTRY_COUNT = 1;
+  localparam int unsigned TOPOLOGY_TABLE_BYTES =
+      CARBON_TOPOLOGY_HEADER_V1_SIZE_BYTES +
+      (CARBON_TOPOLOGY_ENTRY_V1_SIZE_BYTES * TOPOLOGY_ENTRY_COUNT);
+
+  localparam int unsigned BDT_ENTRY_COUNT = 8;
+
+  localparam logic [31:0] CPU_FEAT_WORD0 =
+      CARBON_FEAT_MODE_SWITCH_MASK |
+      CARBON_FEAT_CSR_NAMESPACE_MASK |
+      CARBON_FEAT_FABRIC_MASK |
+      CARBON_FEAT_CPUID_MASK |
+      CARBON_Z480_NATIVE_64_MASK;
+  localparam logic [31:0] FPU_FEAT_WORD0 =
+      CARBON_AM9513_ASYNC_SCALAR_MASK;
+  localparam logic [31:0] PERIPH_FEAT_WORD0 =
+      CARBON_FEAT_CAI_MASK |
+      CARBON_FEAT_BDT_MASK |
+      CARBON_FEAT_DEVICE_MODEL_MASK |
+      CARBON_NON_COHERENT_DMA_BASELINE_MASK;
 
   fabric_if #(
       .ADDR_W(ADDR_W),
@@ -69,6 +113,7 @@ module carbonz480_top (
       32'hFFFF_FFFF,
       ADDR_W'(CARBON_SYS16_ROM_BASE),
       ADDR_W'(CARBON_SYS16_BDT_BASE),
+      ADDR_W'(CARBON_SYS16_DISCOVERY_BASE),
       ADDR_W'(CARBON_SYS16_TIER_HOST_BASE),
       ADDR_W'(CARBON_SYS16_CARBONDMA_BASE),
       ADDR_W'(CARBON_SYS16_CARBONIO_BASE),
@@ -78,6 +123,7 @@ module carbonz480_top (
       32'hFFFF_FFFF,
       ADDR_W'(SYS16_MASK_L16),
       ADDR_W'(SYS16_MASK_L16_BDT),
+      ADDR_W'(SYS16_MASK_L16),
       ADDR_W'(SYS16_MASK_L16),
       ADDR_W'(SYS16_MASK_L16),
       ADDR_W'(SYS16_MASK_L16),
@@ -244,7 +290,9 @@ module carbonz480_top (
       .dev(cai_dev)
   );
 
-  z85_core u_z85 (
+  z85_core #(
+      .DISCOVERY_PTR(DISCOVERY_TABLE_PTR)
+  ) u_z85 (
       .clk(clk),
       .rst_n(rst_n),
       .mem_if(m_if[M_Z85_MEM]),
@@ -254,7 +302,9 @@ module carbonz480_top (
       .dbg(dbg_z85)
   );
 
-  z90_core u_z90 (
+  z90_core #(
+      .DISCOVERY_PTR(DISCOVERY_TABLE_PTR)
+  ) u_z90 (
       .clk(clk),
       .rst_n(rst_n),
       .mem_if(m_if[M_Z90_MEM]),
@@ -265,7 +315,9 @@ module carbonz480_top (
       .cai(cai_z90)
   );
 
-  z380_core u_z380 (
+  z380_core #(
+      .DISCOVERY_PTR(DISCOVERY_TABLE_PTR)
+  ) u_z380 (
       .clk(clk),
       .rst_n(rst_n),
       .mem_if(m_if[M_Z380_MEM]),
@@ -278,7 +330,16 @@ module carbonz480_top (
   z480_core #(
       .IO_BASE(CARBON_SYS16_MMIO_BASE),
       .IO_MASK(32'h0000_F000),
-      .RESET_PC(Z480_RESET_PC)
+      .RESET_PC(Z480_RESET_PC),
+      .DISCOVERY_PTR(DISCOVERY_TABLE_PTR),
+      .BDT_PTR(64'(CARBON_SYS16_BDT_BASE)),
+      .BDT_ENTRY_COUNT(BDT_ENTRY_COUNT),
+      .TOPOLOGY_PTR(TOPOLOGY_TABLE_PTR),
+      .CPU_FEAT_WORD0(CPU_FEAT_WORD0),
+      .FPU_FEAT_WORD0(FPU_FEAT_WORD0),
+      .PERIPH_FEAT_WORD0(PERIPH_FEAT_WORD0),
+      .CORE_COUNT(1),
+      .VECTOR_BITS(0)
   ) u_z480 (
       .clk(clk),
       .rst_n(rst_n),
@@ -475,6 +536,67 @@ module carbonz480_top (
 
   localparam int unsigned ROM_BYTES = CARBON_SYS16_ROM_BYTES;
   localparam int unsigned BDT_BYTES = BDT_IMAGE_BYTES;
+  localparam int unsigned DISCOVERY_BYTES = DISCOVERY_ROM_BYTES;
+
+  function automatic logic [DISCOVERY_BYTES*8-1:0] build_discovery_rom;
+    logic [DISCOVERY_BYTES*8-1:0] tmp;
+    begin
+      tmp = '0;
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_SIGNATURE)*8 +: 32] = 32'h43534443; // "CDSC"
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_TABLE_VERSION)*8 +: 16] =
+          16'(CARBON_CARBON_DISCOVERY_TABLE_V1_VERSION);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_TABLE_SIZE)*8 +: 16] =
+          16'(DISCOVERY_TABLE_BYTES);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_CPU_LADDER_ID)*8 +: 8] =
+          8'(CARBON_TIER_LADDER_Z80);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_FPU_LADDER_ID)*8 +: 8] =
+          8'(CARBON_TIER_LADDER_AM95);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_PRESENTED_CPU_TIER)*8 +: 8] =
+          8'(CARBON_Z80_DERIVED_TIER_P7_Z480);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_PRESENTED_FPU_TIER)*8 +: 8] =
+          8'(CARBON_AM95XX_FPU_TIER_P2_AM9513);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_PROFILE_ID)*8 +: 8] =
+          8'(CARBON_PROFILE_SOC_RETRO);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_TOPOLOGY_TABLE_PTR)*8 +: 64] =
+          TOPOLOGY_TABLE_PTR;
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_BDT_PTR)*8 +: 64] =
+          64'(CARBON_SYS16_BDT_BASE);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_LIMITS_TABLE_PTR)*8 +: 64] =
+          LIMITS_TABLE_PTR;
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_CPU_FEATURE_BITMAP_PTR)*8 +: 64] =
+          CPU_FEAT_PTR;
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_FPU_FEATURE_BITMAP_PTR)*8 +: 64] =
+          FPU_FEAT_PTR;
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_PERIPHERAL_FEATURE_BITMAP_PTR)*8 +: 64] =
+          PERIPH_FEAT_PTR;
+
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_QUEUE_SUBMIT_DEPTH)*8 +: 32] = 32'd1;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_QUEUE_COMPLETE_DEPTH)*8 +: 32] = 32'd256;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_CONTEXTS)*8 +: 16] = 16'd64;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_VECTOR_LANES)*8 +: 16] = 16'd0;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_TENSOR_RANK)*8 +: 16] = 16'd0;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_MAX_CORES)*8 +: 16] = 16'd1;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_MAX_THREADS)*8 +: 16] = 16'd1;
+
+      tmp[(DISCOVERY_OFF_CPU_FEAT)*8 +: 32] = CPU_FEAT_WORD0;
+      tmp[(DISCOVERY_OFF_FPU_FEAT)*8 +: 32] = FPU_FEAT_WORD0;
+      tmp[(DISCOVERY_OFF_PERIPH_FEAT)*8 +: 32] = PERIPH_FEAT_WORD0;
+
+      tmp[(DISCOVERY_OFF_TOPOLOGY + CARBON_TOPOLOGY_HEADER_V1_OFF_SIGNATURE)*8 +: 32] = 32'h504F_5443; // "CTOP"
+      tmp[(DISCOVERY_OFF_TOPOLOGY + CARBON_TOPOLOGY_HEADER_V1_OFF_HEADER_VERSION)*8 +: 16] =
+          16'(CARBON_TOPOLOGY_HEADER_V1_VERSION);
+      tmp[(DISCOVERY_OFF_TOPOLOGY + CARBON_TOPOLOGY_HEADER_V1_OFF_HEADER_SIZE)*8 +: 16] =
+          16'(CARBON_TOPOLOGY_HEADER_V1_SIZE_BYTES);
+      tmp[(DISCOVERY_OFF_TOPOLOGY + CARBON_TOPOLOGY_HEADER_V1_OFF_ENTRY_SIZE)*8 +: 16] =
+          16'(CARBON_TOPOLOGY_ENTRY_V1_SIZE_BYTES);
+      tmp[(DISCOVERY_OFF_TOPOLOGY + CARBON_TOPOLOGY_HEADER_V1_OFF_ENTRY_COUNT)*8 +: 16] =
+          16'(TOPOLOGY_ENTRY_COUNT);
+      tmp[(DISCOVERY_OFF_TOPOLOGY + CARBON_TOPOLOGY_HEADER_V1_OFF_TOTAL_SIZE)*8 +: 32] =
+          32'(TOPOLOGY_TABLE_BYTES);
+
+      build_discovery_rom = tmp;
+    end
+  endfunction
 
   function automatic logic [ROM_BYTES*8-1:0] build_rom_image;
     logic [ROM_BYTES*8-1:0] tmp;
@@ -551,6 +673,7 @@ module carbonz480_top (
   endfunction
 
   localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE = build_rom_image();
+  localparam logic [DISCOVERY_BYTES*8-1:0] DISCOVERY_IMAGE = build_discovery_rom();
 
   carbon_bootrom #(
       .BASE_ADDR(CARBON_SYS16_ROM_BASE),
@@ -561,6 +684,17 @@ module carbonz480_top (
       .clk(clk),
       .rst_n(rst_n),
       .bus(s_if[S_ROM])
+  );
+
+  carbon_bootrom #(
+      .BASE_ADDR(CARBON_SYS16_DISCOVERY_BASE),
+      .ROM_BYTES(DISCOVERY_BYTES),
+      .INIT_IMAGE(DISCOVERY_IMAGE),
+      .RESP_LATENCY(1)
+  ) u_discovery (
+      .clk(clk),
+      .rst_n(rst_n),
+      .bus(s_if[S_DISCOVERY])
   );
 
   carbon_bootrom #(

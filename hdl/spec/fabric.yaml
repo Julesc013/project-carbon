@@ -1,8 +1,8 @@
 spec_version: 1.0
 name: fabric
 description: Internal SoC fabric transaction contract for Project Carbon.
-revision: v1.0.0
-created: 2025-12-15
+revision: v1.1.0
+created: 2025-12-24
 stable: true
 
 overview:
@@ -27,25 +27,25 @@ transaction_types:
 
 fabric_attributes:
   width_bits: 16
-  description: Packed per-transaction attributes.
+  description: Packed per-transaction attributes (low bits mirror memory_attrs).
   fields:
-    - name: FABRIC_ATTR_CACHEABLE
+    - name: MEM_ATTR_CACHEABLE
       lsb: 0
       width: 1
       description: 1=cacheable, 0=uncacheable.
-    - name: FABRIC_ATTR_ORDERED
+    - name: MEM_ATTR_ORDERED
       lsb: 1
       width: 1
       description: 1=ordered, 0=normal ordering.
-    - name: FABRIC_ATTR_IO_SPACE
+    - name: MEM_ATTR_IO_SPACE
       lsb: 2
       width: 1
       description: 1=IO space, 0=memory space.
-    - name: FABRIC_ATTR_ACQUIRE
+    - name: MEM_ATTR_ACQUIRE
       lsb: 3
       width: 1
       description: Acquire semantics (for synchronization).
-    - name: FABRIC_ATTR_RELEASE
+    - name: MEM_ATTR_RELEASE
       lsb: 4
       width: 1
       description: Release semantics (for synchronization).

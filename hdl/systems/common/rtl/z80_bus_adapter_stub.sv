@@ -40,11 +40,10 @@ module z80_bus_adapter_stub (
   assign fab.req_wdata = '0;
   assign fab.req_wstrb = '0;
   assign fab.req_size  = '0;
-  assign fab.req_attr  = $bits(fab.req_attr)'(CARBON_FABRIC_ATTR_ORDERED_MASK | (req_is_io ? CARBON_FABRIC_ATTR_IO_SPACE_MASK : 0));
+  assign fab.req_attr  = $bits(fab.req_attr)'(CARBON_MEM_ATTR_ORDERED_MASK | (req_is_io ? CARBON_MEM_ATTR_IO_SPACE_MASK : 0));
   assign fab.req_id    = '0;
   assign fab.rsp_ready = 1'b1;
 
   wire _unused = ^{clk, rst_n, req_valid, req_write, req_addr, req_wdata, fab.req_ready, fab.rsp_valid, fab.rsp_rdata, fab.rsp_code, fab.rsp_id};
 
 endmodule : z80_bus_adapter_stub
-

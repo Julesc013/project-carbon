@@ -253,7 +253,8 @@ module fabric_arbiter_mxn #(
             req_vec = '0;
             for (m = 0; m < int'(M); m++) begin
               if (!busy_q[m] && !err_pending_q[m]) begin
-                if (masters[m].req_valid && !dec_err[m] && (dec_idx[m] == logic'(si[N_W-1:0]))) begin
+                if (masters[m].req_valid && !dec_err[m] &&
+                    (dec_idx[m] == logic [N_W-1:0]'(si))) begin
                   req_vec[m] = 1'b1;
                 end
               end

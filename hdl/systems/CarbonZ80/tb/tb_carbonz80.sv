@@ -30,6 +30,7 @@ module tb_carbonz80;
   localparam logic [63:0] SUBMIT_BASE = 64'h0000_0000_0000_0400;
   localparam logic [63:0] COMP_BASE   = 64'h0000_0000_0000_0500;
   localparam int unsigned SUBMIT_MASK = 0;
+  localparam int unsigned SUBMIT_ENTRIES = SUBMIT_MASK + 1;
   localparam int unsigned COMP_MASK   = 0;
   localparam int unsigned HEAP_BASE   = 32'h0000_0800;
   localparam int unsigned CAI_TIMEOUT = 20000;
@@ -85,16 +86,16 @@ module tb_carbonz80;
   // --------------------------------------------------------------------------
   task automatic cai_force_host_cfg();
     begin
-      force dut.cai_link.submit_desc_base = SUBMIT_BASE;
-      force dut.cai_link.submit_ring_mask = 32'(SUBMIT_MASK);
+      force dut.cai_link.submit_base = SUBMIT_BASE;
+      force dut.cai_link.submit_size = 32'(SUBMIT_ENTRIES);
       force dut.cai_link.context_sel = 16'h0000;
     end
   endtask
 
   task automatic cai_release_host_cfg();
     begin
-      release dut.cai_link.submit_desc_base;
-      release dut.cai_link.submit_ring_mask;
+      release dut.cai_link.submit_base;
+      release dut.cai_link.submit_size;
       release dut.cai_link.context_sel;
     end
   endtask
@@ -151,11 +152,11 @@ module tb_carbonz80;
     int unsigned wait_cycles;
     begin
       wait_cycles = 0;
-      while (!dut.cai_link.comp_doorbell && (wait_cycles < CAI_TIMEOUT)) begin
+      while (!dut.cai_link.comp_msg && (wait_cycles < CAI_TIMEOUT)) begin
         @(posedge clk);
         wait_cycles++;
       end
-      if (!dut.cai_link.comp_doorbell) $fatal(1, "tb_carbonz80: CAI completion timeout");
+      if (!dut.cai_link.comp_msg) $fatal(1, "tb_carbonz80: CAI completion timeout");
 
       addr = int'(COMP_BASE) + ((comp_idx & COMP_MASK) * CARBON_CAI_COMP_REC_V1_SIZE_BYTES);
       rec = '0;
@@ -258,7 +259,7 @@ module tb_carbonz80;
     cai_submit_and_wait(am9513_opcode(AM9513_FUNC_ADD, 8'(CARBON_FMT_BINARY32)), 32'h0,
                         16'h0000, 16'd2, 64'(opdesc_base),
                         64'(res_ptr), 32'd4, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_SCALAR), 8'(CARBON_FMT_BINARY32), 8'h0, 8'h0,
+                        8'(CARBON_AM95_SCALAR), 8'(CARBON_FMT_BINARY32), 8'h0, 8'h0,
                         64'h0, 16'h0, 8'h0,
                         status, ext, bytes);
     if (status != 16'(CARBON_CAI_STATUS_OK)) $fatal(1, "tb_carbonz80: scalar add status=%0d", status);

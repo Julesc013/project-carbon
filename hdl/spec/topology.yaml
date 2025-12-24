@@ -1,0 +1,126 @@
+spec_version: 1.0
+name: topology
+description: Topology table format for sockets, clusters, cores, and threads.
+revision: v1.0.0
+created: 2025-12-24
+stable: true
+
+topology_table:
+  header:
+    name: TOPOLOGY_HEADER_V1
+    version: 1
+    size_bytes: 16
+    description: Header at the base of the topology table.
+    fields:
+      - name: signature
+        offset: 0
+        width_bytes: 4
+        type: u32
+        description: ASCII "CTOP" in little-endian (0x504f5443).
+      - name: header_version
+        offset: 4
+        width_bytes: 2
+        type: u16
+        description: Header format version (must be 1).
+      - name: header_size
+        offset: 6
+        width_bytes: 2
+        type: u16
+        description: Header size in bytes (must be 16 for v1).
+      - name: entry_size
+        offset: 8
+        width_bytes: 2
+        type: u16
+        description: Entry size in bytes (32 for v1 entries).
+      - name: entry_count
+        offset: 10
+        width_bytes: 2
+        type: u16
+        description: Number of topology entries.
+      - name: total_size
+        offset: 12
+        width_bytes: 4
+        type: u32
+        description: Total size of the topology table (header + entries).
+  entry:
+    name: TOPOLOGY_ENTRY_V1
+    version: 1
+    size_bytes: 32
+    description: One entry per hardware thread.
+    fields:
+      - name: socket_id
+        offset: 0
+        width_bytes: 2
+        type: u16
+        description: Socket identifier.
+      - name: cluster_id
+        offset: 2
+        width_bytes: 2
+        type: u16
+        description: Cluster identifier within the socket.
+      - name: core_id
+        offset: 4
+        width_bytes: 2
+        type: u16
+        description: Core identifier within the cluster.
+      - name: thread_id
+        offset: 6
+        width_bytes: 2
+        type: u16
+        description: Thread identifier within the core (SMT index).
+      - name: cache_l1_id
+        offset: 8
+        width_bytes: 2
+        type: u16
+        description: L1 cache ID shared by this thread.
+      - name: cache_l2_id
+        offset: 10
+        width_bytes: 2
+        type: u16
+        description: L2 cache ID shared by this thread.
+      - name: cache_l3_id
+        offset: 12
+        width_bytes: 2
+        type: u16
+        description: L3 cache ID shared by this thread.
+      - name: coherence_domain_id
+        offset: 14
+        width_bytes: 2
+        type: u16
+        description: Coherence domain identifier.
+      - name: numa_node_id
+        offset: 16
+        width_bytes: 2
+        type: u16
+        description: NUMA node identifier.
+      - name: reserved0
+        offset: 18
+        width_bytes: 14
+        type: u112
+        description: Reserved; must be 0.
+
+cache_levels:
+  - level: 1
+    name: L1
+    description: First-level cache for instructions/data.
+  - level: 2
+    name: L2
+    description: Second-level cache.
+  - level: 3
+    name: L3
+    description: Last-level cache (if present).
+
+discovery_link:
+  description: CPUID/CAPS expose a pointer to the discovery table, which includes the topology table pointer.
+  rules:
+    - Topology information is canonical in the topology table referenced by discovery_table.topology_table_ptr.
+    - CPUID_LEAF_TOPOLOGY may be implemented as a legacy mirror but is not canonical.
+
+rules:
+  - Core count, thread count, and cache topology are discoverable and variable; they are not tiers.
+  - Multi-socket configurations are expressed via socket_id and coherence_domain_id.
+
+reserved_numeric_ranges:
+  - name: cache_level_values
+    range: [4, 255]
+    description: Reserved for future cache levels.

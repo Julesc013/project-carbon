@@ -18,16 +18,50 @@ module carbonz380_top #(
   localparam int unsigned ID_W   = 4;
 
   localparam int unsigned M = 4; // z380 mem, z380 io, am9513 dma, carbondma
-  localparam int unsigned N = 6; // mmio, carbonio, carbondma, bdt, rom, ram(default)
+  localparam int unsigned N = 7; // mmio, carbonio, carbondma, discovery, bdt, rom, ram(default)
 
   localparam int unsigned S_MMIO      = 0;
   localparam int unsigned S_CARBONIO  = 1;
   localparam int unsigned S_CARBONDMA = 2;
-  localparam int unsigned S_BDT       = 3;
-  localparam int unsigned S_ROM       = 4;
-  localparam int unsigned S_RAM       = 5;
+  localparam int unsigned S_DISCOVERY = 3;
+  localparam int unsigned S_BDT       = 4;
+  localparam int unsigned S_ROM       = 5;
+  localparam int unsigned S_RAM       = 6;
 
   localparam logic [7:0] Z380_MODE_NATIVE_MASK = 8'h04;
+  localparam int unsigned DISCOVERY_ROM_BYTES = CARBON_SYS16_DISCOVERY_BYTES;
+  localparam int unsigned DISCOVERY_TABLE_BYTES = CARBON_CARBON_DISCOVERY_TABLE_V1_SIZE_BYTES;
+
+  localparam int unsigned DISCOVERY_OFF_TABLE = 0;
+  localparam int unsigned DISCOVERY_OFF_LIMITS = 64;
+  localparam int unsigned DISCOVERY_OFF_CPU_FEAT = 96;
+  localparam int unsigned DISCOVERY_OFF_FPU_FEAT = 112;
+  localparam int unsigned DISCOVERY_OFF_PERIPH_FEAT = 128;
+
+  localparam logic [63:0] DISCOVERY_TABLE_PTR =
+      64'(CARBON_SYS16_DISCOVERY_BASE + DISCOVERY_OFF_TABLE);
+  localparam logic [63:0] LIMITS_TABLE_PTR =
+      64'(CARBON_SYS16_DISCOVERY_BASE + DISCOVERY_OFF_LIMITS);
+  localparam logic [63:0] CPU_FEAT_PTR =
+      64'(CARBON_SYS16_DISCOVERY_BASE + DISCOVERY_OFF_CPU_FEAT);
+  localparam logic [63:0] FPU_FEAT_PTR =
+      64'(CARBON_SYS16_DISCOVERY_BASE + DISCOVERY_OFF_FPU_FEAT);
+  localparam logic [63:0] PERIPH_FEAT_PTR =
+      64'(CARBON_SYS16_DISCOVERY_BASE + DISCOVERY_OFF_PERIPH_FEAT);
+
+  localparam logic [31:0] CPU_FEAT_WORD0 =
+      CARBON_FEAT_MODE_SWITCH_MASK |
+      CARBON_FEAT_CSR_NAMESPACE_MASK |
+      CARBON_FEAT_FABRIC_MASK |
+      CARBON_FEAT_CAPS_MASK |
+      CARBON_Z380_32BIT_EXTENDED_MASK;
+  localparam logic [31:0] FPU_FEAT_WORD0 =
+      CARBON_AM9513_ASYNC_SCALAR_MASK;
+  localparam logic [31:0] PERIPH_FEAT_WORD0 =
+      CARBON_FEAT_CAI_MASK |
+      CARBON_FEAT_BDT_MASK |
+      CARBON_FEAT_DEVICE_MODEL_MASK |
+      CARBON_NON_COHERENT_DMA_BASELINE_MASK;
 
   fabric_if #(
       .ADDR_W(ADDR_W),
@@ -51,6 +85,7 @@ module carbonz380_top #(
       32'hFFFF_FFFF,
       ADDR_W'(CARBON_SYS16_ROM_BASE),
       ADDR_W'(CARBON_SYS16_BDT_BASE),
+      ADDR_W'(CARBON_SYS16_DISCOVERY_BASE),
       ADDR_W'(CARBON_SYS16_CARBONDMA_BASE),
       ADDR_W'(CARBON_SYS16_CARBONIO_BASE),
       ADDR_W'(CARBON_SYS16_MMIO_BASE)
@@ -59,6 +94,7 @@ module carbonz380_top #(
       32'hFFFF_FFFF,
       ADDR_W'(CARBON_SYS16_ROM_MASK),
       ADDR_W'(CARBON_SYS16_BDT_MASK),
+      ADDR_W'(CARBON_SYS16_DISCOVERY_MASK),
       ADDR_W'(CARBON_SYS16_CARBONDMA_MASK),
       ADDR_W'(CARBON_SYS16_CARBONIO_MASK),
       ADDR_W'(CARBON_SYS16_MMIO_MASK)
@@ -98,7 +134,9 @@ module carbonz380_top #(
   );
   irq_src_tieoff u_irq_cpu_tie (.irq(irq_cpu));
 
-  z380_core u_cpu (
+  z380_core #(
+      .DISCOVERY_PTR(DISCOVERY_TABLE_PTR)
+  ) u_cpu (
       .clk(clk),
       .rst_n(rst_n),
       .mem_if(m_if[0]),
@@ -183,8 +221,8 @@ module carbonz380_top #(
 
   carbon_cai_router #(
       .OVERRIDE_HOST_CFG(1'b1),
-      .OVERRIDE_SUBMIT_DESC_BASE(64'h0000_0000_0000_0400),
-      .OVERRIDE_SUBMIT_RING_MASK(32'h0000_0000),
+      .OVERRIDE_SUBMIT_BASE(64'h0000_0000_0000_0400),
+      .OVERRIDE_SUBMIT_SIZE(32'h0000_0001),
       .OVERRIDE_CONTEXT_SEL(16'h0000)
   ) u_cai (
       .cpu(cai_cpu),
@@ -192,8 +230,8 @@ module carbonz380_top #(
   );
 
   always_comb begin
-    cai_cpu.submit_desc_base = 64'h0;
-    cai_cpu.submit_ring_mask = 32'h0;
+    cai_cpu.submit_base = 64'h0;
+    cai_cpu.submit_size = 32'h0;
     cai_cpu.submit_doorbell = 1'b0;
     cai_cpu.context_sel = 16'h0;
   end
@@ -457,6 +495,55 @@ module carbonz380_top #(
   localparam int unsigned ROM_BYTES = CARBON_SYS16_ROM_BYTES;
   localparam int unsigned ROM_USED  = 51;
   localparam int unsigned BDT_BYTES = BDT_IMAGE_BYTES;
+  localparam int unsigned DISCOVERY_BYTES = DISCOVERY_ROM_BYTES;
+
+  function automatic logic [DISCOVERY_BYTES*8-1:0] build_discovery_rom;
+    logic [DISCOVERY_BYTES*8-1:0] tmp;
+    begin
+      tmp = '0;
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_SIGNATURE)*8 +: 32] = 32'h43534443; // "CDSC"
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_TABLE_VERSION)*8 +: 16] =
+          16'(CARBON_CARBON_DISCOVERY_TABLE_V1_VERSION);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_TABLE_SIZE)*8 +: 16] =
+          16'(DISCOVERY_TABLE_BYTES);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_CPU_LADDER_ID)*8 +: 8] =
+          8'(CARBON_TIER_LADDER_Z80);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_FPU_LADDER_ID)*8 +: 8] =
+          8'(CARBON_TIER_LADDER_AM95);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_PRESENTED_CPU_TIER)*8 +: 8] =
+          8'(CARBON_Z80_DERIVED_TIER_P6_Z380);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_PRESENTED_FPU_TIER)*8 +: 8] =
+          8'(CARBON_AM95XX_FPU_TIER_P2_AM9513);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_PROFILE_ID)*8 +: 8] =
+          8'(CARBON_PROFILE_MCU);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_TOPOLOGY_TABLE_PTR)*8 +: 64] =
+          64'h0;
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_BDT_PTR)*8 +: 64] =
+          64'(CARBON_SYS16_BDT_BASE);
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_LIMITS_TABLE_PTR)*8 +: 64] =
+          LIMITS_TABLE_PTR;
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_CPU_FEATURE_BITMAP_PTR)*8 +: 64] =
+          CPU_FEAT_PTR;
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_FPU_FEATURE_BITMAP_PTR)*8 +: 64] =
+          FPU_FEAT_PTR;
+      tmp[(DISCOVERY_OFF_TABLE + CARBON_CARBON_DISCOVERY_TABLE_V1_OFF_PERIPHERAL_FEATURE_BITMAP_PTR)*8 +: 64] =
+          PERIPH_FEAT_PTR;
+
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_QUEUE_SUBMIT_DEPTH)*8 +: 32] = 32'd1;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_QUEUE_COMPLETE_DEPTH)*8 +: 32] = 32'd1;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_CONTEXTS)*8 +: 16] = 16'd64;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_VECTOR_LANES)*8 +: 16] = 16'd0;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_TENSOR_RANK)*8 +: 16] = 16'd0;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_MAX_CORES)*8 +: 16] = 16'd1;
+      tmp[(DISCOVERY_OFF_LIMITS + CARBON_CARBON_LIMITS_TABLE_V1_OFF_MAX_THREADS)*8 +: 16] = 16'd1;
+
+      tmp[(DISCOVERY_OFF_CPU_FEAT)*8 +: 32] = CPU_FEAT_WORD0;
+      tmp[(DISCOVERY_OFF_FPU_FEAT)*8 +: 32] = FPU_FEAT_WORD0;
+      tmp[(DISCOVERY_OFF_PERIPH_FEAT)*8 +: 32] = PERIPH_FEAT_WORD0;
+
+      build_discovery_rom = tmp;
+    end
+  endfunction
 
   // Z380 boot stub:
   // - MODEUP to P6
@@ -586,6 +673,7 @@ module carbonz380_top #(
   localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE_TIER = build_tier_rom();
   localparam logic [ROM_BYTES*8-1:0] ROM_IMAGE =
       ROM_TIER_TEST ? ROM_IMAGE_TIER : ROM_IMAGE_BOOT;
+  localparam logic [DISCOVERY_BYTES*8-1:0] DISCOVERY_IMAGE = build_discovery_rom();
 
   carbon_bootrom #(
       .BASE_ADDR(CARBON_SYS16_ROM_BASE),
@@ -596,6 +684,17 @@ module carbonz380_top #(
       .clk(clk),
       .rst_n(rst_n),
       .bus(s_if[S_ROM])
+  );
+
+  carbon_bootrom #(
+      .BASE_ADDR(CARBON_SYS16_DISCOVERY_BASE),
+      .ROM_BYTES(DISCOVERY_BYTES),
+      .INIT_IMAGE(DISCOVERY_IMAGE),
+      .RESP_LATENCY(1)
+  ) u_discovery (
+      .clk(clk),
+      .rst_n(rst_n),
+      .bus(s_if[S_DISCOVERY])
   );
 
   carbon_bootrom #(

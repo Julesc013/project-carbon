@@ -224,3 +224,7 @@ module tb_z380_core;
   end
 
 endmodule
+
+module tb_z380_directed;
+  tb_z380_core u_core();
+endmodule

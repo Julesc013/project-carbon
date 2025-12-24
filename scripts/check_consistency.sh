@@ -21,19 +21,41 @@ fi
 echo "Running spec generator..."
 "$python_cmd" "$repo_root/hdl/tools/gen_specs.py" --repo-root "$repo_root"
 
-echo "Checking for TURBO_UNLIMITED..."
-if rg -n "TURBO_UNLIMITED" "$repo_root"; then
-  echo "error: TURBO_UNLIMITED must not appear in the repository." >&2
+pattern="TURBO""_UNLIMITED"
+echo "Checking for ${pattern}..."
+if rg -n "$pattern" "$repo_root"; then
+  echo "error: ${pattern} must not appear in the repository." >&2
   exit 1
 fi
 
+echo "Checking required spec files..."
+required_specs=(
+  "$repo_root/hdl/spec/tiers.yaml"
+  "$repo_root/hdl/spec/mode_switch.yaml"
+  "$repo_root/hdl/spec/profiles.yaml"
+  "$repo_root/hdl/spec/topology.yaml"
+  "$repo_root/hdl/spec/bdt.yaml"
+  "$repo_root/hdl/spec/memory_attrs.yaml"
+  "$repo_root/hdl/spec/external_if.yaml"
+  "$repo_root/hdl/spec/interfaces.yaml"
+  "$repo_root/hdl/spec/discovery.yaml"
+  "$repo_root/hdl/spec/csr_map.yaml"
+  "$repo_root/hdl/spec/device_model.yaml"
+  "$repo_root/hdl/spec/formats.yaml"
+  "$repo_root/hdl/spec/fabric.yaml"
+  "$repo_root/hdl/spec/cai.yaml"
+  "$repo_root/hdl/spec/isa_z90.yaml"
+)
+for spec in "${required_specs[@]}"; do
+  if [[ ! -f "$spec" ]]; then
+    echo "error: missing required spec $spec" >&2
+    exit 1
+  fi
+done
+
 echo "Checking tier ladder tables..."
 tiers_file="$repo_root/hdl/spec/tiers.yaml"
-if [[ ! -f "$tiers_file" ]]; then
-  echo "error: missing $tiers_file" >&2
-  exit 1
-fi
-for ladder in TIER_LADDER_Z80 TIER_LADDER_X86 TIER_LADDER_AMD_FPU; do
+for ladder in TIER_LADDER_Z80 TIER_LADDER_AM95; do
   if ! rg -n "$ladder" "$tiers_file" >/dev/null; then
     echo "error: missing $ladder in $tiers_file" >&2
     exit 1

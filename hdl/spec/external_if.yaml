@@ -1,0 +1,51 @@
+spec_version: 1.0
+name: external_if
+description: External interface families and platform contracts.
+revision: v1.0.0
+created: 2025-12-24
+stable: true
+
+legacy_z80_bus_adapter:
+  description: Legacy Z80 bus adapter contract compatible with retro backplanes.
+  profiles:
+    - name: LEGACY_RC2014
+      value: 0
+      description: RC2014-compatible bus timing profile.
+    - name: LEGACY_S100
+      value: 1
+      description: S-100-compatible bus timing profile.
+  requirements:
+    - Provides Z80-style MREQ/IORQ bus cycle semantics.
+    - Honors WAIT/ready backpressure for slow peripherals.
+    - Uses board-defined timing parameters; signal-level timings are not fixed by this spec.
+
+modern_soc_external:
+  description: Abstract external memory/peripheral interface for modern SoCs.
+  profiles:
+    - name: SOC_MEM_GENERIC
+      value: 16
+      description: Generic synchronous memory interface contract.
+    - name: SOC_PERIPH_GENERIC
+      value: 17
+      description: Generic peripheral interface contract.
+  requirements:
+    - Bridges to the internal fabric with defined ordering and attribute semantics.
+    - Supports burst transfers when the target indicates readiness.
+
+debug_transport:
+  minimum: UART
+  description: Minimum external debug transport requirement.
+  requirements:
+    - UART console is always available in safe mode.
+    - Baud rate and pin mappings are platform-defined.
+
+reserved_numeric_ranges:
+  - name: legacy_profiles
+    range: [2, 15]
+    description: Reserved for future legacy bus profiles.
+  - name: soc_profiles
+    range: [18, 127]
+    description: Reserved for future SoC external interface profiles.
+  - name: vendor_profiles
+    range: [128, 255]
+    description: Reserved for vendor-specific external interface profiles.

@@ -52,7 +52,7 @@ module am9513_cai_engine #(
   localparam int unsigned FAB_CODE_W = $bits(mem_if.rsp_code);
 
   localparam logic [FAB_ATTR_W-1:0] DMA_ATTR =
-      FAB_ATTR_W'(CARBON_FABRIC_ATTR_CACHEABLE_MASK | CARBON_FABRIC_ATTR_ORDERED_MASK);
+      FAB_ATTR_W'(CARBON_MEM_ATTR_CACHEABLE_MASK | CARBON_MEM_ATTR_ORDERED_MASK);
   localparam int unsigned VEC_BYTES = 16;
   localparam logic [1:0] TENSOR_READ_A = 2'd0;
   localparam logic [1:0] TENSOR_READ_B = 2'd1;
@@ -238,7 +238,16 @@ module am9513_cai_engine #(
   logic [63:0] comp_addr_q;
 
   // CAI status outputs
+  localparam int unsigned CAI_VER_W = $bits(cai.cai_version);
+  localparam int unsigned CAI_FEAT_W = $bits(cai.cai_feature_bits);
+  localparam logic [CAI_VER_W-1:0] CAI_LINK_VERSION =
+      CAI_VER_W'(CARBON_CAI_SUBMIT_DESC_V1_VERSION);
+  localparam logic [CAI_FEAT_W-1:0] CAI_FEATURE_BITS = '0;
+
   assign cai.comp_base = cfg_comp_base;
+  assign cai.comp_size = $bits(cai.comp_size)'(cfg_comp_ring_mask + 1'b1);
+  assign cai.cai_version = CAI_LINK_VERSION;
+  assign cai.cai_feature_bits = CAI_FEATURE_BITS;
 
   // Busy reflects state machine activity (not bus alone).
   assign busy = (st_q != ST_IDLE);
@@ -488,7 +497,7 @@ module am9513_cai_engine #(
       desc_ctx_id_q <= '0;
       desc_operand_count_q <= '0;
       desc_tag_q <= '0;
-      desc_opcode_group_q <= 8'(CARBON_CAI_OPGROUP_SCALAR);
+      desc_opcode_group_q <= 8'(CARBON_AM95_SCALAR);
       desc_fmt_primary_q <= 8'h0;
       desc_fmt_aux_q <= 8'h0;
       desc_fmt_flags_q <= 8'h0;
@@ -503,7 +512,7 @@ module am9513_cai_engine #(
 
       eff_ctx_q <= '0;
       eff_mode_q <= AM9513_P0_AM9511;
-      op_group_q <= 8'(CARBON_CAI_OPGROUP_SCALAR);
+      op_group_q <= 8'(CARBON_AM95_SCALAR);
       op_func_q <= '0;
       op_fmt_q <= '0;
       op_fmt_aux_q <= '0;
@@ -594,7 +603,7 @@ module am9513_cai_engine #(
       comp_word_q <= '0;
       comp_addr_q <= '0;
 
-      cai.comp_doorbell <= 1'b0;
+      cai.comp_msg <= 1'b0;
       cai.comp_irq <= 1'b0;
       cai.status <= '0;
     end else begin
@@ -605,7 +614,7 @@ module am9513_cai_engine #(
       end
 
       // Default pulses low.
-      cai.comp_doorbell <= 1'b0;
+      cai.comp_msg <= 1'b0;
       cai.comp_irq <= 1'b0;
 
       // Status (simple v1 encoding).
@@ -634,13 +643,15 @@ module am9513_cai_engine #(
           ST_IDLE: begin
             if (cfg_enable && (pending_q != 0)) begin
               logic [31:0] ring_idx;
-              ring_idx = submit_head_q & cai.submit_ring_mask;
+              logic [31:0] submit_mask;
+              submit_mask = (cai.submit_size == 0) ? 32'h0 : (cai.submit_size - 1'b1);
+              ring_idx = submit_head_q & submit_mask;
               exec_valid_q <= 1'b0;
               vec_exec_valid_q <= 1'b0;
               vec_writeback_q <= 1'b0;
               vec_exc_flags_q <= '0;
               tensor_exc_flags_q <= '0;
-              desc_addr_q <= cai.submit_desc_base + (64'(ring_idx) << 6);
+              desc_addr_q <= cai.submit_base + (64'(ring_idx) << 6);
               desc_word_q <= 5'd0;
               st_q <= ST_DESC_RD;
             end
@@ -880,7 +891,7 @@ module am9513_cai_engine #(
               comp_bytes_q <= '0;
               st_q <= ST_COMP_WR;
             end else begin
-              if (op_group_q == 8'(CARBON_CAI_OPGROUP_SCALAR)) begin
+              if (op_group_q == 8'(CARBON_AM95_SCALAR)) begin
                 if (result_to_reg_q && (eff_mode_q < AM9513_P2_AM9513)) begin
                   comp_status_q <= 16'(CARBON_CAI_STATUS_UNSUPPORTED);
                   comp_bytes_q <= '0;
@@ -922,12 +933,12 @@ module am9513_cai_engine #(
                     st_q <= ST_RESULT_WR;
                   end
                 end
-              end else if (op_group_q == 8'(CARBON_CAI_OPGROUP_VECTOR)) begin
+              end else if (op_group_q == 8'(CARBON_AM95_VECTOR)) begin
                 exec_valid_q <= 1'b0;
                 vec_exec_valid_q <= 1'b0;
                 vec_writeback_q <= 1'b0;
                 st_q <= ST_VEC_INIT;
-              end else if (op_group_q == 8'(CARBON_CAI_OPGROUP_TENSOR)) begin
+              end else if (op_group_q == 8'(CARBON_AM95_TENSOR)) begin
                 exec_valid_q <= 1'b0;
                 vec_exec_valid_q <= 1'b0;
                 vec_writeback_q <= 1'b0;
@@ -1694,7 +1705,7 @@ module am9513_cai_engine #(
             submit_head_q <= submit_head_q + 1'b1;
             if (pending_q != 0) pending_q <= pending_q - 1'b1;
             comp_head_q <= comp_head_q + 1'b1;
-            cai.comp_doorbell <= 1'b1;
+            cai.comp_msg <= 1'b1;
             cai.comp_irq <= cfg_comp_irq_en;
             exec_valid_q <= 1'b0;
             vec_exec_valid_q <= 1'b0;

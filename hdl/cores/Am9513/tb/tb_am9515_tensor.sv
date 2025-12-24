@@ -157,7 +157,7 @@ module tb_am9515_tensor;
     begin
       while (1) begin
         @(posedge clk);
-        if (cai.comp_doorbell) break;
+        if (cai.comp_msg) break;
       end
 
       addr = int'(COMP_BASE) + ((comp_idx & COMP_MASK) * CARBON_CAI_COMP_REC_V1_SIZE_BYTES);
@@ -229,10 +229,10 @@ module tb_am9515_tensor;
 
     wait (rst_n);
 
-    cai.submit_desc_base = SUBMIT_BASE;
-    cai.submit_ring_mask = 32'(SUBMIT_MASK);
-    cai.submit_doorbell  = 1'b0;
-    cai.context_sel      = 16'h0;
+    cai.submit_base = SUBMIT_BASE;
+    cai.submit_size = 32'(SUBMIT_ENTRIES);
+    cai.submit_doorbell = 1'b0;
+    cai.context_sel = 16'h0;
 
     for (i = 0; i < MEM_BYTES; i++) begin
       u_mem.mem[i] = 8'h00;
@@ -295,7 +295,7 @@ module tb_am9515_tensor;
     cai_submit_and_wait(am9515_opcode(AM9515_TENSOR_GEMM), 32'h0,
                         16'h0000, 16'd3, 64'(opdesc_base),
                         64'(res_ptr), 32'd16, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_TENSOR), 8'(CARBON_FMT_BINARY32),
+                        8'(CARBON_AM95_TENSOR), 8'(CARBON_FMT_BINARY32),
                         64'(tensor_desc_ptr), 16'(CARBON_CAI_TENSOR_DESC_V1_SIZE_BYTES), 8'd3,
                         status, ext, bytes);
     if (status != 16'(CARBON_CAI_STATUS_OK)) $fatal(1, "gemm status=%0d", status);
@@ -311,7 +311,7 @@ module tb_am9515_tensor;
     cai_submit_and_wait(am9515_opcode(AM9515_TENSOR_GEMM), 32'h0,
                         16'h0000, 16'd3, 64'(opdesc_base),
                         64'(res_ptr), 32'd16, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_TENSOR), 8'(CARBON_FMT_BINARY32),
+                        8'(CARBON_AM95_TENSOR), 8'(CARBON_FMT_BINARY32),
                         64'(tensor_desc_ptr), 16'(CARBON_CAI_TENSOR_DESC_V1_SIZE_BYTES), 8'd3,
                         status, ext, bytes);
     if (mem_read32(res_ptr + 0) != 32'h41A0_0000) $fatal(1, "gemm repeat c00 wrong");
@@ -346,7 +346,7 @@ module tb_am9515_tensor;
     cai_submit_and_wait(am9515_opcode(AM9515_TENSOR_DOT), 32'h0,
                         16'h0000, 16'd2, 64'(opdesc_base),
                         64'(res_ptr), 32'd4, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_TENSOR), 8'(CARBON_FMT_BINARY32),
+                        8'(CARBON_AM95_TENSOR), 8'(CARBON_FMT_BINARY32),
                         64'(tensor_desc_ptr), 16'(CARBON_CAI_TENSOR_DESC_V1_SIZE_BYTES), 8'd1,
                         status, ext, bytes);
     if (status != 16'(CARBON_CAI_STATUS_OK)) $fatal(1, "dot status=%0d", status);
@@ -374,7 +374,7 @@ module tb_am9515_tensor;
     cai_submit_and_wait(am9515_opcode(AM9515_TENSOR_SUM), 32'h0,
                         16'h0000, 16'd1, 64'(opdesc_base),
                         64'(res_ptr), 32'd4, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_TENSOR), 8'(CARBON_FMT_BINARY32),
+                        8'(CARBON_AM95_TENSOR), 8'(CARBON_FMT_BINARY32),
                         64'(tensor_desc_ptr), 16'(CARBON_CAI_TENSOR_DESC_V1_SIZE_BYTES), 8'd1,
                         status, ext, bytes);
     if (status != 16'(CARBON_CAI_STATUS_OK)) $fatal(1, "sum status=%0d", status);

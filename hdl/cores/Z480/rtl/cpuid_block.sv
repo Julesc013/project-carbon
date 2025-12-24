@@ -3,7 +3,14 @@
 
 module cpuid_block #(
     parameter int unsigned CORE_COUNT  = 1,
-    parameter int unsigned VECTOR_BITS = 128
+    parameter int unsigned VECTOR_BITS = 0,
+    parameter logic [63:0] DISCOVERY_PTR = 64'h0,
+    parameter logic [63:0] BDT_PTR = 64'h0,
+    parameter int unsigned BDT_ENTRY_COUNT = 0,
+    parameter logic [63:0] TOPOLOGY_PTR = 64'h0,
+    parameter logic [31:0] CPU_FEAT_WORD0 = 32'h0,
+    parameter logic [31:0] FPU_FEAT_WORD0 = 32'h0,
+    parameter logic [31:0] PERIPH_FEAT_WORD0 = 32'h0
 ) (
     input  logic [31:0] leaf,
     input  logic [31:0] subleaf,
@@ -56,25 +63,38 @@ module cpuid_block #(
         w0 = {8'h01, 8'h07, 8'h90, 8'h00};  // stepping=1, model=7, family=0x90, vendor=0
         w1 = Z480_CHIP_FLAGS;
       end
-      CARBON_CPUID_LEAF_TIERS: begin
-        // word0: CPU ladder/tier reporting
-        w0[7:0]   = 8'(CARBON_TIER_LADDER_Z80);
-        w0[15:8]  = 8'(CARBON_Z80_DERIVED_TIER_P7_Z480);
-        w0[23:16] = 8'(CARBON_Z80_DERIVED_TIER_P7_Z480);
-        w0[31:24] = 8'h00;
-        // word1: FPU ladder/tier reporting (scaffold defaults to P0)
-        w1[7:0]   = 8'(CARBON_TIER_LADDER_AMD_FPU);
-        w1[15:8]  = 8'(CARBON_AMD_FPU_TIER_P0_AM9511);
-        w1[23:16] = 8'(CARBON_AMD_FPU_TIER_P0_AM9511);
-        w1[31:24] = 8'h00;
+      CARBON_CPUID_LEAF_DISCOVERY: begin
+        w0[15:0]  = 16'(CARBON_CARBON_DISCOVERY_TABLE_V1_VERSION);
+        w0[31:16] = 16'(CARBON_CARBON_DISCOVERY_TABLE_V1_SIZE_BYTES);
+        w1 = DISCOVERY_PTR[31:0];
+        w2 = DISCOVERY_PTR[63:32];
+        w3 = 32'h0;
       end
       CARBON_CPUID_LEAF_FEATURES0: begin
-        w0 = CARBON_FEAT_MODE_SWITCH_MASK |
-            CARBON_FEAT_CSR_NAMESPACE_MASK |
-            CARBON_FEAT_FABRIC_MASK |
-            CARBON_FEAT_CPUID_MASK |
-            CARBON_FEAT_CAPS_MASK |
-            CARBON_Z480_NATIVE_64_MASK;
+        w0 = CPU_FEAT_WORD0;
+        w1 = 32'h0;
+        w2 = 32'h0;
+        w3 = 32'h0;
+      end
+      CARBON_CPUID_LEAF_DEVICE_TABLE: begin
+        w0[15:0]  = 16'(CARBON_BDT_HEADER_V1_VERSION);
+        w0[31:16] = 16'(CARBON_BDT_ENTRY_V1_SIZE_BYTES);
+        w1[15:0]  = 16'(BDT_ENTRY_COUNT[15:0]);
+        w1[31:16] = 16'(CARBON_BDT_HEADER_V1_SIZE_BYTES);
+        w2 = BDT_PTR[31:0];
+        w3 = BDT_PTR[63:32];
+      end
+      CARBON_CPUID_LEAF_FEATURES1: begin
+        w0 = FPU_FEAT_WORD0;
+        w1 = 32'h0;
+        w2 = 32'h0;
+        w3 = 32'h0;
+      end
+      CARBON_CPUID_LEAF_FEATURES2: begin
+        w0 = PERIPH_FEAT_WORD0;
+        w1 = 32'h0;
+        w2 = 32'h0;
+        w3 = 32'h0;
       end
       CARBON_CPUID_LEAF_TOPOLOGY: begin
         // word0: [15:0]=core_count, [31:16]=threads_per_core (v1 fixed 1)
@@ -83,6 +103,8 @@ module cpuid_block #(
         // word1: [15:0]=vector_bits, [31:16]=arch_bits
         w1[15:0]  = 16'(VECTOR_BITS[15:0]);
         w1[31:16] = 16'd64;
+        w2 = TOPOLOGY_PTR[31:0];
+        w3 = TOPOLOGY_PTR[63:32];
       end
       default: begin
         // Unknown leaves return zeros (per discovery spec).

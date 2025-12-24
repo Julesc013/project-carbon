@@ -153,7 +153,7 @@ module tb_am9514_vector;
     begin
       while (1) begin
         @(posedge clk);
-        if (cai.comp_doorbell) break;
+        if (cai.comp_msg) break;
       end
 
       addr = int'(COMP_BASE) + ((comp_idx & COMP_MASK) * CARBON_CAI_COMP_REC_V1_SIZE_BYTES);
@@ -220,10 +220,10 @@ module tb_am9514_vector;
 
     wait (rst_n);
 
-    cai.submit_desc_base = SUBMIT_BASE;
-    cai.submit_ring_mask = 32'(SUBMIT_MASK);
-    cai.submit_doorbell  = 1'b0;
-    cai.context_sel      = 16'h0;
+    cai.submit_base = SUBMIT_BASE;
+    cai.submit_size = 32'(SUBMIT_ENTRIES);
+    cai.submit_doorbell = 1'b0;
+    cai.context_sel = 16'h0;
 
     for (i = 0; i < MEM_BYTES; i++) begin
       u_mem.mem[i] = 8'h00;
@@ -271,7 +271,7 @@ module tb_am9514_vector;
     cai_submit_and_wait(am9514_opcode(AM9514_VEC_ADD), 32'h0,
                         16'h0000, 16'd2, 64'(opdesc_base),
                         64'(res_ptr), 32'd16, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_VECTOR),
+                        8'(CARBON_AM95_VECTOR),
                         8'(CARBON_FMT_BINARY32), 8'h0, 8'h0,
                         status, ext, bytes);
     if (status != 16'(CARBON_CAI_STATUS_OK)) $fatal(1, "vec add status=%0d", status);
@@ -302,7 +302,7 @@ module tb_am9514_vector;
     cai_submit_and_wait(am9514_opcode(AM9514_VEC_FMA), 32'h0,
                         16'h0000, 16'd3, 64'(opdesc_base),
                         64'(res_ptr), 32'd16, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_VECTOR),
+                        8'(CARBON_AM95_VECTOR),
                         8'(CARBON_FMT_BINARY32), 8'h0, 8'h0,
                         status, ext, bytes);
     if (status != 16'(CARBON_CAI_STATUS_OK)) $fatal(1, "vec fma status=%0d", status);
@@ -331,7 +331,7 @@ module tb_am9514_vector;
     cai_submit_and_wait(am9514_opcode(AM9514_VEC_ADD), 32'(16'h0005) << 16,
                         16'h0000, 16'd2, 64'(opdesc_base),
                         64'(res_ptr), 32'd16, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_VECTOR),
+                        8'(CARBON_AM95_VECTOR),
                         8'(CARBON_FMT_BINARY32), 8'h0, 8'h01,
                         status, ext, bytes);
     if (status != 16'(CARBON_CAI_STATUS_OK)) $fatal(1, "vec mask status=%0d", status);
@@ -357,7 +357,7 @@ module tb_am9514_vector;
     cai_submit_and_wait(am9514_opcode(AM9514_VEC_CONV), 32'h0,
                         16'h0000, 16'd1, 64'(opdesc_base),
                         64'(res_ptr), 32'd16, 32'h0,
-                        8'(CARBON_CAI_OPGROUP_VECTOR),
+                        8'(CARBON_AM95_VECTOR),
                         8'(CARBON_FMT_BINARY32), 8'(CARBON_FMT_BINARY16), 8'h0,
                         status, ext, bytes);
     if (status != 16'(CARBON_CAI_STATUS_OK)) $fatal(1, "vec conv status=%0d", status);

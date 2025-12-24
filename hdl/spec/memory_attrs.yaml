@@ -1,0 +1,57 @@
+spec_version: 1.0
+name: memory_attrs
+description: Memory attribute bits, ordering semantics, and DMA coherence rules.
+revision: v1.0.0
+created: 2025-12-24
+stable: true
+
+attributes:
+  width_bits: 8
+  description: Attribute bits used by fabric transactions and DMA engines.
+  fields:
+    - name: MEM_ATTR_CACHEABLE
+      bit: 0
+      description: 1=cacheable, 0=uncacheable.
+    - name: MEM_ATTR_ORDERED
+      bit: 1
+      description: 1=ordered, 0=normal ordering.
+    - name: MEM_ATTR_IO_SPACE
+      bit: 2
+      description: 1=I/O space semantics, 0=memory space semantics.
+    - name: MEM_ATTR_ACQUIRE
+      bit: 3
+      description: Acquire semantics for synchronization.
+    - name: MEM_ATTR_RELEASE
+      bit: 4
+      description: Release semantics for synchronization.
+  reserved_bits:
+    - range: [5, 7]
+      description: Reserved; must be 0.
+
+dma_coherence:
+  baseline: non_coherent
+  description: DMA is non-coherent by default; software must manage cache maintenance.
+  optional_capability_bit: COHERENT_DMA_OPTIONAL
+  requirements:
+    - DMA engines must honor MEM_ATTR_ORDERED for ordered transactions.
+    - Non-coherent DMA requires explicit cache clean/invalidate around buffer usage.
+
+p7_requirements:
+  description: P7 systems must expose range-based cache maintenance hooks.
+  cache_maintenance_ops:
+    - name: cache_clean_range
+      description: Write back dirty cache lines for the specified range.
+    - name: cache_invalidate_range
+      description: Invalidate cache lines for the specified range.
+    - name: cache_clean_invalidate_range
+      description: Clean and invalidate cache lines for the specified range.
+  fences:
+    - name: fence_acquire
+      description: Acquire fence for synchronization and DMA completion ordering.
+    - name: fence_release
+      description: Release fence for synchronization and DMA submission ordering.
+
+reserved_numeric_ranges:
+  - name: memory_attr_bits
+    range: [8, 31]
+    description: Reserved for future memory attribute bits.

@@ -1,0 +1,214 @@
+spec_version: 1.0
+name: bdt
+description: BIOS Device Table (BDT) schema for device discovery and addressing.
+revision: v1.0.0
+created: 2025-12-24
+stable: true
+
+bdt_exposure:
+  location: rom
+  pointer_source: discovery_table.bdt_ptr
+  description: BDT is stored in ROM and discovered via the discovery table pointer.
+
+bdt_header:
+  name: BDT_HEADER_V1
+  version: 1
+  size_bytes: 16
+  description: Board Device Table header placed at the base of the BDT region.
+  fields:
+    - name: signature
+      offset: 0
+      width_bytes: 4
+      type: u32
+      description: ASCII "CBDT" in little-endian (0x54444243).
+    - name: header_version
+      offset: 4
+      width_bytes: 2
+      type: u16
+      description: Header format version (must be 1).
+    - name: header_size
+      offset: 6
+      width_bytes: 2
+      type: u16
+      description: Header size in bytes (must be 16 for v1).
+    - name: entry_size
+      offset: 8
+      width_bytes: 2
+      type: u16
+      description: BDT entry size in bytes (64 for v1 entries).
+    - name: entry_count
+      offset: 10
+      width_bytes: 2
+      type: u16
+      description: Number of device entries in the BDT.
+    - name: total_size
+      offset: 12
+      width_bytes: 4
+      type: u32
+      description: Total size of the BDT region (header + entries).
+
+bdt_entry:
+  name: BDT_ENTRY_V1
+  version: 1
+  size_bytes: 64
+  description: Fixed-size device descriptor entry.
+  fields:
+    - name: desc_version
+      offset: 0
+      width_bytes: 2
+      type: u16
+      description: Descriptor format version (must be 1).
+    - name: desc_size_bytes
+      offset: 2
+      width_bytes: 2
+      type: u16
+      description: Descriptor size in bytes (64 for v1).
+    - name: class_id
+      offset: 4
+      width_bytes: 2
+      type: u16
+      description: Device class identifier (see device_classes).
+    - name: subclass_id
+      offset: 6
+      width_bytes: 2
+      type: u16
+      description: Device subclass identifier (0 if unused).
+    - name: instance_id
+      offset: 8
+      width_bytes: 2
+      type: u16
+      description: Instance index for multiple identical devices.
+    - name: device_version
+      offset: 10
+      width_bytes: 2
+      type: u16
+      description: Device version ID (implementation-defined).
+    - name: caps0
+      offset: 12
+      width_bytes: 4
+      type: u32
+      description: Capability flags word 0.
+    - name: caps1
+      offset: 16
+      width_bytes: 4
+      type: u32
+      description: Capability flags word 1.
+    - name: irq_route_offset
+      offset: 20
+      width_bytes: 2
+      type: u16
+      description: Offset (bytes) from BDT base to IRQ routing table (0 if none).
+    - name: irq_route_count
+      offset: 22
+      width_bytes: 2
+      type: u16
+      description: Number of IRQ routing entries (0 if none).
+    - name: mmio_base
+      offset: 24
+      width_bytes: 8
+      type: u64
+      description: MMIO base address (0 if none).
+    - name: mmio_size
+      offset: 32
+      width_bytes: 4
+      type: u32
+      description: MMIO window size in bytes (0 if none).
+    - name: io_port_base
+      offset: 36
+      width_bytes: 4
+      type: u32
+      description: I/O port base (0 if none).
+    - name: io_port_size
+      offset: 40
+      width_bytes: 2
+      type: u16
+      description: I/O port window size in bytes (0 if none).
+    - name: block_sector_size
+      offset: 42
+      width_bytes: 2
+      type: u16
+      description: Logical sector size for block devices (must support 512).
+    - name: cai_queue_count
+      offset: 44
+      width_bytes: 2
+      type: u16
+      description: CAI queue count (0 if device is not CAI-capable).
+    - name: cai_doorbell_offset
+      offset: 46
+      width_bytes: 2
+      type: u16
+      description: CSR offset to CAI doorbell register (0 if not applicable).
+    - name: reserved0
+      offset: 48
+      width_bytes: 16
+      type: u128
+      description: Reserved; must be 0.
+
+irq_routing_table:
+  name: BDT_IRQ_ROUTE_V1
+  entry_size_bytes: 8
+  description: IRQ routing entries referenced by bdt_entry.irq_route_offset.
+  fields:
+    - name: domain_id
+      offset: 0
+      width_bytes: 2
+      type: u16
+      description: Interrupt domain identifier (PIC instance).
+    - name: irq_line
+      offset: 2
+      width_bytes: 2
+      type: u16
+      description: IRQ line or vector within the domain.
+    - name: flags
+      offset: 4
+      width_bytes: 2
+      type: u16
+      description: IRQ flags (level/edge polarity; reserved if unused).
+    - name: reserved0
+      offset: 6
+      width_bytes: 2
+      type: u16
+      description: Reserved; must be 0.
+
+device_classes:
+  description: Canonical device class identifiers for BDT enumeration.
+  class_id_bits: 16
+  classes:
+    - name: DEVCLASS_CPU
+      value: 0x0001
+      description: CPU cores.
+    - name: DEVCLASS_ACCEL
+      value: 0x0002
+      description: FPU/accelerator cores (Am95xx-class).
+    - name: DEVCLASS_UART
+      value: 0x0010
+      description: UART console devices.
+    - name: DEVCLASS_PIO
+      value: 0x0012
+      description: GPIO/PIO controllers.
+    - name: DEVCLASS_TIMER
+      value: 0x0013
+      description: Timers/CTC blocks and monotonic ticks.
+    - name: DEVCLASS_PIC
+      value: 0x0014
+      description: Interrupt controllers / routers.
+    - name: DEVCLASS_DMA
+      value: 0x0020
+      description: DMA engines (mem-to-mem, scatter/gather).
+    - name: DEVCLASS_STORAGE
+      value: 0x0030
+      description: Storage devices (block or character).
+  reserved_ranges:
+    - range: [0x0100, 0x01FF]
+      description: Reserved for future CarbonNet devices.
+    - range: [0x0200, 0x02FF]
+      description: Reserved for future CarbonVideo devices.
+    - range: [0x0300, 0x0FFF]
+      description: Reserved for future standard peripherals.
+    - range: [0x1000, 0xFFFF]
+      description: Reserved for vendor-specific classes.
+
+reserved_numeric_ranges:
+  - name: bdt_entry_versions
+    range: [2, 255]
+    description: Reserved for future BDT entry versions.

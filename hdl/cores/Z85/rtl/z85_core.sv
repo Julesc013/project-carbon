@@ -2,7 +2,8 @@
 // z85_core: Minimal strict Z80-compatible core scaffolding.
 
 module z85_core #(
-    parameter int unsigned MODESTACK_DEPTH = carbon_arch_pkg::CARBON_MODESTACK_RECOMMENDED_DEPTH
+    parameter int unsigned MODESTACK_DEPTH = carbon_arch_pkg::CARBON_MODESTACK_RECOMMENDED_DEPTH,
+    parameter logic [63:0] DISCOVERY_PTR = 64'h0
 ) (
     input logic clk,
     input logic rst_n,
@@ -40,9 +41,9 @@ module z85_core #(
 `endif
 
   localparam logic [FAB_ATTR_W-1:0] MEM_ATTR =
-      FAB_ATTR_W'(CARBON_FABRIC_ATTR_CACHEABLE_MASK);
+      FAB_ATTR_W'(CARBON_MEM_ATTR_CACHEABLE_MASK);
   localparam logic [FAB_ATTR_W-1:0] IO_ATTR =
-      FAB_ATTR_W'(CARBON_FABRIC_ATTR_ORDERED_MASK | CARBON_FABRIC_ATTR_IO_SPACE_MASK);
+      FAB_ATTR_W'(CARBON_MEM_ATTR_ORDERED_MASK | CARBON_MEM_ATTR_IO_SPACE_MASK);
   localparam int unsigned MD_SP_W =
       (MODESTACK_DEPTH < 2) ? 1 : $clog2(MODESTACK_DEPTH + 1);
 
@@ -113,8 +114,13 @@ module z85_core #(
       CARBON_FEAT_CSR_NAMESPACE_MASK |
       CARBON_FEAT_FABRIC_MASK |
       CARBON_FEAT_CAPS_MASK |
-      CARBON_FEAT_POLLING_COMPLETE_MASK |
       CARBON_Z85_UNDOC_Z80_MASK;
+  localparam logic [15:0] Z85_CPUID_MAX_LEAF =
+      16'(CARBON_CPUID_LEAF_FEATURES0);
+  localparam logic [15:0] Z85_DISCOVERY_VERSION =
+      16'(CARBON_CARBON_DISCOVERY_TABLE_V1_VERSION);
+  localparam logic [15:0] Z85_DISCOVERY_SIZE =
+      16'(CARBON_CARBON_DISCOVERY_TABLE_V1_SIZE_BYTES);
 
   localparam logic [7:0] Z85_VENDOR_ID  = 8'h00;
   localparam logic [7:0] Z85_FAMILY_ID  = 8'h85;
@@ -137,8 +143,8 @@ module z85_core #(
       w3 = 32'h0;
       unique case (leaf)
         CARBON_CPUID_LEAF_VENDOR: begin
-          w0[15:0]  = 16'(CARBON_CPUID_LEAF_FEATURES0);
-          w0[31:16] = 16'h0001;
+          w0[15:0]  = Z85_CPUID_MAX_LEAF;
+          w0[31:16] = Z85_DISCOVERY_VERSION;
           w1 = Z85_VENDOR0;
           w2 = Z85_VENDOR1;
           w3 = Z85_VENDOR2;
@@ -147,15 +153,11 @@ module z85_core #(
           w0 = {Z85_STEPPING, Z85_MODEL_ID, Z85_FAMILY_ID, Z85_VENDOR_ID};
           w1 = 32'h0;
         end
-        CARBON_CPUID_LEAF_TIERS: begin
-          w0 = {8'h00,
-                8'(CARBON_Z80_DERIVED_TIER_P2_Z80),
-                8'(CARBON_Z80_DERIVED_TIER_P2_Z80),
-                8'(CARBON_TIER_LADDER_Z80)};
-          w1 = {8'h00,
-                8'(CARBON_AMD_FPU_TIER_P0_AM9511),
-                8'(CARBON_AMD_FPU_TIER_P0_AM9511),
-                8'(CARBON_TIER_LADDER_AMD_FPU)};
+        CARBON_CPUID_LEAF_DISCOVERY: begin
+          w0 = {Z85_DISCOVERY_SIZE, Z85_DISCOVERY_VERSION};
+          w1 = DISCOVERY_PTR[31:0];
+          w2 = DISCOVERY_PTR[63:32];
+          w3 = 32'h0;
         end
         CARBON_CPUID_LEAF_FEATURES0: begin
           w0 = Z85_FEAT_WORD0;
