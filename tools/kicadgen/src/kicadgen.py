@@ -26,7 +26,7 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
 KI_SCH_VERSION = 20250114
 KI_GEN_NAME = "kicadgen"
-KI_GEN_VERSION = "0.1"
+KI_GEN_VERSION = "0.2"
 
 GRID_MM = 1.27  # 50 mil grid in mm
 
@@ -333,6 +333,12 @@ def _carbon_symbols_by_name() -> Dict[str, List[Any]]:
         "CARBON_BLOCK_CPU": _carbon_block_symbol_def(
             "CARBON_BLOCK_CPU", ref_prefix="U", description="Project Carbon CPU placeholder block"
         ),
+        "CARBON_BLOCK_FPU": _carbon_block_symbol_def(
+            "CARBON_BLOCK_FPU", ref_prefix="U", description="Project Carbon FPU placeholder block"
+        ),
+        "CARBON_BLOCK_ACCEL": _carbon_block_symbol_def(
+            "CARBON_BLOCK_ACCEL", ref_prefix="U", description="Project Carbon accelerator placeholder block"
+        ),
         "CARBON_BLOCK_FABRIC": _carbon_block_symbol_def(
             "CARBON_BLOCK_FABRIC", ref_prefix="U", description="Project Carbon fabric/interconnect placeholder block"
         ),
@@ -347,6 +353,9 @@ def _carbon_symbols_by_name() -> Dict[str, List[Any]]:
         ),
         "CARBON_BLOCK_CAI_ACCEL": _carbon_block_symbol_def(
             "CARBON_BLOCK_CAI_ACCEL", ref_prefix="U", description="Project Carbon CAI accelerator placeholder block"
+        ),
+        "CARBON_BLOCK_MMIO": _carbon_block_symbol_def(
+            "CARBON_BLOCK_MMIO", ref_prefix="U", description="Project Carbon MMIO/decoder placeholder block"
         ),
         "CARBON_BLOCK_CONN_HEADER": _carbon_block_symbol_def(
             "CARBON_BLOCK_CONN_HEADER", ref_prefix="J", description="Project Carbon generic header connector placeholder"
@@ -412,6 +421,16 @@ def _read_json(path: Path) -> Dict[str, Any]:
         raise KicadGenError(f"Invalid JSON in mapping spec: {path}: {e}") from e
 
 
+def _load_spec(spec_dir: Path, base_name: str) -> Dict[str, Any]:
+    json_path = spec_dir / f"{base_name}.json"
+    yaml_path = spec_dir / f"{base_name}.yaml"
+    if json_path.exists():
+        return _read_json(json_path)
+    if yaml_path.exists():
+        return _read_json(yaml_path)
+    raise KicadGenError(f"Missing mapping spec: {json_path} (or {yaml_path})")
+
+
 def _write_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="\n") as f:
@@ -467,6 +486,7 @@ def _generate_core(common: Dict[str, Any], core: Dict[str, Any], root: Path) -> 
     out_dir.mkdir(parents=True, exist_ok=True)
 
     core_name = str(core["name"])
+    display_name = str(core.get("display_name", core_name))
     top_name = str(core["top_schematic"])
     top_path = out_dir / top_name
     rel_top = str(top_path.relative_to(root)).replace("\\", "/")
@@ -479,10 +499,10 @@ def _generate_core(common: Dict[str, Any], core: Dict[str, Any], root: Path) -> 
         sheet_file = str(b["sheet_file"])
         sheet_path = out_dir / sheet_file
         rel_sheet = str(sheet_path.relative_to(root)).replace("\\", "/")
-        title = f"{core_name}::{b.get('name', sheet_file)}"
+        title = f"{display_name}::{b.get('name', sheet_file)}"
         items = [
             _text_box(
-                f"Generated placeholder block for {core_name}/{b.get('name', sheet_file)}",
+                f"Generated placeholder block for {display_name}/{b.get('name', sheet_file)}",
                 (_grid(10), _grid(10)),
                 (_grid(60), _grid(6)),
                 rel_sheet,
@@ -548,17 +568,29 @@ def _generate_core(common: Dict[str, Any], core: Dict[str, Any], root: Path) -> 
             hlabels.append(_hier_label(pname, pdir, (left_x, y_left), 180, rel_top))
             y_left += dy
 
-    items = [
+    items: List[List[Any]] = [
         _text_box(
-            f"Generated core top: {core_name}  (edit mapping specs; do not hand-edit generated/)",
+            f"Generated core top: {display_name}  (edit mapping specs; do not hand-edit generated/)",
             (_grid(10), _grid(10)),
             (_grid(90), _grid(6)),
             rel_top,
-        ),
-        *sheets,
-        *hlabels,
+        )
     ]
-    _write_text(top_path, _kicad_schematic(rel_top, f"{core_name} (generated)", common, items))
+    notes = core.get("notes", [])
+    if isinstance(notes, (list, tuple)) and notes:
+        note_text = "\n".join(str(n) for n in notes if str(n).strip())
+        if note_text:
+            items.append(
+                _text_box(
+                    note_text,
+                    (_grid(10), _grid(18)),
+                    (_grid(90), _grid(10)),
+                    rel_top,
+                )
+            )
+    items.extend(sheets)
+    items.extend(hlabels)
+    _write_text(top_path, _kicad_schematic(rel_top, f"{display_name} (generated)", common, items))
     written.append(top_path)
     return written
 
@@ -571,19 +603,22 @@ def _generate_common(common: Dict[str, Any], root: Path) -> List[Path]:
     written: List[Path] = []
 
     carbon_symbols = _carbon_symbols_by_name()
-    common_sheets = [
-        ("blk_clock_reset.kicad_sch", "Clock/Reset (placeholder)", "CARBON_BLOCK_CLOCK_RESET", "U"),
-        ("blk_debug_header.kicad_sch", "Debug Header (placeholder)", "CARBON_BLOCK_CONN_HEADER", "J"),
-        ("blk_power_dist.kicad_sch", "Power Distribution (placeholder)", "CARBON_BLOCK_POWER", "U"),
-        ("blk_jtag_uart.kicad_sch", "JTAG/UART (placeholder)", "CARBON_BLOCK_DBG", "U"),
-        ("blk_rc2014_adapter.kicad_sch", "RC2014 Adapter (placeholder)", "CARBON_BLOCK_RC2014_ADAPTER", "U"),
-        ("blk_s100_adapter.kicad_sch", "S-100 Adapter (placeholder)", "CARBON_BLOCK_S100_ADAPTER", "U"),
-        ("blk_sram.kicad_sch", "SRAM (placeholder)", "CARBON_BLOCK_SRAM", "U"),
-        ("blk_rom.kicad_sch", "ROM (placeholder)", "CARBON_BLOCK_ROM", "U"),
-        ("blk_dram.kicad_sch", "DRAM (placeholder)", "CARBON_BLOCK_DRAM", "U"),
-    ]
+    common_sheets = common.get("common_sheets", [])
+    if not isinstance(common_sheets, list) or not common_sheets:
+        raise KicadGenError("common_sheets must be a non-empty list in kicadgen_common spec")
 
-    for fname, title, sym_name, sym_ref in common_sheets:
+    for entry in common_sheets:
+        if not isinstance(entry, dict):
+            continue
+        fname = str(entry.get("sheet_file", "")).strip()
+        title = str(entry.get("title", "")).strip() or fname
+        sym_name = str(entry.get("symbol", "")).strip()
+        sym_ref = str(entry.get("ref", "U")).strip() or "U"
+        if not fname:
+            continue
+        if sym_name not in carbon_symbols:
+            raise KicadGenError(f"Unknown symbol '{sym_name}' in common_sheets entry {entry!r}")
+
         path = common_dir / fname
         rel_path = str(path.relative_to(root)).replace("\\", "/")
         root_uuid = _stable_uuid("sch", rel_path)
@@ -610,7 +645,12 @@ def _generate_common(common: Dict[str, Any], root: Path) -> List[Path]:
     return written
 
 
-def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path) -> List[Path]:
+def _generate_system(
+    common: Dict[str, Any],
+    core_index: Dict[str, Dict[str, Any]],
+    system: Dict[str, Any],
+    root: Path,
+) -> List[Path]:
     out_dir = _resolve_under(root, str(system["out_dir"]))
     generated_root = (root / "schem/kicad9/generated").resolve()
     _ensure_within(out_dir, generated_root)
@@ -624,75 +664,91 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
     project_name = f"system_{sys_name}"
     root_uuid = _stable_uuid("sch", rel_top)
 
-    # Sheet refs.
-    cpu_core = str(system.get("cpu_core", ""))
-    accel_core = str(system.get("accel_core", ""))
-
-    cores_spec = _read_json(root / "schem/kicad9/spec/kicadgen_cores.yaml")
-
     def core_spec(core_name: str) -> Dict[str, Any]:
-        for c in cores_spec.get("cores", []) or []:
-            if str(c.get("name")) == core_name:
-                return c
+        if core_name in core_index:
+            return core_index[core_name]
         raise KicadGenError(f"Unknown core referenced by system mapping: {core_name}")
 
     def core_top_path(core_name: str) -> str:
         c = core_spec(core_name)
         return str(Path(str(c["out_dir"])) / str(c["top_schematic"]))
 
-    def sheet_pins_for_core(core_name: str, sheet_x: float, sheet_y: float, sheet_w: float) -> Tuple[int, List[Tuple[str, str, Tuple[float, float], int]]]:
+    def _pin_dir(dir_name: str) -> str:
+        d = dir_name.strip().lower()
+        if d in {"input", "output", "bidirectional"}:
+            return d
+        return "bidirectional"
+
+    def sheet_pins_for_core(
+        core_name: str, sheet_x: float, sheet_y: float, sheet_w: float
+    ) -> Tuple[int, List[Tuple[str, str, Tuple[float, float], int]]]:
         c = core_spec(core_name)
         interfaces = [str(x) for x in (c.get("interfaces", []) or [])]
         ports: List[Dict[str, str]] = []
         for iface in interfaces:
             ports.extend(_iface_ports(common, iface))
 
-        left_ports = [p for p in ports if p.get("dir", "").lower() != "output"]
-        right_ports = [p for p in ports if p.get("dir", "").lower() == "output"]
+        left_ports = [p for p in ports if _pin_dir(p.get("dir", "")) != "output"]
+        right_ports = [p for p in ports if _pin_dir(p.get("dir", "")) == "output"]
         max_pins = max(len(left_ports), len(right_ports), 1)
         height_u = max(MIN_SHEET_H_U, max_pins * PIN_SPACING_U + 2 * PIN_MARGIN_U)
 
         pins: List[Tuple[str, str, Tuple[float, float], int]] = []
         y0 = sheet_y + _grid(PIN_MARGIN_U)
         for idx, p in enumerate(left_ports):
-            pins.append((p["name"], "input", (sheet_x, y0 + _grid(idx * PIN_SPACING_U)), 180))
+            pins.append((p["name"], _pin_dir(p.get("dir", "")), (sheet_x, y0 + _grid(idx * PIN_SPACING_U)), 180))
         for idx, p in enumerate(right_ports):
             pins.append((p["name"], "output", (sheet_x + sheet_w, y0 + _grid(idx * PIN_SPACING_U)), 0))
         return height_u, pins
+
+    cpu_core = str(system.get("cpu_core", "")).strip()
+    if not cpu_core:
+        raise KicadGenError(f"System mapping missing cpu_core: {sys_name}")
+    accel_core = str(system.get("accel_core", "")).strip()
 
     cpu_sheetfile = os.path.relpath(_resolve_under(root, core_top_path(cpu_core)), out_dir).replace("\\", "/")
     accel_sheetfile = ""
     if accel_core:
         accel_sheetfile = os.path.relpath(_resolve_under(root, core_top_path(accel_core)), out_dir).replace("\\", "/")
 
-    # System-level blocks as sheets (v1 placeholder).
+    common_sheets = common.get("common_sheets", [])
+    common_map: Dict[str, Dict[str, Any]] = {}
+    if isinstance(common_sheets, list):
+        for entry in common_sheets:
+            if isinstance(entry, dict) and entry.get("name"):
+                common_map[str(entry["name"]).lower()] = entry
+    if not common_map:
+        raise KicadGenError("common_sheets must define at least one entry")
+
     common_rel = os.path.relpath((root / "schem/kicad9/generated/common").resolve(), out_dir).replace("\\", "/")
 
-    def common_sheetfile(fname: str) -> str:
-        return f"{common_rel}/{fname}"
+    def common_sheetfile(sheet_name: str) -> str:
+        key = sheet_name.strip().lower()
+        if key not in common_map:
+            raise KicadGenError(f"Unknown common sheet '{sheet_name}' in system {sys_name}")
+        return f"{common_rel}/{common_map[key]['sheet_file']}"
 
     sheets: List[List[Any]] = []
     page = 2
 
     sheet_w = _grid(80)
     base_sheet_h = _grid(30)
-    cpu_x, cpu_y = (_grid(10), _grid(20))
-    cpu_h_u, cpu_pins = sheet_pins_for_core(cpu_core, cpu_x, cpu_y, sheet_w)
+    left_x, top_y = (_grid(10), _grid(20))
+    right_x = _grid(110)
+
+    cpu_h_u, cpu_pins = sheet_pins_for_core(cpu_core, left_x, top_y, sheet_w)
     cpu_h = _grid(cpu_h_u)
 
     accel_h = base_sheet_h
     accel_pins: List[Tuple[str, str, Tuple[float, float], int]] = []
     if accel_sheetfile:
-        accel_x, accel_y = (_grid(110), _grid(20))
-        accel_h_u, accel_pins = sheet_pins_for_core(accel_core, accel_x, accel_y, sheet_w)
+        accel_h_u, accel_pins = sheet_pins_for_core(accel_core, right_x, top_y, sheet_w)
         accel_h = _grid(accel_h_u)
-    else:
-        accel_x, accel_y = (_grid(110), _grid(20))
 
     top_row_h = max(cpu_h, accel_h)
     row_gap = _grid(10)
-    mem_at = (_grid(10), cpu_y + top_row_h + row_gap)
-    misc_at = (_grid(110), cpu_y + top_row_h + row_gap)
+    mem_y = top_y + top_row_h + row_gap
+    right_y = top_y + top_row_h + row_gap
 
     sheets.append(
         _sheet(
@@ -701,7 +757,7 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
             page=page,
             sheetname="blk_cpu",
             sheetfile=cpu_sheetfile,
-            at_xy=(cpu_x, cpu_y),
+            at_xy=(left_x, top_y),
             size_wh=(sheet_w, cpu_h),
             pins=cpu_pins,
         )
@@ -716,139 +772,85 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
                 page=page,
                 sheetname="blk_accel",
                 sheetfile=accel_sheetfile,
-                at_xy=(accel_x, accel_y),
+                at_xy=(right_x, top_y),
                 size_wh=(sheet_w, accel_h),
                 pins=accel_pins,
             )
         )
         page += 1
 
+    # Memory blocks on left column.
     memory = [str(x) for x in (system.get("memory", []) or [])]
-    if "ROM" in memory:
+    for mem in memory:
+        mem_key = str(mem).strip().lower()
+        if mem_key in {"rom", "sram", "dram"} and mem_key in common_map:
+            sheets.append(
+                _sheet(
+                    project=project_name,
+                    root_uuid=root_uuid,
+                    page=page,
+                    sheetname=f"blk_{mem_key}",
+                    sheetfile=common_sheetfile(mem_key),
+                    at_xy=(left_x, mem_y),
+                    size_wh=(sheet_w, base_sheet_h),
+                )
+            )
+            page += 1
+            mem_y += _grid(40)
+
+    # Peripheral cores on right column.
+    peripherals = [str(x) for x in (system.get("peripherals", []) or [])]
+    for periph in peripherals:
+        periph = periph.strip()
+        if not periph:
+            continue
+        periph_h_u, periph_pins = sheet_pins_for_core(periph, right_x, right_y, sheet_w)
+        periph_h = _grid(periph_h_u)
         sheets.append(
             _sheet(
                 project=project_name,
                 root_uuid=root_uuid,
                 page=page,
-                sheetname="blk_rom",
-                sheetfile=common_sheetfile("blk_rom.kicad_sch"),
-                at_xy=mem_at,
-                size_wh=(sheet_w, base_sheet_h),
+                sheetname=_sanitize_sheetname(periph),
+                sheetfile=os.path.relpath(_resolve_under(root, core_top_path(periph)), out_dir).replace("\\", "/"),
+                at_xy=(right_x, right_y),
+                size_wh=(sheet_w, periph_h),
+                pins=periph_pins,
             )
         )
         page += 1
-        mem_at = (mem_at[0], mem_at[1] + _grid(40))
-    if "SRAM" in memory:
-        sheets.append(
-            _sheet(
-                project=project_name,
-                root_uuid=root_uuid,
-                page=page,
-                sheetname="blk_sram",
-                sheetfile=common_sheetfile("blk_sram.kicad_sch"),
-                at_xy=mem_at,
-                size_wh=(sheet_w, base_sheet_h),
-            )
-        )
-        page += 1
-        mem_at = (mem_at[0], mem_at[1] + _grid(40))
-    if "DRAM" in memory:
-        sheets.append(
-            _sheet(
-                project=project_name,
-                root_uuid=root_uuid,
-                page=page,
-                sheetname="blk_dram",
-                sheetfile=common_sheetfile("blk_dram.kicad_sch"),
-                at_xy=mem_at,
-                size_wh=(sheet_w, base_sheet_h),
-            )
-        )
-        page += 1
+        right_y += periph_h + _grid(10)
 
-    # Common blocks.
-    sheets.append(
-        _sheet(
-            project=project_name,
-            root_uuid=root_uuid,
-            page=page,
-            sheetname="blk_clock_reset",
-            sheetfile=common_sheetfile("blk_clock_reset.kicad_sch"),
-            at_xy=misc_at,
-            size_wh=(sheet_w, base_sheet_h),
-        )
-    )
-    page += 1
-    misc_at = (misc_at[0], misc_at[1] + _grid(40))
-    sheets.append(
-        _sheet(
-            project=project_name,
-            root_uuid=root_uuid,
-            page=page,
-            sheetname="blk_debug_header",
-            sheetfile=common_sheetfile("blk_debug_header.kicad_sch"),
-            at_xy=misc_at,
-            size_wh=(sheet_w, base_sheet_h),
-        )
-    )
-    page += 1
-    misc_at = (misc_at[0], misc_at[1] + _grid(40))
-    sheets.append(
-        _sheet(
-            project=project_name,
-            root_uuid=root_uuid,
-            page=page,
-            sheetname="blk_power_dist",
-            sheetfile=common_sheetfile("blk_power_dist.kicad_sch"),
-            at_xy=misc_at,
-            size_wh=(sheet_w, base_sheet_h),
-        )
-    )
-    page += 1
-
-    misc_at = (misc_at[0], misc_at[1] + _grid(40))
-    sheets.append(
-        _sheet(
-            project=project_name,
-            root_uuid=root_uuid,
-            page=page,
-            sheetname="blk_jtag_uart",
-            sheetfile=common_sheetfile("blk_jtag_uart.kicad_sch"),
-            at_xy=misc_at,
-            size_wh=(sheet_w, base_sheet_h),
-        )
-    )
-    page += 1
-
+    # Common blocks on right column.
+    common_blocks = [str(x) for x in (system.get("common_blocks", []) or [])]
     adapters = [str(x) for x in (system.get("adapters", []) or [])]
-    if "RC2014" in adapters:
-        misc_at = (misc_at[0], misc_at[1] + _grid(40))
+    adapter_map = {
+        "rc2014": "rc2014_adapter",
+        "s-100": "s100_adapter",
+        "s100": "s100_adapter",
+    }
+    for adapter in adapters:
+        key = adapter.strip().lower()
+        if key in adapter_map:
+            common_blocks.append(adapter_map[key])
+
+    for blk in common_blocks:
+        blk_key = blk.strip().lower()
+        if not blk_key:
+            continue
         sheets.append(
             _sheet(
                 project=project_name,
                 root_uuid=root_uuid,
                 page=page,
-                sheetname="blk_rc2014_adapter",
-                sheetfile=common_sheetfile("blk_rc2014_adapter.kicad_sch"),
-                at_xy=misc_at,
+                sheetname=f"blk_{blk_key}",
+                sheetfile=common_sheetfile(blk_key),
+                at_xy=(right_x, right_y),
                 size_wh=(sheet_w, base_sheet_h),
             )
         )
         page += 1
-    if "S-100" in adapters:
-        misc_at = (misc_at[0], misc_at[1] + _grid(40))
-        sheets.append(
-            _sheet(
-                project=project_name,
-                root_uuid=root_uuid,
-                page=page,
-                sheetname="blk_s100_adapter",
-                sheetfile=common_sheetfile("blk_s100_adapter.kicad_sch"),
-                at_xy=misc_at,
-                size_wh=(sheet_w, base_sheet_h),
-            )
-        )
-        page += 1
+        right_y += _grid(40)
 
     items = [
         _text_box(
@@ -864,18 +866,21 @@ def _generate_system(common: Dict[str, Any], system: Dict[str, Any], root: Path)
 
 
 def generate(root: Path, spec_dir: Path) -> List[Path]:
-    common = _read_json(spec_dir / "kicadgen_common.yaml")
-    cores_spec = _read_json(spec_dir / "kicadgen_cores.yaml")
-    systems_spec = _read_json(spec_dir / "kicadgen_systems.yaml")
+    common = _load_spec(spec_dir, "kicadgen_common")
+    cores_spec = _load_spec(spec_dir, "kicadgen_cores")
+    systems_spec = _load_spec(spec_dir, "kicadgen_systems")
 
     written: List[Path] = []
     written.extend(_generate_common(common, root))
 
-    for core in cores_spec.get("cores", []) or []:
+    cores_list = cores_spec.get("cores", []) or []
+    core_index = {str(c.get("name")): c for c in cores_list if isinstance(c, dict) and c.get("name")}
+
+    for core in cores_list:
         written.extend(_generate_core(common, core, root))
 
     for sys_spec in systems_spec.get("systems", []) or []:
-        written.extend(_generate_system(common, sys_spec, root))
+        written.extend(_generate_system(common, core_index, sys_spec, root))
 
     return written
 

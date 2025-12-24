@@ -92,6 +92,15 @@ class TestKicadGen(unittest.TestCase):
                 "schema_version": 1,
                 "kicad": {"version": 20250114, "generator": "kicadgen", "generator_version": "0.1"},
                 "layout": {"paper": "A4", "title_block": {"company": "TestCo"}},
+                "common_sheets": [
+                    {
+                        "name": "rom",
+                        "sheet_file": "blk_rom.kicad_sch",
+                        "title": "ROM (placeholder)",
+                        "symbol": "CARBON_BLOCK_ROM",
+                        "ref": "U",
+                    }
+                ],
                 "interfaces": {
                     "fabric_if": {
                         "ports": [
@@ -122,15 +131,17 @@ class TestKicadGen(unittest.TestCase):
                         "top_schematic": "CarbonZ80.kicad_sch",
                         "cpu_core": "Z85",
                         "accel_core": "",
+                        "peripherals": [],
                         "memory": ["ROM"],
+                        "common_blocks": [],
                         "adapters": [],
                     }
                 ],
             }
 
-            (root / "schem/kicad9/spec/kicadgen_common.yaml").write_text(json.dumps(common), encoding="utf-8")
-            (root / "schem/kicad9/spec/kicadgen_cores.yaml").write_text(json.dumps(cores), encoding="utf-8")
-            (root / "schem/kicad9/spec/kicadgen_systems.yaml").write_text(json.dumps(systems), encoding="utf-8")
+            (root / "schem/kicad9/spec/kicadgen_common.json").write_text(json.dumps(common), encoding="utf-8")
+            (root / "schem/kicad9/spec/kicadgen_cores.json").write_text(json.dumps(cores), encoding="utf-8")
+            (root / "schem/kicad9/spec/kicadgen_systems.json").write_text(json.dumps(systems), encoding="utf-8")
 
             script = Path(__file__).resolve().parents[1] / "src" / "kicadgen.py"
             proc = run(
@@ -156,3 +167,14 @@ class TestKicadGen(unittest.TestCase):
             sys_text = sys_top.read_text(encoding="utf-8")
             self.assertIn("sheet", sys_text)
             self.assertIn("blk_cpu", sys_text)
+
+            # Determinism check: run again and ensure file contents are unchanged.
+            proc2 = run(
+                ["python", str(script), "--root", str(root)],
+                stdout=PIPE,
+                stderr=PIPE,
+                encoding="utf-8",
+            )
+            self.assertEqual(proc2.returncode, 0, msg=proc2.stderr)
+            data2 = top.read_text(encoding="utf-8")
+            self.assertEqual(data, data2)
