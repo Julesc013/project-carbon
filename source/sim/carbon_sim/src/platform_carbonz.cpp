@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 
+#include "carbon_sim/devices/caps.h"
 #include "carbon_sim/devices/carbon_mmio.h"
 #include "carbon_sim/devices/carbondma.h"
 #include "carbon_sim/devices/carbonio.h"
@@ -26,6 +27,7 @@ namespace {
 static constexpr u16 kSys16RomBase = 0x0000;
 static constexpr std::size_t kSys16RomBytes = 256;
 static constexpr u16 kMmioBase = 0xF000;
+static constexpr u16 kCapsBasePort = 0x0020;
 static constexpr u16 kCarbonIoBase = 0xF100;
 static constexpr u16 kCarbonDmaBase = 0xF200;
 static constexpr u16 kTierHostBase = 0xF300;
@@ -146,16 +148,6 @@ void add_block_desc(std::vector<DeviceDescriptor>& devices) {
   devices.push_back(block_desc);
 }
 
-std::vector<u8> build_bdt_image(const std::vector<DeviceDescriptor>& devices) {
-  const auto bdt = build_bdt(devices);
-  if (bdt.bytes.size() > kBdtRegionBytes) {
-    throw std::runtime_error("BDT image does not fit in 512-byte region");
-  }
-  auto image = bdt.bytes;
-  image.resize(kBdtRegionBytes, 0x00);
-  return image;
-}
-
 std::unique_ptr<Machine> create_carbonz_platform(const SimConfig& config,
                                                  std::ostream& console_out,
                                                  const std::vector<u8>& rom_image,
@@ -163,8 +155,15 @@ std::unique_ptr<Machine> create_carbonz_platform(const SimConfig& config,
                                                  bool with_tier_host) {
   auto m = std::make_unique<Machine>();
 
+  const auto bdt = build_bdt(devices);
+  if (bdt.bytes.size() > kBdtRegionBytes) {
+    throw std::runtime_error("BDT image does not fit in 512-byte region");
+  }
+  auto bdt_image = bdt.bytes;
+  bdt_image.resize(kBdtRegionBytes, 0x00);
+
   m->bus.map_rom(kSys16RomBase, rom_image);
-  m->bus.map_rom(kBdtBase, build_bdt_image(devices));
+  m->bus.map_rom(kBdtBase, bdt_image);
   m->bus.map_ram(0x0000, 65536);
   inject_mem_image(m->bus, config.mem_addr, load_mem_image(config.mem_path));
   inject_bsp_blob(m->bus, config.bsp_addr, load_bsp_blob(config.bsp_path));
@@ -179,11 +178,20 @@ std::unique_ptr<Machine> create_carbonz_platform(const SimConfig& config,
     m->tier_host = nullptr;
   }
 
+  BdtCapsInfo caps_info;
+  caps_info.base_lo = kBdtBase;
+  caps_info.base_hi = 0;
+  caps_info.entry_size = bdt.entry_size;
+  caps_info.entry_count = bdt.entry_count;
+  caps_info.header_size = bdt.header_size;
+  const std::uint32_t features0 =
+      kFeatCapsMask | kFeatDeviceModelMask | kFeatBdtMask | kFeatPollingCompleteMask;
+
+  m->caps = &m->bus.add_device<CapsDevice>(kCapsBasePort, caps_info, features0);
   m->irq = &m->bus.add_device<InterruptController>();
   m->timer = nullptr;
   m->uart0 = nullptr;
   m->sio0 = nullptr;
-  m->caps = nullptr;
   m->cpm_disk = nullptr;
 
   attach_cpm_disks(*m, config);
