@@ -18,13 +18,24 @@ This only rewrites `schem/kicad9/generated/`.
 
 ## Extending the mapping specs
 
-Mapping specs are stored as YAML 1.2-compatible JSON (`.yaml` extension with JSON content) so `tools/kicadgen/src/kicadgen.py` can parse them using Python stdlib `json`.
+Mapping specs are JSON so `tools/kicadgen/src/kicadgen.py` can parse them using
+Python stdlib `json` (no external YAML dependency).
 
-- `schem/kicad9/spec/kicadgen_common.yaml`: interface port naming, common blocks, layout defaults
-- `schem/kicad9/spec/kicadgen_cores.yaml`: core-to-sheet mapping (blocks, interfaces, output paths)
-- `schem/kicad9/spec/kicadgen_systems.yaml`: system top schematics (core selection, memory/common blocks)
+- `schem/kicad9/spec/kicadgen_common.json`: interface port naming, common block sheets, layout defaults
+- `schem/kicad9/spec/kicadgen_cores.json`: core-to-sheet mapping (blocks, interfaces, output paths)
+- `schem/kicad9/spec/kicadgen_systems.json`: system top schematics (core selection, peripherals, common blocks)
 
-To add a new CPU family, add a new entry in `schem/kicad9/spec/kicadgen_cores.yaml` and (optionally) reference it from a new system entry in `schem/kicad9/spec/kicadgen_systems.yaml`.
+Legacy `.yaml` files remain supported for compatibility, but JSON is the source
+of truth.
+
+To add a new chip, add a new entry in `schem/kicad9/spec/kicadgen_cores.json` and
+reference it from a new system entry in `schem/kicad9/spec/kicadgen_systems.json`.
+
+Key fields to know:
+
+- `common_sheets` in `kicadgen_common.json` drives the generated common block sheets.
+- `peripherals` in `kicadgen_systems.json` instantiates extra core sheets (e.g., CarbonIO).
+- `common_blocks` in `kicadgen_systems.json` places shared fabric/clock/power blocks.
 
 ## Adding real parts later (74ACT, SRAMs, CPLDs)
 
@@ -45,4 +56,3 @@ Open any generated top-level schematic under:
 - `schem/kicad9/generated/systems/<System>/<name>.kicad_sch`
 
 The placeholder symbol library is `schem/kicad9/libs/carbon_blocks.kicad_sym`.
-
