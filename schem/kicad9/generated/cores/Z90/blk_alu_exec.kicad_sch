@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
+	(generator_version "0.2")
 	(uuid "fce67591-3f0a-5b1c-8913-b1293bf1f746")
 	(paper "A3")
 	(title_block
-		(title "Z90::alu_exec")
+		(title "Z90 (P3/Z180-class)::alu_exec")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for Z90/alu_exec"
+		"Generated placeholder block for Z90 (P3/Z180-class)/alu_exec"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "0afbc91b-a312-5b14-b927-5c7531c59b4f")
+		(uuid "96091aee-6414-5356-bae1-c823f669024b")
 	)
 	(sheet_instances
 		(path

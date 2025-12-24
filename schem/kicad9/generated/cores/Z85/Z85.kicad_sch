@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
+	(generator_version "0.2")
 	(uuid "fe436247-6d67-5f35-97b1-9e2ade8fd008")
 	(paper "A3")
 	(title_block
-		(title "Z85 (generated)")
+		(title "Z85 (P2/Z80) (generated)")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated core top: Z85  (edit mapping specs; do not hand-edit generated/)"
+		"Generated core top: Z85 (P2/Z80)  (edit mapping specs; do not hand-edit generated/)"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,49 @@
 			)
 			(justify left)
 		)
-		(uuid "6426f20c-7e15-5bf5-8693-cf966769f030")
+		(uuid "ce04d279-2d50-539f-9c32-e3b3c3181a7e")
+	)
+	(text_box
+		"Presented tier: P2 (Z80)\nFeature: undocumented Z80 ops (Z85_UNDOC_Z80)"
+		(exclude_from_sim no)
+		(at
+			12.7
+			22.86
+			0
+		)
+		(size 114.3 12.7)
+		(margins
+			1.27
+			1.27
+			1.27
+			1.27
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color
+				0
+				0
+				0
+				1
+			)
+		)
+		(fill
+			(type color)
+			(color
+				255
+				255
+				150
+				1
+			)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "8dbdd603-9964-5dcd-b7b9-d86e0c3e32ec")
 	)
 	(sheet
 		(at 12.7 25.4)
@@ -132,10 +174,10 @@
 				0
 			)
 		)
-		(uuid "cb6e5c48-c55a-531a-bbbf-b56f8ca4f5c0")
+		(uuid "940b782e-d5a1-531f-b8a4-4d08bba1bff3")
 		(property
 			"Sheetname"
-			"blk_regfile"
+			"blk_regfile_state"
 			(at
 				127
 				24.13
@@ -150,7 +192,7 @@
 		)
 		(property
 			"Sheetfile"
-			"blk_regfile.kicad_sch"
+			"blk_regfile_state.kicad_sch"
 			(at
 				127
 				64.77

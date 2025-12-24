@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
+	(generator_version "0.2")
 	(uuid "92267c30-7a9b-5a25-8278-1a73dfaaf2f0")
 	(paper "A3")
 	(title_block
-		(title "Am9513 (generated)")
+		(title "Am9513 (P2 scalar async) (generated)")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated core top: Am9513  (edit mapping specs; do not hand-edit generated/)"
+		"Generated core top: Am9513 (P2 scalar async)  (edit mapping specs; do not hand-edit generated/)"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,49 @@
 			)
 			(justify left)
 		)
-		(uuid "efef3865-c3e9-50df-b67b-53d147afae67")
+		(uuid "671bf727-e735-5c0b-895a-07d5ce15fdb9")
+	)
+	(text_box
+		"Presented tier: P2 (async scalar)\nHosts P0-P1 personalities"
+		(exclude_from_sim no)
+		(at
+			12.7
+			22.86
+			0
+		)
+		(size 114.3 12.7)
+		(margins
+			1.27
+			1.27
+			1.27
+			1.27
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color
+				0
+				0
+				0
+				1
+			)
+		)
+		(fill
+			(type color)
+			(color
+				255
+				255
+				150
+				1
+			)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "e7cccd12-aa57-577b-bf3f-ac08abdfefcb")
 	)
 	(sheet
 		(at 12.7 25.4)
@@ -72,10 +114,10 @@
 				0
 			)
 		)
-		(uuid "c9343d62-bbce-515e-88e8-260b370b978f")
+		(uuid "ec50db9d-a169-5694-b61b-f7277153d6e4")
 		(property
 			"Sheetname"
-			"blk_frontend_decode"
+			"blk_cai_queue"
 			(at
 				12.7
 				24.13
@@ -90,7 +132,7 @@
 		)
 		(property
 			"Sheetfile"
-			"blk_frontend_decode.kicad_sch"
+			"blk_cai_queue.kicad_sch"
 			(at
 				12.7
 				64.77
@@ -132,10 +174,10 @@
 				0
 			)
 		)
-		(uuid "90682fe5-08fc-5828-8d36-3a1de945c469")
+		(uuid "598aecfb-fe60-5f97-a9bd-286df1f999cf")
 		(property
 			"Sheetname"
-			"blk_regfile"
+			"blk_context_ram"
 			(at
 				127
 				24.13
@@ -150,7 +192,7 @@
 		)
 		(property
 			"Sheetfile"
-			"blk_regfile.kicad_sch"
+			"blk_context_ram.kicad_sch"
 			(at
 				127
 				64.77
@@ -192,10 +234,10 @@
 				0
 			)
 		)
-		(uuid "2029df46-d4c9-5803-8871-7398a30bb8db")
+		(uuid "36c4b5ed-a554-5fa1-997b-2343e05b8147")
 		(property
 			"Sheetname"
-			"blk_alu_exec"
+			"blk_scalar_pipeline"
 			(at
 				12.7
 				74.93
@@ -210,7 +252,7 @@
 		)
 		(property
 			"Sheetfile"
-			"blk_alu_exec.kicad_sch"
+			"blk_scalar_pipeline.kicad_sch"
 			(at
 				12.7
 				115.57
@@ -312,10 +354,10 @@
 				0
 			)
 		)
-		(uuid "0bbf35b1-2865-5480-be86-eaaa061c3d91")
+		(uuid "1ebcb096-7f0c-5de4-b2ef-0fba2f887975")
 		(property
 			"Sheetname"
-			"blk_csr_irq_dbg"
+			"blk_csr_dbg"
 			(at
 				12.7
 				125.73
@@ -330,7 +372,7 @@
 		)
 		(property
 			"Sheetfile"
-			"blk_csr_irq_dbg.kicad_sch"
+			"blk_csr_dbg.kicad_sch"
 			(at
 				12.7
 				166.37
@@ -349,186 +391,6 @@
 				(path
 					"/92267c30-7a9b-5a25-8278-1a73dfaaf2f0"
 					(page "6")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 127 127)
-		(size 101.6 38.1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(fill
-			(color
-				0
-				0
-				0
-				0
-			)
-		)
-		(uuid "ec50db9d-a169-5694-b61b-f7277153d6e4")
-		(property
-			"Sheetname"
-			"blk_cai_queue"
-			(at
-				127
-				125.73
-				0
-			)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property
-			"Sheetfile"
-			"blk_cai_queue.kicad_sch"
-			(at
-				127
-				166.37
-				0
-			)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(instances
-			(project
-				"core_Am9513"
-				(path
-					"/92267c30-7a9b-5a25-8278-1a73dfaaf2f0"
-					(page "7")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 12.7 177.8)
-		(size 101.6 38.1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(fill
-			(color
-				0
-				0
-				0
-				0
-			)
-		)
-		(uuid "598aecfb-fe60-5f97-a9bd-286df1f999cf")
-		(property
-			"Sheetname"
-			"blk_context_ram"
-			(at
-				12.7
-				176.53
-				0
-			)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property
-			"Sheetfile"
-			"blk_context_ram.kicad_sch"
-			(at
-				12.7
-				217.17
-				0
-			)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(instances
-			(project
-				"core_Am9513"
-				(path
-					"/92267c30-7a9b-5a25-8278-1a73dfaaf2f0"
-					(page "8")
-				)
-			)
-		)
-	)
-	(sheet
-		(at 127 177.8)
-		(size 101.6 38.1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(stroke
-			(width 0)
-			(type solid)
-		)
-		(fill
-			(color
-				0
-				0
-				0
-				0
-			)
-		)
-		(uuid "010ff28c-69e6-5656-9e63-5a32b889124c")
-		(property
-			"Sheetname"
-			"blk_pipelines"
-			(at
-				127
-				176.53
-				0
-			)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property
-			"Sheetfile"
-			"blk_pipelines.kicad_sch"
-			(at
-				127
-				217.17
-				0
-			)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(instances
-			(project
-				"core_Am9513"
-				(path
-					"/92267c30-7a9b-5a25-8278-1a73dfaaf2f0"
-					(page "9")
 				)
 			)
 		)

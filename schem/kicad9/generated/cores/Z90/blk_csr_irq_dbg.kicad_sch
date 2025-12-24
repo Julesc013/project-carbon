@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
+	(generator_version "0.2")
 	(uuid "928f7477-0456-58f1-b2e2-6b85fde59bf6")
 	(paper "A3")
 	(title_block
-		(title "Z90::csr_irq_dbg")
+		(title "Z90 (P3/Z180-class)::csr_irq_dbg")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for Z90/csr_irq_dbg"
+		"Generated placeholder block for Z90 (P3/Z180-class)/csr_irq_dbg"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "4109f5af-e8d9-5113-a003-c595e12d2b8f")
+		(uuid "436b927b-f7d6-50d9-9410-cdf5db5656e9")
 	)
 	(sheet_instances
 		(path

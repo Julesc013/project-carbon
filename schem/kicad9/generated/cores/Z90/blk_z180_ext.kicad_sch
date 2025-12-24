@@ -1,0 +1,63 @@
+(kicad_sch
+	(version 20250114)
+	(generator "kicadgen")
+	(generator_version "0.2")
+	(uuid "77a451cf-965c-5088-af36-bf20f3f8b9f9")
+	(paper "A3")
+	(title_block
+		(title "Z90 (P3/Z180-class)::z180_ext")
+		(company "Project Carbon")
+		(comment 1 "Generated - do not edit in generated/")
+		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
+	)
+	(lib_symbols)
+	(text_box
+		"Generated placeholder block for Z90 (P3/Z180-class)/z180_ext"
+		(exclude_from_sim no)
+		(at
+			12.7
+			12.7
+			0
+		)
+		(size 76.2 7.62)
+		(margins
+			1.27
+			1.27
+			1.27
+			1.27
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color
+				0
+				0
+				0
+				1
+			)
+		)
+		(fill
+			(type color)
+			(color
+				255
+				255
+				150
+				1
+			)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "7441dc1b-408f-5a64-80fd-86d1f756f99d")
+	)
+	(sheet_instances
+		(path
+			"/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

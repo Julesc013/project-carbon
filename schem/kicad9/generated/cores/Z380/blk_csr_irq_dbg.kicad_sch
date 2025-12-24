@@ -1,0 +1,63 @@
+(kicad_sch
+	(version 20250114)
+	(generator "kicadgen")
+	(generator_version "0.2")
+	(uuid "9df18a22-b006-5d2b-a638-2ecc25bbfb5c")
+	(paper "A3")
+	(title_block
+		(title "Z380 (P6)::csr_irq_dbg")
+		(company "Project Carbon")
+		(comment 1 "Generated - do not edit in generated/")
+		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
+	)
+	(lib_symbols)
+	(text_box
+		"Generated placeholder block for Z380 (P6)/csr_irq_dbg"
+		(exclude_from_sim no)
+		(at
+			12.7
+			12.7
+			0
+		)
+		(size 76.2 7.62)
+		(margins
+			1.27
+			1.27
+			1.27
+			1.27
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color
+				0
+				0
+				0
+				1
+			)
+		)
+		(fill
+			(type color)
+			(color
+				255
+				255
+				150
+				1
+			)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "07810535-11fa-5803-8478-5057187c3203")
+	)
+	(sheet_instances
+		(path
+			"/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

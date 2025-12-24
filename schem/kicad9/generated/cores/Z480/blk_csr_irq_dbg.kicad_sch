@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
-	(uuid "eaa72bbb-db7f-5b84-95cb-8c22e2b2e535")
+	(generator_version "0.2")
+	(uuid "434f40bc-b6b9-5318-8d69-bc8e99fa1f4b")
 	(paper "A3")
 	(title_block
-		(title "Z480::csr_irq_dbg")
+		(title "Z480 (P7/native 64)::csr_irq_dbg")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for Z480/csr_irq_dbg"
+		"Generated placeholder block for Z480 (P7/native 64)/csr_irq_dbg"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "80b509f3-87cb-5f1f-a63f-0b98a6da9174")
+		(uuid "979938e5-4a4b-54fd-8f28-6f9ed3e31bfc")
 	)
 	(sheet_instances
 		(path

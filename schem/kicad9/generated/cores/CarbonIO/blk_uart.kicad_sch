@@ -1,0 +1,63 @@
+(kicad_sch
+	(version 20250114)
+	(generator "kicadgen")
+	(generator_version "0.2")
+	(uuid "d02f6d24-fd3d-5f9c-9ba8-4013b1298c04")
+	(paper "A3")
+	(title_block
+		(title "CarbonIO (UART/timer)::uart")
+		(company "Project Carbon")
+		(comment 1 "Generated - do not edit in generated/")
+		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
+	)
+	(lib_symbols)
+	(text_box
+		"Generated placeholder block for CarbonIO (UART/timer)/uart"
+		(exclude_from_sim no)
+		(at
+			12.7
+			12.7
+			0
+		)
+		(size 76.2 7.62)
+		(margins
+			1.27
+			1.27
+			1.27
+			1.27
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color
+				0
+				0
+				0
+				1
+			)
+		)
+		(fill
+			(type color)
+			(color
+				255
+				255
+				150
+				1
+			)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "f77602a6-84d7-587d-82cb-c22c10f4c9fb")
+	)
+	(sheet_instances
+		(path
+			"/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

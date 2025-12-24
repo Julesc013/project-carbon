@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
-	(uuid "ae9bf571-4711-579d-8db8-c23a6221a3b2")
+	(generator_version "0.2")
+	(uuid "b9a80c9b-1373-5719-90ef-7f884cf8075e")
 	(paper "A3")
 	(title_block
-		(title "Z480::frontend_decode")
+		(title "Z480 (P7/native 64)::frontend_decode")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for Z480/frontend_decode"
+		"Generated placeholder block for Z480 (P7/native 64)/frontend_decode"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "798875cd-7896-52f5-8248-0817703b2f99")
+		(uuid "88754940-fd97-570f-b5ee-c92525326d5f")
 	)
 	(sheet_instances
 		(path

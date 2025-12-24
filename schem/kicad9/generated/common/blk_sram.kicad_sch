@@ -1,7 +1,7 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
+	(generator_version "0.2")
 	(uuid "a1ff5d3d-5cbc-5a34-8135-eb8c3b293203")
 	(paper "A3")
 	(title_block

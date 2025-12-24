@@ -1,0 +1,1033 @@
+(kicad_sch
+	(version 20250114)
+	(generator "kicadgen")
+	(generator_version "0.2")
+	(uuid "a707a8c4-8b85-5a0e-a1a3-408548fe7ac3")
+	(paper "A3")
+	(title_block
+		(title "Z480 (P7/native 64) (generated)")
+		(company "Project Carbon")
+		(comment 1 "Generated - do not edit in generated/")
+		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
+	)
+	(lib_symbols)
+	(text_box
+		"Generated core top: Z480 (P7/native 64)  (edit mapping specs; do not hand-edit generated/)"
+		(exclude_from_sim no)
+		(at
+			12.7
+			12.7
+			0
+		)
+		(size 114.3 7.62)
+		(margins
+			1.27
+			1.27
+			1.27
+			1.27
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color
+				0
+				0
+				0
+				1
+			)
+		)
+		(fill
+			(type color)
+			(color
+				255
+				255
+				150
+				1
+			)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "7074cf1e-2974-5f5a-a250-d343db33d362")
+	)
+	(text_box
+		"Presented tier: P7 (Z480)\nHosts P0-P6 via compatibility cores"
+		(exclude_from_sim no)
+		(at
+			12.7
+			22.86
+			0
+		)
+		(size 114.3 12.7)
+		(margins
+			1.27
+			1.27
+			1.27
+			1.27
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color
+				0
+				0
+				0
+				1
+			)
+		)
+		(fill
+			(type color)
+			(color
+				255
+				255
+				150
+				1
+			)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "74e244a4-d018-5527-b4b7-16eb205de714")
+	)
+	(sheet
+		(at 12.7 25.4)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "44ee96ce-6a44-59c0-9ace-be6b686046c1")
+		(property
+			"Sheetname"
+			"blk_frontend_decode"
+			(at
+				12.7
+				24.13
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"blk_frontend_decode.kicad_sch"
+			(at
+				12.7
+				64.77
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"core_Z480"
+				(path
+					"/a707a8c4-8b85-5a0e-a1a3-408548fe7ac3"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 127 25.4)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "09a9c346-13b1-5df9-9fa9-58ae9fc4c5f6")
+		(property
+			"Sheetname"
+			"blk_regfile_state"
+			(at
+				127
+				24.13
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"blk_regfile_state.kicad_sch"
+			(at
+				127
+				64.77
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"core_Z480"
+				(path
+					"/a707a8c4-8b85-5a0e-a1a3-408548fe7ac3"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 12.7 76.2)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "ce67adfc-a4d4-5d1b-af23-ffd47fb4d56a")
+		(property
+			"Sheetname"
+			"blk_alu_exec"
+			(at
+				12.7
+				74.93
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"blk_alu_exec.kicad_sch"
+			(at
+				12.7
+				115.57
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"core_Z480"
+				(path
+					"/a707a8c4-8b85-5a0e-a1a3-408548fe7ac3"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 127 76.2)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "f821d8eb-576d-5021-ba36-7a04f03d7017")
+		(property
+			"Sheetname"
+			"blk_addrgen"
+			(at
+				127
+				74.93
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"blk_addrgen.kicad_sch"
+			(at
+				127
+				115.57
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"core_Z480"
+				(path
+					"/a707a8c4-8b85-5a0e-a1a3-408548fe7ac3"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 12.7 127)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "ba2581ad-cdb2-55e2-ba6d-404a0eea12bb")
+		(property
+			"Sheetname"
+			"blk_privilege_mmu"
+			(at
+				12.7
+				125.73
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"blk_privilege_mmu.kicad_sch"
+			(at
+				12.7
+				166.37
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"core_Z480"
+				(path
+					"/a707a8c4-8b85-5a0e-a1a3-408548fe7ac3"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 127 127)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "f5562daa-951f-5718-9842-8f9f7003055a")
+		(property
+			"Sheetname"
+			"blk_trap_ctrl"
+			(at
+				127
+				125.73
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"blk_trap_ctrl.kicad_sch"
+			(at
+				127
+				166.37
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"core_Z480"
+				(path
+					"/a707a8c4-8b85-5a0e-a1a3-408548fe7ac3"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 12.7 177.8)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "8e523a8c-9244-5617-8e79-daf4b78de148")
+		(property
+			"Sheetname"
+			"blk_mem_fabric"
+			(at
+				12.7
+				176.53
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"blk_mem_fabric.kicad_sch"
+			(at
+				12.7
+				217.17
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"core_Z480"
+				(path
+					"/a707a8c4-8b85-5a0e-a1a3-408548fe7ac3"
+					(page "8")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 127 177.8)
+		(size 101.6 38.1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color
+				0
+				0
+				0
+				0
+			)
+		)
+		(uuid "aeea2bb1-d2ff-5f98-9197-9253f02c0fb1")
+		(property
+			"Sheetname"
+			"blk_csr_irq_dbg"
+			(at
+				127
+				176.53
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property
+			"Sheetfile"
+			"blk_csr_irq_dbg.kicad_sch"
+			(at
+				127
+				217.17
+				0
+			)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project
+				"core_Z480"
+				(path
+					"/a707a8c4-8b85-5a0e-a1a3-408548fe7ac3"
+					(page "9")
+				)
+			)
+		)
+	)
+	(hierarchical_label
+		"FAB_ADDR[31:0]"
+		(shape output)
+		(at
+			254
+			25.4
+			0
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "68ddb408-b5d3-5b68-ad8f-db5e0d2de740")
+	)
+	(hierarchical_label
+		"FAB_WDATA[31:0]"
+		(shape output)
+		(at
+			254
+			27.94
+			0
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "c75e31c6-c6a5-5b60-88c9-ac1a2c2df3a2")
+	)
+	(hierarchical_label
+		"FAB_RDATA[31:0]"
+		(shape input)
+		(at
+			7.62
+			25.4
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "b62be728-b055-559a-89f4-3505c77fb434")
+	)
+	(hierarchical_label
+		"FAB_BE[3:0]"
+		(shape output)
+		(at
+			254
+			30.48
+			0
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9541f1a4-b139-5dda-af9f-68ac0bee0820")
+	)
+	(hierarchical_label
+		"FAB_WE"
+		(shape output)
+		(at
+			254
+			33.02
+			0
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "77cb300f-0c0c-5091-bb64-081365234427")
+	)
+	(hierarchical_label
+		"FAB_REQ"
+		(shape output)
+		(at
+			254
+			35.56
+			0
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "33ff2bb3-6b14-5075-bf47-052d0bc0e79e")
+	)
+	(hierarchical_label
+		"FAB_ACK"
+		(shape input)
+		(at
+			7.62
+			27.94
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "e83a0ba1-6b66-57f5-bb59-53d53d610807")
+	)
+	(hierarchical_label
+		"FAB_ERR"
+		(shape input)
+		(at
+			7.62
+			30.48
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "1c53f6f1-9ec9-5c94-ac01-dec9b8dbb954")
+	)
+	(hierarchical_label
+		"FAB_CLK"
+		(shape input)
+		(at
+			7.62
+			33.02
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "a3643546-e5f1-5e7d-91b2-b34fd73c2fa0")
+	)
+	(hierarchical_label
+		"FAB_RESETn"
+		(shape input)
+		(at
+			7.62
+			35.56
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "cd646729-a1f4-5a43-9f16-d1167c1cef11")
+	)
+	(hierarchical_label
+		"CSR_ADDR[15:0]"
+		(shape input)
+		(at
+			7.62
+			38.1
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "b1c0fa04-2b26-5d4d-be20-72e7e6848c49")
+	)
+	(hierarchical_label
+		"CSR_WDATA[31:0]"
+		(shape input)
+		(at
+			7.62
+			40.64
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "09268815-367a-5d71-8e74-8373221b1461")
+	)
+	(hierarchical_label
+		"CSR_RDATA[31:0]"
+		(shape output)
+		(at
+			254
+			38.1
+			0
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9dbcfb17-1182-5743-a5f2-45b09ae49a71")
+	)
+	(hierarchical_label
+		"CSR_WE"
+		(shape input)
+		(at
+			7.62
+			43.18
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "8cf26020-53a4-5d2f-962c-0c5865c41092")
+	)
+	(hierarchical_label
+		"CSR_STB"
+		(shape input)
+		(at
+			7.62
+			45.72
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "997e8eff-8928-55b3-b4b7-51f0d5647b6c")
+	)
+	(hierarchical_label
+		"CSR_ACK"
+		(shape output)
+		(at
+			254
+			40.64
+			0
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "99b55c66-a537-5376-8d35-fb274f1d2e6c")
+	)
+	(hierarchical_label
+		"CSR_CLK"
+		(shape input)
+		(at
+			7.62
+			48.26
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "f761cc83-97e0-5392-861b-dc2a6b3bdddc")
+	)
+	(hierarchical_label
+		"CSR_RESETn"
+		(shape input)
+		(at
+			7.62
+			50.8
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "57a1660b-37cc-50d3-95cb-793825e2c160")
+	)
+	(hierarchical_label
+		"IRQ[31:0]"
+		(shape input)
+		(at
+			7.62
+			53.34
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "b836049c-2251-5ccb-9971-4b20b6b4fea7")
+	)
+	(hierarchical_label
+		"NMI"
+		(shape input)
+		(at
+			7.62
+			55.88
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "07f11ee4-9115-5020-a519-7423cf2a1c69")
+	)
+	(hierarchical_label
+		"IRQ_ACK"
+		(shape output)
+		(at
+			254
+			43.18
+			0
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9ce79588-a71b-55ab-9cdf-4c5ddb918044")
+	)
+	(hierarchical_label
+		"DBG_UART_TX"
+		(shape output)
+		(at
+			254
+			45.72
+			0
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "78e57f5b-30bf-5fbf-8e34-08a97e89141b")
+	)
+	(hierarchical_label
+		"DBG_UART_RX"
+		(shape input)
+		(at
+			7.62
+			58.42
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "5fee7b3c-22e4-51e2-b1d0-526b5ff3ad45")
+	)
+	(hierarchical_label
+		"DBG_JTAG_TCK"
+		(shape input)
+		(at
+			7.62
+			60.96
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "53fa3594-38ee-522f-a724-787e7b35f101")
+	)
+	(hierarchical_label
+		"DBG_JTAG_TMS"
+		(shape input)
+		(at
+			7.62
+			63.5
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "6c8de767-ac62-577d-8d29-96dd311884fc")
+	)
+	(hierarchical_label
+		"DBG_JTAG_TDI"
+		(shape input)
+		(at
+			7.62
+			66.04
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "dddb2155-7942-5261-b80e-77a1fbd58c80")
+	)
+	(hierarchical_label
+		"DBG_JTAG_TDO"
+		(shape output)
+		(at
+			254
+			48.26
+			0
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "74d8bf1a-5af9-565f-b19a-4e397735dd6f")
+	)
+	(hierarchical_label
+		"DBG_RESETn"
+		(shape input)
+		(at
+			7.62
+			68.58
+			180
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "a9d76687-215b-5dee-b8fc-d0063f75674c")
+	)
+	(sheet_instances
+		(path
+			"/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
+	(generator_version "0.2")
 	(uuid "37b5de6e-842d-5f8d-922f-c6e9c34fb407")
 	(paper "A3")
 	(title_block
-		(title "Am9513::cai_queue")
+		(title "Am9513 (P2 scalar async)::cai_queue")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for Am9513/cai_queue"
+		"Generated placeholder block for Am9513 (P2 scalar async)/cai_queue"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "bb5e571c-dd3b-502b-9f0d-17a8b83f815a")
+		(uuid "bb4daddc-4068-5db9-abd2-42d85bcab0ee")
 	)
 	(sheet_instances
 		(path

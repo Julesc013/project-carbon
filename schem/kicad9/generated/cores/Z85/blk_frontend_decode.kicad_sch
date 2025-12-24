@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
+	(generator_version "0.2")
 	(uuid "d31b09f3-dc84-5e8a-a345-48fbd5980e22")
 	(paper "A3")
 	(title_block
-		(title "Z85::frontend_decode")
+		(title "Z85 (P2/Z80)::frontend_decode")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for Z85/frontend_decode"
+		"Generated placeholder block for Z85 (P2/Z80)/frontend_decode"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "ab40e663-31fe-57c2-a6ef-1bec8c054c89")
+		(uuid "c74a3c9d-d66d-5dfa-aa7f-a79a797b9677")
 	)
 	(sheet_instances
 		(path

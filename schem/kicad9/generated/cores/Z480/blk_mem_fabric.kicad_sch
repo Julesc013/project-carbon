@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
-	(uuid "46a5305b-9dce-5859-96e4-4bfb0ac74f01")
+	(generator_version "0.2")
+	(uuid "3d1a802a-5fe6-5467-96c4-0657c667ca9f")
 	(paper "A3")
 	(title_block
-		(title "Z480::mem_fabric")
+		(title "Z480 (P7/native 64)::mem_fabric")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for Z480/mem_fabric"
+		"Generated placeholder block for Z480 (P7/native 64)/mem_fabric"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "75de342a-c8f8-5f1b-971f-003a0914e398")
+		(uuid "113ccfd8-b6f7-5aa8-9ae0-77fa17c27f00")
 	)
 	(sheet_instances
 		(path

@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
+	(generator_version "0.2")
 	(uuid "89e3fb5d-801e-57af-80a9-5dbd7b379238")
 	(paper "A3")
 	(title_block
-		(title "Z90::mem_fabric")
+		(title "Z90 (P3/Z180-class)::mem_fabric")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for Z90/mem_fabric"
+		"Generated placeholder block for Z90 (P3/Z180-class)/mem_fabric"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "94c33d38-a274-5fcc-bc6b-8766910f5498")
+		(uuid "8afd1445-0de5-5310-b0de-9b04213eb0f5")
 	)
 	(sheet_instances
 		(path

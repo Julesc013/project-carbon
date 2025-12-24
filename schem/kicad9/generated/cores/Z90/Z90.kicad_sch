@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
+	(generator_version "0.2")
 	(uuid "513ea55a-9e34-57a5-8677-56105d8d1c95")
 	(paper "A3")
 	(title_block
-		(title "Z90 (generated)")
+		(title "Z90 (P3/Z180-class) (generated)")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated core top: Z90  (edit mapping specs; do not hand-edit generated/)"
+		"Generated core top: Z90 (P3/Z180-class)  (edit mapping specs; do not hand-edit generated/)"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,49 @@
 			)
 			(justify left)
 		)
-		(uuid "6e43f0c9-5837-5ea7-bc3c-68a0338c74d6")
+		(uuid "c3d005cc-47c3-50e2-9ff7-f3d1d67da64c")
+	)
+	(text_box
+		"Presented tier: P3 (Z180-class)\nHosts P0-P2 personalities"
+		(exclude_from_sim no)
+		(at
+			12.7
+			22.86
+			0
+		)
+		(size 114.3 12.7)
+		(margins
+			1.27
+			1.27
+			1.27
+			1.27
+		)
+		(stroke
+			(width 0)
+			(type default)
+			(color
+				0
+				0
+				0
+				1
+			)
+		)
+		(fill
+			(type color)
+			(color
+				255
+				255
+				150
+				1
+			)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "413f818f-8933-508a-8d61-4d26c7e395e2")
 	)
 	(sheet
 		(at 12.7 25.4)
@@ -132,10 +174,10 @@
 				0
 			)
 		)
-		(uuid "3f1b2d85-4f2d-5dda-bd05-10340b85136d")
+		(uuid "b7200a0f-dd11-5f5c-a5ac-f5326f0faf67")
 		(property
 			"Sheetname"
-			"blk_regfile"
+			"blk_regfile_state"
 			(at
 				127
 				24.13
@@ -150,7 +192,7 @@
 		)
 		(property
 			"Sheetfile"
-			"blk_regfile.kicad_sch"
+			"blk_regfile_state.kicad_sch"
 			(at
 				127
 				64.77
@@ -252,10 +294,10 @@
 				0
 			)
 		)
-		(uuid "7cf0601f-9983-5a9b-8479-6878da6d80fc")
+		(uuid "c6accd93-7805-5344-a95c-9a9efdc82501")
 		(property
 			"Sheetname"
-			"blk_mem_fabric"
+			"blk_z180_ext"
 			(at
 				127
 				74.93
@@ -270,7 +312,7 @@
 		)
 		(property
 			"Sheetfile"
-			"blk_mem_fabric.kicad_sch"
+			"blk_z180_ext.kicad_sch"
 			(at
 				127
 				115.57
@@ -312,10 +354,10 @@
 				0
 			)
 		)
-		(uuid "21ea55c9-eb98-5da6-8763-f95be0217ed2")
+		(uuid "7cf0601f-9983-5a9b-8479-6878da6d80fc")
 		(property
 			"Sheetname"
-			"blk_csr_irq_dbg"
+			"blk_mem_fabric"
 			(at
 				12.7
 				125.73
@@ -330,7 +372,7 @@
 		)
 		(property
 			"Sheetfile"
-			"blk_csr_irq_dbg.kicad_sch"
+			"blk_mem_fabric.kicad_sch"
 			(at
 				12.7
 				166.37
@@ -372,10 +414,10 @@
 				0
 			)
 		)
-		(uuid "a8beab8b-8e40-5ff1-a9aa-b859a224efee")
+		(uuid "21ea55c9-eb98-5da6-8763-f95be0217ed2")
 		(property
 			"Sheetname"
-			"blk_cai_link"
+			"blk_csr_irq_dbg"
 			(at
 				127
 				125.73
@@ -390,7 +432,7 @@
 		)
 		(property
 			"Sheetfile"
-			"blk_cai_link.kicad_sch"
+			"blk_csr_irq_dbg.kicad_sch"
 			(at
 				127
 				166.37
@@ -860,102 +902,6 @@
 			(justify right)
 		)
 		(uuid "04278fbf-09d2-5aec-8ebc-8a64e57f5073")
-	)
-	(hierarchical_label
-		"CAI_CMD[31:0]"
-		(shape input)
-		(at
-			7.62
-			71.12
-			180
-		)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "59bec3dc-b76c-5a76-9a2b-f7d8c211bf36")
-	)
-	(hierarchical_label
-		"CAI_CMD_VALID"
-		(shape input)
-		(at
-			7.62
-			73.66
-			180
-		)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "e575aac7-75ca-50e4-8c4d-b24666636d6e")
-	)
-	(hierarchical_label
-		"CAI_CMD_READY"
-		(shape output)
-		(at
-			254
-			50.8
-			0
-		)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "be045e96-6424-5a87-8bc7-555792793a71")
-	)
-	(hierarchical_label
-		"CAI_RSP[31:0]"
-		(shape output)
-		(at
-			254
-			53.34
-			0
-		)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "347fc02a-2a8b-5973-a0cf-5687b588323b")
-	)
-	(hierarchical_label
-		"CAI_RSP_VALID"
-		(shape output)
-		(at
-			254
-			55.88
-			0
-		)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "87e84a48-1adb-5d52-9083-19e3e8f29f8b")
-	)
-	(hierarchical_label
-		"CAI_RSP_READY"
-		(shape input)
-		(at
-			7.62
-			76.2
-			180
-		)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "40b69842-9a1f-5225-852f-ee33d4ed286f")
 	)
 	(sheet_instances
 		(path

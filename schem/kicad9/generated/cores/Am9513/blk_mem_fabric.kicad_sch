@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
+	(generator_version "0.2")
 	(uuid "c30c0b5b-c663-5fda-8aa7-80547dc5ee46")
 	(paper "A3")
 	(title_block
-		(title "Am9513::mem_fabric")
+		(title "Am9513 (P2 scalar async)::mem_fabric")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for Am9513/mem_fabric"
+		"Generated placeholder block for Am9513 (P2 scalar async)/mem_fabric"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "b47d4188-02c7-5cd7-86e7-13bf7ab15b2e")
+		(uuid "82269afe-ab84-59a2-bcdd-13869cae972c")
 	)
 	(sheet_instances
 		(path

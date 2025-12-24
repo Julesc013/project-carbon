@@ -1,18 +1,18 @@
 (kicad_sch
 	(version 20250114)
 	(generator "kicadgen")
-	(generator_version "0.1")
+	(generator_version "0.2")
 	(uuid "d733bbd1-81a6-578c-957e-df2544e3e731")
 	(paper "A3")
 	(title_block
-		(title "Z90::frontend_decode")
+		(title "Z90 (P3/Z180-class)::frontend_decode")
 		(company "Project Carbon")
 		(comment 1 "Generated - do not edit in generated/")
 		(comment 2 "Edit in schem/kicad9/manual/ or refine mapping specs")
 	)
 	(lib_symbols)
 	(text_box
-		"Generated placeholder block for Z90/frontend_decode"
+		"Generated placeholder block for Z90 (P3/Z180-class)/frontend_decode"
 		(exclude_from_sim no)
 		(at
 			12.7
@@ -51,7 +51,7 @@
 			)
 			(justify left)
 		)
-		(uuid "08a01ed1-2510-54b9-a0c1-16bdfc0f7fa9")
+		(uuid "5c086489-673e-5e2b-b8b7-65fe2cd1764a")
 	)
 	(sheet_instances
 		(path
