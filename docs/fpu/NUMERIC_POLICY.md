@@ -1,7 +1,7 @@
 # Am95xx Numeric Policy (v1)
 
 This document summarizes the numeric behavior for the Am95xx accelerator family.
-It is kept in sync with `docs/fpu/NUMERIC_POLICY.md`.
+`docs/fpu/Am95xx_NUMERIC_POLICY.md` mirrors this content for compatibility.
 
 ## Rounding modes
 

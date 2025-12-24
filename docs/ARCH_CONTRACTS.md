@@ -1,6 +1,9 @@
 # Project Carbon — Frozen Architecture Contracts (v1.0)
 
-_AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
+_GENERATED FILE — DO NOT EDIT._
+_Specs: bdt.yaml:v1.0.0, cai.yaml:v1.1.0, csr_map.yaml:v1.0.0, device_model.yaml:v1.0.0, discovery.yaml:v1.1.0, external_if.yaml:v1.0.0, fabric.yaml:v1.1.0, formats.yaml:v1.0.0, interfaces.yaml:v1.0.0, isa_z90.yaml:v1.0.0, memory_attrs.yaml:v1.0.0, mode_switch.yaml:v1.1.0, profiles.yaml:v1.0.0, tiers.yaml:v1.1.0, topology.yaml:v1.0.0._
+_Generated: 2025-12-24T09:48:45Z._
+_Source: `hdl/tools/gen_specs.py`._
 
 ## A) Compatibility Tier Ladders
 
@@ -11,8 +14,9 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 - Presented tier is reported by discovery, even if internal implementation is a superset.
 - Optional or undocumented behaviors are reported via feature bits, not by elevating the tier.
 - Reset always starts in P0 for every ladder.
+- Tier changes only via MODEUP(target_tier, entry_vector) and RETMD().
 
-### TIER_LADDER_Z80 (Z80-derived compatibility ladder.)
+### TIER_LADDER_Z80 (Unified 8080-derived compatibility ladder.)
 
 - Reset default: `P0`
 - Upgrade rule: `target_tier > current_tier`
@@ -38,24 +42,7 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `Z380` | `P6` | `Z380_32BIT_EXTENDED` | Z380 presents as P6 and advertises 32-bit extensions via feature bits. |
 | `Z480` | `P7` | `Z480_NATIVE_64` | Z480 presents as P7 and advertises native 64-bit mode via feature bits. |
 
-### TIER_LADDER_X86 (x86-derived compatibility ladder.)
-
-- Reset default: `P0`
-- Upgrade rule: `target_tier > current_tier`
-- Downgrade rule: `only via RETMD`
-
-| Tier | Value | Label | Strict |
-|---:|---:|---|:---:|
-| `P0` | `0` | `8086/8087` | true |
-| `P1` | `1` | `80186/80187` | true |
-| `P2` | `2` | `80286/80287` | true |
-| `P3` | `3` | `80386/80387` | true |
-| `P4` | `4` | `80486/80487` | true |
-| `P5` | `5` | `pentium_ia32` | true |
-| `P6` | `6` | `p6_ia32` | true |
-| `P7` | `7` | `x86_64` | true |
-
-### TIER_LADDER_AMD_FPU (AMD-derived FPU compatibility ladder (Am9511 lineage).)
+### TIER_LADDER_AM95 (Am95xx FPU compatibility ladder (Am9511 lineage).)
 
 - Reset default: `P0`
 - Upgrade rule: `target_tier > current_tier`
@@ -64,7 +51,7 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | Tier | Value | Label | Strict |
 |---:|---:|---|:---:|
 | `P0` | `0` | `am9511` | true |
-| `P1` | `1` | `am9512` | true |
+| `P1` | `1` | `am9512-plus` | true |
 | `P2` | `2` | `am9513` | true |
 | `P3` | `3` | `am9514` | true |
 | `P4` | `4` | `am9515` | true |
@@ -73,12 +60,30 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 
 | Part | Presents As | Feature Bits | Description |
 |---|---|---|---|
-| `AM9512` | `P1` | `AM9512_IEEE` | Am9512 presents as P1 and advertises IEEE additions via feature bits. |
-| `AM9513` | `P2` | `AM9513_ASYNC` | Am9513 presents as P2 and advertises async scalar capability via feature bits. |
+| `AM9512_PLUS` | `P1` | `AM9512_IEEE_PLUS` | Am9512-plus presents as P1 and advertises IEEE additions via feature bits. |
+| `AM9513` | `P2` | `AM9513_ASYNC_SCALAR` | Am9513 presents as P2 and advertises async scalar capability via feature bits. |
 | `AM9514` | `P3` | `AM9514_VECTOR` | Am9514 presents as P3 and advertises vector capability via feature bits. |
 | `AM9515` | `P4` | `AM9515_TENSOR` | Am9515 presents as P4 and advertises tensor capability via feature bits. |
 
-## B) Mode Switching Contract
+## B) Profiles
+
+| Profile | ID | Description |
+|---|---:|---|
+| `PROFILE_CPU_ONLY` | `0` | CPU-only target with minimal uncore blocks. |
+| `PROFILE_MCU` | `1` | Microcontroller profile with basic I/O and timers. |
+| `PROFILE_SOC_RETRO` | `2` | Retro SoC profile with legacy Z80 bus adapter. |
+| `PROFILE_SOC_WORKSTATION` | `3` | Workstation SoC profile with storage, DMA, and CAI accelerators. |
+
+### Profile Requirements
+
+| Profile | Blocks | Discovery Tables | Min Devices | Legacy Z80 Bus |
+|---|---|---|---|:---:|
+| `PROFILE_CPU_ONLY` | `CPU`, `CSR`, `IRQ`, `DBG` | `DISCOVERY_TABLE` |  |  |
+| `PROFILE_MCU` | `CPU`, `KIO`, `TIMER`, `IRQ`, `CSR`, `DBG` | `DISCOVERY_TABLE`, `BDT` | `UART`, `TIMER` |  |
+| `PROFILE_SOC_RETRO` | `CPU`, `KIO`, `TIMER`, `IRQ`, `DMA`, `STORAGE`, `CSR`, `DBG` | `DISCOVERY_TABLE`, `TOPOLOGY_TABLE`, `BDT` | `UART`, `TIMER` | true |
+| `PROFILE_SOC_WORKSTATION` | `CPU`, `KIO`, `TIMER`, `IRQ`, `DMA`, `STORAGE`, `CAI`, `CSR`, `DBG` | `DISCOVERY_TABLE`, `TOPOLOGY_TABLE`, `BDT`, `LIMITS_TABLE` | `UART`, `TIMER` |  |
+
+## C) Mode Switching Contract
 
 ### Instructions
 
@@ -101,11 +106,53 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 - Minimum depth: `4`
 - Recommended depth: `16`
 
-## C) Discovery / CPUID / CAPS
+## D) Discovery / CPUID / CAPS
 
 - Endianness: `little`
 - Leaf return words: `4` x `32`-bit
 - Unknown leaf behavior: `return_zeros`
+
+### Discovery Table (V1)
+
+- Format: `CARBON_DISCOVERY_TABLE_V1`, version `1`, size `64` bytes
+
+| Field | Offset | Width (bytes) | Type | Description |
+|---|---:|---:|---|---|
+| `signature` | `0` | `4` | `u32` | ASCII "CDSC" in little-endian (0x43534443). |
+| `table_version` | `4` | `2` | `u16` | Discovery table format version (must be 1). |
+| `table_size` | `6` | `2` | `u16` | Size of the discovery table in bytes (64 for v1). |
+| `cpu_ladder_id` | `8` | `1` | `u8` | CPU ladder ID (TIER_LADDER_Z80). |
+| `fpu_ladder_id` | `9` | `1` | `u8` | FPU ladder ID (TIER_LADDER_AM95). |
+| `presented_cpu_tier` | `10` | `1` | `u8` | Presented CPU tier (P0..P15). |
+| `presented_fpu_tier` | `11` | `1` | `u8` | Presented FPU tier (P0..P15). |
+| `profile_id` | `12` | `1` | `u8` | Profile ID (PROFILE_*). |
+| `reserved0` | `13` | `3` | `u24` | Reserved; must be 0. |
+| `topology_table_ptr` | `16` | `8` | `u64` | Pointer to topology table (0 if not present). |
+| `bdt_ptr` | `24` | `8` | `u64` | Pointer to BIOS Device Table (BDT) base (0 if not present). |
+| `limits_table_ptr` | `32` | `8` | `u64` | Pointer to limits table (queue depths, contexts, vector widths). |
+| `cpu_feature_bitmap_ptr` | `40` | `8` | `u64` | Pointer to CPU feature bitmap. |
+| `fpu_feature_bitmap_ptr` | `48` | `8` | `u64` | Pointer to FPU feature bitmap. |
+| `peripheral_feature_bitmap_ptr` | `56` | `8` | `u64` | Pointer to peripheral/device feature bitmap. |
+
+### Feature Bitmap Format
+
+- Words: `4` x `32`-bit
+
+### Limits Table (V1)
+
+- Format: `CARBON_LIMITS_TABLE_V1`, version `1`, size `32` bytes
+
+| Field | Offset | Width (bytes) | Type | Description |
+|---|---:|---:|---|---|
+| `queue_submit_depth` | `0` | `4` | `u32` | Max CAI submit ring depth in entries. |
+| `queue_complete_depth` | `4` | `4` | `u32` | Max CAI completion ring depth in entries. |
+| `contexts` | `8` | `2` | `u16` | Max CAI context count. |
+| `vector_lanes` | `10` | `2` | `u16` | Max vector lanes (0 if not applicable). |
+| `tensor_rank` | `12` | `2` | `u16` | Max tensor rank (0 if not applicable). |
+| `reserved0` | `14` | `2` | `u16` | Reserved; must be 0. |
+| `max_cores` | `16` | `2` | `u16` | Max core count for topology (0 if unknown). |
+| `max_threads` | `18` | `2` | `u16` | Max threads per core (SMT; 0 if unsupported). |
+| `reserved1` | `20` | `12` | `u96` | Reserved; must be 0. |
 
 ### CPUID Leaf IDs
 
@@ -113,12 +160,14 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 |---|---:|---|
 | `CPUID_LEAF_VENDOR` | `0x00000000` | Maximum standard leaf and vendor string. |
 | `CPUID_LEAF_ID` | `0x00000001` | Vendor ID, family ID, model ID, and stepping. |
-| `CPUID_LEAF_TIERS` | `0x00000002` | Presented tier and limits for CPU and FPU lineages. |
-| `CPUID_LEAF_FEATURES0` | `0x00000003` | Base feature bitmap (bits 0..127 across words 0..3). |
-| `CPUID_LEAF_DEVICE_TABLE` | `0x00000004` | Device table (BDT) base and format descriptor. |
-| `CPUID_LEAF_CACHE0` | `0x00000010` | Cache descriptor 0 (if present). |
-| `CPUID_LEAF_TOPOLOGY` | `0x00000011` | Core/thread topology descriptor. |
-| `CPUID_LEAF_ACCEL0` | `0x00000020` | Accelerator presence descriptor 0. |
+| `CPUID_LEAF_DISCOVERY` | `0x00000002` | Pointer to the canonical discovery table. |
+| `CPUID_LEAF_FEATURES0` | `0x00000003` | CPU feature bitmap word0..3 (legacy mirror of discovery table). |
+| `CPUID_LEAF_DEVICE_TABLE` | `0x00000004` | Legacy BDT mirror (base pointer; discovery table is canonical). |
+| `CPUID_LEAF_FEATURES1` | `0x00000005` | FPU feature bitmap word0..3 (legacy mirror of discovery table). |
+| `CPUID_LEAF_FEATURES2` | `0x00000006` | Peripheral/device feature bitmap word0..3 (legacy mirror of discovery table). |
+| `CPUID_LEAF_CACHE0` | `0x00000010` | Cache descriptor 0 (if present; see topology table for canonical cache IDs). |
+| `CPUID_LEAF_TOPOLOGY` | `0x00000011` | Legacy topology leaf (discovery table is canonical). |
+| `CPUID_LEAF_ACCEL0` | `0x00000020` | Accelerator presence descriptor 0 (legacy; discovery table is canonical). |
 | `CPUID_LEAF_ERRATA0` | `0x00000030` | Errata bitmap 0 (bits 0..127 across words 0..3). |
 
 ### Feature Bits
@@ -128,23 +177,21 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `FEAT_MODE_SWITCH` | `0` | MODEUP/RETMD mode switching contract implemented. |
 | `FEAT_CSR_NAMESPACE` | `1` | Carbon CSR namespace and access model implemented. |
 | `FEAT_FABRIC` | `2` | Carbon internal fabric transaction contract implemented. |
-| `FEAT_CAI` | `3` | Carbon Accelerator Interface (CAI) implemented. |
-| `FEAT_CPUID` | `4` | CPUID instruction transport implemented (Z480 P7). |
-| `FEAT_CAPS` | `5` | CAPS transport implemented (Z85/Z90). |
-| `FEAT_AM9513` | `6` | Am9513-class accelerator present. |
-| `FEAT_IOMMU_HOOKS` | `7` | IOMMU integration hooks for accelerators/fabric present. |
-| `FEAT_DEVICE_MODEL` | `8` | Dual-personality device model and capability descriptor schema implemented. |
-| `FEAT_BDT` | `9` | Board Device Table (BDT) provided for device discovery. |
-| `FEAT_TURBO_QUEUE` | `10` | Turbo queue descriptor ring schema implemented. |
-| `FEAT_POLLING_COMPLETE` | `11` | Polling-complete semantics required across devices. |
-| `Z85_UNDOC_Z80` | `12` | Z85 exposes undocumented Z80 opcodes/flags while presenting as P2. |
-| `Z90_Z180_CLASS` | `13` | Z90 is Z180-class while presenting as P3. |
-| `Z380_32BIT_EXTENDED` | `14` | Z380 provides 32-bit extended mode while presenting as P6. |
-| `Z480_NATIVE_64` | `15` | Z480 provides native 64-bit mode while presenting as P7. |
-| `AM9512_IEEE` | `16` | Am9512 adds IEEE ports for missing 9511 functions. |
-| `AM9513_ASYNC` | `17` | Am9513 provides async scalar IEEE execution. |
-| `AM9514_VECTOR` | `18` | Am9514 provides vector/SIMD math support. |
-| `AM9515_TENSOR` | `19` | Am9515 provides matrix/tensor math support. |
+| `FEAT_CPUID` | `3` | CPUID instruction transport implemented (Z480 P7). |
+| `FEAT_CAPS` | `4` | CAPS transport implemented (Z85/Z90). |
+| `Z85_UNDOC_Z80` | `5` | Z85 exposes undocumented Z80 opcodes/flags while presenting as P2. |
+| `Z90_Z180_CLASS` | `6` | Z90 is Z180-class while presenting as P3. |
+| `Z380_32BIT_EXTENDED` | `7` | Z380 provides 32-bit extended mode while presenting as P6. |
+| `Z480_NATIVE_64` | `8` | Z480 provides native 64-bit mode while presenting as P7. |
+| `AM9512_IEEE_PLUS` | `0` | Am9512-plus adds IEEE ports and restored Am9511 functions. |
+| `AM9513_ASYNC_SCALAR` | `1` | Am9513 provides async scalar IEEE execution. |
+| `AM9514_VECTOR` | `2` | Am9514 provides vector/SIMD math support. |
+| `AM9515_TENSOR` | `3` | Am9515 provides matrix/tensor math support. |
+| `FEAT_CAI` | `0` | Carbon Accelerator Interface (CAI) implemented. |
+| `FEAT_BDT` | `1` | Board Device Table (BDT) provided for device discovery. |
+| `FEAT_DEVICE_MODEL` | `2` | Device capability schema implemented for BDT entries. |
+| `NON_COHERENT_DMA_BASELINE` | `3` | DMA is non-coherent by default; software must manage cache maintenance. |
+| `COHERENT_DMA_OPTIONAL` | `4` | Reserved for future coherent DMA capability (optional). |
 
 ### Example CPUID Leaf Table (IDs)
 
@@ -152,10 +199,38 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 |---:|---|
 | `0x00000000` | `CPUID_LEAF_VENDOR` |
 | `0x00000001` | `CPUID_LEAF_ID` |
-| `0x00000002` | `CPUID_LEAF_TIERS` |
+| `0x00000002` | `CPUID_LEAF_DISCOVERY` |
 | `0x00000003` | `CPUID_LEAF_FEATURES0` |
 
-## D) CSR Namespace + Register Model
+## E) Topology Table
+
+- Header: `TOPOLOGY_HEADER_V1`, version `1`, size `16` bytes
+
+| Field | Offset | Width (bytes) | Type | Description |
+|---|---:|---:|---|---|
+| `signature` | `0` | `4` | `u32` | ASCII "CTOP" in little-endian (0x504f5443). |
+| `header_version` | `4` | `2` | `u16` | Header format version (must be 1). |
+| `header_size` | `6` | `2` | `u16` | Header size in bytes (must be 16 for v1). |
+| `entry_size` | `8` | `2` | `u16` | Entry size in bytes (32 for v1 entries). |
+| `entry_count` | `10` | `2` | `u16` | Number of topology entries. |
+| `total_size` | `12` | `4` | `u32` | Total size of the topology table (header + entries). |
+
+- Entry: `TOPOLOGY_ENTRY_V1`, version `1`, size `32` bytes
+
+| Field | Offset | Width (bytes) | Type | Description |
+|---|---:|---:|---|---|
+| `socket_id` | `0` | `2` | `u16` | Socket identifier. |
+| `cluster_id` | `2` | `2` | `u16` | Cluster identifier within the socket. |
+| `core_id` | `4` | `2` | `u16` | Core identifier within the cluster. |
+| `thread_id` | `6` | `2` | `u16` | Thread identifier within the core (SMT index). |
+| `cache_l1_id` | `8` | `2` | `u16` | L1 cache ID shared by this thread. |
+| `cache_l2_id` | `10` | `2` | `u16` | L2 cache ID shared by this thread. |
+| `cache_l3_id` | `12` | `2` | `u16` | L3 cache ID shared by this thread. |
+| `coherence_domain_id` | `14` | `2` | `u16` | Coherence domain identifier. |
+| `numa_node_id` | `16` | `2` | `u16` | NUMA node identifier. |
+| `reserved0` | `18` | `14` | `u112` | Reserved; must be 0. |
+
+## F) CSR Namespace + Register Model
 
 - Unknown CSR behavior: `trap`
 
@@ -314,7 +389,31 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `CSR_CARBONDMA_CH_ATTR` | `0x00600028` | `CSR_RW` | `PRIV_S` | Channel fabric attribute overrides. |
 | `CSR_CARBONDMA_CH_FILL` | `0x00600029` | `CSR_RW` | `PRIV_S` | Channel fill pattern (for fill opcode). |
 
-## E) Fabric Transaction Contract
+## G) Memory Attributes
+
+- Width: `8` bits
+
+| Name | Bit | Description |
+|---|---:|---|
+| `MEM_ATTR_CACHEABLE` | `0` | 1=cacheable, 0=uncacheable. |
+| `MEM_ATTR_ORDERED` | `1` | 1=ordered, 0=normal ordering. |
+| `MEM_ATTR_IO_SPACE` | `2` | 1=I/O space semantics, 0=memory space semantics. |
+| `MEM_ATTR_ACQUIRE` | `3` | Acquire semantics for synchronization. |
+| `MEM_ATTR_RELEASE` | `4` | Release semantics for synchronization. |
+
+### DMA Coherence Baseline
+
+- Baseline: `non_coherent`
+- DMA engines must honor MEM_ATTR_ORDERED for ordered transactions.
+- Non-coherent DMA requires explicit cache clean/invalidate around buffer usage.
+
+### P7 Cache Maintenance Hooks
+
+- `cache_clean_range`: Write back dirty cache lines for the specified range.
+- `cache_invalidate_range`: Invalidate cache lines for the specified range.
+- `cache_clean_invalidate_range`: Clean and invalidate cache lines for the specified range.
+
+## H) Fabric Transaction Contract
 
 ### Transaction Types
 
@@ -330,11 +429,11 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 
 | Field | LSB | Width | Description |
 |---|---:|---:|---|
-| `FABRIC_ATTR_CACHEABLE` | `0` | `1` | 1=cacheable, 0=uncacheable. |
-| `FABRIC_ATTR_ORDERED` | `1` | `1` | 1=ordered, 0=normal ordering. |
-| `FABRIC_ATTR_IO_SPACE` | `2` | `1` | 1=IO space, 0=memory space. |
-| `FABRIC_ATTR_ACQUIRE` | `3` | `1` | Acquire semantics (for synchronization). |
-| `FABRIC_ATTR_RELEASE` | `4` | `1` | Release semantics (for synchronization). |
+| `MEM_ATTR_CACHEABLE` | `0` | `1` | 1=cacheable, 0=uncacheable. |
+| `MEM_ATTR_ORDERED` | `1` | `1` | 1=ordered, 0=normal ordering. |
+| `MEM_ATTR_IO_SPACE` | `2` | `1` | 1=IO space, 0=memory space. |
+| `MEM_ATTR_ACQUIRE` | `3` | `1` | Acquire semantics (for synchronization). |
+| `MEM_ATTR_RELEASE` | `4` | `1` | Release semantics (for synchronization). |
 | `FABRIC_ATTR_BURST_HINT` | `5` | `3` | Burst length hint (0=unspecified; other values are implementation-defined hints). |
 | `FABRIC_ATTR_QOS` | `8` | `4` | QoS/priority (reserved if not implemented; must be ignored if unsupported). |
 
@@ -348,15 +447,18 @@ _AUTO-GENERATED from `hdl/spec/*.yaml` by `hdl/tools/gen_specs.py`._
 | `FABRIC_RESP_TIMEOUT` | `3` | Target timeout or no response. |
 | `FABRIC_RESP_ECC_ERR` | `4` | ECC or integrity error (reserved if not implemented). |
 
-## F) Carbon Accelerator Interface (CAI)
+## I) Carbon Accelerator Interface (CAI)
 
 ### Opcode Groups
 
 | Name | Value | Description |
 |---|---:|---|
-| `CAI_OPGROUP_SCALAR` | `0` | Scalar/legacy math operations (Am9511/Am9512/Am9513 class). |
-| `CAI_OPGROUP_VECTOR` | `1` | Vector/SIMD math operations (Am9514 class). |
-| `CAI_OPGROUP_TENSOR` | `2` | Matrix/tensor math operations (Am9515 class). |
+| `AM95_SCALAR` | `0` | Am95xx scalar math operations (Am9512+/Am9513 class). |
+| `AM95_VECTOR` | `1` | Am95xx vector/SIMD math operations (Am9514 class). |
+| `AM95_TENSOR` | `2` | Am95xx matrix/tensor operations (Am9515 class). |
+| `DMA_COPY` | `3` | Future DMA copy operations. |
+| `DMA_FILL` | `4` | Future DMA fill operations. |
+| `UART_STREAM` | `5` | Future UART stream operations. |
 
 ### Submission Descriptor (V1)
 
@@ -468,7 +570,7 @@ tensor_rank: 0
 tensor_desc_flags: 0
 ```
 
-## G) Device Model, BDT, and Turbo Queues
+## J) Device Model and BDT Schema
 
 ### Dual Personality Device Model
 
@@ -496,19 +598,14 @@ tensor_desc_flags: 0
 
 | Class | Value | Description |
 |---|---:|---|
-| `DEVCLASS_CPU` | `0x0001` | CPU cores (Z85/Z90/Z480/8096/etc). |
-| `DEVCLASS_FPU` | `0x0002` | FPU/accelerator cores (Am951x-class, 8097). |
+| `DEVCLASS_CPU` | `0x0001` | CPU cores. |
+| `DEVCLASS_ACCEL` | `0x0002` | FPU/accelerator cores (Am95xx-class). |
 | `DEVCLASS_UART` | `0x0010` | UART console devices. |
-| `DEVCLASS_SIO` | `0x0011` | Serial I/O controllers (multi-channel). |
-| `DEVCLASS_PIO` | `0x0012` | Parallel I/O controllers. |
+| `DEVCLASS_PIO` | `0x0012` | GPIO/PIO controllers. |
 | `DEVCLASS_TIMER` | `0x0013` | Timers/CTC blocks and monotonic ticks. |
-| `DEVCLASS_IRQ_CTRL` | `0x0014` | Interrupt controllers / routers. |
+| `DEVCLASS_PIC` | `0x0014` | Interrupt controllers / routers. |
 | `DEVCLASS_DMA` | `0x0020` | DMA engines (mem-to-mem, scatter/gather). |
-| `DEVCLASS_BLOCK_STORAGE` | `0x0030` | Block storage devices (fixed blocks). |
-| `DEVCLASS_CHAR_STORAGE` | `0x0031` | Character/stream storage devices. |
-| `DEVCLASS_RTC` | `0x0032` | Real-time clock devices. |
-| `DEVCLASS_GPIO` | `0x0033` | General-purpose I/O pin controllers. |
-| `DEVCLASS_TRACE` | `0x0034` | Trace/telemetry devices. |
+| `DEVCLASS_STORAGE` | `0x0030` | Storage devices (block or character). |
 
 ### BDT Header (V1)
 
@@ -519,9 +616,45 @@ tensor_desc_flags: 0
 | `signature` | `0` | `4` | `u32` | ASCII "CBDT" in little-endian (0x54444243). |
 | `header_version` | `4` | `2` | `u16` | Header format version (must be 1). |
 | `header_size` | `6` | `2` | `u16` | Header size in bytes (must be 16 for v1). |
-| `entry_size` | `8` | `2` | `u16` | Device capability descriptor entry size in bytes. |
+| `entry_size` | `8` | `2` | `u16` | BDT entry size in bytes (64 for v1 entries). |
 | `entry_count` | `10` | `2` | `u16` | Number of device entries in the BDT. |
 | `total_size` | `12` | `4` | `u32` | Total size of the BDT region (header + entries). |
+
+### BDT Entry (V1)
+
+- Format: `BDT_ENTRY_V1`, version `1`, size `64` bytes
+
+| Field | Offset | Width (bytes) | Type | Description |
+|---|---:|---:|---|---|
+| `desc_version` | `0` | `2` | `u16` | Descriptor format version (must be 1). |
+| `desc_size_bytes` | `2` | `2` | `u16` | Descriptor size in bytes (64 for v1). |
+| `class_id` | `4` | `2` | `u16` | Device class identifier (see device_classes). |
+| `subclass_id` | `6` | `2` | `u16` | Device subclass identifier (0 if unused). |
+| `instance_id` | `8` | `2` | `u16` | Instance index for multiple identical devices. |
+| `device_version` | `10` | `2` | `u16` | Device version ID (implementation-defined). |
+| `caps0` | `12` | `4` | `u32` | Capability flags word 0. |
+| `caps1` | `16` | `4` | `u32` | Capability flags word 1. |
+| `irq_route_offset` | `20` | `2` | `u16` | Offset (bytes) from BDT base to IRQ routing table (0 if none). |
+| `irq_route_count` | `22` | `2` | `u16` | Number of IRQ routing entries (0 if none). |
+| `mmio_base` | `24` | `8` | `u64` | MMIO base address (0 if none). |
+| `mmio_size` | `32` | `4` | `u32` | MMIO window size in bytes (0 if none). |
+| `io_port_base` | `36` | `4` | `u32` | I/O port base (0 if none). |
+| `io_port_size` | `40` | `2` | `u16` | I/O port window size in bytes (0 if none). |
+| `block_sector_size` | `42` | `2` | `u16` | Logical sector size for block devices (must support 512). |
+| `cai_queue_count` | `44` | `2` | `u16` | CAI queue count (0 if device is not CAI-capable). |
+| `cai_doorbell_offset` | `46` | `2` | `u16` | CSR offset to CAI doorbell register (0 if not applicable). |
+| `reserved0` | `48` | `16` | `u128` | Reserved; must be 0. |
+
+### BDT IRQ Routing Entry (V1)
+
+- Entry size: `8` bytes
+
+| Field | Offset | Width (bytes) | Type | Description |
+|---|---:|---:|---|---|
+| `domain_id` | `0` | `2` | `u16` | Interrupt domain identifier (PIC instance). |
+| `irq_line` | `2` | `2` | `u16` | IRQ line or vector within the domain. |
+| `flags` | `4` | `2` | `u16` | IRQ flags (level/edge polarity; reserved if unused). |
+| `reserved0` | `6` | `2` | `u16` | Reserved; must be 0. |
 
 ### Device Capability Descriptor (V1)
 
@@ -640,7 +773,37 @@ tensor_desc_flags: 0
 | `TURBO_STATUS_BUSY` | `3` | Device busy or queue full. |
 | `TURBO_STATUS_UNSUPPORTED` | `4` | Feature unsupported. |
 
-## H) Z90 Fast-Path ISA (Opcode Pages)
+## K) External Interfaces
+
+### Legacy Z80 Bus Adapter Profiles
+
+| Profile | Value | Description |
+|---|---:|---|
+| `LEGACY_RC2014` | `0` | RC2014-compatible bus timing profile. |
+| `LEGACY_S100` | `1` | S-100-compatible bus timing profile. |
+
+### Modern SoC External Profiles
+
+| Profile | Value | Description |
+|---|---:|---|
+| `SOC_MEM_GENERIC` | `16` | Generic synchronous memory interface contract. |
+| `SOC_PERIPH_GENERIC` | `17` | Generic peripheral interface contract. |
+
+### Debug Transport
+
+- Minimum: `UART`
+
+## L) Common Interfaces
+
+| Interface | Value | Description |
+|---|---:|---|
+| `fabric_if` | `0` | Fabric request/response channel carrying transactions and attributes. |
+| `csr_if` | `1` | CSR access interface for control/status registers. |
+| `irq_if` | `2` | Interrupt delivery interface for INT/NMI and routed IRQs. |
+| `dbg_if` | `3` | Debug control interface (halt/run/step/trace). |
+| `cai_if` | `4` | Accelerator/peripheral queue interface for CAI devices. |
+
+## M) Z90 Fast-Path ISA (Opcode Pages)
 
 ### Opcode Pages
 
@@ -683,7 +846,7 @@ tensor_desc_flags: 0
 | `Z90_P1_OP_LEA` | `3` | LEA Xd, [base + index + disp8]. |
 | `Z90_P1_OP_CAS16` | `4` | CAS16 Xd, [base + disp8], Xs (Xd expected/old, Xs desired; Z90.Z=success). |
 
-## I) Numeric Formats
+## N) Numeric Formats
 
 | Name | Value | Width | Exp | Frac | Bias | Description |
 |---|---:|---:|---:|---:|---:|---|

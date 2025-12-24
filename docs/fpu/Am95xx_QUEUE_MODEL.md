@@ -15,7 +15,8 @@ descriptors and produces completion records.
 
 - `submit_desc_base` and `submit_ring_mask` are host-provided.
 - The descriptor `desc_version` and `desc_size_dw` must match v1 values.
-- `opcode_group` selects scalar (`P2`), vector (`P3`), or tensor (`P4`) tiers.
+- `opcode_group` selects scalar (`CARBON_AM95_SCALAR` / `P2`), vector
+  (`CARBON_AM95_VECTOR` / `P3`), or tensor (`CARBON_AM95_TENSOR` / `P4`) tiers.
 - `context_id` selects the execution context; `0xFFFF` means use `cai.context_sel`.
 
 ## Completion ring

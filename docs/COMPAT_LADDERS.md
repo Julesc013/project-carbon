@@ -27,31 +27,17 @@ Presentation rules (reported via discovery):
 | Tier | Label | Notes |
 |---:|---|---|
 | P0 | Am9511 | Base numeric engine. |
-| P1 | Am9512 | IEEE ports for missing 9511 functions. |
-| P2 | Am9513 | Native async scalar IEEE engine. |
+| P1 | Am9512-plus | IEEE FP32/FP64 and restored Am9511 functions. |
+| P2 | Am9513 | Native async scalar IEEE engine; CAI-native. |
 | P3 | Am9514 | Vector/SIMD math tier. |
 | P4 | Am9515 | Matrix/tensor math tier. |
 | P5-P15 | Reserved | Reserved for future tiers. |
 
 Feature bits for optional capabilities:
-- AM9512_IEEE
-- AM9513_ASYNC
+- AM9512_IEEE_PLUS
+- AM9513_ASYNC_SCALAR
 - AM9514_VECTOR
 - AM9515_TENSOR
-
-## x86-derived CPU ladder (unchanged)
-
-| Tier | Label | Notes |
-|---:|---|---|
-| P0 | 8086/8087 | Baseline 16-bit x86/x87. |
-| P1 | 80186/80187 | 80186 class. |
-| P2 | 80286/80287 | 80286 class. |
-| P3 | 80386/80387 | 80386 class. |
-| P4 | 80486/80487 | 80486 class. |
-| P5 | pentium_ia32 | P5 class. |
-| P6 | p6_ia32 | P6 class. |
-| P7 | x86_64 | 64-bit tier. |
-| P8-P15 | Reserved | Reserved for future tiers. |
 
 ## Presentation and discovery
 

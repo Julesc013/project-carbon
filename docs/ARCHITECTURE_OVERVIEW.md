@@ -1,44 +1,55 @@
 # Project Carbon — Architecture Overview (v1.0 freeze)
 
-This document describes the high-level architecture contract that future CPU cores, accelerators, and SoCs consume.
-The frozen, machine-readable contract is in `hdl/spec/*.yaml`; generated constants are in `hdl/gen/`; and the
-rendered summary is `docs/ARCH_CONTRACTS.md` (auto-generated).
+This document summarizes the frozen architecture contract for Project Carbon. The authoritative, machine-readable
+specs live in `hdl/spec/*.yaml`; generated constants are in `hdl/gen/`; and the rendered summary is
+`docs/ARCH_CONTRACTS.md` (auto-generated).
 
-## Project Families
+## Core / Uncore / Chip / System
 
-- **Z85 / Z90 / Z480**: Z80-derived compatibility family; Z480 at P7 provides the CPUID instruction transport, while Z85/Z90 provide a CAPS mirror of the same leaf model.
-- **8096 / 8097**: x86-derived compatibility family line (tier ladder contract shared across implementations).
-- **Am951x / Am9513-class**: AMD-derived numeric/FPU accelerators; presence is reported via discovery and exposed to software via CAI.
+- **Core**: CPU tier state, MODEFLAGS, CSR access, IRQ delivery, and debug control.
+- **Uncore**: fabric, caches, memory controllers, DMA engines, CAI accelerators, and KIO blocks.
+- **Chip**: discovery table, topology table, and BDT stored in ROM and exposed via discovery pointers.
+- **System**: BSP + BDT define device addressing and capabilities; no hardcoded ports outside BSP.
 
 ## Compatibility Tiers
 
-- Tiers form monotonic ladders: reset starts at `P0`; upgrades only; downgrades only via `RETMD`.
-- Three ladders are defined: Z80-derived CPU (8080 → Z480, `P0`..`P7`), x86-derived CPU (`P0`..`P7`), and Am95xx FPU (Am9511 → Am9515, `P0`..`P4`, `P5`..`P15` reserved).
-- Presented tiers are reported via discovery; optional supersets are exposed via feature bits (e.g., Z85 undocumented Z80, Z90 Z180-class, Z380 32-bit extended, Z480 native 64, Am9512 IEEE, Am9513 async, Am9514 vector, Am9515 tensor).
+- **CPU ladder**: unified 8080-derived ladder (`P0`..`P7`), with `P8`..`P15` reserved.
+- **FPU ladder**: Am95xx ladder (Am9511 → Am9515, `P0`..`P4`), with `P5`..`P15` reserved.
+- Presented tiers are reported via discovery; optional supersets are exposed via feature bits.
 
 ## Mode Switching
 
-- **Single canonical mechanism**: `MODEUP(target_tier, entry_vector)` and `RETMD()`.
-- `MODEUP` pushes a mode frame (previous tier + flags + return PC), flushes prefetch/decode state, masks interrupts during the atomic transition, and jumps to `entry_vector`.
-- `RETMD` pops a mode frame, restores tier/flags/PC, flushes prefetch/decode state, and traps on underflow.
-- `MODEFLAGS` is a small, reserved-for-growth bitfield defined by the contract.
+- **Only two instructions**: `MODEUP(target_tier, entry_vector)` and `RETMD()`.
+- `MODEUP` is upgrade-only, pushes a mode frame (prev tier + flags + return PC), flushes prefetch/decode, masks interrupts during the transition, and jumps to `entry_vector`.
+- `RETMD` is the only downgrade path and restores the prior tier/modeframe state; traps on underflow.
 
-## Discovery
+## CPU/FPU Boundary
 
-- A unified leaf model describes vendor/family/model/stepping, supported ladder + max tier, feature bitmaps, topology, cache, accelerators, and errata.
-- **Z480 P7**: `CPUID` instruction transport.
-- **Z85/Z90**: `CAPS` index+data transport that mirrors the same leaf IDs and packing.
-- Discovery reports presented tier and max tier for both CPU and FPU lineages, with optional extras described by feature bits.
+- Z90/Z380/Z480 include **no** floating-point instructions or FP register files.
+- Floating point is provided by Am95xx devices; Am9513+ must expose a CAI-native interface.
 
-## CSR Model
+## Profiles
 
-- A global CSR address scheme uses `(vendor_id, block_id, block_version, reg_id)` packed into a 32-bit address.
-- Block-ID ranges partition common core CSRs, MMU/VM CSRs, interrupt/timer CSRs, debug/trace CSRs, cache control CSRs, fabric CSRs, and accelerator CSRs, plus reserved ranges for future expansion.
+- **PROFILE_CPU_ONLY**: minimal core + CSR/IRQ/DBG.
+- **PROFILE_MCU**: adds KIO + timer; requires UART + timer; safe mode forces UART console, caches off, P0.
+- **PROFILE_SOC_RETRO**: adds DMA + storage; legacy Z80 bus adapter present.
+- **PROFILE_SOC_WORKSTATION**: adds CAI accelerators and limits table.
 
-## Fabric + CAI
+## Discovery Model
 
-- **Fabric** defines internal request/response transaction types, packed per-transaction attributes, response codes, and ready/valid stability requirements suitable for a SystemVerilog interface definition.
-- **CAI (Carbon Accelerator Interface)** defines a standard submission/completion queue model (doorbell + rings) with fixed descriptor and completion record formats.
+- A **canonical discovery table** contains presented tiers, profile ID, topology pointer, BDT pointer, limits table pointer, and feature bitmap pointers.
+- **Z480 P7** uses `CPUID`; **Z85/Z90** use `CAPS` (index/data mirror of CPUID leaves).
+- Topology and BDT are authoritative for core count and device enumeration.
+
+## Multiprocessing and Topology
+
+- Z480 supports coherent SMP within a socket; core count is discoverable, not a tier.
+- Multi-socket and SMT are expressed in topology tables and profiles, not tier changes.
+
+## External Interfaces and Option A Hosting
+
+- Legacy external profiles cover RC2014/S-100 bus adapters; modern SoC profiles abstract external memory/peripherals.
+- **Option A hosting**: the Carbon CPU is the primary host, booting from ROM that exposes discovery + BDT; safe-mode strap ensures UART console, caches off, and P0.
 
 ## Regenerating Outputs
 

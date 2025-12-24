@@ -49,6 +49,7 @@ All offsets are byte offsets from the base address.
 - Errors set status flags but do not change the active tier.
 - When the active core changes, a one-cycle `core_run_pulse` is asserted and
   `core_halt_req` is asserted for all other cores.
+- The discovery table reports the presented tier; `STATUS.active_tier` reports the current tier.
 
 `ENTRY_LO/HI` are latched for future use (entry-point handoff); they are not consumed
 by v1 cores.

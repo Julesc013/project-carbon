@@ -4,6 +4,7 @@
 
 - ROM boot stub: `0x0000..0x00FF`
 - RAM: `0x0000..0xFFFF` (ROM/MMIO windows overlay)
+- Discovery ROM: `0xF400..0xF4FF` (256 bytes)
 - BDT ROM: `0xF800..0xFBFF` (1 KiB)
 - BSP blob: `0xFF00..0xFF1F` (32 bytes, RAM)
 

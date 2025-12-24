@@ -24,7 +24,7 @@ the authoritative field layouts live in the generated contract reference.
 - No speculative I/O side effects through CAI.
 - Fixed completion ordering per the descriptor contract.
 - Deterministic rounding/exception behavior as documented in the FPU policy:
-  `docs/fpu/Am95xx_NUMERIC_POLICY.md`.
+  `docs/fpu/NUMERIC_POLICY.md`.
 
 ## Deferred items
 
