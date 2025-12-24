@@ -40,4 +40,73 @@ for ladder in TIER_LADDER_Z80 TIER_LADDER_X86 TIER_LADDER_AMD_FPU; do
   fi
 done
 
+echo "Running KiCad generator..."
+"$python_cmd" "$repo_root/tools/kicadgen/src/kicadgen.py"
+
+echo "Checking KiCad schematic outputs..."
+required_kicad_files=(
+  "$repo_root/schem/kicad9/generated/cores/Z85/Z85.kicad_sch"
+  "$repo_root/schem/kicad9/generated/cores/Z90/Z90.kicad_sch"
+  "$repo_root/schem/kicad9/generated/cores/Z380/Z380.kicad_sch"
+  "$repo_root/schem/kicad9/generated/cores/Z480/Z480.kicad_sch"
+  "$repo_root/schem/kicad9/generated/cores/Am9513/Am9513.kicad_sch"
+  "$repo_root/schem/kicad9/generated/cores/Am9514/Am9514.kicad_sch"
+  "$repo_root/schem/kicad9/generated/cores/Am9515/Am9515.kicad_sch"
+  "$repo_root/schem/kicad9/generated/systems/CarbonZ80/CarbonZ80.kicad_sch"
+  "$repo_root/schem/kicad9/generated/systems/CarbonZ90/CarbonZ90.kicad_sch"
+  "$repo_root/schem/kicad9/generated/systems/CarbonZ380/CarbonZ380.kicad_sch"
+  "$repo_root/schem/kicad9/generated/systems/CarbonZ480/CarbonZ480.kicad_sch"
+)
+for f in "${required_kicad_files[@]}"; do
+  if [[ ! -f "$f" ]]; then
+    echo "error: missing generated schematic $f" >&2
+    exit 1
+  fi
+done
+
+echo "Checking KiCad schematics for stale eZ90 naming..."
+if rg -n "eZ90" "$repo_root/schem/kicad9" >/dev/null; then
+  echo "error: stale eZ90 naming found in schematics." >&2
+  exit 1
+fi
+
+echo "Checking KiCad generator determinism..."
+hash_a=$("$python_cmd" - "$repo_root/schem/kicad9/generated" <<'PY'
+import hashlib
+import pathlib
+import sys
+
+root = pathlib.Path(sys.argv[1])
+hasher = hashlib.sha256()
+for path in sorted(root.rglob("*.kicad_sch")):
+    rel = path.relative_to(root).as_posix()
+    hasher.update(rel.encode("utf-8"))
+    hasher.update(b"\0")
+    hasher.update(path.read_bytes())
+    hasher.update(b"\0")
+print(hasher.hexdigest())
+PY
+)
+"$python_cmd" "$repo_root/tools/kicadgen/src/kicadgen.py"
+hash_b=$("$python_cmd" - "$repo_root/schem/kicad9/generated" <<'PY'
+import hashlib
+import pathlib
+import sys
+
+root = pathlib.Path(sys.argv[1])
+hasher = hashlib.sha256()
+for path in sorted(root.rglob("*.kicad_sch")):
+    rel = path.relative_to(root).as_posix()
+    hasher.update(rel.encode("utf-8"))
+    hasher.update(b"\0")
+    hasher.update(path.read_bytes())
+    hasher.update(b"\0")
+print(hasher.hexdigest())
+PY
+)
+if [[ "$hash_a" != "$hash_b" ]]; then
+  echo "error: KiCad generation is not deterministic (hash mismatch)." >&2
+  exit 1
+fi
+
 echo "Consistency checks passed."
