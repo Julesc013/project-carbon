@@ -1,0 +1,16 @@
+spec_tiers.def
+spec_profiles.def
+spec_mode.def
+spec_discovery.def
+spec_capset.def
+spec_topology.def
+spec_bdt.def
+spec_irq.def
+spec_dev_uart.def
+spec_dev_timer.def
+spec_dev_pic.def
+spec_dev_storage_idepio.def
+spec_cai.def
+spec_jcom.def
+spec_fs_cpmx.def
+spec_conformance.def
