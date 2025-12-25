@@ -14,3 +14,13 @@ Reference targets
 
 Specification
 - See `source/common/spec/SPEC_CONFORMANCE.md` for the exact format.
+
+PAL conformance
+- `source/tests/conformance/pal/pal_conformance.c` validates PAL boot, block I/O,
+  CP/M FS signature, and transcript CRC.
+- PALs may emit RESULT SKIP if the platform is unsupported.
+
+EE conformance
+- `source/tests/conformance/ee/cpm80/ee_cpm80_conformance.c`.
+- `source/tests/conformance/ee/dos86/ee_dos86_conformance.c`.
+- Negative tests use `NEG_UNSUPPORTED` and `NEG_ILLEGAL` fault paths.

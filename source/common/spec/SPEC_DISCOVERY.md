@@ -44,6 +44,18 @@ Feature bitmap (JC_FEATURE_BITMAP_V1, 16 bytes)
 - word2: u32 @8
 - word3: u32 @12
 
+Peripheral feature bits (word0)
+- PERIPH_FEAT_CAI
+- PERIPH_FEAT_BDT
+- PERIPH_FEAT_DEVICE_MODEL
+- PERIPH_FEAT_NON_COHERENT_DMA
+- PERIPH_FEAT_COHERENT_DMA_OPTIONAL
+- PERIPH_FEAT_HAS_V86
+- PERIPH_FEAT_HAS_ROMWBW
+- PERIPH_FEAT_HAS_LOCAL_VIDEO
+- PERIPH_FEAT_HAS_PAGING
+- PERIPH_FEAT_HAS_IRQ
+
 Limits table (JC_LIMITS_TABLE_V1, 32 bytes)
 - queue_submit_depth: u32 @0
 - queue_complete_depth: u32 @4

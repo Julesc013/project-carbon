@@ -40,5 +40,9 @@ Invariants
 - Pointers are physical addresses; 0 means absent.
 - Limits fields are authoritative for BIOS/DOS policy in the absence of device-specific overrides.
 
+Capability bits
+- CAP_HAS_V86, CAP_HAS_ROMWBW, CAP_HAS_LOCAL_VIDEO, CAP_HAS_PAGING, CAP_HAS_IRQ
+  are carried in periph_features[0] and mirror discovery.
+
 Failure semantics
 - Invalid signature, version, or size is fatal; consumers must reject the capset.
