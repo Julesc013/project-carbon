@@ -2,6 +2,7 @@
 
 #include "jc_bios.h"
 #include "jc_block.h"
+#include "jc_block_robust.h"
 #include "jc_console.h"
 #include "jc_contracts_autogen.h"
 #include "jc_bdt.h"
@@ -284,6 +285,67 @@ static void jc_conformance_fs_write_pattern(jc_u8 *buf, jc_u32 len) {
   }
 }
 
+static jc_error_t jc_conformance_fs_hash(jc_u32 *out_crc) {
+  jc_cpmx_superblock_v1 super;
+  jc_u8 sector[512];
+  jc_u32 dir_bytes;
+  jc_u32 dir_sectors;
+  jc_u32 sector_units;
+  jc_u32 dir_lba_512;
+  jc_u32 dir_sectors_512;
+  jc_u32 remaining;
+  jc_u32 crc;
+  jc_u32 i;
+  jc_error_t err;
+
+  if (!out_crc) {
+    return JC_E_INTERNAL_ASSERT;
+  }
+
+  err = jc_blk_read_robust(0, sector, 1);
+  if (err != JC_E_OK) {
+    return err;
+  }
+  jc_memcpy(&super, sector, sizeof(super));
+
+  if (super.signature != JC_MAGIC_CPMX) {
+    return JC_E_FS_BAD_SUPER;
+  }
+  if (super.sector_size < 512u || (super.sector_size & 0x1FFu) != 0u) {
+    return JC_E_FS_BAD_SUPER;
+  }
+
+  sector_units = super.sector_size / 512u;
+  if (sector_units == 0u) {
+    return JC_E_FS_BAD_SUPER;
+  }
+  dir_bytes = (jc_u32)super.dir_entry_count * 32u;
+  if (dir_bytes == 0u) {
+    return JC_E_FS_BAD_SUPER;
+  }
+  dir_sectors = (dir_bytes + super.sector_size - 1u) / super.sector_size;
+  dir_lba_512 = super.dir_start_lba * sector_units;
+  dir_sectors_512 = dir_sectors * sector_units;
+
+  remaining = dir_bytes;
+  crc = jc_crc32_init();
+  for (i = 0; i < dir_sectors_512; ++i) {
+    jc_u32 to_hash = remaining > 512u ? 512u : remaining;
+    err = jc_blk_read_robust(dir_lba_512 + i, sector, 1);
+    if (err != JC_E_OK) {
+      return err;
+    }
+    crc = jc_crc32_update(crc, sector, to_hash);
+    if (remaining <= 512u) {
+      break;
+    }
+    remaining -= 512u;
+  }
+
+  *out_crc = jc_crc32_finalize(crc);
+  return JC_E_OK;
+}
+
 void jc_conformance_v0_5(void) {
   jc_transcript t;
   int pass = 1;
@@ -455,6 +517,121 @@ void jc_conformance_v0_6(void) {
     jc_transcript_test(&t, "JCOM_BAD_CRC", 1, 0);
   } else {
     jc_transcript_test(&t, "JCOM_BAD_CRC", 0, err);
+    pass = 0;
+  }
+
+  jc_transcript_result(&t, pass);
+  jc_transcript_end(&t);
+}
+
+void jc_conformance_v1_7(void) {
+  jc_transcript t;
+  int pass = 1;
+  jc_error_t err;
+  jc_u8 buf[512];
+  jc_u32 crc_before = 0;
+  jc_u32 crc_after = 0;
+
+  jc_transcript_begin(&t);
+  jc_transcript_header(&t);
+
+  err = jc_fs_mount();
+  if (err == JC_E_OK) {
+    jc_transcript_test(&t, "STORAGE_MOUNT", 1, 0);
+  } else {
+    jc_transcript_test(&t, "STORAGE_MOUNT", 0, err);
+    pass = 0;
+  }
+
+  jc_conformance_fs_write_pattern(buf, sizeof(buf));
+  {
+    jc_fs_handle handle;
+    jc_u32 done = 0;
+    err = jc_fs_open(&handle, "STORRW.TMP",
+                     JC_FS_MODE_WRITE | JC_FS_MODE_CREATE | JC_FS_MODE_TRUNC);
+    if (err == JC_E_OK) {
+      err = jc_fs_write(&handle, buf, sizeof(buf), &done);
+      jc_fs_close(&handle);
+    }
+    if (err == JC_E_OK && done == sizeof(buf)) {
+      jc_u8 readback[512];
+      jc_u32 got = 0;
+      err = jc_fs_open(&handle, "STORRW.TMP", JC_FS_MODE_READ);
+      if (err == JC_E_OK) {
+        err = jc_fs_read(&handle, readback, sizeof(readback), &got);
+        jc_fs_close(&handle);
+      }
+      if (err == JC_E_OK && got == sizeof(readback) &&
+          jc_memcmp(buf, readback, sizeof(readback)) == 0) {
+        jc_transcript_test(&t, "STORAGE_RW", 1, 0);
+      } else {
+        jc_transcript_test(&t, "STORAGE_RW", 0, err);
+        pass = 0;
+      }
+    } else {
+      jc_transcript_test(&t, "STORAGE_RW", 0, err);
+      pass = 0;
+    }
+    jc_fs_delete("STORRW.TMP");
+  }
+
+  jc_blk_robust_clear_bad_sectors();
+  jc_blk_robust_inject_fail(1u, JC_E_DEV_IO_TIMEOUT);
+  err = jc_blk_read_robust(0, buf, 1);
+  if (err == JC_E_OK) {
+    jc_transcript_test(&t, "STORAGE_RETRY", 1, 0);
+  } else {
+    jc_transcript_test(&t, "STORAGE_RETRY", 0, err);
+    pass = 0;
+  }
+
+  jc_blk_robust_clear_bad_sectors();
+  jc_blk_robust_inject_fail(JC_BLOCK_RETRY_MAX + 1u, JC_E_DEV_IO_TIMEOUT);
+  err = jc_blk_read_robust(0, buf, 1);
+  if (err == JC_E_DEV_IO_TIMEOUT) {
+    jc_transcript_test(&t, "STORAGE_PERSIST", 1, 0);
+  } else {
+    jc_transcript_test(&t, "STORAGE_PERSIST", 0, err);
+    pass = 0;
+  }
+  jc_blk_robust_inject_fail(0u, JC_E_OK);
+  jc_blk_robust_clear_bad_sectors();
+
+  err = jc_conformance_fs_hash(&crc_before);
+  if (err != JC_E_OK) {
+    jc_transcript_test(&t, "STORAGE_HASH", 0, err);
+    pass = 0;
+  }
+  if (err == JC_E_OK) {
+    jc_u32 i;
+    for (i = 0; i < 4u; ++i) {
+      jc_fs_handle handle;
+      jc_u32 done = 0;
+      err = jc_fs_open(&handle, "STRESS.TMP",
+                       JC_FS_MODE_WRITE | JC_FS_MODE_CREATE |
+                           JC_FS_MODE_TRUNC);
+      if (err != JC_E_OK) {
+        break;
+      }
+      jc_conformance_fs_write_pattern(buf, sizeof(buf));
+      err = jc_fs_write(&handle, buf, sizeof(buf), &done);
+      jc_fs_close(&handle);
+      if (err != JC_E_OK || done != sizeof(buf)) {
+        break;
+      }
+      err = jc_fs_delete("STRESS.TMP");
+      if (err != JC_E_OK) {
+        break;
+      }
+    }
+  }
+  if (err == JC_E_OK) {
+    err = jc_conformance_fs_hash(&crc_after);
+  }
+  if (err == JC_E_OK && crc_before == crc_after) {
+    jc_transcript_test(&t, "STORAGE_STRESS", 1, 0);
+  } else {
+    jc_transcript_test(&t, "STORAGE_STRESS", 0, err);
     pass = 0;
   }
 

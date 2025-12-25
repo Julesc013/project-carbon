@@ -7,6 +7,7 @@
 #define JC_UART_DATA_OFF 0x0000u
 #define JC_UART_STATUS_OFF 0x0004u
 #define JC_UART_CTRL_OFF 0x0008u
+#define JC_UART_WATERMARKS_OFF 0x001Cu
 
 #define JC_UART_STATUS_RX_AVAIL (1u << 0)
 #define JC_UART_STATUS_TX_READY (1u << 1)
@@ -34,6 +35,24 @@ static void jc_mmio_write8(jc_u32 base, jc_u32 off, jc_u8 value) {
   *reg = value;
 }
 
+int jc_carbonkio_uart_rx_ready(jc_carbonkio_uart *uart) {
+  jc_u32 status;
+  if (!uart) {
+    return 0;
+  }
+  status = jc_mmio_read32(uart->base, JC_UART_STATUS_OFF);
+  return (status & JC_UART_STATUS_RX_AVAIL) != 0u;
+}
+
+int jc_carbonkio_uart_tx_ready(jc_carbonkio_uart *uart) {
+  jc_u32 status;
+  if (!uart) {
+    return 0;
+  }
+  status = jc_mmio_read32(uart->base, JC_UART_STATUS_OFF);
+  return (status & JC_UART_STATUS_TX_READY) != 0u;
+}
+
 jc_error_t jc_carbonkio_uart_init(jc_carbonkio_uart *uart,
                                   const jc_bdt_entry_v1 *entry) {
   if (!uart || !entry) {
@@ -59,8 +78,7 @@ jc_error_t jc_carbonkio_uart_getc(jc_carbonkio_uart *uart,
     return JC_E_INTERNAL_ASSERT;
   }
   while (!jc_timer_expired(deadline)) {
-    const jc_u32 status = jc_mmio_read32(uart->base, JC_UART_STATUS_OFF);
-    if (status & JC_UART_STATUS_RX_AVAIL) {
+    if (jc_carbonkio_uart_rx_ready(uart)) {
       *out = jc_mmio_read8(uart->base, JC_UART_DATA_OFF);
       return JC_E_OK;
     }
@@ -75,11 +93,44 @@ jc_error_t jc_carbonkio_uart_putc(jc_carbonkio_uart *uart,
     return JC_E_INTERNAL_ASSERT;
   }
   while (!jc_timer_expired(deadline)) {
-    const jc_u32 status = jc_mmio_read32(uart->base, JC_UART_STATUS_OFF);
-    if (status & JC_UART_STATUS_TX_READY) {
+    if (jc_carbonkio_uart_tx_ready(uart)) {
       jc_mmio_write8(uart->base, JC_UART_DATA_OFF, value);
       return JC_E_OK;
     }
   }
   return JC_E_DEV_IO_TIMEOUT;
+}
+
+jc_error_t jc_carbonkio_uart_try_getc(jc_carbonkio_uart *uart, jc_u8 *out) {
+  if (!uart || !out) {
+    return JC_E_INTERNAL_ASSERT;
+  }
+  if (!jc_carbonkio_uart_rx_ready(uart)) {
+    return JC_E_DEV_IO_TIMEOUT;
+  }
+  *out = jc_mmio_read8(uart->base, JC_UART_DATA_OFF);
+  return JC_E_OK;
+}
+
+jc_error_t jc_carbonkio_uart_try_putc(jc_carbonkio_uart *uart, jc_u8 value) {
+  if (!uart) {
+    return JC_E_INTERNAL_ASSERT;
+  }
+  if (!jc_carbonkio_uart_tx_ready(uart)) {
+    return JC_E_DEV_IO_TIMEOUT;
+  }
+  jc_mmio_write8(uart->base, JC_UART_DATA_OFF, value);
+  return JC_E_OK;
+}
+
+jc_error_t jc_carbonkio_uart_set_watermarks(jc_carbonkio_uart *uart,
+                                            jc_u8 rx,
+                                            jc_u8 tx) {
+  jc_u32 value;
+  if (!uart) {
+    return JC_E_INTERNAL_ASSERT;
+  }
+  value = (jc_u32)rx | ((jc_u32)tx << 8);
+  jc_mmio_write32(uart->base, JC_UART_WATERMARKS_OFF, value);
+  return JC_E_OK;
 }

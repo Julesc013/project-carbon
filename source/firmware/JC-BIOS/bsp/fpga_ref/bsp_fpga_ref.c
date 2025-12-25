@@ -57,3 +57,5 @@ const jc_bsp_anchor_v1 jc_bsp_anchor_fpga_ref = {
 const jc_u16 jc_bsp_anchor_addr =
     (jc_u16)(unsigned long)&jc_bsp_anchor_fpga_ref;
 const jc_u16 jc_bsp_stack_top = 0xF000u;
+const jc_u16 jc_bsp_tpa_base = 0x0000u;
+const jc_u16 jc_bsp_tpa_size = 0x0000u;

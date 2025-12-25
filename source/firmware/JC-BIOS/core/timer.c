@@ -4,6 +4,7 @@
 #include "jc_bios.h"
 #include "jc_carbonkio.h"
 #include "jc_contracts_autogen.h"
+#include "jc_irq.h"
 #include "jc_util.h"
 
 static jc_carbonkio_timer g_timer;
@@ -25,6 +26,7 @@ jc_error_t jc_timer_init(void) {
   err = jc_carbonkio_timer_init(&g_timer, entry);
   if (err == JC_E_OK) {
     g_timer_ready = 1;
+    jc_irq_register_timer(&g_timer, entry);
   }
   return err;
 }

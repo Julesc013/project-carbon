@@ -29,13 +29,25 @@ jc_error_t jc_carbonkio_uart_getc(jc_carbonkio_uart *uart,
 jc_error_t jc_carbonkio_uart_putc(jc_carbonkio_uart *uart,
                                   jc_u8 value,
                                   jc_u64 deadline);
+jc_error_t jc_carbonkio_uart_try_getc(jc_carbonkio_uart *uart, jc_u8 *out);
+jc_error_t jc_carbonkio_uart_try_putc(jc_carbonkio_uart *uart, jc_u8 value);
+jc_error_t jc_carbonkio_uart_set_watermarks(jc_carbonkio_uart *uart,
+                                            jc_u8 rx,
+                                            jc_u8 tx);
+int jc_carbonkio_uart_rx_ready(jc_carbonkio_uart *uart);
+int jc_carbonkio_uart_tx_ready(jc_carbonkio_uart *uart);
 
 jc_error_t jc_carbonkio_timer_init(jc_carbonkio_timer *timer,
                                    const jc_bdt_entry_v1 *entry);
 jc_u64 jc_carbonkio_timer_ticks(jc_carbonkio_timer *timer);
+jc_error_t jc_carbonkio_timer_irq_init(jc_carbonkio_timer *timer);
+int jc_carbonkio_timer_irq_poll(jc_carbonkio_timer *timer);
 
 jc_error_t jc_carbonkio_pic_init(jc_carbonkio_pic *pic,
                                  const jc_bdt_entry_v1 *entry);
 jc_u32 jc_carbonkio_pic_pending(jc_carbonkio_pic *pic);
+jc_error_t jc_carbonkio_pic_write_enable(jc_carbonkio_pic *pic, jc_u32 value);
+jc_error_t jc_carbonkio_pic_write_mask(jc_carbonkio_pic *pic, jc_u32 value);
+jc_error_t jc_carbonkio_pic_ack(jc_carbonkio_pic *pic, jc_u32 value);
 
 #endif /* JC_CARBONKIO_H */

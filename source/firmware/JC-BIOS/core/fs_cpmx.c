@@ -2,10 +2,10 @@
 
 #include "jc_arena.h"
 #include "jc_block.h"
+#include "jc_block_robust.h"
 #include "jc_contracts_autogen.h"
 #include "jc_util.h"
 
-#define JC_FS_MAX_BLOCK_SIZE 4096u
 #define JC_FS_ARENA_SIZE 16384u
 
 typedef struct {
@@ -16,6 +16,7 @@ typedef struct {
   jc_u32 sectors_per_block;
   jc_u32 sectors_per_block_512;
   jc_u32 block_size;
+  jc_u8 *block_buf;
   jc_u32 dir_bytes;
   jc_u32 dir_region_bytes;
   jc_u32 dir_lba_512;
@@ -31,7 +32,6 @@ typedef struct {
 static jc_fs_context g_fs;
 static jc_arena g_fs_arena;
 static jc_u8 g_fs_arena_buf[JC_FS_ARENA_SIZE];
-static jc_u8 g_fs_block_buf[JC_FS_MAX_BLOCK_SIZE];
 static jc_u8 g_fs_sector_buf[512];
 
 static int jc_fs_is_valid_char(jc_u8 c) {
@@ -183,11 +183,11 @@ static jc_u16 jc_fs_alloc_block(void) {
 }
 
 static jc_error_t jc_fs_read_sector(jc_u32 lba, jc_u8 *buf) {
-  return jc_blk_read(lba, buf, 1);
+  return jc_blk_read_robust(lba, buf, 1);
 }
 
 static jc_error_t jc_fs_write_sector(jc_u32 lba, const jc_u8 *buf) {
-  return jc_blk_write(lba, buf, 1);
+  return jc_blk_write_robust(lba, buf, 1);
 }
 
 static jc_error_t jc_fs_load_directory(void) {
@@ -394,7 +394,7 @@ jc_error_t jc_fs_mount(void) {
     return JC_E_FS_BAD_SUPER;
   }
   block_bytes = g_fs.sector_size * g_fs.sectors_per_block;
-  if (block_bytes == 0u || block_bytes > JC_FS_MAX_BLOCK_SIZE) {
+  if (block_bytes == 0u) {
     return JC_E_FS_BAD_SUPER;
   }
   g_fs.block_size = block_bytes;
@@ -465,6 +465,11 @@ jc_error_t jc_fs_mount(void) {
     return JC_E_FS_BAD_SUPER;
   }
   jc_memset(g_fs.alloc_map, 0, g_fs.alloc_map_bytes);
+
+  g_fs.block_buf = (jc_u8 *)jc_arena_alloc(&g_fs_arena, g_fs.block_size, 1);
+  if (!g_fs.block_buf) {
+    return JC_E_FS_BAD_SUPER;
+  }
 
   err = jc_fs_load_directory();
   if (err != JC_E_OK) {
@@ -635,8 +640,8 @@ jc_error_t jc_fs_read(jc_fs_handle *handle, jc_u8 *buf, jc_u32 len,
       jc_u32 lba = g_fs.data_lba_512 +
                    (jc_u32)(entry->block_ptrs[block_in_extent] - 1u) *
                        g_fs.sectors_per_block_512;
-      err = jc_blk_read(lba, g_fs_block_buf,
-                        (jc_u16)g_fs.sectors_per_block_512);
+      err = jc_blk_read_robust(lba, g_fs.block_buf,
+                               (jc_u16)g_fs.sectors_per_block_512);
       if (err != JC_E_OK) {
         return err;
       }
@@ -645,7 +650,7 @@ jc_error_t jc_fs_read(jc_fs_handle *handle, jc_u8 *buf, jc_u32 len,
         if (to_copy > remaining) {
           to_copy = remaining;
         }
-        jc_memcpy(buf + total_read, g_fs_block_buf + block_offset, to_copy);
+        jc_memcpy(buf + total_read, g_fs.block_buf + block_offset, to_copy);
         handle->pos += to_copy;
         total_read += to_copy;
         remaining -= to_copy;
@@ -691,13 +696,13 @@ jc_error_t jc_fs_write(jc_fs_handle *handle, const jc_u8 *buf, jc_u32 len,
       }
       entry->block_ptrs[block_in_extent] = block;
       g_fs.dir_dirty = 1;
-      jc_memset(g_fs_block_buf, 0, g_fs.block_size);
+      jc_memset(g_fs.block_buf, 0, g_fs.block_size);
     } else {
       jc_u32 lba = g_fs.data_lba_512 +
                    (jc_u32)(entry->block_ptrs[block_in_extent] - 1u) *
                        g_fs.sectors_per_block_512;
-      err = jc_blk_read(lba, g_fs_block_buf,
-                        (jc_u16)g_fs.sectors_per_block_512);
+      err = jc_blk_read_robust(lba, g_fs.block_buf,
+                               (jc_u16)g_fs.sectors_per_block_512);
       if (err != JC_E_OK) {
         return err;
       }
@@ -712,13 +717,13 @@ jc_error_t jc_fs_write(jc_fs_handle *handle, const jc_u8 *buf, jc_u32 len,
       if (to_copy > remaining) {
         to_copy = remaining;
       }
-      jc_memcpy(g_fs_block_buf + block_offset, buf + total_written, to_copy);
+      jc_memcpy(g_fs.block_buf + block_offset, buf + total_written, to_copy);
 
       lba = g_fs.data_lba_512 +
             (jc_u32)(entry->block_ptrs[block_in_extent] - 1u) *
                 g_fs.sectors_per_block_512;
-      err = jc_blk_write(lba, g_fs_block_buf,
-                         (jc_u16)g_fs.sectors_per_block_512);
+      err = jc_blk_write_robust(lba, g_fs.block_buf,
+                                (jc_u16)g_fs.sectors_per_block_512);
       if (err != JC_E_OK) {
         return err;
       }

@@ -1,15 +1,20 @@
 #include "jc_bios.h"
 
 #include "jc_bdt.h"
+#include "jc_bios_services_impl.h"
+#include "jc_bsp.h"
 #include "jc_capset.h"
 #include "jc_console.h"
 #include "jc_conformance.h"
 #include "jc_contracts_autogen.h"
 #include "jc_discovery.h"
+#include "jc_dos_handoff.h"
 #include "jc_monitor.h"
 #include "jc_mode.h"
+#include "jc_irq.h"
 #include "jc_timer.h"
 #include "jc_util.h"
+#include "loader_jcom.h"
 
 typedef struct {
   jc_boot_phase_t phase;
@@ -22,6 +27,49 @@ typedef struct {
 } jc_bios_context;
 
 static jc_bios_context g_ctx;
+static jc_dos_handoff_v1 g_dos_handoff;
+
+#define JC_DOS_BOOT_NAME "JCDOS.JCO"
+
+static jc_error_t jc_boot_launch_dos(jc_u8 *out_rc) {
+  jc_jcom_image image;
+  jc_error_t err;
+  const jc_bios_services_v1 *services = jc_bios_services_get();
+  jc_u8 rc = 0;
+  jc_u8 (*entry)(const jc_dos_handoff_v1 *handoff);
+
+  if (!services) {
+    return JC_E_INTERNAL_ASSERT;
+  }
+  err = jc_jcom_load(JC_DOS_BOOT_NAME, &image);
+  if (err != JC_E_OK) {
+    return err;
+  }
+
+  jc_memset(&g_dos_handoff, 0, sizeof(g_dos_handoff));
+  g_dos_handoff.signature = JC_DOS_HANDOFF_V1_SIGNATURE;
+  g_dos_handoff.version = JC_DOS_HANDOFF_V1_VERSION;
+  g_dos_handoff.size_bytes = (jc_u16)sizeof(g_dos_handoff);
+  g_dos_handoff.flags = 0;
+  g_dos_handoff.tpa_base = (jc_u32)jc_bsp_tpa_base;
+  g_dos_handoff.tpa_size = (jc_u32)jc_bsp_tpa_size;
+  g_dos_handoff.capset_ptr =
+      jc_u64_make((jc_u32)(unsigned long)&g_ctx.capset, 0);
+  g_dos_handoff.bdt_ptr = g_ctx.discovery->bdt_ptr;
+  g_dos_handoff.services_ptr =
+      jc_u64_make((jc_u32)(unsigned long)services, 0);
+
+  entry = (jc_u8 (*)(const jc_dos_handoff_v1 *))(
+      unsigned long)image.entry_addr;
+  if (!entry) {
+    return JC_E_EXEC_BAD_MAGIC;
+  }
+  rc = entry(&g_dos_handoff);
+  if (out_rc) {
+    *out_rc = rc;
+  }
+  return JC_E_OK;
+}
 
 static void jc_boot_record_error(jc_boot_phase_t phase, jc_error_t err) {
   g_ctx.phase = phase;
@@ -169,6 +217,15 @@ static void jc_console_write_hex32(jc_u32 value) {
   jc_console_putc(buf[7]);
 }
 
+static void jc_console_write_hex16(jc_u16 value) {
+  char buf[4];
+  jc_u16_to_hex(buf, value);
+  jc_console_putc(buf[0]);
+  jc_console_putc(buf[1]);
+  jc_console_putc(buf[2]);
+  jc_console_putc(buf[3]);
+}
+
 static void jc_boot_print_header(void) {
   jc_console_write("JC-BIOS BOOT v0.3\r\n");
   jc_console_write(
@@ -226,6 +283,7 @@ void jc_bios_p0_entry(void) {
     jc_boot_record_error(JC_BOOT_PHASE_CONSOLE, err);
     return;
   }
+  jc_irq_init();
 
   jc_boot_set_phase(JC_BOOT_PHASE_CAPSET);
   err = jc_capset_init(&g_ctx.capset, g_ctx.discovery, &g_ctx.bdt_index);
@@ -240,8 +298,23 @@ void jc_bios_p0_entry(void) {
 
 #if !defined(JC_CONFORMANCE_V0_1) && !defined(JC_CONFORMANCE_V0_2) && \
     !defined(JC_CONFORMANCE_V0_3) && !defined(JC_CONFORMANCE_V0_4) && \
-    !defined(JC_CONFORMANCE_V0_5) && !defined(JC_CONFORMANCE_V0_6)
-  jc_boot_print_header();
+    !defined(JC_CONFORMANCE_V0_5) && !defined(JC_CONFORMANCE_V0_6) && \
+    !defined(JC_CONFORMANCE_V1_7)
+  {
+    jc_u8 dos_rc = 0;
+    jc_error_t dos_err = jc_boot_launch_dos(&dos_rc);
+    if (dos_err != JC_E_OK) {
+      jc_boot_print_header();
+      jc_console_write("DOS BOOT FAIL ");
+      jc_console_write_hex16(dos_err);
+      jc_console_write("\r\n");
+    } else {
+      jc_boot_print_header();
+      jc_console_write("DOS EXIT RC ");
+      jc_console_write_hex16(dos_rc);
+      jc_console_write("\r\n");
+    }
+  }
 #endif
 
 #if defined(JC_CONFORMANCE_V0_1)
@@ -266,6 +339,10 @@ void jc_bios_p0_entry(void) {
     ;
 #elif defined(JC_CONFORMANCE_V0_6)
   jc_conformance_v0_6();
+  for (;;)
+    ;
+#elif defined(JC_CONFORMANCE_V1_7)
+  jc_conformance_v1_7();
   for (;;)
     ;
 #else

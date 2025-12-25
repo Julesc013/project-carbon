@@ -18,5 +18,7 @@ typedef struct {
 extern const jc_platform_desc_v1 jc_platform_desc;
 extern const jc_u16 jc_bsp_anchor_addr;
 extern const jc_u16 jc_bsp_stack_top;
+extern const jc_u16 jc_bsp_tpa_base;
+extern const jc_u16 jc_bsp_tpa_size;
 
 #endif /* JC_BSP_H */

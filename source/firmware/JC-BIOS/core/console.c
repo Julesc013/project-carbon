@@ -4,6 +4,7 @@
 #include "jc_bios.h"
 #include "jc_carbonkio.h"
 #include "jc_contracts_autogen.h"
+#include "jc_irq.h"
 #include "jc_timer.h"
 #include "jc_util.h"
 
@@ -29,6 +30,7 @@ jc_error_t jc_console_init(void) {
   err = jc_carbonkio_uart_init(&g_uart, entry);
   if (err == JC_E_OK) {
     g_console_ready = 1;
+    jc_irq_register_uart(&g_uart, entry);
   }
   return err;
 }
@@ -38,9 +40,14 @@ jc_error_t jc_console_putc(char c) {
   if (!g_console_ready) {
     return JC_E_DEV_NOT_FOUND;
   }
-  return jc_carbonkio_uart_putc(&g_uart, v,
-                                jc_timer_deadline_from_now(
-                                    JC_UART_TX_TIMEOUT_TICKS));
+  if (jc_irq_uart_ready()) {
+    return jc_irq_uart_putc(v,
+                            jc_timer_deadline_from_now(
+                                JC_UART_TX_TIMEOUT_TICKS));
+  }
+  return jc_carbonkio_uart_putc(
+      &g_uart, v,
+      jc_timer_deadline_from_now(JC_UART_TX_TIMEOUT_TICKS));
 }
 
 jc_error_t jc_console_write(const char *s) {
@@ -67,9 +74,7 @@ jc_error_t jc_console_write_raw(const char *s) {
     return JC_E_DEV_NOT_FOUND;
   }
   while (s[i] != '\0') {
-    jc_carbonkio_uart_putc(&g_uart, (jc_u8)s[i],
-                           jc_timer_deadline_from_now(
-                               JC_UART_TX_TIMEOUT_TICKS));
+    jc_console_putc(s[i]);
     i++;
   }
   return JC_E_OK;
@@ -85,8 +90,14 @@ jc_error_t jc_console_readline(char *buf, jc_u32 max_len) {
   }
   for (;;) {
     jc_u8 v = 0;
-    jc_error_t err = jc_carbonkio_uart_getc(
-        &g_uart, &v, jc_timer_deadline_from_now(JC_UART_RX_TIMEOUT_TICKS));
+    jc_error_t err;
+    if (jc_irq_uart_ready()) {
+      err = jc_irq_uart_getc(
+          &v, jc_timer_deadline_from_now(JC_UART_RX_TIMEOUT_TICKS));
+    } else {
+      err = jc_carbonkio_uart_getc(
+          &g_uart, &v, jc_timer_deadline_from_now(JC_UART_RX_TIMEOUT_TICKS));
+    }
     if (err != JC_E_OK) {
       return err;
     }

@@ -7,5 +7,6 @@ void jc_conformance_v0_3(void);
 void jc_conformance_v0_4(void);
 void jc_conformance_v0_5(void);
 void jc_conformance_v0_6(void);
+void jc_conformance_v1_7(void);
 
 #endif /* JC_CONFORMANCE_H */
