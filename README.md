@@ -48,6 +48,12 @@ What it is **not**:
   - `schem/Carbon_Z80`: a KiCad project with exported PDFs/PNGs/SVGs under `schem/Carbon_Z80/export/`.
   - `schem/kicad9`: generator-owned schematic skeletons (`generated/`) plus hand-edited space (`manual/`) driven by mapping specs (`spec/`).
 
+### Boot models (summary)
+
+- **Carbon native boot**: ROM discovery → BDT/CAPSET → BIOS services → OS handoff.
+- **Z80 boot** (RC2014/S-100 and similar): board pack or ROMWBW hooks; see `docs/boot_z80.md`.
+- **PC BIOS boot**: PAL hooks with BIOS services; see `docs/boot_pcbios.md`.
+
 ### Design philosophy (as implemented in v1)
 
 - **Determinism & reproducibility**: generators are deterministic; CI verifies generated outputs are committed.
@@ -57,6 +63,11 @@ What it is **not**:
 
 ## 5. Supported platforms (summary)
 
+Hardware targets (v1 focus):
+- **Carbon native SoCs** (Z85/Z90/Z380/Z480 system tops).
+- **Z80-class boards** via board packs (RC2014, S-100).
+- **PC compatibles** via PAL BIOS hooks (UEFI PAL is a stub in v1).
+
 Primary (actively used by the repo and CI):
 - **HDL regression**: Icarus Verilog (`iverilog`/`vvp`) + `make` via `hdl/sim/`.
 - **Spec/code generation**: Python via `scripts/gen_arch.*`.
@@ -64,6 +75,11 @@ Primary (actively used by the repo and CI):
 Secondary / experimental:
 - **`carbon-sim` desktop simulator**: CMake build (`source/sim/carbon_sim`); optional Verilator backend is preview scaffolding.
 - **KiCad schematics**: Carbon_Z80 KiCad project and KiCad 9 generated skeletons under `schem/kicad9/generated/`.
+
+Compatibility overview (guest focus):
+- **CP/M** (2.x/3.x) and RomWBW-style guests are target environments.
+- **DOS** real-mode guests are hosted via EE providers.
+- **GEM** and **Windows** compatibility notes live in `docs/compat_gem.md` and `docs/compat_windows.md`.
 
 ## 6. Intended audience & use cases
 
@@ -108,8 +124,16 @@ Not a fit if you need:
 
 ## 9. Documentation map
 
-- Architecture contracts overview: `docs/ARCHITECTURE_OVERVIEW.md`
+- Documentation index: `docs/README.md`
+- Architecture overview and layering: `docs/ARCHITECTURE.md`
+- Hardware architecture: `docs/HARDWARE_ARCHITECTURE.md`
+- Firmware architecture: `docs/FIRMWARE_ARCHITECTURE.md`
+- OS architecture: `docs/OS_ARCHITECTURE.md`
+- PAL and EE contract indexes: `docs/PAL.md` and `docs/EE.md`
+- Contracts, determinism, and style: `docs/CONTRACTS.md`, `docs/DEPENDENCIES.md`,
+  `docs/DETERMINISM.md`, `docs/STYLE.md`
 - Frozen contract reference (generated): `docs/ARCH_CONTRACTS.md`
+- Spec entry points: `docs/SPEC_*.md`
 - Compatibility ladders (CPU/FPU tiers): `docs/COMPAT_LADDERS.md`
 - System memory map index: `docs/platform/SYSTEM_MEMORY_MAPS.md`
 - CPU core docs:
