@@ -5,6 +5,7 @@ A family of retro-style computer designs (hardware code, simulators, and schemat
 ![Carbon Model 150 Schematic](https://github.com/Julesc013/project-carbon/blob/main/schem/Carbon_Z80/export/Carbon_Z80_150_sch_rev1.png)
 ![Carbon Model 150 PCB (WIP)](https://github.com/Julesc013/project-carbon/blob/main/schem/Carbon_Z80/export/Carbon_Z80_150_pcb_rev1.png)
 ![Carbon Development Test Board](https://github.com/Julesc013/project-carbon/blob/main/schem/Carbon_Z80/export/20260405_201231.jpg)
+![Double sided PCB etching test (oxidised)](https://github.com/Julesc013/project-carbon/blob/main/schem/Carbon_Z80/export/20260406_165242~3.jpg)
 
 ## 2. High-level overview (non-technical)
 
