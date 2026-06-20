@@ -1,298 +1,234 @@
 Info: Processing symbol 'ATX_PWR_0:Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical'.
-Info: Processing symbol 'TP107:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'BT1:Battery:BatteryHolder_MYOUNG_BS-07-A1BJ001_CR2032'.
-Info: Processing symbol 'C1:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C2:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C3:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C4:'.
-Info: Processing symbol 'TP108:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C5:'.
-Info: Processing symbol 'TP109:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C6:'.
-Info: Processing symbol 'TP110:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C7:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C8:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C9:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C10:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C11:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C12:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C13:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C14:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C15:'.
-Info: Processing symbol 'TP111:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C16:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C17:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C18:'.
-Info: Processing symbol 'TP112:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C19:'.
-Info: Processing symbol 'TP113:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C20:'.
-Info: Processing symbol 'TP114:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C21:'.
-Info: Processing symbol 'TP115:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C22:'.
-Info: Processing symbol 'TP116:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C23:'.
-Info: Processing symbol 'TP117:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C24:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C25:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C26:'.
-Info: Processing symbol 'TP118:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C27:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C28:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C29:'.
-Info: Processing symbol 'TP119:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C30:'.
-Info: Processing symbol 'TP120:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'C31:'.
-Info: Processing symbol 'TRS_0:Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal'.
-Info: Processing symbol 'C32:'.
-Info: Processing symbol 'TRS_1:Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal'.
-Info: Processing symbol 'C33:'.
-Info: Processing symbol 'U0:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'C34:'.
-Info: Processing symbol 'U1:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'C35:'.
-Info: Processing symbol 'U2:Package_TO_SOT_THT:TO-92L_Inline'.
-Info: Processing symbol 'C36:'.
-Info: Processing symbol 'U3:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'C37:'.
-Info: Processing symbol 'U4:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'C38:'.
-Info: Processing symbol 'JP7:'.
-Info: Processing symbol 'C39:'.
-Info: Processing symbol 'U5:Package_DIP:DIP-20_W7.62mm'.
-Info: Processing symbol 'C40:'.
-Info: Processing symbol 'U6:Package_DIP:DIP-20_W7.62mm'.
-Info: Processing symbol 'C41:'.
-Info: Processing symbol 'U7:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'C42:'.
-Info: Processing symbol 'U8:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'C43:'.
-Info: Processing symbol 'U9:Package_DIP:DIP-20_W7.62mm'.
-Info: Processing symbol 'C44:'.
-Info: Processing symbol 'U10:Package_DIP:DIP-16_W7.62mm_Socket'.
-Info: Processing symbol 'C45:'.
-Info: Processing symbol 'U11:Package_DIP:DIP-16_W7.62mm_Socket'.
-Info: Processing symbol 'CPU_0:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'CTC_0:Package_DIP:DIP-28_W15.24mm_Socket'.
-Info: Processing symbol 'D1:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D2:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D3:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D4:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D5:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D6:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D7:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D8:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D9:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D10:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D11:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D12:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D13:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D14:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D15:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D16:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D17:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'D18:LED_THT:LED_D5.0mm'.
-Info: Processing symbol 'DMA_0:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'FDC_0:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'FDD_0:IDC-Header_2x17_P2.54mm_Vertical'.
-Info: Processing symbol 'U12:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'FPU_0:Package_DIP:DIP-24_W15.24mm_Socket'.
-Info: Processing symbol 'U13:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U14:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'IDE_0:IDC-Header_2x20_P2.54mm_Vertical'.
-Info: Processing symbol 'U15:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'IDE_1:IDC-Header_2x20_P2.54mm_Vertical'.
-Info: Processing symbol 'U16:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'JCBUS_0:Carboni_Library:JC100_Bus_16b'.
-Info: Processing symbol 'JCBUS_1:Carboni_Library:JC100_Bus_16b'.
-Info: Processing symbol 'JCBUS_2:Carboni_Library:JC100_Bus_16b'.
-Info: Processing symbol 'JCBUS_3:Carboni_Library:JC100_Bus_16b'.
-Info: Processing symbol 'JCBUS_4:Carboni_Library:JC100_Bus_16b'.
-Info: Processing symbol 'JCBUS_5:Carboni_Library:JC100_Bus_16b'.
-Info: Processing symbol 'JP1:'.
-Info: Processing symbol 'U17:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'JP2:'.
-Info: Total warnings: 44, errors: 61.
-Info: Processing symbol 'JP3:'.
-Info: Processing symbol 'U18:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'JP4:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP5:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'JP6:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'U19:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U20:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'JP8:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP9:'.
-Info: Processing symbol 'U21:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'JP10:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP11:'.
-Info: Processing symbol 'U22:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'JP12:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP13:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP14:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP15:'.
-Info: Processing symbol 'U23:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'JP16:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'JP17:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'JP18:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'JP19:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'JP20:'.
-Info: Processing symbol 'U24:Package_DIP:DIP-20_W7.62mm'.
-Info: Processing symbol 'JP21:'.
-Info: Processing symbol 'U25:Package_DIP:DIP-8_W7.62mm_Socket'.
-Info: Processing symbol 'JP22:'.
-Info: Processing symbol 'U26:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'JP23:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'JP24:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'JP25:'.
-Info: Processing symbol 'U27:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'JP26:'.
-Info: Processing symbol 'U28:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'JP27:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP28:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP29:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP30:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP31:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP32:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP35:'.
-Info: Processing symbol 'U29:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'JP36:'.
-Info: Processing symbol 'U30:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'JP37:'.
-Info: Processing symbol 'U33:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'JP38:'.
-Info: Processing symbol 'U34:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'JP39:'.
-Info: Processing symbol 'U35:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'JP40:'.
-Info: Processing symbol 'U36:'.
-Info: Processing symbol 'JP41:'.
-Info: Processing symbol 'U37:Package_DIP:DIP-8_W7.62mm'.
-Info: Processing symbol 'JP42:'.
-Info: Processing symbol 'U38:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'JP43:'.
-Info: Processing symbol 'U39:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'PIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'R1:'.
-Info: Processing symbol 'U40:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'R2:'.
-Info: Processing symbol 'U41:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'R3:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R4:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R5:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R6:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R7:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R8:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R9:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R10:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R11:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R12:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R13:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R14:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R15:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R16:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R17:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R18:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R19:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R20:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R21:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R22:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R23:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R24:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R25:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R26:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R27:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R28:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R29:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R30:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R31:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R32:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R33:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R34:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R35:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R36:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R37:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R38:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R39:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R40:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R41:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R42:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R43:'.
-Info: Processing symbol 'U42:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'R44:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R45:'.
-Info: Processing symbol 'U43:Package_DIP:DIP-16_W7.62mm_Socket'.
-Info: Processing symbol 'R46:'.
-Info: Processing symbol 'XTAL_OSC_0:Oscillator:Oscillator_DIP-8'.
-Info: Processing symbol 'R47:'.
-Info: Processing symbol 'XTAL_RES_0:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
-Info: Processing symbol 'R48:'.
-Info: Processing symbol 'XTAL_RES_1:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
-Info: Processing symbol 'R49:'.
-Info: Processing symbol 'XTAL_RES_2:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
-Info: Processing symbol 'R50:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R51:'.
-Info: Processing symbol 'XTAL_RES_3:Crystal:Crystal_Round_D3.0mm_Vertical'.
-Info: Processing symbol 'R52:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R53:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R54:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R60:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R61:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R62:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R63:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R64:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R65:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R66:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R67:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R68:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R69:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R70:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R71:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R72:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'RAM_0:Package_DIP:DIP-32_W15.24mm_Socket'.
-Info: Processing symbol 'RAM_1:Package_DIP:DIP-24_W15.24mm_Socket'.
-Info: Processing symbol 'RAM_2:Package_DIP:DIP-24_W15.24mm_Socket'.
-Info: Processing symbol 'RN1:Resistor_THT:R_Array_SIP9'.
-Info: Processing symbol 'RN2:Resistor_THT:R_Array_SIP9'.
-Info: Processing symbol 'ROM_0:Package_DIP:DIP-28_W15.24mm_Socket'.
-Info: Processing symbol 'ROM_1:Package_DIP:DIP-28_W15.24mm_Socket'.
-Info: Processing symbol 'RV1:'.
-Info: Processing symbol 'RV2:'.
-Info: Processing symbol 'SERIAL_0:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
-Info: Processing symbol 'SERIAL_1:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
-Info: Processing symbol 'SIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'SW1:Button_Switch_THT:SW_PUSH_6mm'.
-Info: Processing symbol 'SW2:Button_Switch_THT:SW_PUSH_6mm'.
-Info: Processing symbol 'TP1:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP2:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP3:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP4:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP5:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP6:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP7:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP8:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP9:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP10:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP11:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP12:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP13:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP14:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP15:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP16:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP17:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP18:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP19:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP20:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP21:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP22:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP23:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP24:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP25:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP26:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP27:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Info: Processing symbol 'TP28:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP29:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'JCBUS_3:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'RAM_1:Package_DIP:DIP-24_W15.24mm_Socket'.
+Info: Processing symbol 'R11:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R34:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'BT1:Battery:BatteryHolder_MYOUNG_BS-07-A1BJ001_CR2032'.
+Info: Processing symbol 'JCBUS_4:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'R62:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'SIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'C1:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'R12:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'JCBUS_5:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'TP10:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C2:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'R35:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'RAM_2:Package_DIP:DIP-24_W15.24mm_Socket'.
+Info: Processing symbol 'JP1:'.
+Info: Processing symbol 'C3:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'JP2:'.
+Info: Processing symbol 'JP3:'.
+Info: Processing symbol 'JP4:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'C4:'.
+Info: Processing symbol 'C5:'.
+Info: Processing symbol 'C6:'.
+Info: Processing symbol 'C7:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'R63:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R13:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'TP3:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'C8:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'JP5:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'R36:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'SW1:Button_Switch_THT:SW_PUSH_6mm'.
+Info: Processing symbol 'C9:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'R14:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'JP6:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'RN1:Resistor_THT:R_Array_SIP9'.
+Info: Processing symbol 'C10:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'R64:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R37:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'JP7:'.
+Info: Processing symbol 'C11:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'JP8:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'TP6:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'R15:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'C12:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'TP16:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'JP9:'.
+Info: Processing symbol 'JP10:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'C13:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'RN2:Resistor_THT:R_Array_SIP9'.
+Info: Processing symbol 'R38:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R16:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'C14:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
+Info: Processing symbol 'JP11:'.
+Info: Processing symbol 'JP12:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'R65:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'C15:'.
+Info: Processing symbol 'C16:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'TP13:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'SW2:Button_Switch_THT:SW_PUSH_6mm'.
+Info: Processing symbol 'JP13:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'C17:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'R17:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R39:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'ROM_0:Package_DIP:DIP-28_W15.24mm_Socket'.
+Info: Processing symbol 'C18:'.
+Info: Processing symbol 'C19:'.
+Info: Processing symbol 'C20:'.
+Info: Processing symbol 'C21:'.
+Info: Processing symbol 'C22:'.
+Info: Processing symbol 'C23:'.
+Info: Processing symbol 'C24:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'JP14:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'R66:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R18:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'C25:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'TP12:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'JP15:'.
+Info: Processing symbol 'JP16:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'C26:'.
+Info: Processing symbol 'C27:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'R40:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'TP4:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'R19:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'C28:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
+Info: Processing symbol 'JP17:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'ROM_1:Package_DIP:DIP-28_W15.24mm_Socket'.
+Info: Processing symbol 'R67:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'C29:'.
+Info: Processing symbol 'C30:'.
+Info: Processing symbol 'C31:'.
+Info: Processing symbol 'C32:'.
+Info: Processing symbol 'C33:'.
+Info: Processing symbol 'C34:'.
+Info: Processing symbol 'C35:'.
+Info: Processing symbol 'C36:'.
+Info: Processing symbol 'C37:'.
+Info: Processing symbol 'C38:'.
+Info: Processing symbol 'C39:'.
+Info: Processing symbol 'C40:'.
+Info: Processing symbol 'C41:'.
+Info: Processing symbol 'C42:'.
+Info: Processing symbol 'C43:'.
+Info: Processing symbol 'C44:'.
+Info: Processing symbol 'C45:'.
+Info: Processing symbol 'CPU_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'R41:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'JP18:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'CTC_0:Package_DIP:DIP-28_W15.24mm_Socket'.
+Info: Processing symbol 'R20:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'TP9:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'D1:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'TP1:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'JP19:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'RV1:'.
+Info: Processing symbol 'D2:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'R21:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R42:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'JP20:'.
+Info: Processing symbol 'D3:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'JP21:'.
+Info: Processing symbol 'JP22:'.
+Info: Processing symbol 'JP23:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'D4:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'R68:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'RV2:'.
+Info: Processing symbol 'R22:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'D5:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'JP24:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'SERIAL_0:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
+Info: Processing symbol 'R43:'.
+Info: Processing symbol 'D6:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'R44:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'JP25:'.
+Info: Processing symbol 'JP26:'.
+Info: Processing symbol 'JP27:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'R23:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'TP23:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'D7:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'R69:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'JP28:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'TP7:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'D8:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'R24:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R45:'.
+Info: Processing symbol 'JP29:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'R46:'.
+Info: Processing symbol 'R47:'.
+Info: Processing symbol 'R25:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'D9:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'JP30:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'R48:'.
+Info: Processing symbol 'R49:'.
+Info: Processing symbol 'D10:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'R50:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'JP31:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'R26:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'D11:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'TP14:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP22:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'JP32:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'D12:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'R70:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R27:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R51:'.
+Info: Processing symbol 'D13:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'JP35:'.
+Info: Processing symbol 'JP36:'.
+Info: Processing symbol 'JP37:'.
+Info: Processing symbol 'D14:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'JP38:'.
+Info: Processing symbol 'JP39:'.
+Info: Processing symbol 'JP40:'.
+Info: Processing symbol 'D15:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'JP41:'.
+Info: Processing symbol 'JP42:'.
+Info: Processing symbol 'JP43:'.
+Info: Processing symbol 'D16:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'PIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'R52:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'TP21:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'D17:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'R1:'.
+Info: Processing symbol 'R2:'.
+Info: Processing symbol 'R3:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'D18:LED_THT:LED_D5.0mm'.
+Info: Processing symbol 'R28:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'TP11:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP5:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'DMA_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'R4:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R53:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'FDC_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'R29:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R71:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'FDD_0:IDC-Header_2x17_P2.54mm_Vertical'.
+Info: Processing symbol 'TP28:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'R5:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'SERIAL_1:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
+Info: Processing symbol 'TP20:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'R30:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'FPU_0:Package_DIP:DIP-24_W15.24mm_Socket'.
+Info: Processing symbol 'R6:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'TP27:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP26:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'R54:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'IDE_0:IDC-Header_2x20_P2.54mm_Vertical'.
+Info: Processing symbol 'TP25:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP2:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'R72:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R7:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R31:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'IDE_1:IDC-Header_2x20_P2.54mm_Vertical'.
+Info: Processing symbol 'TP24:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP17:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'R60:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R8:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'TP19:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'JCBUS_0:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'R32:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'TP18:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'R9:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'JCBUS_1:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'RAM_0:Package_DIP:DIP-32_W15.24mm_Socket'.
+Info: Processing symbol 'R61:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R33:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'JCBUS_2:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'R10:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'TP15:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP8:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP30:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP31:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP32:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
@@ -370,34 +306,1126 @@ Info: Processing symbol 'TP103:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP104:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP105:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP106:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
-Change ATX_PWR_0 footprint from 'Connector_Molex:Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical' to 'Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical'.
-Update U26 symbol association from /4abe36e3-36d0-4cbd-b773-73bb9a5c887d to /8a8d8e16-088b-4d35-b6a3-e1cb225c200e.
-Change FDD_0 footprint from 'Connector_IDC:IDC-Header_2x17_P2.54mm_Vertical' to 'IDC-Header_2x17_P2.54mm_Vertical'.
-Change SERIAL_0 footprint from 'Connector_Dsub:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm' to 'DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
-Update U14 symbol association from /cac7cb95-0e3b-46ec-a581-00e480fbb740 to /6f446b64-6c95-485d-a8f2-74b4512fb0db.
-Change SERIAL_1 footprint from 'Connector_Dsub:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm' to 'DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
-Update U23 symbol association from /72cb084a-0173-4482-bd98-1aa13a168b3b to /8298b409-1c1d-4f6c-831b-a38efb54d4cb.
+Info: Processing symbol 'TP107:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP108:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP109:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP110:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP111:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP112:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP113:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP114:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP115:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP116:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP117:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP118:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP119:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP120:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TRS_0:Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal'.
+Info: Processing symbol 'TRS_1:Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal'.
+Info: Processing symbol 'U0:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U1:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U2:Package_TO_SOT_THT:TO-92L_Inline'.
+Info: Processing symbol 'U3:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U4:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U5:Package_DIP:DIP-20_W7.62mm'.
+Info: Processing symbol 'U6:Package_DIP:DIP-20_W7.62mm'.
+Info: Processing symbol 'U7:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U8:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U9:Package_DIP:DIP-20_W7.62mm'.
+Info: Processing symbol 'U10:Package_DIP:DIP-16_W7.62mm_Socket'.
+Info: Processing symbol 'U11:Package_DIP:DIP-16_W7.62mm_Socket'.
+Info: Processing symbol 'U12:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U13:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U14:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U15:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U16:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U17:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U18:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U19:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U20:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U21:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U22:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U23:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U24:Package_DIP:DIP-20_W7.62mm'.
+Info: Processing symbol 'U25:Package_DIP:DIP-8_W7.62mm_Socket'.
+Info: Processing symbol 'U26:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U27:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'U28:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U29:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U30:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U33:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U34:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U35:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U36:'.
+Info: Processing symbol 'U37:Package_DIP:DIP-8_W7.62mm'.
+Info: Processing symbol 'U38:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U39:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U40:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U41:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U42:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U43:Package_DIP:DIP-16_W7.62mm_Socket'.
+Info: Processing symbol 'XTAL_OSC_0:Oscillator:Oscillator_DIP-8'.
+Info: Processing symbol 'XTAL_RES_0:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'XTAL_RES_1:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'XTAL_RES_2:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'XTAL_RES_3:Crystal:Crystal_Round_D3.0mm_Vertical'.
+Update JCBUS_0 fields.
+Update JCBUS_0 sheetfile to 'Model_150.kicad_sch'.
+Update JCBUS_0 unit metadata.
+Update JCBUS_1 fields.
+Update JCBUS_1 sheetfile to 'Model_150.kicad_sch'.
+Update JCBUS_1 unit metadata.
+Update JCBUS_2 fields.
+Update JCBUS_2 sheetfile to 'Model_150.kicad_sch'.
+Update JCBUS_2 unit metadata.
+Update JCBUS_3 fields.
+Update JCBUS_3 sheetfile to 'Model_150.kicad_sch'.
+Update JCBUS_3 unit metadata.
+Update JCBUS_4 fields.
+Update JCBUS_4 sheetfile to 'Model_150.kicad_sch'.
+Update JCBUS_4 unit metadata.
+Update JCBUS_5 fields.
+Update JCBUS_5 sheetfile to 'Model_150.kicad_sch'.
+Update JCBUS_5 unit metadata.
+Update JP4 fields.
+Update JP4 sheetfile to 'Model_150.kicad_sch'.
+Update JP4 unit metadata.
+Update JP5 fields.
+Update JP5 sheetfile to 'Model_150.kicad_sch'.
+Update JP5 unit metadata.
+Update JP6 fields.
+Update JP6 sheetfile to 'Model_150.kicad_sch'.
+Update JP6 unit metadata.
+Update JP8 fields.
+Update JP8 sheetfile to 'Model_150.kicad_sch'.
+Update JP8 unit metadata.
+Update JP10 fields.
+Update JP10 sheetfile to 'Model_150.kicad_sch'.
+Update JP10 unit metadata.
+Update JP12 fields.
+Update JP12 sheetfile to 'Model_150.kicad_sch'.
+Update JP12 unit metadata.
+Update JP13 fields.
+Update JP13 sheetfile to 'Model_150.kicad_sch'.
+Update JP13 unit metadata.
+Update JP14 fields.
+Update JP14 sheetfile to 'Model_150.kicad_sch'.
+Update JP14 unit metadata.
+Update JP16 fields.
+Update JP16 sheetfile to 'Model_150.kicad_sch'.
+Update JP16 unit metadata.
+Update JP17 fields.
+Update JP17 sheetfile to 'Model_150.kicad_sch'.
+Update JP17 unit metadata.
+Update JP18 fields.
+Update JP18 sheetfile to 'Model_150.kicad_sch'.
+Update JP18 unit metadata.
+Update JP19 fields.
+Update JP19 sheetfile to 'Model_150.kicad_sch'.
+Update JP19 unit metadata.
+Update JP23 fields.
+Update JP23 sheetfile to 'Model_150.kicad_sch'.
+Update JP23 unit metadata.
+Update JP24 fields.
+Update JP24 sheetfile to 'Model_150.kicad_sch'.
+Update JP24 unit metadata.
+Update JP27 fields.
+Update JP27 sheetfile to 'Model_150.kicad_sch'.
+Update JP27 unit metadata.
+Update JP28 fields.
+Update JP28 sheetfile to 'Model_150.kicad_sch'.
+Update JP28 unit metadata.
+Update JP29 fields.
+Update JP29 sheetfile to 'Model_150.kicad_sch'.
+Update JP29 unit metadata.
+Update JP30 fields.
+Update JP30 sheetfile to 'Model_150.kicad_sch'.
+Update JP30 unit metadata.
+Update JP31 fields.
+Update JP31 sheetfile to 'Model_150.kicad_sch'.
+Update JP31 unit metadata.
+Update JP32 fields.
+Update JP32 sheetfile to 'Model_150.kicad_sch'.
+Update JP32 unit metadata.
+Update PIO_0 sheetfile to 'Model_150.kicad_sch'.
+Update PIO_0 unit metadata.
+Update R3 fields.
+Update R3 sheetfile to 'Model_150.kicad_sch'.
+Update R3 unit metadata.
+Update R4 fields.
+Update R4 sheetfile to 'Model_150.kicad_sch'.
+Update R4 unit metadata.
+Update R5 fields.
+Update R5 sheetfile to 'Model_150.kicad_sch'.
+Update R5 unit metadata.
+Update R6 fields.
+Update R6 sheetfile to 'Model_150.kicad_sch'.
+Update R6 unit metadata.
+Update R7 fields.
+Update R7 sheetfile to 'Model_150.kicad_sch'.
+Update R7 unit metadata.
+Update R8 fields.
+Update R8 sheetfile to 'Model_150.kicad_sch'.
+Update R8 unit metadata.
+Update R9 fields.
+Update R9 sheetfile to 'Model_150.kicad_sch'.
+Update R9 unit metadata.
+Update R10 fields.
+Update R10 sheetfile to 'Model_150.kicad_sch'.
+Update R10 unit metadata.
+Update R11 fields.
+Update R11 sheetfile to 'Model_150.kicad_sch'.
+Update R11 unit metadata.
+Update R12 fields.
+Update R12 sheetfile to 'Model_150.kicad_sch'.
+Reconnect R12 pin 2 from Net-(D6-K) to Net-(D6-A).
+Update R12 unit metadata.
+Update R13 fields.
+Update R13 sheetfile to 'Model_150.kicad_sch'.
+Update R13 unit metadata.
+Update R14 fields.
+Update R14 sheetfile to 'Model_150.kicad_sch'.
+Reconnect R14 pin 2 from Net-(D8-K) to Net-(D8-A).
+Update R14 unit metadata.
+Update R15 fields.
+Update R15 sheetfile to 'Model_150.kicad_sch'.
+Update R15 unit metadata.
+Update R16 fields.
+Update R16 sheetfile to 'Model_150.kicad_sch'.
+Update R16 unit metadata.
+Update R17 fields.
+Update R17 sheetfile to 'Model_150.kicad_sch'.
+Update R17 unit metadata.
+Update R18 fields.
+Update R18 sheetfile to 'Model_150.kicad_sch'.
+Update R18 unit metadata.
+Update R19 fields.
+Update R19 sheetfile to 'Model_150.kicad_sch'.
+Update R19 unit metadata.
+Update R20 fields.
+Update R20 sheetfile to 'Model_150.kicad_sch'.
+Update R20 unit metadata.
+Update R21 fields.
+Update R21 sheetfile to 'Model_150.kicad_sch'.
+Update R21 unit metadata.
+Update R22 fields.
+Update R22 sheetfile to 'Model_150.kicad_sch'.
+Update R22 unit metadata.
+Update R23 fields.
+Update R23 sheetfile to 'Model_150.kicad_sch'.
+Update R23 unit metadata.
+Update R24 fields.
+Update R24 sheetfile to 'Model_150.kicad_sch'.
+Update R24 unit metadata.
+Update R25 fields.
+Update R25 sheetfile to 'Model_150.kicad_sch'.
+Update R25 unit metadata.
+Update R26 fields.
+Update R26 sheetfile to 'Model_150.kicad_sch'.
+Update R26 unit metadata.
+Update R27 fields.
+Update R27 sheetfile to 'Model_150.kicad_sch'.
+Update R27 unit metadata.
+Update R28 fields.
+Update R28 sheetfile to 'Model_150.kicad_sch'.
+Update R28 unit metadata.
+Update R29 fields.
+Update R29 sheetfile to 'Model_150.kicad_sch'.
+Update R29 unit metadata.
+Update R30 fields.
+Update R30 sheetfile to 'Model_150.kicad_sch'.
+Update R30 unit metadata.
+Update R31 fields.
+Update R31 sheetfile to 'Model_150.kicad_sch'.
+Update R31 unit metadata.
+Update R32 fields.
+Update R32 sheetfile to 'Model_150.kicad_sch'.
+Update R32 unit metadata.
+Update R33 fields.
+Update R33 sheetfile to 'Model_150.kicad_sch'.
+Update R33 unit metadata.
+Update R34 fields.
+Update R34 sheetfile to 'Model_150.kicad_sch'.
+Update R34 unit metadata.
+Update R35 fields.
+Update R35 sheetfile to 'Model_150.kicad_sch'.
+Update R35 unit metadata.
+Update R36 fields.
+Update R36 sheetfile to 'Model_150.kicad_sch'.
+Update R36 unit metadata.
+Update R37 fields.
+Update R37 sheetfile to 'Model_150.kicad_sch'.
+Update R37 unit metadata.
+Update R38 fields.
+Update R38 sheetfile to 'Model_150.kicad_sch'.
+Update R38 unit metadata.
+Update R39 fields.
+Update R39 sheetfile to 'Model_150.kicad_sch'.
+Update R39 unit metadata.
+Update R40 fields.
+Update R40 sheetfile to 'Model_150.kicad_sch'.
+Update R40 unit metadata.
+Update R41 fields.
+Update R41 sheetfile to 'Model_150.kicad_sch'.
+Update R41 unit metadata.
+Update R42 fields.
+Update R42 sheetfile to 'Model_150.kicad_sch'.
+Update R42 unit metadata.
+Update R44 fields.
+Update R44 sheetfile to 'Model_150.kicad_sch'.
+Update R44 unit metadata.
+Update R50 fields.
+Update R50 sheetfile to 'Model_150.kicad_sch'.
+Update R50 unit metadata.
+Update R52 fields.
+Update R52 sheetfile to 'Model_150.kicad_sch'.
+Update R52 unit metadata.
+Update R53 fields.
+Update R53 sheetfile to 'Model_150.kicad_sch'.
+Update R53 unit metadata.
+Update R54 fields.
+Update R54 sheetfile to 'Model_150.kicad_sch'.
+Update R54 unit metadata.
+Update R60 fields.
+Update R60 sheetfile to 'Model_150.kicad_sch'.
+Update R60 unit metadata.
+Update R61 fields.
+Update R61 sheetfile to 'Model_150.kicad_sch'.
+Update R61 unit metadata.
+Update R62 fields.
+Update R62 sheetfile to 'Model_150.kicad_sch'.
+Update R62 unit metadata.
+Update R63 fields.
+Update R63 sheetfile to 'Model_150.kicad_sch'.
+Update R63 unit metadata.
+Update R64 fields.
+Update R64 sheetfile to 'Model_150.kicad_sch'.
+Update R64 unit metadata.
+Update R65 fields.
+Update R65 sheetfile to 'Model_150.kicad_sch'.
+Update R65 unit metadata.
+Update R66 fields.
+Update R66 sheetfile to 'Model_150.kicad_sch'.
+Update R66 unit metadata.
+Update R67 fields.
+Update R67 sheetfile to 'Model_150.kicad_sch'.
+Update R67 unit metadata.
+Update R68 fields.
+Update R68 sheetfile to 'Model_150.kicad_sch'.
+Update R68 unit metadata.
+Update R69 fields.
+Update R69 sheetfile to 'Model_150.kicad_sch'.
+Update R69 unit metadata.
+Update R70 fields.
+Update R70 sheetfile to 'Model_150.kicad_sch'.
+Update R70 unit metadata.
+Update R71 fields.
+Update R71 sheetfile to 'Model_150.kicad_sch'.
+Update R71 unit metadata.
+Update R72 fields.
+Update R72 sheetfile to 'Model_150.kicad_sch'.
+Update R72 unit metadata.
+Update RAM_0 sheetfile to 'Model_150.kicad_sch'.
+Update RAM_0 unit metadata.
+Update RAM_1 sheetfile to 'Model_150.kicad_sch'.
+Update RAM_1 unit metadata.
+Update RAM_2 sheetfile to 'Model_150.kicad_sch'.
+Update RAM_2 unit metadata.
+Update RN1 sheetfile to 'Model_150.kicad_sch'.
+Update RN1 unit metadata.
+Update RN2 sheetfile to 'Model_150.kicad_sch'.
+Update RN2 unit metadata.
+Update ROM_0 sheetfile to 'Model_150.kicad_sch'.
+Update ROM_0 unit metadata.
+Update ROM_1 sheetfile to 'Model_150.kicad_sch'.
+Update ROM_1 unit metadata.
+Update SERIAL_0 fields.
+Update SERIAL_0 sheetfile to 'Model_150.kicad_sch'.
+Update SERIAL_0 unit metadata.
+Add SERIAL_0 'Do not place' fabrication attribute.
+Update SERIAL_1 fields.
+Update SERIAL_1 sheetfile to 'Model_150.kicad_sch'.
+Update SERIAL_1 unit metadata.
+Add SERIAL_1 'Do not place' fabrication attribute.
+Update SIO_0 sheetfile to 'Model_150.kicad_sch'.
+Update SIO_0 unit metadata.
+Update SW1 fields.
+Update SW1 sheetfile to 'Model_150.kicad_sch'.
+Update SW1 unit metadata.
+Update SW2 fields.
+Update SW2 sheetfile to 'Model_150.kicad_sch'.
+Update SW2 unit metadata.
+Update TP1 fields.
+Update TP1 sheetfile to 'Model_150.kicad_sch'.
+Remove TP1 'exclude from position files' fabrication attribute.
+Update TP1 unit metadata.
+Update TP2 fields.
+Update TP2 sheetfile to 'Model_150.kicad_sch'.
+Remove TP2 'exclude from position files' fabrication attribute.
+Update TP2 unit metadata.
+Update TP3 fields.
+Update TP3 sheetfile to 'Model_150.kicad_sch'.
+Remove TP3 'exclude from position files' fabrication attribute.
+Update TP3 unit metadata.
+Update TP4 fields.
+Update TP4 sheetfile to 'Model_150.kicad_sch'.
+Remove TP4 'exclude from position files' fabrication attribute.
+Update TP4 unit metadata.
+Update TP5 fields.
+Update TP5 sheetfile to 'Model_150.kicad_sch'.
+Remove TP5 'exclude from position files' fabrication attribute.
+Update TP5 unit metadata.
+Update TP6 fields.
+Update TP6 sheetfile to 'Model_150.kicad_sch'.
+Remove TP6 'exclude from position files' fabrication attribute.
+Update TP6 unit metadata.
+Update TP7 fields.
+Update TP7 sheetfile to 'Model_150.kicad_sch'.
+Remove TP7 'exclude from position files' fabrication attribute.
+Update TP7 unit metadata.
+Update TP8 fields.
+Update TP8 sheetfile to 'Model_150.kicad_sch'.
+Remove TP8 'exclude from position files' fabrication attribute.
+Update TP8 unit metadata.
+Update TP9 fields.
+Update TP9 sheetfile to 'Model_150.kicad_sch'.
+Remove TP9 'exclude from position files' fabrication attribute.
+Update TP9 unit metadata.
+Update TP10 fields.
+Update TP10 sheetfile to 'Model_150.kicad_sch'.
+Remove TP10 'exclude from position files' fabrication attribute.
+Update TP10 unit metadata.
+Update TP11 fields.
+Update TP11 sheetfile to 'Model_150.kicad_sch'.
+Remove TP11 'exclude from position files' fabrication attribute.
+Update TP11 unit metadata.
+Update TP12 fields.
+Update TP12 sheetfile to 'Model_150.kicad_sch'.
+Remove TP12 'exclude from position files' fabrication attribute.
+Update TP12 unit metadata.
+Update TP13 fields.
+Update TP13 sheetfile to 'Model_150.kicad_sch'.
+Remove TP13 'exclude from position files' fabrication attribute.
+Update TP13 unit metadata.
+Update TP14 fields.
+Update TP14 sheetfile to 'Model_150.kicad_sch'.
+Remove TP14 'exclude from position files' fabrication attribute.
+Update TP14 unit metadata.
+Update TP15 fields.
+Update TP15 sheetfile to 'Model_150.kicad_sch'.
+Remove TP15 'exclude from position files' fabrication attribute.
+Update TP15 unit metadata.
+Update TP16 fields.
+Update TP16 sheetfile to 'Model_150.kicad_sch'.
+Remove TP16 'exclude from position files' fabrication attribute.
+Update TP16 unit metadata.
+Update TP17 fields.
+Update TP17 sheetfile to 'Model_150.kicad_sch'.
+Remove TP17 'exclude from position files' fabrication attribute.
+Update TP17 unit metadata.
+Update TP18 fields.
+Update TP18 sheetfile to 'Model_150.kicad_sch'.
+Remove TP18 'exclude from position files' fabrication attribute.
+Update TP18 unit metadata.
+Update TP19 fields.
+Update TP19 sheetfile to 'Model_150.kicad_sch'.
+Remove TP19 'exclude from position files' fabrication attribute.
+Update TP19 unit metadata.
+Update TP20 fields.
+Update TP20 sheetfile to 'Model_150.kicad_sch'.
+Remove TP20 'exclude from position files' fabrication attribute.
+Update TP20 unit metadata.
+Update TP21 fields.
+Update TP21 sheetfile to 'Model_150.kicad_sch'.
+Remove TP21 'exclude from position files' fabrication attribute.
+Update TP21 unit metadata.
+Update TP22 fields.
+Update TP22 sheetfile to 'Model_150.kicad_sch'.
+Remove TP22 'exclude from position files' fabrication attribute.
+Update TP22 unit metadata.
+Update TP23 fields.
+Update TP23 sheetfile to 'Model_150.kicad_sch'.
+Remove TP23 'exclude from position files' fabrication attribute.
+Update TP23 unit metadata.
+Update TP24 fields.
+Update TP24 sheetfile to 'Model_150.kicad_sch'.
+Remove TP24 'exclude from position files' fabrication attribute.
+Update TP24 unit metadata.
+Update TP25 fields.
+Update TP25 sheetfile to 'Model_150.kicad_sch'.
+Remove TP25 'exclude from position files' fabrication attribute.
+Update TP25 unit metadata.
+Update TP26 fields.
+Update TP26 sheetfile to 'Model_150.kicad_sch'.
+Remove TP26 'exclude from position files' fabrication attribute.
+Update TP26 unit metadata.
+Update TP27 fields.
+Update TP27 sheetfile to 'Model_150.kicad_sch'.
+Remove TP27 'exclude from position files' fabrication attribute.
+Update TP27 unit metadata.
+Update TP28 fields.
+Update TP28 sheetfile to 'Model_150.kicad_sch'.
+Remove TP28 'exclude from position files' fabrication attribute.
+Update TP28 unit metadata.
+Update TP29 fields.
+Update TP29 sheetfile to 'Model_150.kicad_sch'.
+Remove TP29 'exclude from position files' fabrication attribute.
+Update TP29 unit metadata.
+Update ATX_PWR_0 fields.
+Update TP30 fields.
+Update TP30 sheetfile to 'Model_150.kicad_sch'.
+Remove TP30 'exclude from position files' fabrication attribute.
+Update TP30 unit metadata.
+Update ATX_PWR_0 sheetfile to 'Model_150.kicad_sch'.
+Update TP31 fields.
+Update TP31 sheetfile to 'Model_150.kicad_sch'.
+Remove TP31 'exclude from position files' fabrication attribute.
+Update TP31 unit metadata.
+Update ATX_PWR_0 unit metadata.
+Update TP32 fields.
+Update TP32 sheetfile to 'Model_150.kicad_sch'.
+Remove TP32 'exclude from position files' fabrication attribute.
+Update TP32 unit metadata.
+Add ATX_PWR_0 'Do not place' fabrication attribute.
+Update TP33 fields.
+Update TP33 sheetfile to 'Model_150.kicad_sch'.
+Remove TP33 'exclude from position files' fabrication attribute.
+Update TP33 unit metadata.
+Update BT1 fields.
+Update TP34 fields.
+Update TP34 sheetfile to 'Model_150.kicad_sch'.
+Remove TP34 'exclude from position files' fabrication attribute.
+Update TP34 unit metadata.
+Update BT1 sheetfile to 'Model_150.kicad_sch'.
+Update TP35 fields.
+Update TP35 sheetfile to 'Model_150.kicad_sch'.
+Remove TP35 'exclude from position files' fabrication attribute.
+Update TP35 unit metadata.
+Update BT1 unit metadata.
+Update TP36 fields.
+Update TP36 sheetfile to 'Model_150.kicad_sch'.
+Remove TP36 'exclude from position files' fabrication attribute.
+Update TP36 unit metadata.
+Update C1 fields.
+Update TP37 fields.
+Update TP37 sheetfile to 'Model_150.kicad_sch'.
+Remove TP37 'exclude from position files' fabrication attribute.
+Update TP37 unit metadata.
+Update C1 sheetfile to 'Model_150.kicad_sch'.
+Update TP38 fields.
+Update TP38 sheetfile to 'Model_150.kicad_sch'.
+Remove TP38 'exclude from position files' fabrication attribute.
+Update TP38 unit metadata.
+Update C1 unit metadata.
+Update TP39 fields.
+Update TP39 sheetfile to 'Model_150.kicad_sch'.
+Remove TP39 'exclude from position files' fabrication attribute.
+Update TP39 unit metadata.
+Update C2 fields.
+Update TP40 fields.
+Update TP40 sheetfile to 'Model_150.kicad_sch'.
+Remove TP40 'exclude from position files' fabrication attribute.
+Update TP40 unit metadata.
+Update C2 sheetfile to 'Model_150.kicad_sch'.
+Update TP41 fields.
+Update TP41 sheetfile to 'Model_150.kicad_sch'.
+Remove TP41 'exclude from position files' fabrication attribute.
+Update TP41 unit metadata.
+Update C2 unit metadata.
+Update TP42 fields.
+Update TP42 sheetfile to 'Model_150.kicad_sch'.
+Remove TP42 'exclude from position files' fabrication attribute.
+Update TP42 unit metadata.
+Update C3 fields.
+Update TP43 fields.
+Update TP43 sheetfile to 'Model_150.kicad_sch'.
+Remove TP43 'exclude from position files' fabrication attribute.
+Update TP43 unit metadata.
+Update C3 sheetfile to 'Model_150.kicad_sch'.
+Update TP44 fields.
+Update TP44 sheetfile to 'Model_150.kicad_sch'.
+Remove TP44 'exclude from position files' fabrication attribute.
+Update TP44 unit metadata.
+Update C3 unit metadata.
+Update TP45 fields.
+Update TP45 sheetfile to 'Model_150.kicad_sch'.
+Remove TP45 'exclude from position files' fabrication attribute.
+Update TP45 unit metadata.
+Update C7 fields.
+Update TP46 fields.
+Update TP46 sheetfile to 'Model_150.kicad_sch'.
+Remove TP46 'exclude from position files' fabrication attribute.
+Update TP46 unit metadata.
+Update C7 sheetfile to 'Model_150.kicad_sch'.
+Update TP47 fields.
+Update TP47 sheetfile to 'Model_150.kicad_sch'.
+Remove TP47 'exclude from position files' fabrication attribute.
+Update TP47 unit metadata.
+Update C7 unit metadata.
+Update TP48 fields.
+Update TP48 sheetfile to 'Model_150.kicad_sch'.
+Remove TP48 'exclude from position files' fabrication attribute.
+Update TP48 unit metadata.
+Update C8 fields.
+Update TP49 fields.
+Update TP49 sheetfile to 'Model_150.kicad_sch'.
+Remove TP49 'exclude from position files' fabrication attribute.
+Update TP49 unit metadata.
+Update C8 sheetfile to 'Model_150.kicad_sch'.
+Update TP50 fields.
+Update TP50 sheetfile to 'Model_150.kicad_sch'.
+Remove TP50 'exclude from position files' fabrication attribute.
+Update TP50 unit metadata.
+Update C8 unit metadata.
+Update TP51 fields.
+Update TP51 sheetfile to 'Model_150.kicad_sch'.
+Remove TP51 'exclude from position files' fabrication attribute.
+Update TP51 unit metadata.
+Update C9 fields.
+Update TP52 fields.
+Update TP52 sheetfile to 'Model_150.kicad_sch'.
+Remove TP52 'exclude from position files' fabrication attribute.
+Update TP52 unit metadata.
+Update C9 sheetfile to 'Model_150.kicad_sch'.
+Update TP53 fields.
+Update TP53 sheetfile to 'Model_150.kicad_sch'.
+Remove TP53 'exclude from position files' fabrication attribute.
+Update TP53 unit metadata.
+Update C9 unit metadata.
+Update TP54 fields.
+Update TP54 sheetfile to 'Model_150.kicad_sch'.
+Remove TP54 'exclude from position files' fabrication attribute.
+Update TP54 unit metadata.
+Update C10 fields.
+Update TP55 fields.
+Update TP55 sheetfile to 'Model_150.kicad_sch'.
+Remove TP55 'exclude from position files' fabrication attribute.
+Update TP55 unit metadata.
+Update C10 sheetfile to 'Model_150.kicad_sch'.
+Update TP56 fields.
+Update TP56 sheetfile to 'Model_150.kicad_sch'.
+Remove TP56 'exclude from position files' fabrication attribute.
+Update TP56 unit metadata.
+Update C10 unit metadata.
+Update TP57 fields.
+Update TP57 sheetfile to 'Model_150.kicad_sch'.
+Remove TP57 'exclude from position files' fabrication attribute.
+Update TP57 unit metadata.
+Update C11 fields.
+Update TP58 fields.
+Update TP58 sheetfile to 'Model_150.kicad_sch'.
+Remove TP58 'exclude from position files' fabrication attribute.
+Update TP58 unit metadata.
+Update C11 sheetfile to 'Model_150.kicad_sch'.
+Update TP59 fields.
+Update TP59 sheetfile to 'Model_150.kicad_sch'.
+Remove TP59 'exclude from position files' fabrication attribute.
+Update TP59 unit metadata.
+Update C11 unit metadata.
+Update TP60 fields.
+Update TP60 sheetfile to 'Model_150.kicad_sch'.
+Remove TP60 'exclude from position files' fabrication attribute.
+Update TP60 unit metadata.
+Update C12 fields.
+Update TP61 fields.
+Update TP61 sheetfile to 'Model_150.kicad_sch'.
+Remove TP61 'exclude from position files' fabrication attribute.
+Update TP61 unit metadata.
+Update C12 sheetfile to 'Model_150.kicad_sch'.
+Update TP62 fields.
+Update TP62 sheetfile to 'Model_150.kicad_sch'.
+Remove TP62 'exclude from position files' fabrication attribute.
+Update TP62 unit metadata.
+Update C12 unit metadata.
+Update TP63 fields.
+Update TP63 sheetfile to 'Model_150.kicad_sch'.
+Remove TP63 'exclude from position files' fabrication attribute.
+Update TP63 unit metadata.
+Update C13 fields.
+Update TP64 fields.
+Update TP64 sheetfile to 'Model_150.kicad_sch'.
+Remove TP64 'exclude from position files' fabrication attribute.
+Update TP64 unit metadata.
+Update C13 sheetfile to 'Model_150.kicad_sch'.
+Update TP65 fields.
+Update TP65 sheetfile to 'Model_150.kicad_sch'.
+Remove TP65 'exclude from position files' fabrication attribute.
+Update TP65 unit metadata.
+Update C13 unit metadata.
+Update TP66 fields.
+Update TP66 sheetfile to 'Model_150.kicad_sch'.
+Remove TP66 'exclude from position files' fabrication attribute.
+Update TP66 unit metadata.
+Update C14 fields.
+Update TP67 fields.
+Update TP67 sheetfile to 'Model_150.kicad_sch'.
+Remove TP67 'exclude from position files' fabrication attribute.
+Update TP67 unit metadata.
+Update C14 sheetfile to 'Model_150.kicad_sch'.
+Update TP68 fields.
+Update TP68 sheetfile to 'Model_150.kicad_sch'.
+Remove TP68 'exclude from position files' fabrication attribute.
+Update TP68 unit metadata.
+Update C14 unit metadata.
+Update TP69 fields.
+Update TP69 sheetfile to 'Model_150.kicad_sch'.
+Remove TP69 'exclude from position files' fabrication attribute.
+Update TP69 unit metadata.
+Update C16 fields.
+Update TP70 fields.
+Update TP70 sheetfile to 'Model_150.kicad_sch'.
+Remove TP70 'exclude from position files' fabrication attribute.
+Update TP70 unit metadata.
+Update C16 sheetfile to 'Model_150.kicad_sch'.
+Update TP71 fields.
+Update TP71 sheetfile to 'Model_150.kicad_sch'.
+Remove TP71 'exclude from position files' fabrication attribute.
+Update TP71 unit metadata.
+Update C16 unit metadata.
+Update TP72 fields.
+Update TP72 sheetfile to 'Model_150.kicad_sch'.
+Remove TP72 'exclude from position files' fabrication attribute.
+Update TP72 unit metadata.
+Update C17 fields.
+Update TP73 fields.
+Update TP73 sheetfile to 'Model_150.kicad_sch'.
+Remove TP73 'exclude from position files' fabrication attribute.
+Update TP73 unit metadata.
+Update C17 sheetfile to 'Model_150.kicad_sch'.
+Update TP74 fields.
+Update TP74 sheetfile to 'Model_150.kicad_sch'.
+Remove TP74 'exclude from position files' fabrication attribute.
+Update TP74 unit metadata.
+Update C17 unit metadata.
+Update TP75 fields.
+Update TP75 sheetfile to 'Model_150.kicad_sch'.
+Remove TP75 'exclude from position files' fabrication attribute.
+Update TP75 unit metadata.
+Update C24 fields.
+Update TP76 fields.
+Update TP76 sheetfile to 'Model_150.kicad_sch'.
+Remove TP76 'exclude from position files' fabrication attribute.
+Update TP76 unit metadata.
+Update C24 sheetfile to 'Model_150.kicad_sch'.
+Update TP77 fields.
+Update TP77 sheetfile to 'Model_150.kicad_sch'.
+Remove TP77 'exclude from position files' fabrication attribute.
+Update TP77 unit metadata.
+Update C24 unit metadata.
+Update TP78 fields.
+Update TP78 sheetfile to 'Model_150.kicad_sch'.
+Remove TP78 'exclude from position files' fabrication attribute.
+Update TP78 unit metadata.
+Update C25 fields.
+Update TP79 fields.
+Update TP79 sheetfile to 'Model_150.kicad_sch'.
+Remove TP79 'exclude from position files' fabrication attribute.
+Update TP79 unit metadata.
+Update C25 sheetfile to 'Model_150.kicad_sch'.
+Update TP80 fields.
+Update TP80 sheetfile to 'Model_150.kicad_sch'.
+Remove TP80 'exclude from position files' fabrication attribute.
+Update TP80 unit metadata.
+Update C25 unit metadata.
+Update TP81 fields.
+Update TP81 sheetfile to 'Model_150.kicad_sch'.
+Remove TP81 'exclude from position files' fabrication attribute.
+Update TP81 unit metadata.
+Update C27 fields.
+Update TP82 fields.
+Update TP82 sheetfile to 'Model_150.kicad_sch'.
+Remove TP82 'exclude from position files' fabrication attribute.
+Update TP82 unit metadata.
+Update C27 sheetfile to 'Model_150.kicad_sch'.
+Update TP83 fields.
+Update TP83 sheetfile to 'Model_150.kicad_sch'.
+Remove TP83 'exclude from position files' fabrication attribute.
+Update TP83 unit metadata.
+Update C27 unit metadata.
+Update TP84 fields.
+Update TP84 sheetfile to 'Model_150.kicad_sch'.
+Remove TP84 'exclude from position files' fabrication attribute.
+Update TP84 unit metadata.
+Update C28 fields.
+Update TP85 fields.
+Update TP85 sheetfile to 'Model_150.kicad_sch'.
+Remove TP85 'exclude from position files' fabrication attribute.
+Update TP85 unit metadata.
+Update C28 sheetfile to 'Model_150.kicad_sch'.
+Update TP86 fields.
+Update TP86 sheetfile to 'Model_150.kicad_sch'.
+Remove TP86 'exclude from position files' fabrication attribute.
+Update TP86 unit metadata.
+Update C28 unit metadata.
+Update TP87 fields.
+Update TP87 sheetfile to 'Model_150.kicad_sch'.
+Remove TP87 'exclude from position files' fabrication attribute.
+Update TP87 unit metadata.
+Update CPU_0 sheetfile to 'Model_150.kicad_sch'.
+Update TP88 fields.
+Update TP88 sheetfile to 'Model_150.kicad_sch'.
+Remove TP88 'exclude from position files' fabrication attribute.
+Update TP88 unit metadata.
+Update CPU_0 unit metadata.
+Update TP89 fields.
+Update TP89 sheetfile to 'Model_150.kicad_sch'.
+Remove TP89 'exclude from position files' fabrication attribute.
+Update TP89 unit metadata.
+Update CTC_0 sheetfile to 'Model_150.kicad_sch'.
+Update TP90 fields.
+Update TP90 sheetfile to 'Model_150.kicad_sch'.
+Remove TP90 'exclude from position files' fabrication attribute.
+Update TP90 unit metadata.
+Update CTC_0 unit metadata.
+Update TP91 fields.
+Update TP91 sheetfile to 'Model_150.kicad_sch'.
+Remove TP91 'exclude from position files' fabrication attribute.
+Update TP91 unit metadata.
+Update D1 fields.
+Update TP92 fields.
+Update TP92 sheetfile to 'Model_150.kicad_sch'.
+Remove TP92 'exclude from position files' fabrication attribute.
+Update TP92 unit metadata.
+Update D1 sheetfile to 'Model_150.kicad_sch'.
+Update TP93 fields.
+Update TP93 sheetfile to 'Model_150.kicad_sch'.
+Remove TP93 'exclude from position files' fabrication attribute.
+Update TP93 unit metadata.
+Update D1 unit metadata.
+Update TP94 fields.
+Update TP94 sheetfile to 'Model_150.kicad_sch'.
+Remove TP94 'exclude from position files' fabrication attribute.
+Update TP94 unit metadata.
+Update D2 fields.
+Update TP95 fields.
+Update TP95 sheetfile to 'Model_150.kicad_sch'.
+Remove TP95 'exclude from position files' fabrication attribute.
+Update TP95 unit metadata.
+Update D2 sheetfile to 'Model_150.kicad_sch'.
+Update TP96 fields.
+Update TP96 sheetfile to 'Model_150.kicad_sch'.
+Remove TP96 'exclude from position files' fabrication attribute.
+Update TP96 unit metadata.
+Update D2 unit metadata.
+Update TP97 fields.
+Update TP97 sheetfile to 'Model_150.kicad_sch'.
+Remove TP97 'exclude from position files' fabrication attribute.
+Update TP97 unit metadata.
+Update D3 fields.
+Update TP98 fields.
+Update TP98 sheetfile to 'Model_150.kicad_sch'.
+Remove TP98 'exclude from position files' fabrication attribute.
+Update TP98 unit metadata.
+Update D3 sheetfile to 'Model_150.kicad_sch'.
+Update TP99 fields.
+Update TP99 sheetfile to 'Model_150.kicad_sch'.
+Remove TP99 'exclude from position files' fabrication attribute.
+Update TP99 unit metadata.
+Update D3 unit metadata.
+Update TP100 fields.
+Update TP100 sheetfile to 'Model_150.kicad_sch'.
+Remove TP100 'exclude from position files' fabrication attribute.
+Update TP100 unit metadata.
+Update D4 fields.
+Update TP101 fields.
+Update TP101 sheetfile to 'Model_150.kicad_sch'.
+Remove TP101 'exclude from position files' fabrication attribute.
+Update TP101 unit metadata.
+Update D4 sheetfile to 'Model_150.kicad_sch'.
+Update TP102 fields.
+Update TP102 sheetfile to 'Model_150.kicad_sch'.
+Remove TP102 'exclude from position files' fabrication attribute.
+Update TP102 unit metadata.
+Update D4 unit metadata.
+Update TP103 fields.
+Update TP103 sheetfile to 'Model_150.kicad_sch'.
+Remove TP103 'exclude from position files' fabrication attribute.
+Update TP103 unit metadata.
+Update D5 fields.
+Update TP104 fields.
+Update TP104 sheetfile to 'Model_150.kicad_sch'.
+Remove TP104 'exclude from position files' fabrication attribute.
+Update TP104 unit metadata.
+Update D5 sheetfile to 'Model_150.kicad_sch'.
+Update TP105 fields.
+Update TP105 sheetfile to 'Model_150.kicad_sch'.
+Remove TP105 'exclude from position files' fabrication attribute.
+Update TP105 unit metadata.
+Update D5 unit metadata.
+Update TP106 fields.
+Update TP106 sheetfile to 'Model_150.kicad_sch'.
+Remove TP106 'exclude from position files' fabrication attribute.
+Update TP106 unit metadata.
+Update D6 fields.
+Update TP107 fields.
+Update TP107 sheetfile to 'Model_150.kicad_sch'.
+Remove TP107 'exclude from position files' fabrication attribute.
+Update TP107 unit metadata.
+Update D6 sheetfile to 'Model_150.kicad_sch'.
+Update TP108 fields.
+Update TP108 sheetfile to 'Model_150.kicad_sch'.
+Remove TP108 'exclude from position files' fabrication attribute.
+Update TP108 unit metadata.
+Reconnect D6 pin 1 from Net-(D6-K) to -12V.
+Update TP109 fields.
+Update TP109 sheetfile to 'Model_150.kicad_sch'.
+Remove TP109 'exclude from position files' fabrication attribute.
+Update TP109 unit metadata.
+Add net Net-(D6-A).
+Update TP110 fields.
+Update TP110 sheetfile to 'Model_150.kicad_sch'.
+Remove TP110 'exclude from position files' fabrication attribute.
+Update TP110 unit metadata.
+Reconnect D6 pin 2 from -12V to Net-(D6-A).
+Update TP111 fields.
+Update TP111 sheetfile to 'Model_150.kicad_sch'.
+Remove TP111 'exclude from position files' fabrication attribute.
+Update TP111 unit metadata.
+Update D6 unit metadata.
+Update TP112 fields.
+Update TP112 sheetfile to 'Model_150.kicad_sch'.
+Remove TP112 'exclude from position files' fabrication attribute.
+Update TP112 unit metadata.
+Update D7 fields.
+Update TP113 fields.
+Update TP113 sheetfile to 'Model_150.kicad_sch'.
+Remove TP113 'exclude from position files' fabrication attribute.
+Update TP113 unit metadata.
+Update D7 sheetfile to 'Model_150.kicad_sch'.
+Update TP114 fields.
+Update TP114 sheetfile to 'Model_150.kicad_sch'.
+Remove TP114 'exclude from position files' fabrication attribute.
+Update TP114 unit metadata.
+Update D7 unit metadata.
+Update TP115 fields.
+Update TP115 sheetfile to 'Model_150.kicad_sch'.
+Remove TP115 'exclude from position files' fabrication attribute.
+Update TP115 unit metadata.
+Update D8 fields.
+Update TP116 fields.
+Update TP116 sheetfile to 'Model_150.kicad_sch'.
+Remove TP116 'exclude from position files' fabrication attribute.
+Update TP116 unit metadata.
+Update D8 sheetfile to 'Model_150.kicad_sch'.
+Update TP117 fields.
+Update TP117 sheetfile to 'Model_150.kicad_sch'.
+Remove TP117 'exclude from position files' fabrication attribute.
+Update TP117 unit metadata.
+Add net Net-(D8-A).
+Update TP118 fields.
+Update TP118 sheetfile to 'Model_150.kicad_sch'.
+Remove TP118 'exclude from position files' fabrication attribute.
+Update TP118 unit metadata.
+Reconnect D8 pin 2 from -5V to Net-(D8-A).
+Update TP119 fields.
+Update TP119 sheetfile to 'Model_150.kicad_sch'.
+Remove TP119 'exclude from position files' fabrication attribute.
+Update TP119 unit metadata.
+Reconnect D8 pin 1 from Net-(D8-K) to -5V.
+Update TP120 fields.
+Update TP120 sheetfile to 'Model_150.kicad_sch'.
+Remove TP120 'exclude from position files' fabrication attribute.
+Update TP120 unit metadata.
+Update D8 unit metadata.
+Update TRS_0 fields.
+Update TRS_0 sheetfile to 'Model_150.kicad_sch'.
+Remove TRS_0 'exclude from position files' fabrication attribute.
+Update TRS_0 unit metadata.
+Update D9 fields.
+Update TRS_1 fields.
+Update TRS_1 sheetfile to 'Model_150.kicad_sch'.
+Remove TRS_1 'exclude from position files' fabrication attribute.
+Update TRS_1 unit metadata.
+Update D9 sheetfile to 'Model_150.kicad_sch'.
+Update U0 sheetfile to 'Model_150.kicad_sch'.
+Update U0 unit metadata.
+Update D9 unit metadata.
+Update U1 symbol association from /4944e35b-080b-4585-a390-5da30bc5f98e to /80e20ec7-7f35-4126-a0a3-74db8fae9278.
+Update U1 sheetfile to 'Model_150.kicad_sch'.
+Update U1 unit metadata.
+Update D10 fields.
+Update U2 sheetfile to 'Model_150.kicad_sch'.
+Update U2 unit metadata.
+Update D10 sheetfile to 'Model_150.kicad_sch'.
+Update U3 sheetfile to 'Model_150.kicad_sch'.
+Update U3 unit metadata.
+Update D10 unit metadata.
+Update U4 symbol association from /7805f2f4-29d1-455f-a739-6fab4a77036c to /9aaede86-68bd-4d89-acac-ccbb718b78d3.
+Update U4 sheetfile to 'Model_150.kicad_sch'.
+Update U4 unit metadata.
+Update D11 fields.
+Update U5 sheetfile to 'Model_150.kicad_sch'.
+Update U5 unit metadata.
+Update D11 sheetfile to 'Model_150.kicad_sch'.
+Update U6 sheetfile to 'Model_150.kicad_sch'.
+Update U6 unit metadata.
+Update D11 unit metadata.
+Update U7 sheetfile to 'Model_150.kicad_sch'.
+Update U7 unit metadata.
+Update D12 fields.
+Update U8 sheetfile to 'Model_150.kicad_sch'.
+Update U8 unit metadata.
+Update D12 sheetfile to 'Model_150.kicad_sch'.
+Update U9 sheetfile to 'Model_150.kicad_sch'.
+Update U9 unit metadata.
+Update D12 unit metadata.
+Update U10 sheetfile to 'Model_150.kicad_sch'.
+Update U10 unit metadata.
+Update D13 fields.
+Update U11 sheetfile to 'Model_150.kicad_sch'.
+Update U11 unit metadata.
+Update D13 sheetfile to 'Model_150.kicad_sch'.
+Update U12 symbol association from /f5cf1070-2526-42ba-8f76-31f8ef855b43 to /730e1e4c-ec14-4797-90df-cc79852602f0.
+Update U12 sheetfile to 'Model_150.kicad_sch'.
+Update U12 unit metadata.
+Update D13 unit metadata.
+Update U13 sheetfile to 'Model_150.kicad_sch'.
+Update U13 unit metadata.
+Update D14 fields.
+Update U14 sheetfile to 'Model_150.kicad_sch'.
+Update U14 unit metadata.
+Update D14 sheetfile to 'Model_150.kicad_sch'.
+Update U15 sheetfile to 'Model_150.kicad_sch'.
+Update U15 unit metadata.
+Update D14 unit metadata.
+Update U16 sheetfile to 'Model_150.kicad_sch'.
+Update U16 unit metadata.
+Update D15 fields.
+Update U17 sheetfile to 'Model_150.kicad_sch'.
+Update U17 unit metadata.
+Update D15 sheetfile to 'Model_150.kicad_sch'.
+Update U18 symbol association from /49d1e29a-244e-4176-8d93-718387de20fb to /607837ec-8fef-4a2b-9fd1-1d27ac7eda5c.
+Update U18 sheetfile to 'Model_150.kicad_sch'.
+Update U18 unit metadata.
+Update D15 unit metadata.
+Update U19 symbol association from /ff9cb265-7e70-493e-9899-6da89d033615 to /a8b71f6b-e7ca-45f9-a2ef-64c494fc4067.
+Update U19 sheetfile to 'Model_150.kicad_sch'.
+Update U19 unit metadata.
+Update D16 fields.
+Update U20 sheetfile to 'Model_150.kicad_sch'.
+Update U20 unit metadata.
+Update D16 sheetfile to 'Model_150.kicad_sch'.
 Update U21 symbol association from /cb9e3d48-d76d-4809-bfc6-3fcf9fb4faf5 to /9a177d8a-94a3-4cfd-ba26-9ae5d0f91d85.
-Change IDE_0 footprint from 'Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical' to 'IDC-Header_2x20_P2.54mm_Vertical'.
-Change IDE_1 footprint from 'Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical' to 'IDC-Header_2x20_P2.54mm_Vertical'.
-
-
-Update U18 symbol association from /49d1e29a-244e-4176-8d93-718387de20fb to /3a300a20-aaad-4e17-8f94-98d2f816b43f.
-Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
+Update U21 sheetfile to 'Model_150.kicad_sch'.
+Update U21 unit metadata.
+Update D16 unit metadata.
+Update U22 symbol association from /32571e72-64b7-4755-9f92-73f0dcfacfd5 to /5b312f90-ffdd-4563-96c4-12f3a7e8169a.
+Update U22 sheetfile to 'Model_150.kicad_sch'.
+Update U22 unit metadata.
+Update D17 fields.
+Update U23 symbol association from /72cb084a-0173-4482-bd98-1aa13a168b3b to /8298b409-1c1d-4f6c-831b-a38efb54d4cb.
+Update U23 sheetfile to 'Model_150.kicad_sch'.
+Update U23 unit metadata.
+Update D17 sheetfile to 'Model_150.kicad_sch'.
+Update U24 sheetfile to 'Model_150.kicad_sch'.
+Update U24 unit metadata.
+Update D17 unit metadata.
+Update U25 sheetfile to 'Model_150.kicad_sch'.
+Update U25 unit metadata.
+Update D18 fields.
+Update U26 symbol association from /4abe36e3-36d0-4cbd-b773-73bb9a5c887d to /c2602a4f-2d5a-48d0-b01f-6fb7fff55ac2.
+Update U26 sheetfile to 'Model_150.kicad_sch'.
+Update U26 unit metadata.
+Update D18 sheetfile to 'Model_150.kicad_sch'.
+Update U27 sheetfile to 'Model_150.kicad_sch'.
+Update U27 unit metadata.
+Update D18 unit metadata.
+Update U28 sheetfile to 'Model_150.kicad_sch'.
+Update U28 unit metadata.
+Update DMA_0 sheetfile to 'Model_150.kicad_sch'.
+Update U29 sheetfile to 'Model_150.kicad_sch'.
+Update U29 unit metadata.
+Update DMA_0 unit metadata.
+Update U30 sheetfile to 'Model_150.kicad_sch'.
+Update U30 unit metadata.
+Update FDC_0 sheetfile to 'Model_150.kicad_sch'.
+Update U33 symbol association from /8e8cdf23-0e29-47fe-bfe5-d07f90bf6fd0 to /58fc2ba2-7d75-4ea8-b665-809d88fd2a6b.
+Update U33 sheetfile to 'Model_150.kicad_sch'.
+Update U33 unit metadata.
+Update FDC_0 unit metadata.
+Update U34 sheetfile to 'Model_150.kicad_sch'.
+Update U34 unit metadata.
+Update FDD_0 fields.
+Update U35 sheetfile to 'Model_150.kicad_sch'.
+Update U35 unit metadata.
+Update FDD_0 sheetfile to 'Model_150.kicad_sch'.
+Update FDD_0 unit metadata.
+Update U37 sheetfile to 'Model_150.kicad_sch'.
+Update U37 unit metadata.
+Add FDD_0 'Do not place' fabrication attribute.
+Update U38 sheetfile to 'Model_150.kicad_sch'.
+Update U38 unit metadata.
+Update FPU_0 sheetfile to 'Model_150.kicad_sch'.
+Update U39 sheetfile to 'Model_150.kicad_sch'.
+Update U39 unit metadata.
+Update FPU_0 unit metadata.
+Update U40 symbol association from /eb88e118-8de4-499f-a760-5d77013af8f8 to /b3105117-4682-4865-95ae-0c18016e3230.
+Update U40 sheetfile to 'Model_150.kicad_sch'.
+Update U40 unit metadata.
+Update IDE_0 fields.
+Update U41 sheetfile to 'Model_150.kicad_sch'.
+Update U41 unit metadata.
+Update IDE_0 sheetfile to 'Model_150.kicad_sch'.
+Update U42 symbol association from /fe8da935-a6dd-464d-9c55-363f8180512e to /9eab7a87-f710-44cc-93d7-eeb1cf3a1d81.
+Update U42 sheetfile to 'Model_150.kicad_sch'.
+Update U42 unit metadata.
+Update IDE_0 unit metadata.
+Update U43 sheetfile to 'Model_150.kicad_sch'.
+Update U43 unit metadata.
+Add IDE_0 'Do not place' fabrication attribute.
+Update XTAL_OSC_0 fields.
+Update XTAL_OSC_0 sheetfile to 'Model_150.kicad_sch'.
+Update XTAL_OSC_0 unit metadata.
+Update IDE_1 fields.
+Update XTAL_RES_0 fields.
+Update XTAL_RES_0 sheetfile to 'Model_150.kicad_sch'.
+Update XTAL_RES_0 unit metadata.
+Update IDE_1 sheetfile to 'Model_150.kicad_sch'.
+Update XTAL_RES_1 fields.
+Update XTAL_RES_1 sheetfile to 'Model_150.kicad_sch'.
+Update XTAL_RES_1 unit metadata.
+Update IDE_1 unit metadata.
+Update XTAL_RES_2 fields.
+Update XTAL_RES_2 sheetfile to 'Model_150.kicad_sch'.
+Update XTAL_RES_2 unit metadata.
+Add IDE_1 'Do not place' fabrication attribute.
+Update XTAL_RES_3 fields.
+Update XTAL_RES_3 sheetfile to 'Model_150.kicad_sch'.
+Update XTAL_RES_3 unit metadata.
+Warning: No net found for component U35 pad 6 (no pin 6 in symbol).
+Warning: No net found for component U35 pad 12 (no pin 12 in symbol).
+Warning: No net found for component U35 pad 5 (no pin 5 in symbol).
 Warning: No net found for component U17 pad 11 (no pin 11 in symbol).
-Warning: No net found for component U17 pad 1 (no pin 1 in symbol).
-Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
-Warning: No net found for component TRS_0 pad RN (no pin RN in symbol).
-Warning: No net found for component TRS_0 pad TN (no pin TN in symbol).
-Warning: No net found for component TRS_1 pad TN (no pin TN in symbol).
-Warning: No net found for component TRS_1 pad RN (no pin RN in symbol).
+Warning: No net found for component U17 pad 3 (no pin 3 in symbol).
+Warning: No net found for component U17 pad 13 (no pin 13 in symbol).
+Warning: No net found for component U17 pad 12 (no pin 12 in symbol).
+Warning: No net found for component U17 pad 14 (no pin 14 in symbol).
 Warning: No net found for component U0 pad 9 (no pin 9 in symbol).
 Warning: No net found for component U0 pad 8 (no pin 8 in symbol).
 Warning: No net found for component U0 pad 10 (no pin 10 in symbol).
 Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
+Warning: Warning: IDE_1 footprint 'IDC-Header_2x20_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
+Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
+Warning: Warning: FDD_0 footprint 'IDC-Header_2x17_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
+Warning: No net found for component TRS_0 pad RN (no pin RN in symbol).
+Warning: No net found for component TRS_0 pad TN (no pin TN in symbol).
+Warning: No net found for component FPU_0 pad 6 (no pin 6 in symbol).
+Warning: Warning: SERIAL_0 footprint 'DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
+Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
+Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
+Warning: Warning: ATX_PWR_0 footprint 'Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
+Warning: No net found for component TRS_1 pad TN (no pin TN in symbol).
+Warning: No net found for component TRS_1 pad RN (no pin RN in symbol).
+Warning: Warning: IDE_0 footprint 'IDC-Header_2x20_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
+Warning: No net found for component FPU_0 pad 7 (no pin 7 in symbol).
+Warning: Warning: SERIAL_1 footprint 'DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
 Warning: No net found for component U33 pad 13 (no pin 13 in symbol).
 Warning: No net found for component U33 pad 16 (no pin 16 in symbol).
-Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
+Warning: No net found for component U17 pad 5 (no pin 5 in symbol).
+Warning: No net found for component U17 pad 2 (no pin 2 in symbol).
+Warning: No net found for component XTAL_OSC_0 pad 5 (no pin 5 in symbol).
+Warning: No net found for component XTAL_OSC_0 pad 8 (no pin 8 in symbol).
+Warning: No net found for component U17 pad 6 (no pin 6 in symbol).
 Warning: No net found for component U34 pad 14 (no pin 14 in symbol).
 Warning: No net found for component U34 pad 16 (no pin 16 in symbol).
 Warning: No net found for component U34 pad 15 (no pin 15 in symbol).
@@ -405,89 +1433,15 @@ Warning: No net found for component U34 pad 3 (no pin 3 in symbol).
 Warning: No net found for component U34 pad 1 (no pin 1 in symbol).
 Warning: No net found for component U34 pad 2 (no pin 2 in symbol).
 Warning: No net found for component U34 pad 4 (no pin 4 in symbol).
-Warning: No net found for component U17 pad 5 (no pin 5 in symbol).
+Warning: No net found for component U17 pad 7 (no pin 7 in symbol).
+Warning: No net found for component U17 pad 1 (no pin 1 in symbol).
+Warning: No net found for component U17 pad 4 (no pin 4 in symbol).
 Warning: No net found for component U35 pad 11 (no pin 11 in symbol).
 Warning: No net found for component U35 pad 8 (no pin 8 in symbol).
 Warning: No net found for component U35 pad 10 (no pin 10 in symbol).
 Warning: No net found for component U35 pad 13 (no pin 13 in symbol).
-Warning: No net found for component FPU_0 pad 7 (no pin 7 in symbol).
-Warning: No net found for component FPU_0 pad 6 (no pin 6 in symbol).
 Warning: No net found for component U35 pad 9 (no pin 9 in symbol).
 Warning: No net found for component U35 pad 7 (no pin 7 in symbol).
-Warning: No net found for component U35 pad 6 (no pin 6 in symbol).
-Warning: No net found for component U35 pad 12 (no pin 12 in symbol).
-Warning: No net found for component U35 pad 5 (no pin 5 in symbol).
-Warning: No net found for component U17 pad 2 (no pin 2 in symbol).
-Warning: No net found for component U17 pad 6 (no pin 6 in symbol).
-Warning: No net found for component U17 pad 7 (no pin 7 in symbol).
-Warning: No net found for component U17 pad 4 (no pin 4 in symbol).
-Warning: No net found for component U17 pad 3 (no pin 3 in symbol).
-Warning: No net found for component U17 pad 13 (no pin 13 in symbol).
-Warning: No net found for component U17 pad 12 (no pin 12 in symbol).
-Warning: No net found for component XTAL_OSC_0 pad 5 (no pin 5 in symbol).
-Warning: No net found for component XTAL_OSC_0 pad 8 (no pin 8 in symbol).
-Warning: No net found for component U17 pad 14 (no pin 14 in symbol).
-Error: Cannot add C4 (no footprint assigned).
-Error: Cannot add C5 (no footprint assigned).
-Error: Cannot add C6 (no footprint assigned).
-Error: Cannot add C15 (no footprint assigned).
-Error: Cannot add C18 (no footprint assigned).
-Error: Cannot add C19 (no footprint assigned).
-Error: Cannot add C20 (no footprint assigned).
-Error: Cannot add C21 (no footprint assigned).
-Error: Cannot add C22 (no footprint assigned).
-Error: Cannot add C23 (no footprint assigned).
-Error: Cannot add C26 (no footprint assigned).
-Error: Cannot add C29 (no footprint assigned).
-Error: Cannot add C30 (no footprint assigned).
-Error: Cannot add C32 (no footprint assigned).
-Error: Cannot add C33 (no footprint assigned).
-Error: Cannot add C34 (no footprint assigned).
-Error: Cannot add C35 (no footprint assigned).
-Error: Cannot add C36 (no footprint assigned).
-Error: Cannot add C37 (no footprint assigned).
-Error: Cannot add C39 (no footprint assigned).
-Error: Cannot add C40 (no footprint assigned).
-Error: Cannot add C41 (no footprint assigned).
-Error: Cannot add C42 (no footprint assigned).
-Error: Cannot add C43 (no footprint assigned).
-Error: Cannot add C44 (no footprint assigned).
-Error: Cannot add C45 (no footprint assigned).
-Error: Cannot add C31 (no footprint assigned).
-Error: Cannot add JP1 (no footprint assigned).
-Error: Cannot add JP2 (no footprint assigned).
-Error: Cannot add JP3 (no footprint assigned).
-Error: Cannot add C38 (no footprint assigned).
-Error: Cannot add JP7 (no footprint assigned).
-Error: Cannot add JP9 (no footprint assigned).
-Error: Cannot add JP11 (no footprint assigned).
-Error: Cannot add JP15 (no footprint assigned).
-Error: Cannot add JP20 (no footprint assigned).
-Error: Cannot add JP21 (no footprint assigned).
-Error: Cannot add JP22 (no footprint assigned).
-Error: Cannot add JP25 (no footprint assigned).
-Error: Cannot add JP35 (no footprint assigned).
-Error: Cannot add JP36 (no footprint assigned).
-Error: Cannot add JP37 (no footprint assigned).
-Error: Cannot add JP38 (no footprint assigned).
-Error: Cannot add JP39 (no footprint assigned).
-Error: Cannot add R51 (no footprint assigned).
-Error: Cannot add R47 (no footprint assigned).
-Error: Cannot add JP26 (no footprint assigned).
-Error: Cannot add R2 (no footprint assigned).
-Error: Cannot add RV1 (no footprint assigned).
-Error: Cannot add R46 (no footprint assigned).
-Error: Cannot add R48 (no footprint assigned).
-Error: Cannot add R45 (no footprint assigned).
-Error: Cannot add R1 (no footprint assigned).
-Error: Cannot add R49 (no footprint assigned).
-Error: Cannot add RV2 (no footprint assigned).
-Error: Cannot add JP43 (no footprint assigned).
-Error: Cannot add JP42 (no footprint assigned).
-Error: Cannot add R43 (no footprint assigned).
-Error: Cannot add JP41 (no footprint assigned).
-Error: Cannot add JP40 (no footprint assigned).
-Error: Cannot add U36 (no footprint assigned).
 
 
-Info: Total warnings: 44, errors: 61.
+Info: Total warnings: 50, errors: 0.
