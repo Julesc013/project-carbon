@@ -451,7 +451,7 @@
       "no_connect_dangling": "warning",
       "pin_not_connected": "error",
       "pin_not_driven": "error",
-      "pin_to_pin": "warning",
+      "pin_to_pin": "error",
       "power_pin_not_driven": "error",
       "same_local_global_label": "warning",
       "similar_label_and_power": "warning",
@@ -510,7 +510,158 @@
       "version": 5
     },
     "net_colors": null,
-    "netclass_assignments": null,
+    "netclass_assignments": {
+      "A0": [
+        "ADDRESS_BUS"
+      ],
+      "A1": [
+        "ADDRESS_BUS"
+      ],
+      "A10": [
+        "ADDRESS_BUS"
+      ],
+      "A11": [
+        "ADDRESS_BUS"
+      ],
+      "A12": [
+        "ADDRESS_BUS"
+      ],
+      "A13": [
+        "ADDRESS_BUS"
+      ],
+      "A14": [
+        "ADDRESS_BUS"
+      ],
+      "A15": [
+        "ADDRESS_BUS"
+      ],
+      "A16": [
+        "ADDRESS_BUS"
+      ],
+      "A17": [
+        "ADDRESS_BUS"
+      ],
+      "A18": [
+        "ADDRESS_BUS"
+      ],
+      "A19": [
+        "ADDRESS_BUS"
+      ],
+      "A2": [
+        "ADDRESS_BUS"
+      ],
+      "A20": [
+        "ADDRESS_BUS"
+      ],
+      "A21": [
+        "ADDRESS_BUS"
+      ],
+      "A22": [
+        "ADDRESS_BUS"
+      ],
+      "A23": [
+        "ADDRESS_BUS"
+      ],
+      "A24": [
+        "ADDRESS_BUS"
+      ],
+      "A25": [
+        "ADDRESS_BUS"
+      ],
+      "A26": [
+        "ADDRESS_BUS"
+      ],
+      "A27": [
+        "ADDRESS_BUS"
+      ],
+      "A28": [
+        "ADDRESS_BUS"
+      ],
+      "A29": [
+        "ADDRESS_BUS"
+      ],
+      "A3": [
+        "ADDRESS_BUS"
+      ],
+      "A30": [
+        "ADDRESS_BUS"
+      ],
+      "A31": [
+        "ADDRESS_BUS"
+      ],
+      "A4": [
+        "ADDRESS_BUS"
+      ],
+      "A5": [
+        "ADDRESS_BUS"
+      ],
+      "A6": [
+        "ADDRESS_BUS"
+      ],
+      "A7": [
+        "ADDRESS_BUS"
+      ],
+      "A8": [
+        "ADDRESS_BUS"
+      ],
+      "A9": [
+        "ADDRESS_BUS"
+      ],
+      "A[0..31]": [
+        "ADDRESS_BUS"
+      ],
+      "D0": [
+        "DATA_BUS"
+      ],
+      "D1": [
+        "DATA_BUS"
+      ],
+      "D10": [
+        "DATA_BUS"
+      ],
+      "D11": [
+        "DATA_BUS"
+      ],
+      "D12": [
+        "DATA_BUS"
+      ],
+      "D13": [
+        "DATA_BUS"
+      ],
+      "D14": [
+        "DATA_BUS"
+      ],
+      "D15": [
+        "DATA_BUS"
+      ],
+      "D2": [
+        "DATA_BUS"
+      ],
+      "D3": [
+        "DATA_BUS"
+      ],
+      "D4": [
+        "DATA_BUS"
+      ],
+      "D5": [
+        "DATA_BUS"
+      ],
+      "D6": [
+        "DATA_BUS"
+      ],
+      "D7": [
+        "DATA_BUS"
+      ],
+      "D8": [
+        "DATA_BUS"
+      ],
+      "D9": [
+        "DATA_BUS"
+      ],
+      "D[0..15]": [
+        "DATA_BUS"
+      ]
+    },
     "netclass_patterns": []
   },
   "pcbnew": {
@@ -676,7 +827,19 @@
       "sort_asc": true,
       "sort_field": "Reference"
     },
-    "bus_aliases": {},
+    "bus_aliases": {
+      "{ISA_16}": [],
+      "{ISA_8}": [],
+      "{JC_100}": [
+        "D[0..15]",
+        "A[0..31]"
+      ],
+      "{JC_64}": [],
+      "{RC-40}": [],
+      "{RC_60}": [],
+      "{RC_80}": [],
+      "{S_100}": []
+    },
     "connection_grid_size": 50.0,
     "drawing": {
       "dashed_lines_dash_length_ratio": 12.0,
@@ -706,6 +869,14 @@
       "version": 1
     },
     "net_format_name": "",
+    "ngspice": {
+      "fix_include_paths": true,
+      "meta": {
+        "version": 0
+      },
+      "model_mode": 4,
+      "workbook_filename": ""
+    },
     "page_layout_descr_file": "",
     "plot_directory": "export/",
     "reuse_designators": true,

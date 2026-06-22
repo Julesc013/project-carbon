@@ -1392,6 +1392,8 @@ Add IDE_1 'Do not place' fabrication attribute.
 Update XTAL_RES_3 fields.
 Update XTAL_RES_3 sheetfile to 'Model_150.kicad_sch'.
 Update XTAL_RES_3 unit metadata.
+
+
 Warning: No net found for component U35 pad 6 (no pin 6 in symbol).
 Warning: No net found for component U35 pad 12 (no pin 12 in symbol).
 Warning: No net found for component U35 pad 5 (no pin 5 in symbol).
