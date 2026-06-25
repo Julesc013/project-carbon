@@ -3859,7 +3859,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_DIP:DIP-24_W15.24mm"
+		(property "Footprint" "Package_DIP:DIP-40_W15.24mm_Socket"
 			(at 0 35.56 0)
 			(effects
 				(font
@@ -3886,7 +3886,7 @@
 				(hide yes)
 			)
 		)
-		(property "ki_keywords" "RAM SRAM CMOS MEMORY"
+		(property "ki_keywords" "FDC FLOPPY DISC CONTROLLER W37C65 37C65 GM82C765B 82C765"
 			(at 0 0 0)
 			(effects
 				(font

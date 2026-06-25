@@ -224,7 +224,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": "1"
+      "sch_revision": "2"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -501,9 +501,31 @@
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.2,
         "tuning_profile": "",
-        "via_diameter": 0.6,
+        "via_diameter": 0.5,
         "via_drill": 0.3,
         "wire_width": 6
+      },
+      {
+        "name": "ADDRESS_BUS",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 0,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "tuning_profile": ""
+      },
+      {
+        "name": "DATA_BUS",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 1,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "tuning_profile": ""
+      },
+      {
+        "name": "POWER",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.6,
+        "tuning_profile": ""
       }
     ],
     "meta": {
@@ -662,7 +684,224 @@
         "DATA_BUS"
       ]
     },
-    "netclass_patterns": []
+    "netclass_patterns": [
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A1"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A2"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A3"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A4"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A5"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A6"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A7"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A8"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A9"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A10"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A11"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A12"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A13"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A14"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A15"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A16"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A17"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A18"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A19"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A20"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A21"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A22"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A23"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A24"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A25"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A26"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A27"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A28"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A29"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A30"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A31"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D0"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D1"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D2"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D3"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D4"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D5"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D6"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D7"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D8"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D9"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D10"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D11"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D12"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D13"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D14"
+      },
+      {
+        "netclass": "DATA_BUS",
+        "pattern": "D15"
+      },
+      {
+        "netclass": "ADDRESS_BUS",
+        "pattern": "A0"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "+3.3V"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "+5V"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "-5V"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "+12V"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "-12V"
+      },
+      {
+        "netclass": "POWER",
+        "pattern": "GND"
+      }
+    ]
   },
   "pcbnew": {
     "last_paths": {
@@ -828,6 +1067,58 @@
       "sort_field": "Reference"
     },
     "bus_aliases": {
+      "JC_100": [
+        "D[0..15]",
+        "A[0..31]",
+        "IRQ[0..7]",
+        "DREQ[0..3]",
+        "DACK[0..3]",
+        "CLK",
+        "CLK2",
+        "RESET",
+        "RESET2",
+        "TX",
+        "RX",
+        "TX2",
+        "RX2",
+        "MREQ",
+        "IORQ",
+        "WR",
+        "RD",
+        "M1",
+        "INT",
+        "NMI",
+        "WAIT",
+        "HALT",
+        "BUSREQ",
+        "BUSACK",
+        "RFSH"
+      ],
+      "JC_64": [
+        "D[0..7]",
+        "A[0..23]",
+        "IRQ[0..3]",
+        "CLK",
+        "CLK2",
+        "RESET",
+        "RESET2",
+        "TX",
+        "RX",
+        "TX2",
+        "RX2",
+        "MREQ",
+        "IORQ",
+        "WR",
+        "RD",
+        "M1",
+        "INT",
+        "NMI",
+        "WAIT",
+        "HALT",
+        "BUSREQ",
+        "BUSACK",
+        "RFSH"
+      ],
       "{ISA_16}": [],
       "{ISA_8}": [],
       "{JC_100}": [
@@ -896,7 +1187,7 @@
         "uuid": "06d7853b-ec0e-46e4-9a93-83dad81d944c"
       }
     ],
-    "used_designators": "#PWR324,JP33",
+    "used_designators": "#PWR155",
     "variants": []
   },
   "sheets": [

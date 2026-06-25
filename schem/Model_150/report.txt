@@ -1,6 +1,6 @@
 Info: Processing symbol 'ATX_PWR_0:Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical'.
-Info: Processing symbol 'R25:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'JP36:'.
+Info: Processing symbol 'U40:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U41:Package_DIP:DIP-16_W7.62mm'.
 Info: Processing symbol 'BT1:Battery:BatteryHolder_MYOUNG_BS-07-A1BJ001_CR2032'.
 Info: Processing symbol 'C1:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
 Info: Processing symbol 'C2:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
@@ -48,65 +48,7 @@ Info: Processing symbol 'C43:'.
 Info: Processing symbol 'C44:'.
 Info: Processing symbol 'C45:'.
 Info: Processing symbol 'CPU_0:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'JP37:'.
-Info: Processing symbol 'JP38:'.
-Info: Processing symbol 'JP39:'.
-Info: Processing symbol 'FDC_0:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'JP40:'.
-Info: Processing symbol 'JCBUS_3:Carboni_Library:JC100_Bus_16b'.
-Info: Processing symbol 'JP41:'.
-Info: Processing symbol 'JP42:'.
-Info: Processing symbol 'JP43:'.
-Info: Processing symbol 'PIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'R8:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R9:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R10:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R11:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R12:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R13:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R14:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R19:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'FDD_0:IDC-Header_2x17_P2.54mm_Vertical'.
-Info: Processing symbol 'R24:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R15:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R16:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R17:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'FPU_0:Package_DIP:DIP-24_W15.24mm_Socket'.
-Info: Processing symbol 'R23:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R1:'.
-Info: Processing symbol 'JCBUS_2:Carboni_Library:JC100_Bus_16b'.
-Info: Processing symbol 'R2:'.
-Info: Processing symbol 'R3:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R4:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R5:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'R22:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'JP1:'.
-Info: Processing symbol 'JP2:'.
-Info: Processing symbol 'JP3:'.
-Info: Processing symbol 'IDE_0:IDC-Header_2x20_P2.54mm_Vertical'.
-Info: Processing symbol 'R21:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'JP4:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'IDE_1:IDC-Header_2x20_P2.54mm_Vertical'.
-Info: Processing symbol 'R20:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'JP5:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'R6:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'JP6:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'JP7:'.
-Info: Processing symbol 'JCBUS_0:Carboni_Library:JC100_Bus_16b'.
-Info: Processing symbol 'JP8:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP9:'.
-Info: Processing symbol 'JP10:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
 Info: Processing symbol 'CTC_0:Package_DIP:DIP-28_W15.24mm_Socket'.
-Info: Processing symbol 'JP11:'.
-Info: Processing symbol 'JP12:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JCBUS_1:Carboni_Library:JC100_Bus_16b'.
-Info: Processing symbol 'JCBUS_5:Carboni_Library:JC100_Bus_16b'.
-Info: Processing symbol 'JP13:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP14:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP15:'.
-Info: Processing symbol 'JP16:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'JP17:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'JP18:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
 Info: Processing symbol 'D1:LED_THT:LED_D5.0mm'.
 Info: Processing symbol 'D2:LED_THT:LED_D5.0mm'.
 Info: Processing symbol 'D3:LED_THT:LED_D5.0mm'.
@@ -126,15 +68,47 @@ Info: Processing symbol 'D16:LED_THT:LED_D5.0mm'.
 Info: Processing symbol 'D17:LED_THT:LED_D5.0mm'.
 Info: Processing symbol 'D18:LED_THT:LED_D5.0mm'.
 Info: Processing symbol 'DMA_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'FDC_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'FDD_0:IDC-Header_2x17_P2.54mm_Vertical'.
+Info: Processing symbol 'U42:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U43:Package_DIP:DIP-16_W7.62mm_Socket'.
+Info: Processing symbol 'FPU_0:Package_DIP:DIP-24_W15.24mm'.
+Info: Processing symbol 'IDE_0:IDC-Header_2x20_P2.54mm_Vertical'.
+Info: Processing symbol 'XTAL_OSC_0:Oscillator:Oscillator_DIP-8'.
+Info: Processing symbol 'XTAL_RES_0:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'IDE_1:IDC-Header_2x20_P2.54mm_Vertical'.
+Info: Processing symbol 'XTAL_RES_1:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'XTAL_RES_2:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'JCBUS_0:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JCBUS_1:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JCBUS_2:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JCBUS_3:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JCBUS_4:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JCBUS_5:Carboni_Library:JC100_Bus_16b'.
+Info: Processing symbol 'JP1:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP2:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP3:'.
+Info: Processing symbol 'JP4:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP5:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'JP6:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'JP7:'.
+Info: Processing symbol 'JP8:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP9:'.
+Info: Processing symbol 'JP10:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP11:'.
+Info: Processing symbol 'JP12:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP13:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP14:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP15:'.
+Info: Processing symbol 'JP16:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'JP17:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'JP18:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
 Info: Processing symbol 'JP19:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
 Info: Processing symbol 'JP20:'.
 Info: Processing symbol 'JP21:'.
 Info: Processing symbol 'JP22:'.
 Info: Processing symbol 'JP23:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'R7:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
 Info: Processing symbol 'JP24:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
-Info: Processing symbol 'R18:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
-Info: Processing symbol 'JCBUS_4:Carboni_Library:JC100_Bus_16b'.
 Info: Processing symbol 'JP25:'.
 Info: Processing symbol 'JP26:'.
 Info: Processing symbol 'JP27:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
@@ -144,8 +118,42 @@ Info: Processing symbol 'JP30:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_
 Info: Processing symbol 'JP31:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
 Info: Processing symbol 'JP32:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
 Info: Processing symbol 'JP33:'.
-Info: Processing symbol 'XTAL_RES_3:Crystal:Crystal_Round_D3.0mm_Vertical'.
+Info: Processing symbol 'JP34:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
 Info: Processing symbol 'JP35:'.
+Info: Processing symbol 'JP36:'.
+Info: Processing symbol 'JP37:'.
+Info: Processing symbol 'JP38:'.
+Info: Processing symbol 'JP39:'.
+Info: Processing symbol 'JP40:'.
+Info: Processing symbol 'JP41:'.
+Info: Processing symbol 'JP42:'.
+Info: Processing symbol 'JP43:'.
+Info: Processing symbol 'PIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'R1:'.
+Info: Processing symbol 'R2:'.
+Info: Processing symbol 'R3:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R4:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R5:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R6:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R7:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R8:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R9:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R10:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R11:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R12:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R13:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R14:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R15:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R16:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R17:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R18:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R19:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R20:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R21:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R22:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R23:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R24:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
+Info: Processing symbol 'R25:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
 Info: Processing symbol 'R26:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
 Info: Processing symbol 'R27:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
 Info: Processing symbol 'R28:Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal'.
@@ -322,8 +330,14 @@ Info: Processing symbol 'TP117:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP118:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP119:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP120:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP121:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP122:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP123:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP124:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP125:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TRS_0:Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal'.
 Info: Processing symbol 'TRS_1:Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal'.
+Info: Processing symbol 'XTAL_RES_3:Crystal:Crystal_Round_D3.0mm_Vertical'.
 Info: Processing symbol 'U0:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U1:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U2:Package_TO_SOT_THT:TO-92L_Inline'.
@@ -341,7 +355,6 @@ Info: Processing symbol 'U13:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U14:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U15:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U16:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U17:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U18:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U19:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U20:Package_DIP:DIP-16_W7.62mm'.
@@ -357,820 +370,35 @@ Info: Processing symbol 'U29:Package_DIP:DIP-16_W7.62mm'.
 Info: Processing symbol 'U30:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U33:Package_DIP:DIP-16_W7.62mm'.
 Info: Processing symbol 'U34:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U35:Package_DIP:DIP-16_W7.62mm'.
 Info: Processing symbol 'U36:'.
 Info: Processing symbol 'U37:Package_DIP:DIP-8_W7.62mm'.
 Info: Processing symbol 'U38:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U39:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U40:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U41:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U42:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U43:Package_DIP:DIP-16_W7.62mm_Socket'.
-Info: Processing symbol 'XTAL_OSC_0:Oscillator:Oscillator_DIP-8'.
-Info: Processing symbol 'XTAL_RES_0:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
-Info: Processing symbol 'XTAL_RES_1:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
-Info: Processing symbol 'XTAL_RES_2:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
-Reconnect JCBUS_1 pin b35 from unconnected-(JCBUS_1-Pin_b35-Padb35) to D10.
-Reconnect JCBUS_1 pin b31 from unconnected-(JCBUS_1-Pin_b31-Padb31) to D6.
-Reconnect JCBUS_1 pin a15 from unconnected-(JCBUS_1-Pin_a15-Pada15) to A6.
-Reconnect JCBUS_1 pin a35 from unconnected-(JCBUS_1-Pin_a35-Pada35) to A26.
-Reconnect JCBUS_1 pin b36 from unconnected-(JCBUS_1-Pin_b36-Padb36) to D11.
-Reconnect JCBUS_1 pin a36 from unconnected-(JCBUS_1-Pin_a36-Pada36) to A27.
-Reconnect JCBUS_1 pin b27 from unconnected-(JCBUS_1-Pin_b27-Padb27) to D2.
-Reconnect JCBUS_1 pin a32 from unconnected-(JCBUS_1-Pin_a32-Pada32) to A23.
-Reconnect JCBUS_1 pin a29 from unconnected-(JCBUS_1-Pin_a29-Pada29) to A20.
-Reconnect JCBUS_2 pin a28 from unconnected-(JCBUS_2-Pin_a28-Pada28) to A19.
-Reconnect JCBUS_2 pin a15 from unconnected-(JCBUS_2-Pin_a15-Pada15) to A6.
-Reconnect JCBUS_2 pin b39 from unconnected-(JCBUS_2-Pin_b39-Padb39) to D14.
-Reconnect JCBUS_2 pin b25 from unconnected-(JCBUS_2-Pin_b25-Padb25) to D0.
-Reconnect JCBUS_2 pin a27 from unconnected-(JCBUS_2-Pin_a27-Pada27) to A18.
-Reconnect JCBUS_2 pin a21 from unconnected-(JCBUS_2-Pin_a21-Pada21) to A12.
-Reconnect JCBUS_2 pin a40 from unconnected-(JCBUS_2-Pin_a40-Pada40) to A31.
-Reconnect JCBUS_2 pin a25 from unconnected-(JCBUS_2-Pin_a25-Pada25) to A16.
-Reconnect JCBUS_2 pin a9 from unconnected-(JCBUS_2-Pin_a9-Pada9) to A0.
-Reconnect JCBUS_2 pin a37 from unconnected-(JCBUS_2-Pin_a37-Pada37) to A28.
-Reconnect JCBUS_2 pin a10 from unconnected-(JCBUS_2-Pin_a10-Pada10) to A1.
-Reconnect JCBUS_2 pin b37 from unconnected-(JCBUS_2-Pin_b37-Padb37) to D12.
-Reconnect JCBUS_2 pin b36 from unconnected-(JCBUS_2-Pin_b36-Padb36) to D11.
-Reconnect JCBUS_2 pin a31 from unconnected-(JCBUS_2-Pin_a31-Pada31) to A22.
-Reconnect JCBUS_2 pin a26 from unconnected-(JCBUS_2-Pin_a26-Pada26) to A17.
-Reconnect JCBUS_2 pin a34 from unconnected-(JCBUS_2-Pin_a34-Pada34) to A25.
-Reconnect JCBUS_2 pin b38 from unconnected-(JCBUS_2-Pin_b38-Padb38) to D13.
-Reconnect JCBUS_2 pin b32 from unconnected-(JCBUS_2-Pin_b32-Padb32) to D7.
-Reconnect JCBUS_2 pin a30 from unconnected-(JCBUS_2-Pin_a30-Pada30) to A21.
-Reconnect JCBUS_2 pin a16 from unconnected-(JCBUS_2-Pin_a16-Pada16) to A7.
-Reconnect JCBUS_2 pin b34 from unconnected-(JCBUS_2-Pin_b34-Padb34) to D9.
-Reconnect JCBUS_2 pin a19 from unconnected-(JCBUS_2-Pin_a19-Pada19) to A10.
-Reconnect JCBUS_2 pin b27 from unconnected-(JCBUS_2-Pin_b27-Padb27) to D2.
-Reconnect JCBUS_2 pin b30 from unconnected-(JCBUS_2-Pin_b30-Padb30) to D5.
-Reconnect JCBUS_2 pin a12 from unconnected-(JCBUS_2-Pin_a12-Pada12) to A3.
-Reconnect JCBUS_2 pin b35 from unconnected-(JCBUS_2-Pin_b35-Padb35) to D10.
-Reconnect JCBUS_2 pin a35 from unconnected-(JCBUS_2-Pin_a35-Pada35) to A26.
-Reconnect JCBUS_2 pin a20 from unconnected-(JCBUS_2-Pin_a20-Pada20) to A11.
-Reconnect JCBUS_2 pin b26 from unconnected-(JCBUS_2-Pin_b26-Padb26) to D1.
-Reconnect JCBUS_2 pin a24 from unconnected-(JCBUS_2-Pin_a24-Pada24) to A15.
-Reconnect JCBUS_2 pin a18 from unconnected-(JCBUS_2-Pin_a18-Pada18) to A9.
-Reconnect JCBUS_2 pin a23 from unconnected-(JCBUS_2-Pin_a23-Pada23) to A14.
-Reconnect JCBUS_2 pin b28 from unconnected-(JCBUS_2-Pin_b28-Padb28) to D3.
-Reconnect JCBUS_2 pin a36 from unconnected-(JCBUS_2-Pin_a36-Pada36) to A27.
-Reconnect JCBUS_2 pin a11 from unconnected-(JCBUS_2-Pin_a11-Pada11) to A2.
-Reconnect JCBUS_2 pin a22 from unconnected-(JCBUS_2-Pin_a22-Pada22) to A13.
-Reconnect JCBUS_2 pin b40 from unconnected-(JCBUS_2-Pin_b40-Padb40) to D15.
-Reconnect JCBUS_2 pin a13 from unconnected-(JCBUS_2-Pin_a13-Pada13) to A4.
-Reconnect JCBUS_2 pin a17 from unconnected-(JCBUS_2-Pin_a17-Pada17) to A8.
-Reconnect JCBUS_2 pin b33 from unconnected-(JCBUS_2-Pin_b33-Padb33) to D8.
-Reconnect JCBUS_2 pin a39 from unconnected-(JCBUS_2-Pin_a39-Pada39) to A30.
-Reconnect JCBUS_2 pin a33 from unconnected-(JCBUS_2-Pin_a33-Pada33) to A24.
-Reconnect JCBUS_2 pin a32 from unconnected-(JCBUS_2-Pin_a32-Pada32) to A23.
-Reconnect JCBUS_2 pin b31 from unconnected-(JCBUS_2-Pin_b31-Padb31) to D6.
-Reconnect JCBUS_2 pin a29 from unconnected-(JCBUS_2-Pin_a29-Pada29) to A20.
-Reconnect JCBUS_2 pin b29 from unconnected-(JCBUS_2-Pin_b29-Padb29) to D4.
-Reconnect JCBUS_2 pin a38 from unconnected-(JCBUS_2-Pin_a38-Pada38) to A29.
-Reconnect JCBUS_2 pin a14 from unconnected-(JCBUS_2-Pin_a14-Pada14) to A5.
-Reconnect JCBUS_3 pin a37 from unconnected-(JCBUS_3-Pin_a37-Pada37) to A28.
-Reconnect JCBUS_3 pin a32 from unconnected-(JCBUS_3-Pin_a32-Pada32) to A23.
-Reconnect JCBUS_3 pin a31 from unconnected-(JCBUS_3-Pin_a31-Pada31) to A22.
-Reconnect JCBUS_3 pin a33 from unconnected-(JCBUS_3-Pin_a33-Pada33) to A24.
-Reconnect JCBUS_3 pin b27 from unconnected-(JCBUS_3-Pin_b27-Padb27) to D2.
-Reconnect JCBUS_3 pin a11 from unconnected-(JCBUS_3-Pin_a11-Pada11) to A2.
-Reconnect JCBUS_3 pin a40 from unconnected-(JCBUS_3-Pin_a40-Pada40) to A31.
-Reconnect JCBUS_3 pin a12 from unconnected-(JCBUS_3-Pin_a12-Pada12) to A3.
-Reconnect JCBUS_3 pin a9 from unconnected-(JCBUS_3-Pin_a9-Pada9) to A0.
-Reconnect JCBUS_3 pin a27 from unconnected-(JCBUS_3-Pin_a27-Pada27) to A18.
-Reconnect JCBUS_3 pin a39 from unconnected-(JCBUS_3-Pin_a39-Pada39) to A30.
-Reconnect JCBUS_3 pin b37 from unconnected-(JCBUS_3-Pin_b37-Padb37) to D12.
-Reconnect JCBUS_3 pin b30 from unconnected-(JCBUS_3-Pin_b30-Padb30) to D5.
-Reconnect JCBUS_3 pin a26 from unconnected-(JCBUS_3-Pin_a26-Pada26) to A17.
-Reconnect JCBUS_3 pin a30 from unconnected-(JCBUS_3-Pin_a30-Pada30) to A21.
-Reconnect JCBUS_3 pin a13 from unconnected-(JCBUS_3-Pin_a13-Pada13) to A4.
-Reconnect JCBUS_3 pin b33 from unconnected-(JCBUS_3-Pin_b33-Padb33) to D8.
-Reconnect JCBUS_3 pin a24 from unconnected-(JCBUS_3-Pin_a24-Pada24) to A15.
-Reconnect JCBUS_3 pin a18 from unconnected-(JCBUS_3-Pin_a18-Pada18) to A9.
-Reconnect JCBUS_3 pin a34 from unconnected-(JCBUS_3-Pin_a34-Pada34) to A25.
-Reconnect JCBUS_3 pin a35 from unconnected-(JCBUS_3-Pin_a35-Pada35) to A26.
-Reconnect JCBUS_3 pin a38 from unconnected-(JCBUS_3-Pin_a38-Pada38) to A29.
-Reconnect JCBUS_3 pin b26 from unconnected-(JCBUS_3-Pin_b26-Padb26) to D1.
-Reconnect JCBUS_3 pin a20 from unconnected-(JCBUS_3-Pin_a20-Pada20) to A11.
-Reconnect JCBUS_3 pin a21 from unconnected-(JCBUS_3-Pin_a21-Pada21) to A12.
-Reconnect JCBUS_3 pin a16 from unconnected-(JCBUS_3-Pin_a16-Pada16) to A7.
-Reconnect JCBUS_3 pin a22 from unconnected-(JCBUS_3-Pin_a22-Pada22) to A13.
-Reconnect JCBUS_3 pin b31 from unconnected-(JCBUS_3-Pin_b31-Padb31) to D6.
-Reconnect JCBUS_3 pin a14 from unconnected-(JCBUS_3-Pin_a14-Pada14) to A5.
-Reconnect JCBUS_3 pin b29 from unconnected-(JCBUS_3-Pin_b29-Padb29) to D4.
-Reconnect JCBUS_3 pin b39 from unconnected-(JCBUS_3-Pin_b39-Padb39) to D14.
-Reconnect JCBUS_3 pin b36 from unconnected-(JCBUS_3-Pin_b36-Padb36) to D11.
-Reconnect JCBUS_3 pin a29 from unconnected-(JCBUS_3-Pin_a29-Pada29) to A20.
-Reconnect JCBUS_3 pin a36 from unconnected-(JCBUS_3-Pin_a36-Pada36) to A27.
-Reconnect JCBUS_3 pin b25 from unconnected-(JCBUS_3-Pin_b25-Padb25) to D0.
-Reconnect JCBUS_3 pin b40 from unconnected-(JCBUS_3-Pin_b40-Padb40) to D15.
-Reconnect JCBUS_3 pin b28 from unconnected-(JCBUS_3-Pin_b28-Padb28) to D3.
-Reconnect JCBUS_3 pin a15 from unconnected-(JCBUS_3-Pin_a15-Pada15) to A6.
-Reconnect JCBUS_3 pin a28 from unconnected-(JCBUS_3-Pin_a28-Pada28) to A19.
-Reconnect JCBUS_3 pin a23 from unconnected-(JCBUS_3-Pin_a23-Pada23) to A14.
-Reconnect JCBUS_3 pin b38 from unconnected-(JCBUS_3-Pin_b38-Padb38) to D13.
-Reconnect JCBUS_3 pin b34 from unconnected-(JCBUS_3-Pin_b34-Padb34) to D9.
-Reconnect JCBUS_3 pin a17 from unconnected-(JCBUS_3-Pin_a17-Pada17) to A8.
-Reconnect JCBUS_3 pin a25 from unconnected-(JCBUS_3-Pin_a25-Pada25) to A16.
-Reconnect JCBUS_3 pin b32 from unconnected-(JCBUS_3-Pin_b32-Padb32) to D7.
-Reconnect JCBUS_3 pin b35 from unconnected-(JCBUS_3-Pin_b35-Padb35) to D10.
-Reconnect JCBUS_3 pin a10 from unconnected-(JCBUS_3-Pin_a10-Pada10) to A1.
-Reconnect JCBUS_3 pin a19 from unconnected-(JCBUS_3-Pin_a19-Pada19) to A10.
-Reconnect JCBUS_4 pin a20 from unconnected-(JCBUS_4-Pin_a20-Pada20) to A11.
-Reconnect JCBUS_4 pin a9 from unconnected-(JCBUS_4-Pin_a9-Pada9) to A0.
-Reconnect JCBUS_4 pin a36 from unconnected-(JCBUS_4-Pin_a36-Pada36) to A27.
-Reconnect JCBUS_4 pin b31 from unconnected-(JCBUS_4-Pin_b31-Padb31) to D6.
-Reconnect JCBUS_4 pin a27 from unconnected-(JCBUS_4-Pin_a27-Pada27) to A18.
-Reconnect JCBUS_4 pin a26 from unconnected-(JCBUS_4-Pin_a26-Pada26) to A17.
-Reconnect JCBUS_4 pin a29 from unconnected-(JCBUS_4-Pin_a29-Pada29) to A20.
-Reconnect JCBUS_4 pin b38 from unconnected-(JCBUS_4-Pin_b38-Padb38) to D13.
-Reconnect JCBUS_4 pin a19 from unconnected-(JCBUS_4-Pin_a19-Pada19) to A10.
-Reconnect JCBUS_4 pin a21 from unconnected-(JCBUS_4-Pin_a21-Pada21) to A12.
-Reconnect JCBUS_4 pin a31 from unconnected-(JCBUS_4-Pin_a31-Pada31) to A22.
-Reconnect JCBUS_4 pin a16 from unconnected-(JCBUS_4-Pin_a16-Pada16) to A7.
-Reconnect JCBUS_4 pin a35 from unconnected-(JCBUS_4-Pin_a35-Pada35) to A26.
-Reconnect JCBUS_4 pin a13 from unconnected-(JCBUS_4-Pin_a13-Pada13) to A4.
-Reconnect JCBUS_4 pin a11 from unconnected-(JCBUS_4-Pin_a11-Pada11) to A2.
-Reconnect JCBUS_4 pin b32 from unconnected-(JCBUS_4-Pin_b32-Padb32) to D7.
-Reconnect JCBUS_4 pin a22 from unconnected-(JCBUS_4-Pin_a22-Pada22) to A13.
-Reconnect JCBUS_4 pin a18 from unconnected-(JCBUS_4-Pin_a18-Pada18) to A9.
-Reconnect JCBUS_4 pin b27 from unconnected-(JCBUS_4-Pin_b27-Padb27) to D2.
-Reconnect JCBUS_4 pin a40 from unconnected-(JCBUS_4-Pin_a40-Pada40) to A31.
-Reconnect JCBUS_4 pin b26 from unconnected-(JCBUS_4-Pin_b26-Padb26) to D1.
-Reconnect JCBUS_4 pin a12 from unconnected-(JCBUS_4-Pin_a12-Pada12) to A3.
-Reconnect JCBUS_4 pin b28 from unconnected-(JCBUS_4-Pin_b28-Padb28) to D3.
-Reconnect JCBUS_4 pin b37 from unconnected-(JCBUS_4-Pin_b37-Padb37) to D12.
-Reconnect JCBUS_4 pin a23 from unconnected-(JCBUS_4-Pin_a23-Pada23) to A14.
-Reconnect JCBUS_4 pin a15 from unconnected-(JCBUS_4-Pin_a15-Pada15) to A6.
-Reconnect JCBUS_4 pin b25 from unconnected-(JCBUS_4-Pin_b25-Padb25) to D0.
-Reconnect JCBUS_4 pin a32 from unconnected-(JCBUS_4-Pin_a32-Pada32) to A23.
-Reconnect JCBUS_4 pin b35 from unconnected-(JCBUS_4-Pin_b35-Padb35) to D10.
-Reconnect JCBUS_4 pin a37 from unconnected-(JCBUS_4-Pin_a37-Pada37) to A28.
-Reconnect JCBUS_4 pin a17 from unconnected-(JCBUS_4-Pin_a17-Pada17) to A8.
-Reconnect JCBUS_4 pin b30 from unconnected-(JCBUS_4-Pin_b30-Padb30) to D5.
-Reconnect JCBUS_4 pin a14 from unconnected-(JCBUS_4-Pin_a14-Pada14) to A5.
-Reconnect JCBUS_4 pin a24 from unconnected-(JCBUS_4-Pin_a24-Pada24) to A15.
-Reconnect JCBUS_4 pin a33 from unconnected-(JCBUS_4-Pin_a33-Pada33) to A24.
-Reconnect JCBUS_4 pin a30 from unconnected-(JCBUS_4-Pin_a30-Pada30) to A21.
-Reconnect JCBUS_4 pin b36 from unconnected-(JCBUS_4-Pin_b36-Padb36) to D11.
-Reconnect JCBUS_4 pin b34 from unconnected-(JCBUS_4-Pin_b34-Padb34) to D9.
-Reconnect JCBUS_4 pin a34 from unconnected-(JCBUS_4-Pin_a34-Pada34) to A25.
-Reconnect JCBUS_4 pin a10 from unconnected-(JCBUS_4-Pin_a10-Pada10) to A1.
-Reconnect JCBUS_4 pin b39 from unconnected-(JCBUS_4-Pin_b39-Padb39) to D14.
-Reconnect JCBUS_4 pin a38 from unconnected-(JCBUS_4-Pin_a38-Pada38) to A29.
-Reconnect JCBUS_4 pin b33 from unconnected-(JCBUS_4-Pin_b33-Padb33) to D8.
-Reconnect JCBUS_4 pin a28 from unconnected-(JCBUS_4-Pin_a28-Pada28) to A19.
-Reconnect JCBUS_4 pin b40 from unconnected-(JCBUS_4-Pin_b40-Padb40) to D15.
-Reconnect JCBUS_4 pin a39 from unconnected-(JCBUS_4-Pin_a39-Pada39) to A30.
-Reconnect JCBUS_4 pin b29 from unconnected-(JCBUS_4-Pin_b29-Padb29) to D4.
-Reconnect JCBUS_5 pin a16 from unconnected-(JCBUS_5-Pin_a16-Pada16) to A7.
-Reconnect JCBUS_5 pin b35 from unconnected-(JCBUS_5-Pin_b35-Padb35) to D10.
-Reconnect JCBUS_5 pin a33 from unconnected-(JCBUS_5-Pin_a33-Pada33) to A24.
-Reconnect JCBUS_5 pin a14 from unconnected-(JCBUS_5-Pin_a14-Pada14) to A5.
-Reconnect JCBUS_5 pin a40 from unconnected-(JCBUS_5-Pin_a40-Pada40) to A31.
-Reconnect JCBUS_5 pin b33 from unconnected-(JCBUS_5-Pin_b33-Padb33) to D8.
-Reconnect JCBUS_5 pin b29 from unconnected-(JCBUS_5-Pin_b29-Padb29) to D4.
-Reconnect JCBUS_5 pin a34 from unconnected-(JCBUS_5-Pin_a34-Pada34) to A25.
-Reconnect JCBUS_5 pin a20 from unconnected-(JCBUS_5-Pin_a20-Pada20) to A11.
-Reconnect JCBUS_5 pin b38 from unconnected-(JCBUS_5-Pin_b38-Padb38) to D13.
-Reconnect JCBUS_5 pin a12 from unconnected-(JCBUS_5-Pin_a12-Pada12) to A3.
-Reconnect JCBUS_5 pin a17 from unconnected-(JCBUS_5-Pin_a17-Pada17) to A8.
-Reconnect JCBUS_5 pin b27 from unconnected-(JCBUS_5-Pin_b27-Padb27) to D2.
-Reconnect JCBUS_5 pin a35 from unconnected-(JCBUS_5-Pin_a35-Pada35) to A26.
-Reconnect JCBUS_5 pin b37 from unconnected-(JCBUS_5-Pin_b37-Padb37) to D12.
-Reconnect JCBUS_5 pin a29 from unconnected-(JCBUS_5-Pin_a29-Pada29) to A20.
-Reconnect JCBUS_5 pin a30 from unconnected-(JCBUS_5-Pin_a30-Pada30) to A21.
-Reconnect JCBUS_5 pin a11 from unconnected-(JCBUS_5-Pin_a11-Pada11) to A2.
-Reconnect JCBUS_5 pin b32 from unconnected-(JCBUS_5-Pin_b32-Padb32) to D7.
-Reconnect JCBUS_5 pin a27 from unconnected-(JCBUS_5-Pin_a27-Pada27) to A18.
-Reconnect JCBUS_5 pin b34 from unconnected-(JCBUS_5-Pin_b34-Padb34) to D9.
-Reconnect JCBUS_5 pin a32 from unconnected-(JCBUS_5-Pin_a32-Pada32) to A23.
-Reconnect JCBUS_5 pin a36 from unconnected-(JCBUS_5-Pin_a36-Pada36) to A27.
-Reconnect JCBUS_5 pin b40 from unconnected-(JCBUS_5-Pin_b40-Padb40) to D15.
-Reconnect JCBUS_5 pin b30 from unconnected-(JCBUS_5-Pin_b30-Padb30) to D5.
-Reconnect JCBUS_5 pin a39 from unconnected-(JCBUS_5-Pin_a39-Pada39) to A30.
-Reconnect JCBUS_5 pin a13 from unconnected-(JCBUS_5-Pin_a13-Pada13) to A4.
-Reconnect JCBUS_5 pin a26 from unconnected-(JCBUS_5-Pin_a26-Pada26) to A17.
-Reconnect JCBUS_5 pin a10 from unconnected-(JCBUS_5-Pin_a10-Pada10) to A1.
-Reconnect JCBUS_5 pin b26 from unconnected-(JCBUS_5-Pin_b26-Padb26) to D1.
-Reconnect JCBUS_5 pin b25 from unconnected-(JCBUS_5-Pin_b25-Padb25) to D0.
-Reconnect JCBUS_5 pin a25 from unconnected-(JCBUS_5-Pin_a25-Pada25) to A16.
-Reconnect JCBUS_5 pin b31 from unconnected-(JCBUS_5-Pin_b31-Padb31) to D6.
-Reconnect JCBUS_5 pin a24 from unconnected-(JCBUS_5-Pin_a24-Pada24) to A15.
-Reconnect JCBUS_5 pin a15 from unconnected-(JCBUS_5-Pin_a15-Pada15) to A6.
-Reconnect JCBUS_5 pin a31 from unconnected-(JCBUS_5-Pin_a31-Pada31) to A22.
-Reconnect JCBUS_5 pin a28 from unconnected-(JCBUS_5-Pin_a28-Pada28) to A19.
-Reconnect JCBUS_5 pin a9 from unconnected-(JCBUS_5-Pin_a9-Pada9) to A0.
-Reconnect JCBUS_5 pin a18 from unconnected-(JCBUS_5-Pin_a18-Pada18) to A9.
-Reconnect JCBUS_5 pin b36 from unconnected-(JCBUS_5-Pin_b36-Padb36) to D11.
-Reconnect JCBUS_5 pin b39 from unconnected-(JCBUS_5-Pin_b39-Padb39) to D14.
-Reconnect JCBUS_5 pin a21 from unconnected-(JCBUS_5-Pin_a21-Pada21) to A12.
-Reconnect JCBUS_5 pin a22 from unconnected-(JCBUS_5-Pin_a22-Pada22) to A13.
-Reconnect JCBUS_5 pin a38 from unconnected-(JCBUS_5-Pin_a38-Pada38) to A29.
-Reconnect JCBUS_5 pin b28 from unconnected-(JCBUS_5-Pin_b28-Padb28) to D3.
-Reconnect JCBUS_5 pin a23 from unconnected-(JCBUS_5-Pin_a23-Pada23) to A14.
-Reconnect JCBUS_5 pin a19 from unconnected-(JCBUS_5-Pin_a19-Pada19) to A10.
-Reconnect JCBUS_5 pin a37 from unconnected-(JCBUS_5-Pin_a37-Pada37) to A28.
-Add JP5 (footprint 'Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical').
-Reconnect JP23 pin 2 from Net-(FDC_0-~{DACK}) to /DACK.
-Reconnect JP24 pin 2 from Net-(FDC_0-TC) to /TC.
-Reconnect PIO_0 pin 3 from unconnected-(PIO_0-D6-Pad3) to D6.
-Reconnect PIO_0 pin 2 from unconnected-(PIO_0-D7-Pad2) to D7.
-Reconnect PIO_0 pin 39 from unconnected-(PIO_0-D4-Pad39) to D4.
-Reconnect PIO_0 pin 6 from unconnected-(PIO_0-B/~{A}-Pad6) to A0.
-Reconnect PIO_0 pin 38 from unconnected-(PIO_0-D5-Pad38) to D5.
-Reconnect PIO_0 pin 19 from unconnected-(PIO_0-D0-Pad19) to D0.
-Reconnect PIO_0 pin 40 from unconnected-(PIO_0-D3-Pad40) to D3.
-Reconnect PIO_0 pin 5 from unconnected-(PIO_0-C/~{D}-Pad5) to A1.
-Reconnect PIO_0 pin 1 from unconnected-(PIO_0-D2-Pad1) to D2.
-Reconnect PIO_0 pin 20 from unconnected-(PIO_0-D1-Pad20) to D1.
-Change R7 value from R to R?.
-Reconnect DMA_0 pin 20 from unconnected-(DMA_0-A12-Pad20) to A12.
-Reconnect R19 pin 2 from Net-(JP5-A) to Net-(JP5-B).
-Add R20 (footprint 'Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal').
-Add ATX_PWR_0 'Do not place' fabrication attribute.
-Add net D1.
-Reconnect CPU_0 pin 15 from unconnected-(CPU_0-D1-Pad15) to D1.
-Add net A5.
-Reconnect CPU_0 pin 35 from unconnected-(CPU_0-A5-Pad35) to A5.
-Add net D3.
-Reconnect CPU_0 pin 8 from unconnected-(CPU_0-D3-Pad8) to D3.
-Add net A15.
-Reconnect CPU_0 pin 5 from unconnected-(CPU_0-A15-Pad5) to A15.
-Add net A13.
-Reconnect CPU_0 pin 3 from unconnected-(CPU_0-A13-Pad3) to A13.
-Add net A8.
-Reconnect CPU_0 pin 38 from unconnected-(CPU_0-A8-Pad38) to A8.
-Add net D2.
-Reconnect CPU_0 pin 12 from unconnected-(CPU_0-D2-Pad12) to D2.
-Add net D5.
-Reconnect CPU_0 pin 9 from unconnected-(CPU_0-D5-Pad9) to D5.
-Add net A10.
-Reconnect CPU_0 pin 40 from unconnected-(CPU_0-A10-Pad40) to A10.
-Add net D6.
-Reconnect CPU_0 pin 10 from unconnected-(CPU_0-D6-Pad10) to D6.
-Add net A12.
-Reconnect CPU_0 pin 2 from unconnected-(CPU_0-A12-Pad2) to A12.
-Add net A11.
-Reconnect CPU_0 pin 1 from unconnected-(CPU_0-A11-Pad1) to A11.
-Add R50 (footprint 'Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal').
-Add net A9.
-Reconnect CPU_0 pin 39 from unconnected-(CPU_0-A9-Pad39) to A9.
-Add net D0.
-Reconnect CPU_0 pin 14 from unconnected-(CPU_0-D0-Pad14) to D0.
-Add net A4.
-Reconnect CPU_0 pin 34 from unconnected-(CPU_0-A4-Pad34) to A4.
-Add net A3.
-Reconnect CPU_0 pin 33 from unconnected-(CPU_0-A3-Pad33) to A3.
-Add net A1.
-Reconnect CPU_0 pin 31 from unconnected-(CPU_0-A1-Pad31) to A1.
-Add net A2.
-Reconnect CPU_0 pin 32 from unconnected-(CPU_0-A2-Pad32) to A2.
-Add net A7.
-Reconnect CPU_0 pin 37 from unconnected-(CPU_0-A7-Pad37) to A7.
-Add net D7.
-Reconnect CPU_0 pin 13 from unconnected-(CPU_0-D7-Pad13) to D7.
-Add net A14.
-Reconnect CPU_0 pin 4 from unconnected-(CPU_0-A14-Pad4) to A14.
-Reconnect RAM_0 pin 20 from unconnected-(RAM_0-DQ6-Pad20) to D6.
-Reconnect RAM_0 pin 14 from unconnected-(RAM_0-DQ1-Pad14) to D1.
-Reconnect RAM_0 pin 5 from unconnected-(RAM_0-A7-Pad5) to A7.
-Reconnect RAM_0 pin 27 from unconnected-(RAM_0-A8-Pad27) to A8.
-Reconnect RAM_0 pin 18 from unconnected-(RAM_0-DQ4-Pad18) to D4.
-Reconnect RAM_0 pin 9 from unconnected-(RAM_0-A3-Pad9) to A3.
-Reconnect RAM_0 pin 25 from unconnected-(RAM_0-A11-Pad25) to A11.
-Reconnect RAM_0 pin 10 from unconnected-(RAM_0-A2-Pad10) to A2.
-Reconnect RAM_0 pin 22 from Net-(JP5-A) to Net-(JP5-B).
-Reconnect RAM_0 pin 19 from unconnected-(RAM_0-DQ5-Pad19) to D5.
-Reconnect RAM_0 pin 12 from unconnected-(RAM_0-A0-Pad12) to A0.
-Reconnect RAM_0 pin 23 from unconnected-(RAM_0-A10-Pad23) to A10.
-Reconnect RAM_0 pin 4 from unconnected-(RAM_0-A12-Pad4) to A12.
-Reconnect RAM_0 pin 11 from unconnected-(RAM_0-A1-Pad11) to A1.
-Reconnect RAM_0 pin 21 from unconnected-(RAM_0-DQ7-Pad21) to D7.
-Reconnect RAM_0 pin 8 from unconnected-(RAM_0-A4-Pad8) to A4.
-Reconnect RAM_0 pin 28 from unconnected-(RAM_0-A13-Pad28) to A13.
-Reconnect RAM_0 pin 6 from unconnected-(RAM_0-A6-Pad6) to A6.
-Reconnect RAM_0 pin 17 from unconnected-(RAM_0-DQ3-Pad17) to D3.
-Reconnect RAM_0 pin 26 from unconnected-(RAM_0-A9-Pad26) to A9.
-Reconnect RAM_0 pin 3 from unconnected-(RAM_0-A14-Pad3) to A14.
-Reconnect RAM_0 pin 15 from unconnected-(RAM_0-DQ2-Pad15) to D2.
-Reconnect RAM_0 pin 7 from unconnected-(RAM_0-A5-Pad7) to A5.
-Reconnect RAM_0 pin 13 from unconnected-(RAM_0-DQ0-Pad13) to D0.
-Add net A0.
-Reconnect RAM_1 pin 3 from unconnected-(RAM_1-A5-Pad3) to A5.
-Reconnect RAM_1 pin 17 from unconnected-(RAM_1-IO7-Pad17) to D7.
-Reconnect RAM_1 pin 6 from unconnected-(RAM_1-A2-Pad6) to A2.
-Reconnect RAM_1 pin 19 from unconnected-(RAM_1-A10-Pad19) to A10.
-Reconnect RAM_1 pin 13 from unconnected-(RAM_1-IO3-Pad13) to D3.
-Reconnect RAM_1 pin 10 from unconnected-(RAM_1-IO1-Pad10) to D1.
-Reconnect RAM_1 pin 8 from unconnected-(RAM_1-A0-Pad8) to A0.
-Reconnect RAM_1 pin 4 from unconnected-(RAM_1-A4-Pad4) to A4.
-Reconnect RAM_1 pin 22 from unconnected-(RAM_1-A9-Pad22) to A9.
-Reconnect RAM_1 pin 15 from unconnected-(RAM_1-IO5-Pad15) to D5.
-Reconnect RAM_1 pin 9 from unconnected-(RAM_1-IO0-Pad9) to D0.
-Reconnect RAM_1 pin 1 from unconnected-(RAM_1-A7-Pad1) to A7.
-Reconnect RAM_1 pin 16 from unconnected-(RAM_1-IO6-Pad16) to D6.
-Reconnect RAM_1 pin 23 from unconnected-(RAM_1-A8-Pad23) to A8.
-Reconnect RAM_1 pin 7 from unconnected-(RAM_1-A1-Pad7) to A1.
-Reconnect RAM_1 pin 5 from unconnected-(RAM_1-A3-Pad5) to A3.
-Reconnect RAM_1 pin 11 from unconnected-(RAM_1-IO2-Pad11) to D2.
-Reconnect RAM_1 pin 2 from unconnected-(RAM_1-A6-Pad2) to A6.
-Reconnect RAM_1 pin 14 from unconnected-(RAM_1-IO4-Pad14) to D4.
-Reconnect CPU_0 pin 30 from unconnected-(CPU_0-A0-Pad30) to A0.
-Reconnect RAM_2 pin 8 from unconnected-(RAM_2-A0-Pad8) to A0.
-Reconnect RAM_2 pin 9 from unconnected-(RAM_2-IO0-Pad9) to D0.
-Reconnect RAM_2 pin 4 from unconnected-(RAM_2-A4-Pad4) to A4.
-Reconnect RAM_2 pin 2 from unconnected-(RAM_2-A6-Pad2) to A6.
-Reconnect RAM_2 pin 6 from unconnected-(RAM_2-A2-Pad6) to A2.
-Reconnect RAM_2 pin 15 from unconnected-(RAM_2-IO5-Pad15) to D5.
-Reconnect RAM_2 pin 23 from unconnected-(RAM_2-A8-Pad23) to A8.
-Reconnect RAM_2 pin 11 from unconnected-(RAM_2-IO2-Pad11) to D2.
-Reconnect RAM_2 pin 10 from unconnected-(RAM_2-IO1-Pad10) to D1.
-Reconnect RAM_2 pin 14 from unconnected-(RAM_2-IO4-Pad14) to D4.
-Reconnect RAM_2 pin 13 from unconnected-(RAM_2-IO3-Pad13) to D3.
-Reconnect RAM_2 pin 7 from unconnected-(RAM_2-A1-Pad7) to A1.
-Reconnect RAM_2 pin 1 from unconnected-(RAM_2-A7-Pad1) to A7.
-Reconnect RAM_2 pin 16 from unconnected-(RAM_2-IO6-Pad16) to D6.
-Reconnect RAM_2 pin 17 from unconnected-(RAM_2-IO7-Pad17) to D7.
-Reconnect RAM_2 pin 3 from unconnected-(RAM_2-A5-Pad3) to A5.
-Reconnect RAM_2 pin 22 from unconnected-(RAM_2-A9-Pad22) to A9.
-Reconnect RAM_2 pin 19 from unconnected-(RAM_2-A10-Pad19) to A10.
-Reconnect RAM_2 pin 5 from unconnected-(RAM_2-A3-Pad5) to A3.
-Add net D4.
-Reconnect CPU_0 pin 7 from unconnected-(CPU_0-D4-Pad7) to D4.
-Reconnect RN2 pin 5 from Net-(FDC_0-WP) to Net-(FDD_0-Pin_34).
-Reconnect RN2 pin 2 from Net-(FDC_0-WP) to Net-(FDD_0-Pin_34).
-Add net A6.
-Reconnect ROM_0 pin 26 from unconnected-(ROM_0-A13-Pad26) to A13.
-Reconnect ROM_0 pin 2 from unconnected-(ROM_0-A12-Pad2) to A12.
-Reconnect ROM_0 pin 4 from unconnected-(ROM_0-A6-Pad4) to A6.
-Reconnect ROM_0 pin 19 from unconnected-(ROM_0-D7-Pad19) to D7.
-Reconnect ROM_0 pin 13 from unconnected-(ROM_0-D2-Pad13) to D2.
-Reconnect ROM_0 pin 7 from unconnected-(ROM_0-A3-Pad7) to A3.
-Reconnect ROM_0 pin 15 from unconnected-(ROM_0-D3-Pad15) to D3.
-Reconnect ROM_0 pin 12 from unconnected-(ROM_0-D1-Pad12) to D1.
-Reconnect ROM_0 pin 5 from unconnected-(ROM_0-A5-Pad5) to A5.
-Reconnect ROM_0 pin 3 from unconnected-(ROM_0-A7-Pad3) to A7.
-Reconnect ROM_0 pin 8 from unconnected-(ROM_0-A2-Pad8) to A2.
-Reconnect ROM_0 pin 25 from unconnected-(ROM_0-A8-Pad25) to A8.
-Reconnect ROM_0 pin 27 from unconnected-(ROM_0-A14-Pad27) to A14.
-Reconnect ROM_0 pin 21 from unconnected-(ROM_0-A10-Pad21) to A10.
-Reconnect ROM_0 pin 9 from unconnected-(ROM_0-A1-Pad9) to A1.
-Reconnect ROM_0 pin 11 from unconnected-(ROM_0-D0-Pad11) to D0.
-Reconnect ROM_0 pin 24 from unconnected-(ROM_0-A9-Pad24) to A9.
-Reconnect ROM_0 pin 6 from unconnected-(ROM_0-A4-Pad6) to A4.
-Reconnect ROM_0 pin 10 from unconnected-(ROM_0-A0-Pad10) to A0.
-Reconnect ROM_0 pin 16 from unconnected-(ROM_0-D4-Pad16) to D4.
-Reconnect ROM_0 pin 23 from unconnected-(ROM_0-A11-Pad23) to A11.
-Reconnect ROM_0 pin 18 from unconnected-(ROM_0-D6-Pad18) to D6.
-Reconnect ROM_0 pin 17 from unconnected-(ROM_0-D5-Pad17) to D5.
-Reconnect CPU_0 pin 36 from unconnected-(CPU_0-A6-Pad36) to A6.
-Reconnect ROM_1 pin 4 from unconnected-(ROM_1-A6-Pad4) to A6.
-Reconnect ROM_1 pin 23 from unconnected-(ROM_1-A11-Pad23) to A11.
-Reconnect ROM_1 pin 13 from unconnected-(ROM_1-D2-Pad13) to D2.
-Reconnect ROM_1 pin 7 from unconnected-(ROM_1-A3-Pad7) to A3.
-Reconnect ROM_1 pin 10 from unconnected-(ROM_1-A0-Pad10) to A0.
-Reconnect ROM_1 pin 24 from unconnected-(ROM_1-A9-Pad24) to A9.
-Reconnect ROM_1 pin 15 from unconnected-(ROM_1-D3-Pad15) to D3.
-Reconnect ROM_1 pin 25 from unconnected-(ROM_1-A8-Pad25) to A8.
-Reconnect ROM_1 pin 16 from unconnected-(ROM_1-D4-Pad16) to D4.
-Reconnect ROM_1 pin 8 from unconnected-(ROM_1-A2-Pad8) to A2.
-Reconnect ROM_1 pin 3 from unconnected-(ROM_1-A7-Pad3) to A7.
-Reconnect ROM_1 pin 12 from unconnected-(ROM_1-D1-Pad12) to D1.
-Reconnect ROM_1 pin 27 from unconnected-(ROM_1-A14-Pad27) to A14.
-Reconnect ROM_1 pin 2 from unconnected-(ROM_1-A12-Pad2) to A12.
-Reconnect ROM_1 pin 6 from unconnected-(ROM_1-A4-Pad6) to A4.
-Reconnect ROM_1 pin 21 from unconnected-(ROM_1-A10-Pad21) to A10.
-Reconnect ROM_1 pin 11 from unconnected-(ROM_1-D0-Pad11) to D0.
-Reconnect ROM_1 pin 26 from unconnected-(ROM_1-A13-Pad26) to A13.
-Reconnect ROM_1 pin 19 from unconnected-(ROM_1-D7-Pad19) to D7.
-Reconnect ROM_1 pin 17 from unconnected-(ROM_1-D5-Pad17) to D5.
-Reconnect ROM_1 pin 5 from unconnected-(ROM_1-A5-Pad5) to A5.
-Reconnect ROM_1 pin 18 from unconnected-(ROM_1-D6-Pad18) to D6.
-Reconnect ROM_1 pin 9 from unconnected-(ROM_1-A1-Pad9) to A1.
-Reconnect CTC_0 pin 19 from unconnected-(CTC_0-CS1-Pad19) to A1.
-Reconnect CTC_0 pin 2 from unconnected-(CTC_0-D5-Pad2) to D5.
-Reconnect CTC_0 pin 3 from unconnected-(CTC_0-D6-Pad3) to D6.
-Remove SERIAL_0 'Do not place' fabrication attribute.
-Reconnect CTC_0 pin 25 from unconnected-(CTC_0-D0-Pad25) to D0.
-Remove SERIAL_1 'Do not place' fabrication attribute.
-Reconnect CTC_0 pin 4 from unconnected-(CTC_0-D7-Pad4) to D7.
-Reconnect SIO_0 pin 40 from unconnected-(SIO_0-D0-Pad40) to D0.
-Reconnect SIO_0 pin 4 from unconnected-(SIO_0-D7-Pad4) to D7.
-Reconnect SIO_0 pin 37 from unconnected-(SIO_0-D6-Pad37) to D6.
-Reconnect SIO_0 pin 2 from unconnected-(SIO_0-D3-Pad2) to D3.
-Reconnect SIO_0 pin 38 from unconnected-(SIO_0-D4-Pad38) to D4.
-Reconnect SIO_0 pin 1 from unconnected-(SIO_0-D1-Pad1) to D1.
-Reconnect SIO_0 pin 34 from unconnected-(SIO_0-B/~{A}-Pad34) to A1.
-Reconnect SIO_0 pin 3 from unconnected-(SIO_0-D5-Pad3) to D5.
-Reconnect SIO_0 pin 39 from unconnected-(SIO_0-D2-Pad39) to D2.
-Reconnect CTC_0 pin 1 from unconnected-(CTC_0-D4-Pad1) to D4.
-Reconnect CTC_0 pin 26 from unconnected-(CTC_0-D1-Pad26) to D1.
-Reconnect CTC_0 pin 18 from unconnected-(CTC_0-CS0-Pad18) to A0.
-Reconnect CTC_0 pin 27 from unconnected-(CTC_0-D2-Pad27) to D2.
-Reconnect CTC_0 pin 28 from unconnected-(CTC_0-D3-Pad28) to D3.
-Reconnect DMA_0 pin 31 from unconnected-(DMA_0-D4-Pad31) to D4.
-Reconnect DMA_0 pin 35 from unconnected-(DMA_0-D0-Pad35) to D0.
-Reconnect DMA_0 pin 3 from unconnected-(DMA_0-A3-Pad3) to A3.
-Reconnect DMA_0 pin 23 from unconnected-(DMA_0-A9-Pad23) to A9.
-Reconnect DMA_0 pin 1 from unconnected-(DMA_0-A5-Pad1) to A5.
-Reconnect DMA_0 pin 4 from unconnected-(DMA_0-A2-Pad4) to A2.
-Reconnect DMA_0 pin 29 from unconnected-(DMA_0-D5-Pad29) to D5.
-Reconnect DMA_0 pin 24 from unconnected-(DMA_0-A8-Pad24) to A8.
-Reconnect DMA_0 pin 27 from unconnected-(DMA_0-D7-Pad27) to D7.
-Reconnect DMA_0 pin 2 from unconnected-(DMA_0-A4-Pad2) to A4.
-Reconnect DMA_0 pin 40 from unconnected-(DMA_0-A6-Pad40) to A6.
-Reconnect DMA_0 pin 33 from unconnected-(DMA_0-D2-Pad33) to D2.
-Reconnect DMA_0 pin 32 from unconnected-(DMA_0-D3-Pad32) to D3.
-Reconnect DMA_0 pin 28 from unconnected-(DMA_0-D6-Pad28) to D6.
-Reconnect DMA_0 pin 17 from unconnected-(DMA_0-A15-Pad17) to A15.
-Reconnect DMA_0 pin 22 from unconnected-(DMA_0-A10-Pad22) to A10.
-Reconnect DMA_0 pin 18 from unconnected-(DMA_0-A14-Pad18) to A14.
-Reconnect DMA_0 pin 39 from unconnected-(DMA_0-A7-Pad39) to A7.
-Reconnect DMA_0 pin 34 from unconnected-(DMA_0-D1-Pad34) to D1.
-Reconnect DMA_0 pin 5 from unconnected-(DMA_0-A1-Pad5) to A1.
-Reconnect DMA_0 pin 6 from unconnected-(DMA_0-A0-Pad6) to A0.
-Reconnect DMA_0 pin 19 from unconnected-(DMA_0-A13-Pad19) to A13.
-Reconnect DMA_0 pin 21 from unconnected-(DMA_0-A11-Pad21) to A11.
-Reconnect FDC_0 pin 13 from unconnected-(FDC_0-DB6-Pad13) to D6.
-Reconnect FDC_0 pin 10 from unconnected-(FDC_0-DB3-Pad10) to D3.
-Reconnect FDC_0 pin 9 from unconnected-(FDC_0-DB2-Pad9) to D2.
-Reconnect FDC_0 pin 11 from unconnected-(FDC_0-DB4-Pad11) to D4.
-Reconnect FDC_0 pin 14 from unconnected-(FDC_0-DB7-Pad14) to D7.
-Reconnect FDC_0 pin 7 from unconnected-(FDC_0-DB0-Pad7) to D0.
-Add net /TC.
-Reconnect FDC_0 pin 6 from Net-(FDC_0-TC) to /TC.
-Reconnect FDC_0 pin 12 from unconnected-(FDC_0-DB5-Pad12) to D5.
-Add net /DACK.
-Reconnect FDC_0 pin 5 from Net-(FDC_0-~{DACK}) to /DACK.
-Add net A[0..31].
-Reconnect FDC_0 pin 4 from ADDRESS to A[0..31].
-Reconnect FDC_0 pin 8 from unconnected-(FDC_0-DB1-Pad8) to D1.
+Remove ATX_PWR_0 'Do not place' fabrication attribute.
 Remove FDD_0 'Do not place' fabrication attribute.
-Add net Net-(FDD_0-Pin_34).
-Reconnect FDD_0 pin 34 from Net-(FDC_0-WP) to Net-(FDD_0-Pin_34).
-Reconnect FPU_0 pin 13 from unconnected-(FPU_0-DB5-Pad13) to D5.
-Reconnect FPU_0 pin 8 from unconnected-(FPU_0-DB0-Pad8) to D0.
-Reconnect FPU_0 pin 15 from unconnected-(FPU_0-DB7-Pad15) to D7.
-Reconnect FPU_0 pin 14 from unconnected-(FPU_0-DB6-Pad14) to D6.
-Reconnect FPU_0 pin 10 from unconnected-(FPU_0-DB2-Pad10) to D2.
-Reconnect FPU_0 pin 21 from ADDRESS to A[0..31].
-Reconnect FPU_0 pin 11 from unconnected-(FPU_0-DB3-Pad11) to D3.
-Reconnect TP50 pin 1 from unconnected-(TP50-Pad1) to A0.
-Reconnect FPU_0 pin 9 from unconnected-(FPU_0-DB1-Pad9) to D1.
-Reconnect TP51 pin 1 from unconnected-(TP51-Pad1) to A1.
-Reconnect FPU_0 pin 12 from unconnected-(FPU_0-DB4-Pad12) to D4.
-Reconnect TP52 pin 1 from unconnected-(TP52-Pad1) to A2.
 Remove IDE_0 'Do not place' fabrication attribute.
-Reconnect TP53 pin 1 from unconnected-(TP53-Pad1) to A3.
 Remove IDE_1 'Do not place' fabrication attribute.
-Reconnect TP54 pin 1 from unconnected-(TP54-Pad1) to A4.
-Reconnect IDE_1 pin 36 from unconnected-(IDE_1-Pin_36-Pad36) to A2.
-Reconnect TP55 pin 1 from unconnected-(TP55-Pad1) to A5.
-Reconnect IDE_1 pin 33 from unconnected-(IDE_1-Pin_33-Pad33) to A1.
-Reconnect TP56 pin 1 from unconnected-(TP56-Pad1) to A6.
-Reconnect IDE_1 pin 35 from unconnected-(IDE_1-Pin_35-Pad35) to A0.
-Reconnect TP57 pin 1 from unconnected-(TP57-Pad1) to A7.
-Reconnect JCBUS_0 pin a23 from unconnected-(JCBUS_0-Pin_a23-Pada23) to A14.
-Reconnect TP58 pin 1 from unconnected-(TP58-Pad1) to A8.
-Add net D12.
-Reconnect TP59 pin 1 from unconnected-(TP59-Pad1) to A9.
-Reconnect JCBUS_0 pin b37 from unconnected-(JCBUS_0-Pin_b37-Padb37) to D12.
-Reconnect TP60 pin 1 from unconnected-(TP60-Pad1) to A10.
-Reconnect JCBUS_0 pin a10 from unconnected-(JCBUS_0-Pin_a10-Pada10) to A1.
-Reconnect TP61 pin 1 from unconnected-(TP61-Pad1) to A11.
-Add net A27.
-Reconnect TP62 pin 1 from unconnected-(TP62-Pad1) to A12.
-Reconnect JCBUS_0 pin a36 from unconnected-(JCBUS_0-Pin_a36-Pada36) to A27.
-Reconnect TP63 pin 1 from unconnected-(TP63-Pad1) to A13.
-Reconnect JCBUS_0 pin a22 from unconnected-(JCBUS_0-Pin_a22-Pada22) to A13.
-Reconnect TP64 pin 1 from unconnected-(TP64-Pad1) to A14.
-Reconnect JCBUS_0 pin a9 from unconnected-(JCBUS_0-Pin_a9-Pada9) to A0.
-Reconnect TP65 pin 1 from unconnected-(TP65-Pad1) to A15.
-Add net A20.
-Reconnect TP66 pin 1 from unconnected-(TP66-Pad1) to A16.
-Reconnect JCBUS_0 pin a29 from unconnected-(JCBUS_0-Pin_a29-Pada29) to A20.
-Reconnect TP67 pin 1 from unconnected-(TP67-Pad1) to A17.
-Reconnect JCBUS_0 pin b26 from unconnected-(JCBUS_0-Pin_b26-Padb26) to D1.
-Reconnect TP68 pin 1 from unconnected-(TP68-Pad1) to A18.
-Reconnect JCBUS_0 pin a14 from unconnected-(JCBUS_0-Pin_a14-Pada14) to A5.
-Reconnect TP69 pin 1 from unconnected-(TP69-Pad1) to A19.
-Add net D11.
-Reconnect TP70 pin 1 from unconnected-(TP70-Pad1) to A20.
-Reconnect JCBUS_0 pin b36 from unconnected-(JCBUS_0-Pin_b36-Padb36) to D11.
-Reconnect TP71 pin 1 from unconnected-(TP71-Pad1) to A21.
-Reconnect JCBUS_0 pin b27 from unconnected-(JCBUS_0-Pin_b27-Padb27) to D2.
-Reconnect TP72 pin 1 from unconnected-(TP72-Pad1) to A22.
-Add net A30.
-Reconnect TP73 pin 1 from unconnected-(TP73-Pad1) to A23.
-Reconnect JCBUS_0 pin a39 from unconnected-(JCBUS_0-Pin_a39-Pada39) to A30.
-Reconnect TP74 pin 1 from unconnected-(TP74-Pad1) to A24.
-Reconnect JCBUS_0 pin a19 from unconnected-(JCBUS_0-Pin_a19-Pada19) to A10.
-Reconnect TP75 pin 1 from unconnected-(TP75-Pad1) to A25.
-Reconnect JCBUS_0 pin a11 from unconnected-(JCBUS_0-Pin_a11-Pada11) to A2.
-Reconnect TP76 pin 1 from unconnected-(TP76-Pad1) to A26.
-Add net A21.
-Reconnect TP77 pin 1 from unconnected-(TP77-Pad1) to A27.
-Reconnect JCBUS_0 pin a30 from unconnected-(JCBUS_0-Pin_a30-Pada30) to A21.
-Reconnect TP78 pin 1 from unconnected-(TP78-Pad1) to A28.
-Reconnect JCBUS_0 pin a20 from unconnected-(JCBUS_0-Pin_a20-Pada20) to A11.
-Reconnect TP79 pin 1 from unconnected-(TP79-Pad1) to A29.
-Reconnect JCBUS_0 pin a17 from unconnected-(JCBUS_0-Pin_a17-Pada17) to A8.
-Reconnect TP80 pin 1 from unconnected-(TP80-Pad1) to A30.
-Add net A29.
-Reconnect TP81 pin 1 from unconnected-(TP81-Pad1) to A31.
-Reconnect JCBUS_0 pin a38 from unconnected-(JCBUS_0-Pin_a38-Pada38) to A29.
-Reconnect TP82 pin 1 from unconnected-(TP82-Pad1) to D0.
-Add net A17.
-Reconnect TP83 pin 1 from unconnected-(TP83-Pad1) to D1.
-Reconnect JCBUS_0 pin a26 from unconnected-(JCBUS_0-Pin_a26-Pada26) to A17.
-Reconnect TP84 pin 1 from unconnected-(TP84-Pad1) to D2.
-Add net A22.
-Reconnect TP85 pin 1 from unconnected-(TP85-Pad1) to D3.
-Reconnect JCBUS_0 pin a31 from unconnected-(JCBUS_0-Pin_a31-Pada31) to A22.
-Reconnect TP86 pin 1 from unconnected-(TP86-Pad1) to D4.
-Add net D13.
-Reconnect TP87 pin 1 from unconnected-(TP87-Pad1) to D5.
-Reconnect JCBUS_0 pin b38 from unconnected-(JCBUS_0-Pin_b38-Padb38) to D13.
-Reconnect TP88 pin 1 from unconnected-(TP88-Pad1) to D6.
-Add net A26.
-Reconnect TP89 pin 1 from unconnected-(TP89-Pad1) to D7.
-Reconnect JCBUS_0 pin a35 from unconnected-(JCBUS_0-Pin_a35-Pada35) to A26.
-Reconnect TP90 pin 1 from unconnected-(TP90-Pad1) to D8.
-Add net D10.
-Reconnect TP91 pin 1 from unconnected-(TP91-Pad1) to D9.
-Reconnect JCBUS_0 pin b35 from unconnected-(JCBUS_0-Pin_b35-Padb35) to D10.
-Reconnect TP92 pin 1 from unconnected-(TP92-Pad1) to D10.
-Add net A19.
-Reconnect TP93 pin 1 from unconnected-(TP93-Pad1) to D11.
-Reconnect JCBUS_0 pin a28 from unconnected-(JCBUS_0-Pin_a28-Pada28) to A19.
-Reconnect TP94 pin 1 from unconnected-(TP94-Pad1) to D12.
-Add net D14.
-Reconnect TP95 pin 1 from unconnected-(TP95-Pad1) to D13.
-Reconnect JCBUS_0 pin b39 from unconnected-(JCBUS_0-Pin_b39-Padb39) to D14.
-Reconnect TP96 pin 1 from unconnected-(TP96-Pad1) to D14.
-Reconnect JCBUS_0 pin b29 from unconnected-(JCBUS_0-Pin_b29-Padb29) to D4.
-Reconnect TP97 pin 1 from unconnected-(TP97-Pad1) to D15.
-Add net D9.
-Reconnect JCBUS_0 pin b34 from unconnected-(JCBUS_0-Pin_b34-Padb34) to D9.
-Add net A18.
-Reconnect JCBUS_0 pin a27 from unconnected-(JCBUS_0-Pin_a27-Pada27) to A18.
-Reconnect JCBUS_0 pin a24 from unconnected-(JCBUS_0-Pin_a24-Pada24) to A15.
-Add net A16.
-Reconnect JCBUS_0 pin a25 from unconnected-(JCBUS_0-Pin_a25-Pada25) to A16.
-Add net A25.
-Reconnect JCBUS_0 pin a34 from unconnected-(JCBUS_0-Pin_a34-Pada34) to A25.
-Reconnect JCBUS_0 pin a21 from unconnected-(JCBUS_0-Pin_a21-Pada21) to A12.
-Add net D8.
-Reconnect JCBUS_0 pin b33 from unconnected-(JCBUS_0-Pin_b33-Padb33) to D8.
-Reconnect JCBUS_0 pin b28 from unconnected-(JCBUS_0-Pin_b28-Padb28) to D3.
-Add net A24.
-Reconnect JCBUS_0 pin a33 from unconnected-(JCBUS_0-Pin_a33-Pada33) to A24.
-Reconnect JCBUS_0 pin a18 from unconnected-(JCBUS_0-Pin_a18-Pada18) to A9.
-Reconnect JCBUS_0 pin a13 from unconnected-(JCBUS_0-Pin_a13-Pada13) to A4.
-Reconnect JCBUS_0 pin b25 from unconnected-(JCBUS_0-Pin_b25-Padb25) to D0.
-Add net A23.
-Reconnect JCBUS_0 pin a32 from unconnected-(JCBUS_0-Pin_a32-Pada32) to A23.
-Add net A28.
-Reconnect JCBUS_0 pin a37 from unconnected-(JCBUS_0-Pin_a37-Pada37) to A28.
-Reconnect JCBUS_0 pin a16 from unconnected-(JCBUS_0-Pin_a16-Pada16) to A7.
-Reconnect JCBUS_0 pin a15 from unconnected-(JCBUS_0-Pin_a15-Pada15) to A6.
-Reconnect JCBUS_0 pin b31 from unconnected-(JCBUS_0-Pin_b31-Padb31) to D6.
-Reconnect JCBUS_0 pin a12 from unconnected-(JCBUS_0-Pin_a12-Pada12) to A3.
-Update U0 symbol association from /c37f4df1-26c7-44fe-8883-eaa54af686d5 to /5f40cc54-8191-414f-b005-c0ec5dc4e2ff.
-Add net D15.
-Update U1 symbol association from /80e20ec7-7f35-4126-a0a3-74db8fae9278 to /e459ce01-e51d-4fe5-a15a-46b74ae77767.
-Reconnect U1 pin 9 from unconnected-(U1-Pad9) to A0.
-Reconnect U1 pin 13 from Net-(U1-Pad13) to A11.
-Reconnect JCBUS_0 pin b40 from unconnected-(JCBUS_0-Pin_b40-Padb40) to D15.
-Reconnect JCBUS_0 pin b32 from unconnected-(JCBUS_0-Pin_b32-Padb32) to D7.
-Update U3 symbol association from /f05ce7f9-141b-4226-96a5-2996a052fd51 to /7333176a-a530-4a83-b7b0-c07330982187.
-Add net A31.
-Add net /LA19.
-Reconnect U4 pin 14 from Net-(U4B-A0) to /LA19.
-Reconnect U4 pin 15 from ADDRESS to A15.
-Add net /MA19.
-Reconnect U4 pin 2 from Net-(U4A-A0) to /MA19.
-Reconnect U4 pin 12 from Net-(U4A-A0) to /MA19.
-Reconnect JCBUS_0 pin a40 from unconnected-(JCBUS_0-Pin_a40-Pada40) to A31.
-Reconnect U5 pin 8 from unconnected-(U5-P3-Pad8) to A3.
-Reconnect U5 pin 15 from unconnected-(U5-P6-Pad15) to A6.
-Reconnect U5 pin 6 from unconnected-(U5-P2-Pad6) to A2.
-Reconnect U5 pin 17 from unconnected-(U5-P7-Pad17) to A7.
-Reconnect U5 pin 13 from unconnected-(U5-P5-Pad13) to A5.
-Reconnect U5 pin 4 from unconnected-(U5-P1-Pad4) to A1.
-Reconnect U5 pin 11 from unconnected-(U5-P4-Pad11) to A4.
-Reconnect JCBUS_0 pin b30 from unconnected-(JCBUS_0-Pin_b30-Padb30) to D5.
-Add net /LA18.
-Reconnect U6 pin 12 from Net-(U6-Q4) to /LA18.
-Reconnect U6 pin 7 from unconnected-(U6-D2-Pad7) to D2.
-Reconnect U6 pin 14 from unconnected-(U6-D5-Pad14) to D5.
-Reconnect U6 pin 13 from unconnected-(U6-D4-Pad13) to D4.
-Reconnect U6 pin 4 from unconnected-(U6-D1-Pad4) to D1.
-Add net /LA15.
-Reconnect U6 pin 5 from Net-(U6-Q1) to /LA15.
-Reconnect U6 pin 15 from Net-(U4B-A0) to /LA19.
-Add net /LA17.
-Reconnect U6 pin 9 from Net-(U6-Q3) to /LA17.
-Reconnect U6 pin 8 from unconnected-(U6-D3-Pad8) to D3.
-Add net /LA16.
-Reconnect U6 pin 6 from Net-(U6-Q2) to /LA16.
-Reconnect JCBUS_1 pin b25 from unconnected-(JCBUS_1-Pin_b25-Padb25) to D0.
-Reconnect U7 pin 2 from Net-(U6-Q1) to /LA15.
-Reconnect U7 pin 14 from Net-(U6-Q4) to /LA18.
-Reconnect U7 pin 5 from Net-(U6-Q2) to /LA16.
-Reconnect U7 pin 11 from Net-(U6-Q3) to /LA17.
-Reconnect U7 pin 1 from unconnected-(U7-S-Pad1) to A15.
-Reconnect JCBUS_1 pin a14 from unconnected-(JCBUS_1-Pin_a14-Pada14) to A5.
-Reconnect U8 pin 1 from unconnected-(U8-A0-Pad1) to A2.
-Reconnect U8 pin 2 from unconnected-(U8-A1-Pad2) to A3.
-Reconnect U8 pin 3 from unconnected-(U8-A2-Pad3) to A4.
-Reconnect U8 pin 6 from unconnected-(U8-E2-Pad6) to A7.
-Reconnect U8 pin 4 from unconnected-(U8-~{E0}-Pad4) to A6.
-Reconnect JCBUS_1 pin a13 from unconnected-(JCBUS_1-Pin_a13-Pada13) to A4.
-Reconnect U9 pin 8 from unconnected-(U9-D3-Pad8) to D3.
-Reconnect U9 pin 3 from unconnected-(U9-D0-Pad3) to D0.
-Reconnect U9 pin 7 from unconnected-(U9-D2-Pad7) to D2.
-Reconnect U9 pin 17 from unconnected-(U9-D6-Pad17) to D6.
-Reconnect U9 pin 18 from unconnected-(U9-D7-Pad18) to D7.
-Reconnect U9 pin 14 from unconnected-(U9-D5-Pad14) to D5.
-Reconnect U9 pin 13 from unconnected-(U9-D4-Pad13) to D4.
-Reconnect U9 pin 4 from unconnected-(U9-D1-Pad4) to D1.
-Reconnect JCBUS_1 pin b39 from unconnected-(JCBUS_1-Pin_b39-Padb39) to D14.
-Reconnect JCBUS_1 pin b30 from unconnected-(JCBUS_1-Pin_b30-Padb30) to D5.
-Reconnect JCBUS_1 pin a22 from unconnected-(JCBUS_1-Pin_a22-Pada22) to A13.
-Update U12 symbol association from /730e1e4c-ec14-4797-90df-cc79852602f0 to /7723030b-23be-4084-9c08-623c3ef1bd09.
-Reconnect U12 pin 10 from Net-(U12-Pad10) to A5.
-Reconnect JCBUS_1 pin a38 from unconnected-(JCBUS_1-Pin_a38-Pada38) to A29.
-Reconnect U13 pin 12 from unconnected-(U13B-D-Pad12) to A4.
-Reconnect JCBUS_1 pin b40 from unconnected-(JCBUS_1-Pin_b40-Padb40) to D15.
-Update U14 symbol association from /cac7cb95-0e3b-46ec-a581-00e480fbb740 to /958ace6d-11e9-4af4-8df8-baccd6eb20e5.
-Reconnect JCBUS_1 pin a12 from unconnected-(JCBUS_1-Pin_a12-Pada12) to A3.
-Reconnect JCBUS_4 pin a25 from unconnected-(JCBUS_4-Pin_a25-Pada25) to A16.
-Reconnect U15 pin 12 from Net-(U12-Pad10) to A5.
-Reconnect U15 pin 11 from Net-(U12-Pad10) to A5.
-Reconnect JCBUS_1 pin a26 from unconnected-(JCBUS_1-Pin_a26-Pada26) to A17.
-Reconnect JCBUS_1 pin a40 from unconnected-(JCBUS_1-Pin_a40-Pada40) to A31.
-Reconnect JCBUS_1 pin a11 from unconnected-(JCBUS_1-Pin_a11-Pada11) to A2.
-Update U18 symbol association from /607837ec-8fef-4a2b-9fd1-1d27ac7eda5c to /df3f78ec-0370-47cc-9077-c37a7214cdb7.
-Reconnect U18 pin 3 from DATA to D7.
-Reconnect U18 pin 2 from Net-(FDC_0-WP) to Net-(FDD_0-Pin_34).
-Reconnect JCBUS_1 pin a39 from unconnected-(JCBUS_1-Pin_a39-Pada39) to A30.
-Reconnect JCBUS_1 pin b37 from unconnected-(JCBUS_1-Pin_b37-Padb37) to D12.
-Reconnect U20 pin 1 from unconnected-(U20-A0-Pad1) to A2.
-Reconnect U20 pin 2 from unconnected-(U20-A1-Pad2) to A3.
-Reconnect U20 pin 3 from unconnected-(U20-A2-Pad3) to A4.
-Reconnect JCBUS_1 pin b34 from unconnected-(JCBUS_1-Pin_b34-Padb34) to D9.
-Update U21 symbol association from /9a177d8a-94a3-4cfd-ba26-9ae5d0f91d85 to /cb9e3d48-d76d-4809-bfc6-3fcf9fb4faf5.
-Reconnect JCBUS_1 pin a20 from unconnected-(JCBUS_1-Pin_a20-Pada20) to A11.
-Reconnect JCBUS_1 pin a37 from unconnected-(JCBUS_1-Pin_a37-Pada37) to A28.
-Update U23 symbol association from /8298b409-1c1d-4f6c-831b-a38efb54d4cb to /72cb084a-0173-4482-bd98-1aa13a168b3b.
-Reconnect U23 pin 12 from Net-(U1-Pad13) to A11.
-Reconnect U23 pin 13 from Net-(JP5-B) to Net-(JP5-A).
-Reconnect U23 pin 9 from Net-(JP5-B) to Net-(JP5-A).
-Reconnect JCBUS_1 pin a10 from unconnected-(JCBUS_1-Pin_a10-Pada10) to A1.
-Reconnect U24 pin 4 from unconnected-(U24-D1-Pad4) to D1.
-Reconnect U24 pin 7 from unconnected-(U24-D2-Pad7) to D2.
-Reconnect U24 pin 13 from unconnected-(U24-D4-Pad13) to D4.
-Reconnect U24 pin 17 from unconnected-(U24-D6-Pad17) to D6.
-Reconnect U24 pin 18 from unconnected-(U24-D7-Pad18) to D7.
-Reconnect U24 pin 3 from unconnected-(U24-D0-Pad3) to D0.
-Reconnect U24 pin 14 from unconnected-(U24-D5-Pad14) to D5.
-Reconnect U24 pin 8 from unconnected-(U24-D3-Pad8) to D3.
-Reconnect JCBUS_1 pin a21 from unconnected-(JCBUS_1-Pin_a21-Pada21) to A12.
-Reconnect JCBUS_1 pin a28 from unconnected-(JCBUS_1-Pin_a28-Pada28) to A19.
-Update U26 symbol association from /c2602a4f-2d5a-48d0-b01f-6fb7fff55ac2 to /8a8d8e16-088b-4d35-b6a3-e1cb225c200e.
-Reconnect U26 pin 3 from unconnected-(U26-Pad3) to D5.
-Reconnect U26 pin 8 from unconnected-(U26-Pad8) to D0.
-Reconnect U26 pin 6 from unconnected-(U26-Pad6) to D4.
-Reconnect JCBUS_1 pin a24 from unconnected-(JCBUS_1-Pin_a24-Pada24) to A15.
-Add net /PB6.
-Reconnect U27 pin 24 from unconnected-(U27-PB6-Pad24) to /PB6.
-Add net /PB2.
-Reconnect U27 pin 20 from unconnected-(U27-PB2-Pad20) to /PB2.
-Add net /PB7.
-Reconnect U27 pin 25 from unconnected-(U27-PB7-Pad25) to /PB7.
-Reconnect U27 pin 28 from unconnected-(U27-D6-Pad28) to D6.
-Add net /PB1.
-Reconnect U27 pin 19 from unconnected-(U27-PB1-Pad19) to /PB1.
-Reconnect U27 pin 33 from unconnected-(U27-D1-Pad33) to D1.
-Add net /PA6.
-Reconnect U27 pin 38 from unconnected-(U27-PA6-Pad38) to /PA6.
-Add net /PB4.
-Reconnect U27 pin 22 from unconnected-(U27-PB4-Pad22) to /PB4.
-Reconnect U27 pin 34 from unconnected-(U27-D0-Pad34) to D0.
-Add net /PA5.
-Reconnect U27 pin 39 from unconnected-(U27-PA5-Pad39) to /PA5.
-Add net /PA3.
-Reconnect U27 pin 1 from unconnected-(U27-PA3-Pad1) to /PA3.
-Add net /PA7.
-Reconnect U27 pin 37 from Net-(U27-PA7) to /PA7.
-Add net /PA4.
-Reconnect U27 pin 40 from unconnected-(U27-PA4-Pad40) to /PA4.
-Reconnect U27 pin 31 from unconnected-(U27-D3-Pad31) to D3.
-Reconnect U27 pin 32 from unconnected-(U27-D2-Pad32) to D2.
-Add net /PA1.
-Reconnect U27 pin 3 from unconnected-(U27-PA1-Pad3) to /PA1.
-Add net /PB5.
-Reconnect U27 pin 23 from unconnected-(U27-PB5-Pad23) to /PB5.
-Reconnect U27 pin 30 from unconnected-(U27-D4-Pad30) to D4.
-Reconnect U27 pin 29 from unconnected-(U27-D5-Pad29) to D5.
-Add net /PB0.
-Reconnect U27 pin 18 from unconnected-(U27-PB0-Pad18) to /PB0.
-Add net /PA0.
-Reconnect U27 pin 4 from unconnected-(U27-PA0-Pad4) to /PA0.
-Add net /PB3.
-Reconnect U27 pin 21 from unconnected-(U27-PB3-Pad21) to /PB3.
-Reconnect U27 pin 27 from unconnected-(U27-D7-Pad27) to D7.
-Add net /PA2.
-Reconnect U27 pin 2 from unconnected-(U27-PA2-Pad2) to /PA2.
-Reconnect JCBUS_1 pin b28 from unconnected-(JCBUS_1-Pin_b28-Padb28) to D3.
-Update U28 symbol association from /a1ca8606-852d-41a2-bd4b-98146d1937aa to /5a06f2e2-17a5-4c2f-8b50-cb6845dfc553.
-Reconnect JCBUS_1 pin a17 from unconnected-(JCBUS_1-Pin_a17-Pada17) to A8.
-Reconnect U29 pin 3 from unconnected-(U29-A2-Pad3) to A4.
-Reconnect U29 pin 1 from unconnected-(U29-A0-Pad1) to A2.
-Reconnect U29 pin 4 from unconnected-(U29-~{E0}-Pad4) to A6.
-Reconnect U29 pin 2 from unconnected-(U29-A1-Pad2) to A3.
-Reconnect U29 pin 6 from unconnected-(U29-E2-Pad6) to A7.
-Reconnect JCBUS_1 pin b33 from unconnected-(JCBUS_1-Pin_b33-Padb33) to D8.
-Update U30 symbol association from /8e2d6f88-a153-473a-a98e-78bfdeaa9e27 to /908f0135-549b-4f79-a3a8-f375be6541bd.
-Reconnect JCBUS_1 pin a23 from unconnected-(JCBUS_1-Pin_a23-Pada23) to A14.
-Update U33 symbol association from /58fc2ba2-7d75-4ea8-b665-809d88fd2a6b to /6dc6fb4f-fadb-4f71-a14b-460c3bcce754.
-Reconnect JCBUS_1 pin a27 from unconnected-(JCBUS_1-Pin_a27-Pada27) to A18.
-Reconnect JCBUS_1 pin a34 from unconnected-(JCBUS_1-Pin_a34-Pada34) to A25.
-Reconnect JCBUS_1 pin b26 from unconnected-(JCBUS_1-Pin_b26-Padb26) to D1.
-Reconnect JCBUS_1 pin a19 from unconnected-(JCBUS_1-Pin_a19-Pada19) to A10.
-Reconnect JCBUS_1 pin a9 from unconnected-(JCBUS_1-Pin_a9-Pada9) to A0.
-Update U38 symbol association from /7a615276-b95b-402c-ab46-3982511c67b9 to /56caa28f-3831-45b1-ab50-fc00175cb45e.
-Reconnect JCBUS_1 pin a31 from unconnected-(JCBUS_1-Pin_a31-Pada31) to A22.
-Reconnect JCBUS_1 pin b38 from unconnected-(JCBUS_1-Pin_b38-Padb38) to D13.
-Update U40 symbol association from /b3105117-4682-4865-95ae-0c18016e3230 to /c6d7713a-f2df-42cc-b972-6ee5d6ac2248.
-Reconnect JCBUS_1 pin a18 from unconnected-(JCBUS_1-Pin_a18-Pada18) to A9.
-Add net Net-(U36-I1b).
-Reconnect U41 pin 13 from unconnected-(U41-Q1-Pad13) to Net-(U36-I1b).
-Add net Net-(U36-I0b).
-Reconnect U41 pin 14 from unconnected-(U41-Q0-Pad14) to Net-(U36-I0b).
-Add net Net-(U36-I2b).
-Reconnect U41 pin 12 from unconnected-(U41-Q2-Pad12) to Net-(U36-I2b).
-Add net Net-(U36-I3b).
-Reconnect U41 pin 11 from Net-(U41-Q3) to Net-(U36-I3b).
-Reconnect JCBUS_1 pin a33 from unconnected-(JCBUS_1-Pin_a33-Pada33) to A24.
-Reconnect JCBUS_1 pin b32 from unconnected-(JCBUS_1-Pin_b32-Padb32) to D7.
-Reconnect U43 pin 3 from Net-(U41-Q3) to Net-(U36-I3b).
-Reconnect JCBUS_1 pin b29 from unconnected-(JCBUS_1-Pin_b29-Padb29) to D4.
-Reconnect JCBUS_1 pin a25 from unconnected-(JCBUS_1-Pin_a25-Pada25) to A16.
-Reconnect JCBUS_1 pin a30 from unconnected-(JCBUS_1-Pin_a30-Pada30) to A21.
-Reconnect JCBUS_1 pin a16 from unconnected-(JCBUS_1-Pin_a16-Pada16) to A7.
-Update U15 symbol association from /9e3eeb0f-17de-4e83-83a3-a42e3bdf1de6 to /c77fc008-fa23-4969-9014-0660ae7f3df3.
-Warning: No net found for component U17 pad 6 (no pin 6 in symbol).
-Warning: No net found for component U17 pad 7 (no pin 7 in symbol).
-Warning: No net found for component U17 pad 1 (no pin 1 in symbol).
-Warning: No net found for component U17 pad 4 (no pin 4 in symbol).
+Remove SERIAL_1 'Do not place' fabrication attribute.
+Remove SERIAL_0 'Do not place' fabrication attribute.
+Warning: Warning: ATX_PWR_0 footprint 'Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
+Warning: Warning: FDD_0 footprint 'IDC-Header_2x17_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
+Warning: Warning: IDE_0 footprint 'IDC-Header_2x20_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
+Warning: Warning: IDE_1 footprint 'IDC-Header_2x20_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
 Warning: No net found for component U33 pad 13 (no pin 13 in symbol).
 Warning: No net found for component U33 pad 16 (no pin 16 in symbol).
-Warning: No net found for component U17 pad 11 (no pin 11 in symbol).
-Warning: No net found for component U34 pad 14 (no pin 14 in symbol).
-Warning: No net found for component U34 pad 16 (no pin 16 in symbol).
-Warning: No net found for component U34 pad 15 (no pin 15 in symbol).
-Warning: No net found for component U34 pad 3 (no pin 3 in symbol).
-Warning: No net found for component U34 pad 1 (no pin 1 in symbol).
-Warning: No net found for component U34 pad 2 (no pin 2 in symbol).
-Warning: No net found for component U34 pad 4 (no pin 4 in symbol).
-Warning: No net found for component U17 pad 3 (no pin 3 in symbol).
-Warning: No net found for component U35 pad 11 (no pin 11 in symbol).
-Warning: No net found for component U35 pad 8 (no pin 8 in symbol).
-Warning: No net found for component U35 pad 10 (no pin 10 in symbol).
-Warning: No net found for component U35 pad 13 (no pin 13 in symbol).
-Warning: No net found for component U35 pad 9 (no pin 9 in symbol).
-Warning: No net found for component U35 pad 7 (no pin 7 in symbol).
-Warning: No net found for component U35 pad 6 (no pin 6 in symbol).
-Warning: No net found for component U35 pad 12 (no pin 12 in symbol).
-Warning: No net found for component U35 pad 5 (no pin 5 in symbol).
-Warning: No net found for component U17 pad 13 (no pin 13 in symbol).
-Warning: No net found for component U17 pad 12 (no pin 12 in symbol).
-Warning: No net found for component U17 pad 14 (no pin 14 in symbol).
+Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
+Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
+Warning: No net found for component TRS_0 pad RN (no pin RN in symbol).
+Warning: No net found for component TRS_0 pad TN (no pin TN in symbol).
+Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
+Warning: No net found for component TRS_1 pad TN (no pin TN in symbol).
+Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
+Warning: Warning: SERIAL_0 footprint 'DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
 Warning: No net found for component U0 pad 9 (no pin 9 in symbol).
 Warning: No net found for component U0 pad 8 (no pin 8 in symbol).
 Warning: No net found for component U0 pad 10 (no pin 10 in symbol).
-Warning: Warning: IDE_0 footprint 'IDC-Header_2x20_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
-Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
-Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
-Warning: No net found for component FPU_0 pad 6 (no pin 6 in symbol).
 Warning: Warning: SERIAL_1 footprint 'DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
-Warning: No net found for component FPU_0 pad 7 (no pin 7 in symbol).
-Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
-Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
-Warning: Warning: FDD_0 footprint 'IDC-Header_2x17_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
-Warning: No net found for component TRS_0 pad RN (no pin RN in symbol).
-Warning: No net found for component TRS_0 pad TN (no pin TN in symbol).
-Warning: Warning: ATX_PWR_0 footprint 'Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
-Warning: No net found for component TRS_1 pad TN (no pin TN in symbol).
 Warning: No net found for component TRS_1 pad RN (no pin RN in symbol).
-Warning: No net found for component XTAL_OSC_0 pad 5 (no pin 5 in symbol).
-Warning: No net found for component XTAL_OSC_0 pad 8 (no pin 8 in symbol).
-Warning: Warning: IDE_1 footprint 'IDC-Header_2x20_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
-Warning: Warning: SERIAL_0 footprint 'DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
-Warning: No net found for component U17 pad 5 (no pin 5 in symbol).
-Warning: No net found for component U17 pad 2 (no pin 2 in symbol).
 
 
-Info: Total warnings: 50, errors: 0.
+Info: Total warnings: 19, errors: 0.
