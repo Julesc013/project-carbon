@@ -1,54 +1,52 @@
-Info: Processing symbol 'ATX_PWR_0:Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical'.
-Info: Processing symbol 'U40:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U41:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'ATX_PWR_0:Connector_Molex:Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical'.
 Info: Processing symbol 'BT1:Battery:BatteryHolder_MYOUNG_BS-07-A1BJ001_CR2032'.
-Info: Processing symbol 'C1:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C2:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C3:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C4:'.
-Info: Processing symbol 'C5:'.
-Info: Processing symbol 'C6:'.
-Info: Processing symbol 'C7:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C8:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C9:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C10:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C11:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C12:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C13:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C14:Capacitor_THT:CP_Radial_D4.0mm_P1.50mm'.
-Info: Processing symbol 'C15:'.
-Info: Processing symbol 'C16:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C17:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C18:'.
-Info: Processing symbol 'C19:'.
-Info: Processing symbol 'C20:'.
-Info: Processing symbol 'C21:'.
-Info: Processing symbol 'C22:'.
-Info: Processing symbol 'C23:'.
-Info: Processing symbol 'C24:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C25:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C26:'.
-Info: Processing symbol 'C27:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C28:Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm'.
-Info: Processing symbol 'C29:'.
-Info: Processing symbol 'C30:'.
-Info: Processing symbol 'C31:'.
+Info: Processing symbol 'C1:Capacitor_THT:C_Disc_D3.4mm_W2.1mm_P2.50mm'.
+Info: Processing symbol 'C2:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C3:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C4:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C5:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C6:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C7:Capacitor_THT:CP_Radial_D4.0mm_P2.00mm'.
+Info: Processing symbol 'C8:Capacitor_THT:CP_Radial_D4.0mm_P2.00mm'.
+Info: Processing symbol 'C9:Capacitor_THT:CP_Radial_D4.0mm_P2.00mm'.
+Info: Processing symbol 'C10:Capacitor_THT:CP_Radial_D4.0mm_P2.00mm'.
+Info: Processing symbol 'C11:Capacitor_THT:CP_Radial_D4.0mm_P2.00mm'.
+Info: Processing symbol 'C12:Capacitor_THT:CP_Radial_D4.0mm_P2.00mm'.
+Info: Processing symbol 'C13:Capacitor_THT:CP_Radial_D4.0mm_P2.00mm'.
+Info: Processing symbol 'C14:Capacitor_THT:CP_Radial_D4.0mm_P2.00mm'.
+Info: Processing symbol 'C15:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C16:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C17:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C18:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C19:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C20:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C21:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C22:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C23:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C24:Capacitor_THT:C_Disc_D3.4mm_W2.1mm_P2.50mm'.
+Info: Processing symbol 'C25:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C26:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C27:Capacitor_THT:C_Disc_D3.4mm_W2.1mm_P2.50mm'.
+Info: Processing symbol 'C28:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C29:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C30:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C31:Capacitor_THT:C_Rect_L7.0mm_W3.5mm_P5.00mm'.
 Info: Processing symbol 'C32:'.
 Info: Processing symbol 'C33:'.
-Info: Processing symbol 'C34:'.
-Info: Processing symbol 'C35:'.
-Info: Processing symbol 'C36:'.
-Info: Processing symbol 'C37:'.
-Info: Processing symbol 'C38:'.
-Info: Processing symbol 'C39:'.
-Info: Processing symbol 'C40:'.
-Info: Processing symbol 'C41:'.
-Info: Processing symbol 'C42:'.
-Info: Processing symbol 'C43:'.
-Info: Processing symbol 'C44:'.
-Info: Processing symbol 'C45:'.
+Info: Processing symbol 'C34:Capacitor_THT:C_Radial_D5.0mm_H11.0mm_P2.00mm'.
+Info: Processing symbol 'C35:Capacitor_THT:C_Disc_D3.4mm_W2.1mm_P2.50mm'.
+Info: Processing symbol 'C36:Capacitor_THT:C_Disc_D3.4mm_W2.1mm_P2.50mm'.
+Info: Processing symbol 'C37:Capacitor_THT:C_Radial_D5.0mm_H11.0mm_P2.00mm'.
+Info: Processing symbol 'C38:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C39:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C40:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C41:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C42:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C43:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C44:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
+Info: Processing symbol 'C45:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
 Info: Processing symbol 'CPU_0:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'CTC_0:Package_DIP:DIP-28_W15.24mm_Socket'.
+Info: Processing symbol 'CTC_0:Package_DIP:DIP-28_W15.24mm_LongPads'.
 Info: Processing symbol 'D1:LED_THT:LED_D5.0mm'.
 Info: Processing symbol 'D2:LED_THT:LED_D5.0mm'.
 Info: Processing symbol 'D3:LED_THT:LED_D5.0mm'.
@@ -69,16 +67,10 @@ Info: Processing symbol 'D17:LED_THT:LED_D5.0mm'.
 Info: Processing symbol 'D18:LED_THT:LED_D5.0mm'.
 Info: Processing symbol 'DMA_0:Package_DIP:DIP-40_W15.24mm_Socket'.
 Info: Processing symbol 'FDC_0:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'FDD_0:IDC-Header_2x17_P2.54mm_Vertical'.
-Info: Processing symbol 'U42:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U43:Package_DIP:DIP-16_W7.62mm_Socket'.
+Info: Processing symbol 'FDD_0:Connector_IDC:IDC-Header_2x17_P2.54mm_Vertical'.
 Info: Processing symbol 'FPU_0:Package_DIP:DIP-24_W15.24mm'.
-Info: Processing symbol 'IDE_0:IDC-Header_2x20_P2.54mm_Vertical'.
-Info: Processing symbol 'XTAL_OSC_0:Oscillator:Oscillator_DIP-8'.
-Info: Processing symbol 'XTAL_RES_0:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
-Info: Processing symbol 'IDE_1:IDC-Header_2x20_P2.54mm_Vertical'.
-Info: Processing symbol 'XTAL_RES_1:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
-Info: Processing symbol 'XTAL_RES_2:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'IDE_0:Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical'.
+Info: Processing symbol 'IDE_1:Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical'.
 Info: Processing symbol 'JCBUS_0:Carboni_Library:JC100_Bus_16b'.
 Info: Processing symbol 'JCBUS_1:Carboni_Library:JC100_Bus_16b'.
 Info: Processing symbol 'JCBUS_2:Carboni_Library:JC100_Bus_16b'.
@@ -128,6 +120,7 @@ Info: Processing symbol 'JP40:'.
 Info: Processing symbol 'JP41:'.
 Info: Processing symbol 'JP42:'.
 Info: Processing symbol 'JP43:'.
+Info: Processing symbol 'JP44:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
 Info: Processing symbol 'PIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
 Info: Processing symbol 'R1:'.
 Info: Processing symbol 'R2:'.
@@ -205,8 +198,10 @@ Info: Processing symbol 'ROM_0:Package_DIP:DIP-28_W15.24mm_Socket'.
 Info: Processing symbol 'ROM_1:Package_DIP:DIP-28_W15.24mm_Socket'.
 Info: Processing symbol 'RV1:'.
 Info: Processing symbol 'RV2:'.
-Info: Processing symbol 'SERIAL_0:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
-Info: Processing symbol 'SERIAL_1:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
+Info: Processing symbol 'SERIAL_0:Connector_Dsub:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
+Info: Processing symbol 'XTAL_RES_2:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'XTAL_RES_3:Crystal:Crystal_Round_D3.0mm_Vertical'.
+Info: Processing symbol 'SERIAL_1:Connector_Dsub:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
 Info: Processing symbol 'SIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
 Info: Processing symbol 'SW1:Button_Switch_THT:SW_PUSH_6mm'.
 Info: Processing symbol 'SW2:Button_Switch_THT:SW_PUSH_6mm'.
@@ -335,9 +330,12 @@ Info: Processing symbol 'TP122:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP123:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP124:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TP125:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP127:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP128:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP129:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
+Info: Processing symbol 'TP130:TestPoint:TestPoint_THTPad_1.5x1.5mm_Drill0.7mm'.
 Info: Processing symbol 'TRS_0:Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal'.
 Info: Processing symbol 'TRS_1:Connector_Audio:Jack_3.5mm_CUI_SJ1-3525N_Horizontal'.
-Info: Processing symbol 'XTAL_RES_3:Crystal:Crystal_Round_D3.0mm_Vertical'.
 Info: Processing symbol 'U0:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U1:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U2:Package_TO_SOT_THT:TO-92L_Inline'.
@@ -355,6 +353,7 @@ Info: Processing symbol 'U13:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U14:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U15:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U16:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U17:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U18:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U19:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U20:Package_DIP:DIP-16_W7.62mm'.
@@ -374,31 +373,37 @@ Info: Processing symbol 'U36:'.
 Info: Processing symbol 'U37:Package_DIP:DIP-8_W7.62mm'.
 Info: Processing symbol 'U38:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U39:Package_DIP:DIP-16_W7.62mm'.
-Remove ATX_PWR_0 'Do not place' fabrication attribute.
-Remove FDD_0 'Do not place' fabrication attribute.
-Remove IDE_0 'Do not place' fabrication attribute.
-Remove IDE_1 'Do not place' fabrication attribute.
-Remove SERIAL_1 'Do not place' fabrication attribute.
-Remove SERIAL_0 'Do not place' fabrication attribute.
-Warning: Warning: ATX_PWR_0 footprint 'Molex_Mini-Fit_Jr_5566-24A_2x12_P4.20mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
-Warning: Warning: FDD_0 footprint 'IDC-Header_2x17_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
-Warning: Warning: IDE_0 footprint 'IDC-Header_2x20_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
-Warning: Warning: IDE_1 footprint 'IDC-Header_2x20_P2.54mm_Vertical' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
+Info: Processing symbol 'U40:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U41:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U42:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U43:Package_DIP:DIP-16_W7.62mm_Socket'.
+Info: Processing symbol 'XTAL_OSC_0:Oscillator:Oscillator_DIP-8'.
+Info: Processing symbol 'XTAL_RES_0:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'XTAL_RES_1:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
+Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
+Warning: No net found for component U0 pad 8 (no pin 8 in symbol).
+Warning: No net found for component U17 pad 4 (no pin 4 in symbol).
+Warning: No net found for component U17 pad 7 (no pin 7 in symbol).
+Warning: No net found for component U17 pad 2 (no pin 2 in symbol).
+Warning: No net found for component U17 pad 13 (no pin 13 in symbol).
+Warning: No net found for component U17 pad 11 (no pin 11 in symbol).
 Warning: No net found for component U33 pad 13 (no pin 13 in symbol).
 Warning: No net found for component U33 pad 16 (no pin 16 in symbol).
-Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
-Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
+Warning: No net found for component U17 pad 12 (no pin 12 in symbol).
+Warning: No net found for component U17 pad 14 (no pin 14 in symbol).
+Warning: No net found for component U17 pad 1 (no pin 1 in symbol).
+Warning: No net found for component U17 pad 3 (no pin 3 in symbol).
+Warning: No net found for component U17 pad 5 (no pin 5 in symbol).
+Warning: No net found for component U17 pad 6 (no pin 6 in symbol).
+Warning: No net found for component U0 pad 10 (no pin 10 in symbol).
 Warning: No net found for component TRS_0 pad RN (no pin RN in symbol).
 Warning: No net found for component TRS_0 pad TN (no pin TN in symbol).
-Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
+Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
 Warning: No net found for component TRS_1 pad TN (no pin TN in symbol).
-Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
-Warning: Warning: SERIAL_0 footprint 'DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
-Warning: No net found for component U0 pad 9 (no pin 9 in symbol).
-Warning: No net found for component U0 pad 8 (no pin 8 in symbol).
-Warning: No net found for component U0 pad 10 (no pin 10 in symbol).
-Warning: Warning: SERIAL_1 footprint 'DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm' is missing a library name. Use the full 'Library:Footprint' format to avoid repeated update notifications.
 Warning: No net found for component TRS_1 pad RN (no pin RN in symbol).
+Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
+Warning: No net found for component U0 pad 9 (no pin 9 in symbol).
 
 
-Info: Total warnings: 19, errors: 0.
+Info: Total warnings: 24, errors: 0.
