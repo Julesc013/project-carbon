@@ -900,6 +900,10 @@
       {
         "netclass": "POWER",
         "pattern": "GND"
+      },
+      {
+        "netclass": "Default",
+        "pattern": "+5VSB"
       }
     ]
   },
@@ -1187,7 +1191,7 @@
         "uuid": "06d7853b-ec0e-46e4-9a93-83dad81d944c"
       }
     ],
-    "used_designators": "#PWR49,#PWR96,#PWR101,#PWR133-134,#PWR155,TP126-130,R18,JP44,CTC_1,U17",
+    "used_designators": "#PWR49,#PWR96,#PWR101,#PWR133-134,#PWR155,#PWR165-166,#PWR324-331,TP126-130,R18,JP44-45,CTC_1,U17",
     "variants": []
   },
   "sheets": [

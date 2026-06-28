@@ -33,10 +33,10 @@ Info: Processing symbol 'C30:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
 Info: Processing symbol 'C31:Capacitor_THT:C_Rect_L7.0mm_W3.5mm_P5.00mm'.
 Info: Processing symbol 'C32:'.
 Info: Processing symbol 'C33:'.
-Info: Processing symbol 'C34:Capacitor_THT:C_Radial_D5.0mm_H11.0mm_P2.00mm'.
+Info: Processing symbol 'C34:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
 Info: Processing symbol 'C35:Capacitor_THT:C_Disc_D3.4mm_W2.1mm_P2.50mm'.
 Info: Processing symbol 'C36:Capacitor_THT:C_Disc_D3.4mm_W2.1mm_P2.50mm'.
-Info: Processing symbol 'C37:Capacitor_THT:C_Radial_D5.0mm_H11.0mm_P2.00mm'.
+Info: Processing symbol 'C37:Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm'.
 Info: Processing symbol 'C38:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
 Info: Processing symbol 'C39:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
 Info: Processing symbol 'C40:Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm'.
@@ -67,6 +67,9 @@ Info: Processing symbol 'D17:LED_THT:LED_D5.0mm'.
 Info: Processing symbol 'D18:LED_THT:LED_D5.0mm'.
 Info: Processing symbol 'DMA_0:Package_DIP:DIP-40_W15.24mm_Socket'.
 Info: Processing symbol 'FDC_0:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'U16:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U18:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U19:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'FDD_0:Connector_IDC:IDC-Header_2x17_P2.54mm_Vertical'.
 Info: Processing symbol 'FPU_0:Package_DIP:DIP-24_W15.24mm'.
 Info: Processing symbol 'IDE_0:Connector_IDC:IDC-Header_2x20_P2.54mm_Vertical'.
@@ -109,7 +112,20 @@ Info: Processing symbol 'JP29:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_
 Info: Processing symbol 'JP30:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
 Info: Processing symbol 'JP31:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
 Info: Processing symbol 'JP32:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
-Info: Processing symbol 'JP33:'.
+Info: Processing symbol 'JP33:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'U20:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U21:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U22:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U23:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U24:Package_DIP:DIP-20_W7.62mm'.
+Info: Processing symbol 'U25:Package_DIP:DIP-8_W7.62mm_Socket'.
+Info: Processing symbol 'U26:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U27:Package_DIP:DIP-40_W15.24mm_Socket'.
+Info: Processing symbol 'U28:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U29:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U30:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U33:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U34:Package_DIP:DIP-16_W7.62mm'.
 Info: Processing symbol 'JP34:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
 Info: Processing symbol 'JP35:'.
 Info: Processing symbol 'JP36:'.
@@ -121,6 +137,20 @@ Info: Processing symbol 'JP41:'.
 Info: Processing symbol 'JP42:'.
 Info: Processing symbol 'JP43:'.
 Info: Processing symbol 'JP44:Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical'.
+Info: Processing symbol 'JP45:Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical'.
+Info: Processing symbol 'U36:'.
+Info: Processing symbol 'U37:Package_DIP:DIP-8_W7.62mm'.
+Info: Processing symbol 'U38:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U39:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U40:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U41:Package_DIP:DIP-16_W7.62mm'.
+Info: Processing symbol 'U42:Package_DIP:DIP-14_W7.62mm'.
+Info: Processing symbol 'U43:Package_DIP:DIP-16_W7.62mm_Socket'.
+Info: Processing symbol 'XTAL_OSC_0:Oscillator:Oscillator_DIP-8'.
+Info: Processing symbol 'XTAL_RES_0:Crystal:Resonator-2Pin_W10.0mm_H5.0mm'.
+Info: Processing symbol 'XTAL_RES_1:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'XTAL_RES_2:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Info: Processing symbol 'XTAL_RES_3:Crystal:Crystal_Round_D3.0mm_Vertical'.
 Info: Processing symbol 'PIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
 Info: Processing symbol 'R1:'.
 Info: Processing symbol 'R2:'.
@@ -199,8 +229,6 @@ Info: Processing symbol 'ROM_1:Package_DIP:DIP-28_W15.24mm_Socket'.
 Info: Processing symbol 'RV1:'.
 Info: Processing symbol 'RV2:'.
 Info: Processing symbol 'SERIAL_0:Connector_Dsub:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
-Info: Processing symbol 'XTAL_RES_2:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
-Info: Processing symbol 'XTAL_RES_3:Crystal:Crystal_Round_D3.0mm_Vertical'.
 Info: Processing symbol 'SERIAL_1:Connector_Dsub:DSUB-9_Pins_Horizontal_P2.77x2.84mm_EdgePinOffset7.70mm_Housed_MountingHolesOffset9.12mm'.
 Info: Processing symbol 'SIO_0:Package_DIP:DIP-40_W15.24mm_Socket'.
 Info: Processing symbol 'SW1:Button_Switch_THT:SW_PUSH_6mm'.
@@ -352,58 +380,47 @@ Info: Processing symbol 'U12:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U13:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U14:Package_DIP:DIP-14_W7.62mm'.
 Info: Processing symbol 'U15:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U16:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U17:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U18:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U19:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U20:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U21:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U22:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U23:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U24:Package_DIP:DIP-20_W7.62mm'.
-Info: Processing symbol 'U25:Package_DIP:DIP-8_W7.62mm_Socket'.
-Info: Processing symbol 'U26:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U27:Package_DIP:DIP-40_W15.24mm_Socket'.
-Info: Processing symbol 'U28:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U29:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U30:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U33:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U34:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U36:'.
-Info: Processing symbol 'U37:Package_DIP:DIP-8_W7.62mm'.
-Info: Processing symbol 'U38:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U39:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U40:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U41:Package_DIP:DIP-16_W7.62mm'.
-Info: Processing symbol 'U42:Package_DIP:DIP-14_W7.62mm'.
-Info: Processing symbol 'U43:Package_DIP:DIP-16_W7.62mm_Socket'.
-Info: Processing symbol 'XTAL_OSC_0:Oscillator:Oscillator_DIP-8'.
-Info: Processing symbol 'XTAL_RES_0:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
-Info: Processing symbol 'XTAL_RES_1:Crystal:Resonator-2Pin_W6.0mm_H3.0mm'.
+Reconnected FDC_0 pin 22 from Net-(FDC_0-DRV) to +5V.
+Add net Net-(FDC_0-PCVAL).
+Reconnected FDC_0 pin 24 from +5V to Net-(FDC_0-PCVAL).
+Added JP33 (footprint 'Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical').
+Changed REF** reference designator to JP33.
+Changed JP33 value from PinHeader_1x03_P2.54mm_Vertical to SIO_A0_INVERT.
+Updated JP33 symbol association from  to /41c50714-db56-4d15-b946-3517ccf9c910.
+Updated JP33 fields.
+Updated JP33 sheetname to '/'.
+Updated JP33 sheetfile to 'Model_150.kicad_sch'.
+Updated JP33 footprint filters to 'Jumper* TestPoint*3Pads* TestPoint*Bridge*'.
+Added JP33 'exclude from BOM' fabrication attribute.
+Connected JP33 pin 1 to A0.
+Connected JP33 pin 2 to Net-(JP33-C).
+Connected JP33 pin 3 to Net-(JP33-B).
+Updated JP33 unit metadata.
+Added JP45 (footprint 'Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical').
+Changed REF** reference designator to JP45.
+Changed JP45 value from PinHeader_1x03_P2.54mm_Vertical to FDC_PCVAL.
+Updated JP45 symbol association from  to /15a561c8-e3cc-4ffd-adcd-51995e2ebf11.
+Updated JP45 fields.
+Updated JP45 sheetname to '/'.
+Updated JP45 sheetfile to 'Model_150.kicad_sch'.
+Updated JP45 footprint filters to 'Jumper* TestPoint*3Pads* TestPoint*Bridge*'.
+Added JP45 'exclude from BOM' fabrication attribute.
+Connected JP45 pin 3 to GND.
+Connected JP45 pin 2 to +5V.
+Connected JP45 pin 1 to Net-(FDC_0-PCVAL).
+Updated JP45 unit metadata.
+Updated U26 symbol association from /c2602a4f-2d5a-48d0-b01f-6fb7fff55ac2 to /2f5e3877-e81a-4ea2-81da-47ac52fcc26f.
+Removed unused net Net-(FDC_0-DRV).
+Warning: No net found for component TRS_0 pad RN (no pin RN in symbol).
 Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
 Warning: No net found for component SERIAL_0 pad 0 (no pin 0 in symbol).
-Warning: No net found for component U0 pad 8 (no pin 8 in symbol).
-Warning: No net found for component U17 pad 4 (no pin 4 in symbol).
-Warning: No net found for component U17 pad 7 (no pin 7 in symbol).
-Warning: No net found for component U17 pad 2 (no pin 2 in symbol).
-Warning: No net found for component U17 pad 13 (no pin 13 in symbol).
-Warning: No net found for component U17 pad 11 (no pin 11 in symbol).
+Warning: No net found for component TRS_1 pad TN (no pin TN in symbol).
 Warning: No net found for component U33 pad 13 (no pin 13 in symbol).
 Warning: No net found for component U33 pad 16 (no pin 16 in symbol).
-Warning: No net found for component U17 pad 12 (no pin 12 in symbol).
-Warning: No net found for component U17 pad 14 (no pin 14 in symbol).
-Warning: No net found for component U17 pad 1 (no pin 1 in symbol).
-Warning: No net found for component U17 pad 3 (no pin 3 in symbol).
-Warning: No net found for component U17 pad 5 (no pin 5 in symbol).
-Warning: No net found for component U17 pad 6 (no pin 6 in symbol).
-Warning: No net found for component U0 pad 10 (no pin 10 in symbol).
-Warning: No net found for component TRS_0 pad RN (no pin RN in symbol).
-Warning: No net found for component TRS_0 pad TN (no pin TN in symbol).
-Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
-Warning: No net found for component TRS_1 pad TN (no pin TN in symbol).
 Warning: No net found for component TRS_1 pad RN (no pin RN in symbol).
 Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
-Warning: No net found for component U0 pad 9 (no pin 9 in symbol).
+Warning: No net found for component SERIAL_1 pad 0 (no pin 0 in symbol).
+Warning: No net found for component TRS_0 pad TN (no pin TN in symbol).
 
 
-Info: Total warnings: 24, errors: 0.
+Info: Total warnings: 10, errors: 0.
