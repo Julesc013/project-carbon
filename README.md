@@ -1,5 +1,11 @@
 # Project Carbon
 
+![memory leaks](https://badgen.net/static/memory%20leaks/5.4%20Mo%2FS/F73)
+![coffee drunk](https://badgen.net/static/coffee%20drunk/694%20L/6F4E37)
+![encoding](https://badgen.net/static/encoding/%C3%9BT%EF%FF%BD-%E2%80%AC%E2%84%A2/08C)
+![code style](https://badgen.net/static/code%20style/dated/F73)
+![code size](https://badgen.net/static/code%20size/1.21%20GW/3C1)
+
 A family of retro-style computer designs (hardware code, simulators, and schematics) built around shared specifications so different implementations stay compatible.
 
 ![Carbon Model 150 Schematic](https://github.com/Julesc013/project-carbon/blob/main/schem/Carbon_Z80/export/Carbon_Z80_150_sch_rev1.png)
