@@ -2,7 +2,7 @@
 
 ![memory leaks](https://badgen.net/static/memory%20leaks/5.4%20Mo%2FS/F73)
 ![coffee drunk](https://badgen.net/static/coffee%20drunk/694%20L/6F4E37)
-![encoding](https://badgen.net/static/encoding/%C3%9BT%EF%FF%BD-%E2%80%AC%E2%84%A2/08C)
+![encoding](https://badgen.net/static/encoding/ternary/08C)
 ![code style](https://badgen.net/static/code%20style/dated/F73)
 ![code size](https://badgen.net/static/code%20size/1.21%20GW/3C1)
 
