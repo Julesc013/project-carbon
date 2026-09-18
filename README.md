@@ -9,8 +9,7 @@ A family of retro-style computer designs (hardware code, simulators, and schemat
 ![Carbon Model 150 Schematic](https://raw.githubusercontent.com/Julesc013/project-carbon/main/schem/Model_150/export/Carbon_Z80_150_sch_rev1.png)
 ![Carbon Model 150 PCB (WIP)](https://raw.githubusercontent.com/Julesc013/project-carbon/main/schem/Model_150/export/Carbon_Z80_150_pcb_rev1.png)
 
-
-## 2. High-level overview (non-technical)
+## Overview
 
 Project Carbon is a repository for designing and testing classic-style computers: it includes hardware design files, code that describes CPUs and systems, and simulators that let you run small programs without building physical hardware.
 
@@ -23,7 +22,7 @@ What it is **not**:
 - A repository of copyrighted ROMs or operating system images (you must supply your own).
 - A cycle-accurate reproduction of legacy buses and full peripheral ecosystems (many peripherals and timing models are explicitly deferred).
 
-## 3. Key features (at a glance)
+## Keypoints
 
 - Frozen v1.0 architecture contracts in `hdl/spec/*.yaml` with generated SystemVerilog/C constants.
 - Compatibility tier ladders and a single mode-switching contract (`MODEUP`/`RETMD`).
@@ -34,7 +33,7 @@ What it is **not**:
 - `carbon-sim` C++ simulator for CP/M 2.2 and RomWBW-style platforms (ROMs not included).
 - KiCad hardware: a Carbon_Z80 project plus a KiCad 9 schematic skeleton generator.
 
-## 4. Architecture overview (mid-level technical)
+## Architecture
 
 ### Layering (source-of-truth → generated → implementations)
 
@@ -69,7 +68,7 @@ What it is **not**:
 - **Portability-minded tooling**: scripts exist for POSIX shell and PowerShell; generators avoid third-party dependencies.
 - **Long-term maintainability**: clean module boundaries (notably the Z480 scaffold) so implementations can evolve behind stable interfaces.
 
-## 5. Supported platforms (summary)
+## Platforms
 
 Hardware targets (v1 focus):
 - **Carbon native SoCs** (Z85/Z90/Z380/Z480 system tops).
@@ -89,7 +88,7 @@ Compatibility overview (guest focus):
 - **DOS** real-mode guests are hosted via EE providers.
 - **GEM** and **Windows** compatibility notes live in `docs/compat_gem.md` and `docs/compat_windows.md`.
 
-## 6. Intended audience & use cases
+## Audience
 
 This project is for:
 - RTL/hardware engineers exploring CPU, accelerator, and system integration patterns with explicit contracts.
@@ -105,7 +104,7 @@ Not a fit if you need:
 - Turn-key ROMs/OS images or full software distributions.
 - Full instruction/peripheral coverage and cycle-accurate platform timing (see deferred lists and per-core docs).
 
-## 7. Design constraints & philosophy
+## Constraints
 
 - **Contracts are the source of truth**: `hdl/spec/*.yaml` drives generated headers/packages and the rendered contract reference.
 - **Generated outputs are treated as artifacts**: `hdl/gen/*` and `docs/ARCH_CONTRACTS.md` are generated and committed (verified in CI).
@@ -113,7 +112,7 @@ Not a fit if you need:
 - **Compatibility and gating are explicit**: tier ladders, `MODEUP`/`RETMD`, and strict-mode extension gating are architectural concepts, not local hacks.
 - **Generated vs hand-edited separation**: `schem/kicad9/generated/` is safe to overwrite; `schem/kicad9/manual/` is not.
 
-## 8. Repository structure (map)
+## Structure
 
 - `docs/`: architecture/contracts docs plus legacy design notes, manuals, datasheets, and images.
 - `hdl/`: HDL contract layer and implementations.
@@ -124,13 +123,13 @@ Not a fit if you need:
   - `hdl/systems/`: integrated system tops + TBs.
   - `hdl/sim/`: regression harness and tests.
 - `schem/`: KiCad projects and schematic generation.
-  - `schem/Carbon_Z80/`: board-level KiCad project + exports.
+  - `schem/Model_150/`: board-level KiCad project + exports.
   - `schem/kicad9/`: generated/manual schematic trees + mapping specs.
 - `source/`: software and simulator sources (notably `source/sim/carbon_sim`).
 - `scripts/`: wrappers for regenerating specs, running HDL regressions, and regenerating KiCad skeletons.
 - `tools/`: utilities (`tools/kicadgen` and `tools/mk_disk.py`).
 
-## 9. Documentation map
+## Documentation
 
 - Documentation index: `docs/README.md`
 - Architecture overview and layering: `docs/ARCHITECTURE.md`
@@ -169,13 +168,13 @@ Not a fit if you need:
 - Carbon_Z80 schematic/PCB exports: `schem/Carbon_Z80/export/Carbon_Z80_150_sch_rev1.pdf`
 - Release notes: `CHANGELOG.md`
 
-## 10. Build / usage (high-level only)
+## Build
 
 - HDL (generate + run regressions): see `hdl/sim/README.md` and `docs/RELEASE_v1.md`.
 - `carbon-sim` (build/run): see `source/sim/carbon_sim/docs/USAGE.md`.
 - KiCad skeleton regeneration: see `schem/kicad9/docs/USAGE.md`.
 
-## 11. Project status & maturity
+## Status
 
 - Repository version: **v1.0.0** (`VERSION`).
 - The **contract/spec layer is frozen for v1.0** and the generator outputs are CI-checked for reproducibility.
@@ -183,10 +182,10 @@ Not a fit if you need:
 - x86/x87 lineage and CarbonX* system validation are deferred for v1.0.
 - The primary “known-good” workflows in v1.0 are spec generation and HDL regression in CI; additional platforms (e.g., `carbon-sim` backends) evolve separately.
 
-## 12. License
+## License
 
-License: not specified in repository.
+License: just behave yourselves.
 
-## 13. Contributing / contact (if applicable)
+## Contributing
 
 This repository includes CI and regression tooling under `.github/` and `scripts/`. If you contribute changes, keep generated outputs in sync and include enough context in your PR/commit to review the contract impact.
